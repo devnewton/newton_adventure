@@ -1,0 +1,43 @@
+* apple.png
+
+License: CC-BY-SA 3.0
+Author: Ails (http://ails.deviantart.com/)
+
+* hero.gif
+
+License: CC-BY-SA 3.0
+Author: Christian Tietze (christian.tietze@googlemail.com, http://www.pixeljoint.com/pixelart/14400.htm)
+
+* background.jpg
+
+License: CC-BY-SA 3.0
+Author: bart (http://opengameart.org/user/1)
+
+* explosion.gif
+
+License: CC-BY 3.0
+Author: Daniel Cook (http://lostgarden.com, http://opengameart.org/content/iron-plague-explode5bmp)
+
+* egyptian_boss_body.png, egyptian_boss_hand.png
+
+License: permission to use
+Author: Adrian Nock <acespark@gmail.com> (http://ace-spark.deviantart.com/art/Robotnikhotep-Sonic-3-Style-152753823)
+
+* jump.wav (original name: ApricotJumpBounce-SheepBounce2.ogg)
+
+Author: YoFrankie! (c) 2008, Blender Foundation (http://opengameart.org/content/cartoony-jump-and-bounce)
+
+* The_End.mid, Game_Over.mid, Lava_City.mid
+
+License: CC-BY-SA 3.0
+Author: Metaruka (http://sites.google.com/site/metaruka/GameGame, http://opengameart.org/content/game-game)
+
+* hopnbob.mid
+
+License: copyright free.
+Author: Net4TV (http://www.net4tv.com/net4TV/music/resources/hopnbop.mid)
+
+* Other files
+
+License: CC-BY-SA 3.0
+Author: devnewton (devnewton@tuxfamily.org, http://newtonadv.tuxfamily.org/)

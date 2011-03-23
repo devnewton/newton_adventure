@@ -1,0 +1,64 @@
+################################################################
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMQ#
+#P                                                            Q#
+#P CCCCCCC                           CCC              CC      Q#
+#P          CCCC  C                      CCCCCC          C    Q#
+#P     o     CCCC                 C     C                     Q#
+#P   CC    C           CCCCCCCC     C   C     CC              Q#
+#P   C   C   CC  CC        CCCC CC   CCAACCC               C  Q#
+#P   C  CKCCC  CCCCC     CCCAAAAA C  CCC  C       o     o  C  Q#
+#P  C    C           C  CC     CC C         C                 Q#
+#P  C C  o         CC            CC CC      C A      D     C  Q#
+#P CC              C    C            CC       A      #        Q#
+#P CCC             C      C          C                      C Q#
+#P  C                 CC C  C     o   C                     C Q#
+#P  C               C CC  CCCC       CCC CCCCCCAA    CCC   C  Q#
+#P  C             CC         CCCCA CC  CCC                C   Q#
+#P  CC           CC   CC C  C  CCCC      CC      CCCCCCC CC   Q#
+#P  AAA                C C                                    Q#
+#P  AAA C  o        CC     C    CCCC           CCCCCCCCCCC    Q#
+#P  CCC C        CC           C  C CCCCAAAAACCCC              Q#
+#P   CC             C       CC           CC        C       C  Q#
+#P   CC C          CCCCCCCCCC  C  C  C             CCCCCC     Q#
+#P      C                o    CC C         C    o  C CC   C   Q#
+#P   C       C  o            C             C                  Q#
+#P  CC       C              C      CC    CC CC      C  C      Q#
+#P  CCC     CC     CCCCC CCC  CCCC                   C  CC    Q#
+#P   C          CCCAAACC     C            CCC   C   C  C      Q#
+#P           CCCC   CCC   C             C     CCCC CCC    C   Q#
+#P                                      CC CCC CC      CCCCCC Q#
+#P  CCC           CC     C        o  CC AA                 CC Q#
+#P  CC                   CC          AA AA CC           C   C Q#
+#P  C CC           C            C    CC CC C         C    CC  Q#
+#P         C                    CC               C    CC   C  Q#
+#P        C     CCCC    CC        C CCC            CCCC AAAA  Q#
+#P  CCAA          CC C C CCC                        CC  AAAA  Q#
+#P  CCAAC          CCC CCAA        C  C  CCCCC CCCCCo   AAAA  Q#
+#P  C AAC          C     AA C                  C        AAAA  Q#
+#P  CCCCC         CCCC CC C                      C      AAAA  Q#
+#P                  CC CCCC                             AAAA  Q#
+#P         C              CC    C        C    CCC      C      Q#
+#P   C   CCCC           CC        C CC                   C    Q#
+#P             CCCC     C  C    CCCCo   CAAAAAACC      CC     Q#
+#P      C   CCCCAAC     C     C         C AAAAA               Q#
+#P  CC          AAC         CC        CCCCCC     C  C  C      Q#
+#P  CC    C     CC                       CCCC           C     Q#
+#P   C      o       CCC  o         C                  C C     Q#
+#P              C    C                     CCC         C  C   Q#
+#P   C C          CC C        o                        C CC   Q#
+#P   C C                                   C             CC   Q#
+#P    AA             C CC                  C  C               Q#
+#P   CAA          CC  C            C       C                  Q#
+#P    CC               C C   CC         CC   CC    CCCCC      Q#
+#P  C CC             C      C  CCC   C       CCCCCCCAAAAC C   Q#
+#P                 CCC                                    CC  Q#
+#P                                 C                          Q#
+#P  C    C      CCCC CC               C                       Q#
+#P CC H   C  o      CCCC   o     C        CAAAAA      C       Q#
+#P  CCCC        C                         CCC  CCCCCCCC       Q#
+#P              CAAAAA        CC C     CCCC                   Q#
+#P                  CCCC CCC     CC                           Q#
+#P  CCC     CC         CCC                                    Q#
+#P                                                            Q#
+#WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW#
+################################################################
