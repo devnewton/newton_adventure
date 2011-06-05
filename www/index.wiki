@@ -8,3 +8,6 @@
 <p><img src="screenshots/newton_adventure_1.0_a.png" /></p>
 <p><img src="screenshots/newton_adventure_1.0_b.png" /></p>
 
+<h1> Contact </h1>
+devnewton ^at^ bci.dyndns-server.com
+
