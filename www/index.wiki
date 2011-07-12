@@ -11,3 +11,7 @@
 <h1> Contact </h1>
 devnewton ^at^ bci.dyndns-server.com
 
+<h1>Forum sur <a href="http://retroshare.sf.net">Retroshare</a></h1>
+<a href="retroshare://forum?name=Devnewton:%20jeux%20et%20logiciels%20libres&id=dbb44dc17a8019c6c3222ad2499a17dc">retroshare://forum?name=Devnewton:%20jeux%20et%20logiciels%20libres&id=dbb44dc17a8019c6c3222ad2499a17dc</a>
+
+
