@@ -1,3 +1,9 @@
+<h1>English</h1>
+
+Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.
+
+<p><a href="downloads/newton_adventure_1.0.zip">Download version 1.0</a></p>
+
 <h1>Présentation</h1>
 <p>Newton Adventure est un jeu de plateforme 2D où le joueur dirige Newton, un héro très particulier puisqu'il a le pouvoir de modifier la direction de la gravité. Ainsi pour Newton les niveaux du jeu ne sont pas linéaires et peuvent être parcouru dans tous les sens. Les enemis et les objets subissent aussi les effets de la gravité ce qui permet de les atteindre ou de les éviter en les faisant tomber dans la bonne direction.</p>
 
