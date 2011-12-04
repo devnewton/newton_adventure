@@ -365,6 +365,11 @@ public strictfp class World extends net.phys2d.raw.World {
                 EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
                 boss.setBodyTexture(textureCache.getTexture("data/egyptian_boss_body.png"));
                 boss.setHandTexture(textureCache.getTexture("data/egyptian_boss_hand.png"));
+            } else if (c == 'R') {
+                BouncePlatform platform = new BouncePlatform(this);
+                platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
+                platform.setPosition(x * Platform.size, y * Platform.size);
+                add(platform);
             } else {
                 Platform platform = new Platform();
                 platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
@@ -456,23 +461,34 @@ public strictfp class World extends net.phys2d.raw.World {
             return levelDir.getAbsolutePath() + File.separator + properties.getProperty("newton_adventure.map");
         }
 
+        private String buildTextureName(String levelPathBase, String propertyName) {
+            String imageFilename = properties.getProperty(propertyName);
+            String path = levelPathBase + imageFilename;
+            if ((new File(path)).exists()) {
+                return path;
+            } else {
+                return "data" + File.separator + "default_level_data" + File.separator + imageFilename;
+            }
+        }
+
         private void buildTextureNames() {
             final String pathBase = levelDir.getAbsolutePath() + File.separator;
-            mummyAnimation = pathBase + properties.getProperty("newton_adventure.mummy");
-            batAnimation = pathBase + properties.getProperty("newton_adventure.bat");
-            explosionAnimation = pathBase + properties.getProperty("newton_adventure.explosion");
-            fireBallTexture = pathBase + properties.getProperty("newton_adventure.fireball");
-            axeTexture = pathBase + properties.getProperty("newton_adventure.axe");
-            mobilePikesTexture = pathBase + properties.getProperty("newton_adventure.mobilePikes");
-            doorClosedTexture = pathBase + properties.getProperty("newton_adventure.door");
-            doorOpenTexture = pathBase + properties.getProperty("newton_adventure.door_open");
-            keyTexture = pathBase + properties.getProperty("newton_adventure.key");
-            heroAnimation = pathBase + properties.getProperty("newton_adventure.hero");
-            appleTexture = pathBase + properties.getProperty("newton_adventure.apple");
+            mummyAnimation = buildTextureName(pathBase, "newton_adventure.mummy");
+            batAnimation = buildTextureName(pathBase, "newton_adventure.bat");
+            explosionAnimation = buildTextureName(pathBase, "newton_adventure.explosion");
+            fireBallTexture = buildTextureName(pathBase, "newton_adventure.fireball");
+            axeTexture = buildTextureName(pathBase, "newton_adventure.axe");
+            mobilePikesTexture = buildTextureName(pathBase, "newton_adventure.mobilePikes");
+            doorClosedTexture = buildTextureName(pathBase, "newton_adventure.door");
+            doorOpenTexture = buildTextureName(pathBase, "newton_adventure.door_open");
+            keyTexture = buildTextureName(pathBase, "newton_adventure.key");
+            heroAnimation = buildTextureName(pathBase, "newton_adventure.hero");
+            appleTexture = buildTextureName(pathBase, "newton_adventure.apple");
             if (properties.getProperty("newton_adventure.music") != null) {
-                musicFile = pathBase + properties.getProperty("newton_adventure.music");
-            } else
+                musicFile = buildTextureName(pathBase, "newton_adventure.music");
+            } else {
                 musicFile = "data/hopnbop.mid";
+            }
 
             for (Entry entry : properties.entrySet()) {
                 String key = (String) entry.getKey();
@@ -495,7 +511,7 @@ public strictfp class World extends net.phys2d.raw.World {
             }
         });
         if (propertyFiles.length == 0) {
-            return null;
+            throw new FileNotFoundException("cannot find *.properties file in level path: " + levelPath);
         }
 
         LevelInfo level = new LevelInfo();
@@ -550,6 +566,7 @@ public strictfp class World extends net.phys2d.raw.World {
     static final float ortho2DRight = ortho2DBaseSize;
     static final float ortho2DTop = ortho2DBaseSize;
     float aspectRatio = 1.0f;
+
     public void draw() {
         GL11.glPushMatrix();
 

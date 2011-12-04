@@ -354,4 +354,10 @@ public strictfp class Hero extends Body implements Drawable, Updatable {
             addForce(force);
         }
     }
+
+    public void collisionWithBouncePlatform(Vector2f normal) {
+        float reactionForce = world.getGravityForce() * jumpForce * 1.1f;
+        Vector2f force = new Vector2f(normal.getX() * reactionForce, normal.getY() * reactionForce);
+        addForce(force);
+    }
 }
