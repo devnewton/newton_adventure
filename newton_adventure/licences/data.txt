@@ -8,7 +8,8 @@ Author: Ails (http://ails.deviantart.com/)
 License: CC-BY-SA 3.0
 Author: Christian Tietze (christian.tietze@googlemail.com, http://www.pixeljoint.com/pixelart/14400.htm)
 
-* background.jpg
+* pyramid_background.jpg
+* sky_background.jpg
 
 License: CC-BY-SA 3.0
 Author: bart (http://opengameart.org/user/1)
@@ -37,7 +38,12 @@ Author: Metaruka (http://sites.google.com/site/metaruka/GameGame, http://opengam
 License: copyright free.
 Author: Net4TV (http://www.net4tv.com/net4TV/music/resources/hopnbop.mid)
 
+* Some of jungle tiles ( http://opengameart.org/content/pixel-ground )
+
+License: CC-BY-SA 3.0
+Author: Harlad
+
 * Other files
 
 License: CC-BY-SA 3.0
-Author: devnewton (devnewton@bci.im, http://newtonadv.tuxfamily.org/)
+Author: devnewton (devnewton@bci.im, http://bci.im)

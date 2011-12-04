@@ -454,7 +454,7 @@ public strictfp class World extends net.phys2d.raw.World {
         }
 
         String getBackgroundTexture() {
-            return levelDir.getAbsolutePath() + File.separator + properties.getProperty("newton_adventure.background");
+            return buildTextureName(levelDir.getAbsolutePath() + File.separator, "newton_adventure.background");
         }
 
         String getLevelMap() {
