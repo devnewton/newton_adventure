@@ -33,7 +33,7 @@
  */
 --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.tuxfamily.newtonadv</groupId>
+    <groupId>im.bci.newtonadv</groupId>
     <artifactId>newton_adventure</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -55,8 +55,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.tuxfamily.newtonadv.Main</mainClass>
-                            <packageName>org.tuxfamily.newtonadv</packageName>
+                            <mainClass>im.bci.newtonadv.Main</mainClass>
+                            <packageName>im.bci.newtonadv</packageName>
                             <addClasspath>true</addClasspath>
                             <addExtensions>true</addExtensions>
                             <classpathPrefix>lib/</classpathPrefix>
