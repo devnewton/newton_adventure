@@ -40,4 +40,4 @@ Author: Net4TV (http://www.net4tv.com/net4TV/music/resources/hopnbop.mid)
 * Other files
 
 License: CC-BY-SA 3.0
-Author: devnewton (devnewton@tuxfamily.org, http://newtonadv.tuxfamily.org/)
+Author: devnewton (devnewton@bci.im, http://newtonadv.tuxfamily.org/)

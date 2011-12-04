@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@tuxfamily.org>
+ * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'devnewton <devnewton@tuxfamily.org>' nor the names of
+ * * Neither the name of 'devnewton <devnewton@bci.im>' nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -36,7 +36,6 @@ import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.tuxfamily.newtonadv.game.FrameTimeInfos;
-import org.tuxfamily.newtonadv.game.LevelSequence;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,6 +44,7 @@ import java.util.Properties;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.tuxfamily.newtonadv.game.MainMenuSequence;
+import org.tuxfamily.newtonadv.game.QuestMenuSequence;
 import org.tuxfamily.newtonadv.game.QuestSequence;
 import org.tuxfamily.newtonadv.game.Sequence;
 import org.tuxfamily.newtonadv.game.Sequence.TransitionException;
@@ -109,41 +109,11 @@ public strictfp class Game {
         getSoundCache().clearAll();
     }
 
-    private List<QuestSequence> loadQuests() {
-        List<QuestSequence> quests = new ArrayList();
-        File dir = new File("data" + File.separator + "quests");
-        QuestSequence lastSequence = null;
-        File[] files = dir.listFiles();
-        java.util.Arrays.sort(files, new Comparator<File>() {
-
-            public int compare(File a, File b) {
-                return a.getName().compareTo(b.getName());
-            }
-        });
-        for (File f : files) {
-            if (f.isDirectory()) {
-                QuestSequence questSequence = new QuestSequence(this, f.getAbsolutePath());
-                quests.add(questSequence);
-                if (lastSequence != null) {
-                    lastSequence.setNextSequence(questSequence);
-                }
-                lastSequence = questSequence;
-            }
-        }
-        return quests;
-    }
-
     Sequence setupSequences() {
-        List<QuestSequence> questSequences = loadQuests();
-        if (questSequences.isEmpty()) {
-            Sys.alert("No quest", "data/quests contains no quest");
-            return null;
-        }
-        QuestSequence firstQuestSequence = questSequences.get(0);
         Sequence outroSequence = new StoryboardSequence(this, "data" + File.separator + "outro.jpg", "data" + File.separator + "The_End.mid", null);
-        mainMenuSequence = new MainMenuSequence(this, firstQuestSequence, outroSequence);
-        QuestSequence lastLevelSequence = questSequences.get(questSequences.size() - 1);
-        lastLevelSequence.setNextSequence(outroSequence);
+        QuestMenuSequence questMenuSequence = new QuestMenuSequence(this);
+        mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence);
+        questMenuSequence.setNextSequence(mainMenuSequence);
         return mainMenuSequence;
     }
 

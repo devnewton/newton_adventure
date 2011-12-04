@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@tuxfamily.org>
+ * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'devnewton <devnewton@tuxfamily.org>' nor the names of
+ * * Neither the name of 'devnewton <devnewton@bci.im>' nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -57,6 +57,7 @@ strictfp public class LevelSequence implements Sequence {
     private Sequence nextSequence;
     private Game game;
     private String levelPath;
+    private boolean cheatCodeGotoNextLevel = false;
 
     public LevelSequence(Game game, String levelPath) {
         this.game = game;
@@ -104,7 +105,7 @@ strictfp public class LevelSequence implements Sequence {
                 }
             }
             world.update();
-            if (world.areObjectivesCompleted()) {
+            if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
                 throw new TransitionException(nextSequence);
             }
         } catch (GameOverException ex) {
@@ -150,6 +151,10 @@ strictfp public class LevelSequence implements Sequence {
         }
         if (!heroIsMoving) {
             world.getHero().dontMove();
+        }
+
+        if(Keyboard.isKeyDown(Keyboard.KEY_F12)) {
+            cheatCodeGotoNextLevel = true;
         }
     }
 
