@@ -1,0 +1,32 @@
+  6____________________RRRRRRRRRRRRRRRRRRR____________________5 
+  @AAMMMM   MMM  MMMM R                                       ^ 
+  @                   R                                       ^ 
+  @                   R                                       ^ 
+  @  cCCCC c   C      R   A               R       A           ^ 
+  @CCCCCCCCCCC C    C R                   R                   ^ 
+  @CCC     CCC C  C C R                   R                   ^ 
+  @ C   HCCCC     CcC R                   3              RR   ^ 
+  @CCC  CCC      CC C RRRRRRRRRRRRR       R               R   ^ 
+  @  CCCCCCCCCCC CC C R                   RRRRRRRRR       R   ^ 
+  @  C       CC   C C R                   R            A  R   ^ 
+  @ CCCWWWW C  c  CCC R                   R               R   ^ 
+  @CCCC0000CC    CCCC R         A         3               R   ^ 
+  @CC CCCCCCCCCCCCC C 3                   3   RRRRRRRRR   R   ^ 
+  @CC CCCCC CCCCCCC C 3                   R               R   ^ 
+  @ C cCC c CCC  CC C R                   R          R    RR  ^ 
+  @ CCCC  CCC    C  CcR                   R RR       R        ^ 
+  @CC  C  CCCCC  Cc C R                   R          RRRRR    ^ 
+  @CCc C      CC  C C R       RRRRRRRRRRRRR                   ^ 
+  @CC  C     ACCAAC C R                   R                   ^ 
+  @ C CC     WWWWWCCC R                   3                   ^ 
+  @ CCC   CCQ00000PCC R                A  3                   ^ 
+  @  CAW CC CMMMMM  C R                   R                   ^ 
+  @ C Q0PC   CCC    CC3                   R                   ^ 
+  @ C  Mc  CC      CCC3                   R                   ^ 
+  @ CC CC  CCC  c  CC R                   R         WWWW      ^ 
+  @  C  C       CCC C R                   3        Q3333P     ^ 
+  @  C  C   c   CC CC R                   3       CCMMMMCC    ^ 
+  @ CCc CCCC    CC C                      R       CCCCCCCC    ^ 
+  @ CC CCCCCCCCCCCCC                      R       CCCCCCCC    ^ 
+  @cAACC                                  RAA WWWWWW K  WWWWWW^ 
+  211111111111111111111RRRRRRRRRRRRRRRRRRR111111111111111111114 
