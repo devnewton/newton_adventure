@@ -45,7 +45,7 @@ public class SoundCache {
 
     public void stopMusic() {
         currentSequenceName = null;
-        if (sequencer.isOpen()) {
+        if (null != sequencer && sequencer.isOpen()) {
             if (sequencer.isRunning()) {
                 sequencer.stop();
             }

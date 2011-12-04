@@ -45,6 +45,7 @@ import java.util.Properties;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.tuxfamily.newtonadv.game.MainMenuSequence;
+import org.tuxfamily.newtonadv.game.QuestSequence;
 import org.tuxfamily.newtonadv.game.Sequence;
 import org.tuxfamily.newtonadv.game.Sequence.TransitionException;
 import org.tuxfamily.newtonadv.game.StoryboardSequence;
@@ -108,10 +109,10 @@ public strictfp class Game {
         getSoundCache().clearAll();
     }
 
-    List<LevelSequence> loadLevels() {
-        ArrayList<LevelSequence> levels = new ArrayList();
-        File dir = new File("data/levels");
-        LevelSequence lastSequence = null;
+    private List<QuestSequence> loadQuests() {
+        List<QuestSequence> quests = new ArrayList();
+        File dir = new File("data" + File.separator + "quests");
+        QuestSequence lastSequence = null;
         File[] files = dir.listFiles();
         java.util.Arrays.sort(files, new Comparator<File>() {
 
@@ -121,27 +122,27 @@ public strictfp class Game {
         });
         for (File f : files) {
             if (f.isDirectory()) {
-                LevelSequence levelSequence = new LevelSequence(this, f.getAbsolutePath());
-                levels.add(levelSequence);
+                QuestSequence questSequence = new QuestSequence(this, f.getAbsolutePath());
+                quests.add(questSequence);
                 if (lastSequence != null) {
-                    lastSequence.setNextSequence(levelSequence);
+                    lastSequence.setNextSequence(questSequence);
                 }
-                lastSequence = levelSequence;
+                lastSequence = questSequence;
             }
         }
-        return levels;
+        return quests;
     }
 
     Sequence setupSequences() {
-        List<LevelSequence> levelSequences = loadLevels();
-        if (levelSequences.isEmpty()) {
-            Sys.alert("No level", "data/levels contains no level");
+        List<QuestSequence> questSequences = loadQuests();
+        if (questSequences.isEmpty()) {
+            Sys.alert("No quest", "data/quests contains no quest");
             return null;
         }
-        LevelSequence firstLevelSequence = levelSequences.get(0);
-        Sequence outroSequence = new StoryboardSequence(this, "data/outro.jpg", "data/The_End.mid", null);
-        mainMenuSequence = new MainMenuSequence(this, firstLevelSequence, outroSequence);
-        LevelSequence lastLevelSequence = levelSequences.get(levelSequences.size() - 1);
+        QuestSequence firstQuestSequence = questSequences.get(0);
+        Sequence outroSequence = new StoryboardSequence(this, "data" + File.separator + "outro.jpg", "data" + File.separator + "The_End.mid", null);
+        mainMenuSequence = new MainMenuSequence(this, firstQuestSequence, outroSequence);
+        QuestSequence lastLevelSequence = questSequences.get(questSequences.size() - 1);
         lastLevelSequence.setNextSequence(outroSequence);
         return mainMenuSequence;
     }
