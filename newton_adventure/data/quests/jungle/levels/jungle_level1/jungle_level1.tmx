@@ -13,7 +13,7 @@
   <property name="newton_adventure.hero" value="hero.gif"/>
   <property name="newton_adventure.key" value="key.png"/>
   <property name="newton_adventure.mobilePikes" value="mobile_pikes.png"/>
-  <property name="newton_adventure.mummy" value="mummy.gif"/>
+  <property name="newton_adventure.mummy" value="toad.gif"/>
  </properties>
  <tileset name="newton_adventure_jungle" firstgid="1">
   <tile id="0">

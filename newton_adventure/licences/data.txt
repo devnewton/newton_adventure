@@ -43,6 +43,11 @@ Author: Net4TV (http://www.net4tv.com/net4TV/music/resources/hopnbop.mid)
 License: CC-BY-SA 3.0
 Author: Harlad
 
+* toad.gif
+
+Author: Redshrike (Stephen Challener) ( http://opengameart.org/content/a-load-of-overworld-34-rpg-sprites ) 
+License: CC-BY 3.0
+
 * Other files
 
 License: CC-BY-SA 3.0
