@@ -1,0 +1,48 @@
+333333333333333333333333333333333333333333333333
+3                                           C K3
+3                                           CCC3
+3                         x           x        3
+3         x                                    3
+3  A              x              x             3
+3  A                                           3
+3                                              3
+3    0000000000000000000000000000000000000     3
+3           b        b      b      b    A0     3
+3                                        0     3
+3    0  CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  0     3
+3    0  C                             C  0     3
+3    0L C                             C  0     3
+3    0  C                             C J0     3
+3    0  C                             C  0     3
+3    0  C                             C  0 RR  3
+3    0  C                             C  0     3
+3R  R0L C                             C  0     3
+3    0  C        RR  RRRRRRRR         C  0     3
+3    0  C        R          R         C  0     3
+3    0  C        R          R         C  0     3
+3    0  C        R          R         C J0     3
+3    0  C        R          R         C  0  A  3
+3    0L C        R    HD    R         C  0  A  3
+3 AA 0  C        R    00    R         C  0     3
+3    0  C        R          R         C  0     3
+3    0  C        R          R         C  0     3
+3    0  C        R          R         C  0     3
+3    0  C        R          R         C  0     3
+3    0L C        RRRRRRRR   R         C  0     3
+3    0  C                             C J0     3
+3  RR0  C                             C  0     3
+3    0  C                             C  0     3
+3    0  C                             C  0     3
+3    0  C                             C  0R   R3
+3    0  C                             C J0     3
+3    0L C                             C  0     3
+3    0  C                             C  0     3
+3    0  CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  0     3
+3    0                                         3
+3    0A    B      B      B       B             3
+3    0000000000000000000000000000000000000     3
+3                  AA    MMMMMMMM              3
+3                  AA                          3
+3                  AA                          3
+3         WWWW                                 3
+333333333333333333333333333333333333333333333333
