@@ -32,6 +32,7 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
+import java.io.File;
 
 /**
  *
@@ -47,6 +48,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
         super(game);
         this.playSequence = playSeq;
         this.quitSequence = quitSeq;
+        this.helpSequence = new StoryboardSequence(game, "data" + File.separator + "help.jpg", null, this);
 
         setBackgroundImage("data/main_menu/home.png");
 
