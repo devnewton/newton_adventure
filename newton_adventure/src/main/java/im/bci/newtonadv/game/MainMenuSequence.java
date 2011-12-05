@@ -39,7 +39,7 @@ import im.bci.newtonadv.Game;
  */
 public strictfp class MainMenuSequence extends MenuSequence {
 
-    private Sequence playSequence, resumeSequence, optionsSequence, quitSequence;
+    private Sequence playSequence, resumeSequence, helpSequence, quitSequence;
     private final Button playButton;
     private final Button resumeButton;
 
@@ -76,19 +76,19 @@ public strictfp class MainMenuSequence extends MenuSequence {
         resumeButton.y = 441;
         addButton(resumeButton);
 
-        Button optionsButton = new Button() {
+        Button helpButton = new Button() {
 
             @Override
             void activate() throws TransitionException {
-                if (optionsSequence != null) {
-                    throw new Sequence.TransitionException(optionsSequence);
+                if (helpSequence != null) {
+                    throw new Sequence.TransitionException(helpSequence);
                 }
             }
         };
-        optionsButton.currentTexture = optionsButton.offTexture = "data/main_menu/bt-options-off.png";
-        optionsButton.onTexture = "data/main_menu/bt-options-on.png";
-        optionsButton.y = 558;
-        addButton(optionsButton);
+        helpButton.currentTexture = helpButton.offTexture = "data/main_menu/bt-help-off.png";
+        helpButton.onTexture = "data/main_menu/bt-help-on.png";
+        helpButton.y = 558;
+        addButton(helpButton);
 
         Button quitButton = new Button() {
 
