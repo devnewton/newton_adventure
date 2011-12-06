@@ -215,7 +215,7 @@ public class TextureCache {
         try {
             return ImageIO.read(new File(filename));
         } catch (Exception e) {
-            System.out.println("Impossible de charger " + filename);
+            System.out.println("Impossible de charger la texture " + filename);
             System.out.println("Erreur : " + e.getClass().getName() + " " + e.getMessage());
             System.exit(0);
             return null;
