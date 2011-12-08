@@ -12,7 +12,12 @@ Author: Christian Tietze (christian.tietze@googlemail.com, http://www.pixeljoint
 * sky_background.jpg
 
 License: CC-BY-SA 3.0
-Author: bart (http://opengameart.org/user/1)
+Author: Bart Kelsey (http://opengameart.org/user/1)
+
+* arctic_background.jpg
+
+License: CC-BY-SA 3.0
+Author: Delfos (aka Matías Poggini http://opengameart.org/users/delfos)
 
 * explosion.gif
 
