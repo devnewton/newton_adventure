@@ -345,21 +345,25 @@ public strictfp class World extends net.phys2d.raw.World {
                 UpRightHalfPlatform platform = new UpRightHalfPlatform();
                 platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
                 platform.setPosition(x * Platform.size, y * Platform.size);
+                platform.setFriction(levelInfo.getPlatformFriction(c));
                 add(platform);
             } else if (c == ')') {
                 UpLeftHalfPlatform platform = new UpLeftHalfPlatform();
                 platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
                 platform.setPosition(x * Platform.size, y * Platform.size);
+                platform.setFriction(levelInfo.getPlatformFriction(c));
                 add(platform);
             } else if (c == '\\') {
                 DownLeftHalfPlatform platform = new DownLeftHalfPlatform();
                 platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
                 platform.setPosition(x * Platform.size, y * Platform.size);
+                platform.setFriction(levelInfo.getPlatformFriction(c));
                 add(platform);
             } else if (c == '/') {
                 DownRightHalfPlatform platform = new DownRightHalfPlatform();
                 platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
                 platform.setPosition(x * Platform.size, y * Platform.size);
+                platform.setFriction(levelInfo.getPlatformFriction(c));
                 add(platform);
             } else if (c == 'S') {
                 EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
@@ -374,6 +378,7 @@ public strictfp class World extends net.phys2d.raw.World {
                 Platform platform = new Platform();
                 platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
                 platform.setPosition(x * Platform.size, y * Platform.size);
+                platform.setFriction(levelInfo.getPlatformFriction(c));
                 add(platform);
             }
         }
@@ -395,6 +400,7 @@ public strictfp class World extends net.phys2d.raw.World {
         private String doorClosedTexture;
         private File levelDir;
         private Map<String, String> textureByChar = new HashMap();
+        private Map<String, Float> frictionByChar = new HashMap();
         private Properties properties = new Properties();
         private String heroAnimation;
         private String appleTexture;
@@ -493,10 +499,37 @@ public strictfp class World extends net.phys2d.raw.World {
             for (Entry entry : properties.entrySet()) {
                 String key = (String) entry.getKey();
                 if (key.endsWith(".char")) {
+                    String c = properties.getProperty(key);
                     String textureFilename = properties.getProperty(key.replace(".char", ".texture.filename"));
-                    textureByChar.put(properties.getProperty(key), pathBase + textureFilename);
+                    textureByChar.put(c, pathBase + textureFilename);
                 }
             }
+        }
+
+        private void buildFrictionByChar() {
+            for (Entry entry : properties.entrySet()) {
+                String key = (String) entry.getKey();
+                if (key.endsWith(".char")) {
+                    String c = properties.getProperty(key);
+                    String friction = properties.getProperty(key.replace(".char", ".friction"));
+                    if(null != friction) {
+                        frictionByChar.put(c, Float.parseFloat(friction));
+                    }
+
+                }
+            }
+        }
+
+        private float getPlatformFriction(String key) {
+            Float f = frictionByChar.get(key);
+            if( f==null)
+                return 10.0f;
+            else
+                return f;
+        }
+
+        private float getPlatformFriction(char key) {
+            return getPlatformFriction( "" + key );
         }
     }
 
@@ -524,6 +557,7 @@ public strictfp class World extends net.phys2d.raw.World {
         }
         level.levelDir = levelDir;
         level.buildTextureNames();
+        level.buildFrictionByChar();
         return level;
     }
 

@@ -191,6 +191,11 @@ public class NewtonAdventureMapWriter implements MapWriter {
                 ImageIO.write(image, "png", new File(absoluteFilename));
                 levelProperties.setProperty(name + ".char", c);
                 levelProperties.setProperty(name + ".texture.filename", filename);
+
+                String friction = tile.getProperties().getProperty("newton_adventure.friction");
+                if (friction != null) {
+                    levelProperties.setProperty(name + ".friction", friction);
+                }
             }
         }
     }
