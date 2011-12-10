@@ -200,8 +200,8 @@ strictfp public class LevelSequence implements Sequence {
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight(), -1, 1);
-        GL11.glTranslatef(0, Display.getDisplayMode().getHeight() - 64, 0);
+        GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
+        GL11.glTranslatef(0, Display.getHeight() - 64, 0);
         String nbAppleStr = "" + world.getHero().getNbApple();
         appleFont.drawString(nbAppleStr);
         int iconWidth = appleFont.getWidth("O");

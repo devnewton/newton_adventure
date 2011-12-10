@@ -113,8 +113,10 @@ public strictfp class GameView {
         try {
             if( chosenMode.getWidth() >= Display.getDesktopDisplayMode().getWidth() || chosenMode.getHeight() >= Display.getDesktopDisplayMode().getHeight())
                 Display.setDisplayModeAndFullscreen(chosenMode);
-            else
+            else {
                 Display.setDisplayMode(chosenMode);
+            }
+            Display.setResizable(true);
             Display.setTitle("Newton adventure");
             Display.create();
             Display.setVSyncEnabled(true);
@@ -141,6 +143,9 @@ public strictfp class GameView {
     }
 
     void draw(Sequence sequence ) {
+        if( Display.isDirty() ||  Display.wasResized()) {
+            GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+        }
         sequence.draw();
 
         // now tell the screen to update
@@ -162,8 +167,8 @@ public strictfp class GameView {
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight(), -1, 1);
-        GL11.glTranslatef(Display.getDisplayMode().getWidth() - fpsFont.getWidth(fps), Display.getDisplayMode().getHeight() - 64, 0);
+        GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
+        GL11.glTranslatef(Display.getWidth() - fpsFont.getWidth(fps), Display.getHeight() - 64, 0);
         fpsFont.drawString(fps);
         GL11.glPopMatrix();
         GL11.glPopAttrib();

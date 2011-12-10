@@ -66,7 +66,7 @@ public abstract class MenuSequence implements Sequence {
 
     @Override
     public void draw() {
-        if (Display.isDirty() || redraw) {
+        if (Display.isDirty() || Display.wasResized() || redraw) {
             redraw = false;
             GL11.glPushMatrix();
             GLU.gluOrtho2D(MainMenuSequence.ortho2DLeft, MainMenuSequence.ortho2DRight, MainMenuSequence.ortho2DBottom, MainMenuSequence.ortho2DTop);

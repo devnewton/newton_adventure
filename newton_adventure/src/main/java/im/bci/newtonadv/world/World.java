@@ -604,7 +604,7 @@ public strictfp class World extends net.phys2d.raw.World {
     public void draw() {
         GL11.glPushMatrix();
 
-        aspectRatio = (float) Display.getDisplayMode().getWidth() / (float) Display.getDisplayMode().getHeight();
+        aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
         GLU.gluOrtho2D(ortho2DLeft * aspectRatio, ortho2DRight * aspectRatio, ortho2DBottom, ortho2DTop);
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
