@@ -4,7 +4,7 @@
  <properties>
   <property name="newton_adventure.apple" value="apple.png"/>
   <property name="newton_adventure.axe" value="axe.png"/>
-  <property name="newton_adventure.background" value="pyramid_background.jpg"/>
+  <property name="newton_adventure.background" value="sky_background.jpg"/>
   <property name="newton_adventure.bat" value="bat.gif"/>
   <property name="newton_adventure.door" value="door.png"/>
   <property name="newton_adventure.door_open" value="door_open.png"/>
