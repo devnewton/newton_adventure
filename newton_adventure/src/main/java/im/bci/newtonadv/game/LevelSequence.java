@@ -67,6 +67,7 @@ strictfp public class LevelSequence implements Sequence {
     @Override
     public void start() {
         try {
+            cheatCodeGotoNextLevel = false;
             appleFont = new TrueTypeFont();
             world = new World(game);
             frameTimeInfos = game.getFrameTimeInfos();
@@ -121,31 +122,31 @@ strictfp public class LevelSequence implements Sequence {
         }
 
         float stepRate = 1.0f;//frameTimeInfos.elapsedTime / (1000000000.0f / Game.FPSf);
-        if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
+        if (Keyboard.isKeyDown(game.getKeyRotateClockwise())) {
             world.progressiveRotateGravity(0.05f * stepRate);
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
+        if (Keyboard.isKeyDown(game.getKeyRotateCounterClockwise())) {
             world.progressiveRotateGravity(-0.05f * stepRate);
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+        if (Keyboard.isKeyDown(game.getKeyRotate90Clockwise())) {
             world.rotateGravity((float) (Math.PI / 4.0));
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+        if (Keyboard.isKeyDown(game.getKeyRotate90CounterClockwise())) {
             world.rotateGravity((float) (-Math.PI / 4.0));
         }
 
         boolean heroIsMoving = false;
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+        if (Keyboard.isKeyDown(game.getKeyLeft())) {
             world.getHero().moveLeft(stepRate);
             heroIsMoving = true;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+        if (Keyboard.isKeyDown(game.getKeyRight())) {
             world.getHero().moveRight(stepRate);
             heroIsMoving = true;
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+        if (Keyboard.isKeyDown(game.getKeyJump())) {
             world.getHero().jump(stepRate);
             heroIsMoving = true;
         }

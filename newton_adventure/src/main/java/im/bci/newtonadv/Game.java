@@ -37,15 +37,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Properties;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.QuestMenuSequence;
-import im.bci.newtonadv.game.QuestSequence;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.game.StoryboardSequence;
@@ -66,6 +61,56 @@ public strictfp class Game {
     private Properties config = new Properties();
     private SoundCache soundCache = null;
     private MainMenuSequence mainMenuSequence;
+    private int keyJump;
+    private int keyLeft;
+    private int keyRight;
+    private int keyRotateClockwise;
+    private int keyRotateCounterClockwise;
+    private int keyRotate90Clockwise;
+    private int keyRotate90CounterClockwise;
+    private int keyToggleFullscreen;
+    private int keyPause;
+    private int keyReturnToMenu;
+
+    public int getKeyJump() {
+        return keyJump;
+    }
+
+    public int getKeyLeft() {
+        return keyLeft;
+    }
+
+    public int getKeyPause() {
+        return keyPause;
+    }
+
+    public int getKeyReturnToMenu() {
+        return keyReturnToMenu;
+    }
+
+    public int getKeyRight() {
+        return keyRight;
+    }
+
+    public int getKeyRotate90Clockwise() {
+        return keyRotate90Clockwise;
+    }
+
+    public int getKeyRotate90CounterClockwise() {
+        return keyRotate90CounterClockwise;
+    }
+
+    public int getKeyRotateClockwise() {
+        return keyRotateClockwise;
+    }
+
+    public int getKeyRotateCounterClockwise() {
+        return keyRotateCounterClockwise;
+    }
+
+    public int getKeyToggleFullscreen() {
+        return keyToggleFullscreen;
+    }
 
     public Properties getConfig() {
         return config;
@@ -83,12 +128,23 @@ public strictfp class Game {
         return soundCache;
     }
 
-    Game() {
+    Game() throws Exception {
         try {
             config.setProperty("view.width", Integer.toString(DEFAULT_SCREEN_WIDTH));
             config.setProperty("view.height", Integer.toString(DEFAULT_SCREEN_HEIGHT));
             config.setProperty("view.quality", "NICEST");
             config.setProperty("sound.enabled", "true");
+            config.setProperty("key.jump", "KEY_UP");
+            config.setProperty("key.left", "KEY_LEFT");
+            config.setProperty("key.right", "KEY_RIGHT");
+            config.setProperty("key.rotate_clockwise", "KEY_C");
+            config.setProperty("key.rotate_counter_clockwise", "KEY_X");
+            config.setProperty("key.rotate_90_clockwise", "KEY_S");
+            config.setProperty("key.rotate_90_counter_clockwise", "KEY_D");
+            config.setProperty("key.toggle_fullscreen", "KEY_F");
+            config.setProperty("key.pause", "KEY_PAUSE");
+            config.setProperty("key.return_to_menu", "KEY_ESCAPE");
+
             FileInputStream f = new FileInputStream("data/config.properties");
             try {
                 config.load(f);
@@ -101,6 +157,7 @@ public strictfp class Game {
 
         this.soundCache = new SoundCache(config.getProperty("sound.enabled").equals("true"));
         this.view = new GameView(this);
+        setupKeys();
     }
 
     void stopGame() {
@@ -162,20 +219,46 @@ public strictfp class Game {
     private boolean bShowMainMenu = false;
 
     private void processInputs(Sequence currentSequence) throws TransitionException {
-        if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+        if (Keyboard.isKeyDown(getKeyReturnToMenu())) {
             bShowMainMenu = true;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+        if (Keyboard.isKeyDown(getKeyToggleFullscreen())) {
             bToggleFullscreen = true;
         } else if (bToggleFullscreen) {
             bToggleFullscreen = false;
             view.toggleFullscreen();
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_PAUSE)) {
+        if (Keyboard.isKeyDown(getKeyPause())) {
             bTogglePause = true;
         } else if (bTogglePause) {
             bTogglePause = false;
             frameTimeInfos.togglePause();
         }
+    }
+
+    int getKeyCode(String propertyName) throws Exception {
+        String lwjglName = config.getProperty(propertyName);
+        int code = Keyboard.getKeyIndex(lwjglName);
+        if (Keyboard.KEY_NONE == code) {
+            try {
+                code = Keyboard.class.getDeclaredField(lwjglName).getInt(null);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException("Unknow key : " + propertyName);
+            }
+        }
+        return code;
+    }
+
+    private void setupKeys() throws Exception {
+        keyJump = getKeyCode("key.jump");
+        keyLeft = getKeyCode("key.left");
+        keyRight = getKeyCode("key.right");
+        keyRotateClockwise = getKeyCode("key.rotate_clockwise");
+        keyRotateCounterClockwise = getKeyCode("key.rotate_counter_clockwise");
+        keyRotate90Clockwise = getKeyCode("key.rotate_90_clockwise");
+        keyRotate90CounterClockwise = getKeyCode("key.rotate_90_counter_clockwise");
+        keyToggleFullscreen = getKeyCode("key.toggle_fullscreen");
+        keyPause = getKeyCode("key.pause");
+        keyReturnToMenu = getKeyCode("key.return_to_menu");
     }
 }

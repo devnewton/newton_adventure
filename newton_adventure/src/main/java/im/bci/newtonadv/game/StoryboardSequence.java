@@ -59,7 +59,7 @@ public class StoryboardSequence implements Sequence {
 
     @Override
     public void draw() {
-        if (Display.isDirty() || redraw) {
+        if (Display.isVisible() || Display.wasResized() || Display.isDirty() || redraw) {
             redraw = false;
 
             GL11.glPushMatrix();
@@ -88,7 +88,7 @@ public class StoryboardSequence implements Sequence {
     public void update() throws TransitionException {
         //NOTHING
     }
-    private boolean mustQuit = false;
+    private boolean mustQuit;
 
     @Override
     public void processInputs() throws TransitionException {
@@ -104,6 +104,7 @@ public class StoryboardSequence implements Sequence {
             game.getSoundCache().playMusicIfEnabled(music);
         }
         redraw = true;
+        mustQuit = false;
     }
 
     public void stop() {

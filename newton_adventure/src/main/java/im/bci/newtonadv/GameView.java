@@ -143,7 +143,7 @@ public strictfp class GameView {
     }
 
     void draw(Sequence sequence ) {
-        if( Display.isDirty() ||  Display.wasResized()) {
+        if( Display.isVisible() || Display.isDirty() ||  Display.wasResized()) {
             GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
         }
         sequence.draw();

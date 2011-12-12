@@ -63,7 +63,7 @@ public class Main {
         System.setProperty("org.lwjgl.librarypath", (new File( "native" + File.separator + osDir )).getAbsolutePath() );
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, Exception {
 
         setupLibraryPath();
         
