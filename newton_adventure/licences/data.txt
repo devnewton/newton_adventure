@@ -53,6 +53,17 @@ Author: Harlad
 Author: Redshrike (Stephen Challener) ( http://opengameart.org/content/a-load-of-overworld-34-rpg-sprites ) 
 License: CC-BY 3.0
 
+* vatican quest tiles
+
+Author: surt (Carl Olsson) (http://opengameart.org/content/classical-ruin-tiles)
+License: CC-BY-SA 3.0
+
+* vatican quest bt-quest-off.jpg  bt-quest-on.jpg  completed.jpg illustration
+
+Original photo author: xiquinhosilva ( http://www.flickr.com/photos/xiquinho/ )
+Artistic filters author: devnewton@bci.im
+License: CC-BY
+
 * Other files
 
 License: CC-BY-SA 3.0
