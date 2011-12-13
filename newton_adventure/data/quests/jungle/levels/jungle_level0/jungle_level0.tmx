@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
-<map version="1.0" orientation="orthogonal" width="24" height="24" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="25" height="24" tilewidth="32" tileheight="32">
  <properties>
   <property name="newton_adventure.apple" value="apple.png"/>
   <property name="newton_adventure.axe" value="axe.png"/>
@@ -429,8 +429,9 @@
    </image>
   </tile>
  </tileset>
- <layer name="level" width="24" height="24">
+ <layer name="level" width="25" height="24">
   <data>
+   <tile gid="0"/>
    <tile gid="23"/>
    <tile gid="23"/>
    <tile gid="23"/>
@@ -455,6 +456,7 @@
    <tile gid="23"/>
    <tile gid="23"/>
    <tile gid="23"/>
+   <tile gid="0"/>
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -479,6 +481,7 @@
    <tile gid="8"/>
    <tile gid="8"/>
    <tile gid="23"/>
+   <tile gid="0"/>
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="5"/>
@@ -503,6 +506,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="23"/>
+   <tile gid="17"/>
    <tile gid="24"/>
    <tile gid="24"/>
    <tile gid="24"/>
@@ -527,6 +531,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="23"/>
+   <tile gid="37"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -551,6 +556,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="23"/>
+   <tile gid="37"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -575,6 +581,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="23"/>
+   <tile gid="37"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -599,6 +606,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="23"/>
+   <tile gid="37"/>
    <tile gid="29"/>
    <tile gid="36"/>
    <tile gid="36"/>
@@ -623,6 +631,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="23"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -647,6 +656,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="23"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="4"/>
@@ -671,6 +681,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="23"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="6"/>
    <tile gid="6"/>
@@ -695,6 +706,7 @@
    <tile gid="23"/>
    <tile gid="23"/>
    <tile gid="23"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -719,6 +731,7 @@
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -743,6 +756,7 @@
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -767,6 +781,7 @@
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -791,6 +806,7 @@
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -815,6 +831,7 @@
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -839,6 +856,7 @@
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -863,6 +881,7 @@
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -887,6 +906,7 @@
    <tile gid="23"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -911,6 +931,7 @@
    <tile gid="23"/>
    <tile gid="23"/>
    <tile gid="0"/>
+   <tile gid="37"/>
    <tile gid="38"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -935,6 +956,7 @@
    <tile gid="9"/>
    <tile gid="23"/>
    <tile gid="0"/>
+   <tile gid="20"/>
    <tile gid="38"/>
    <tile gid="7"/>
    <tile gid="0"/>
@@ -959,6 +981,7 @@
    <tile gid="9"/>
    <tile gid="23"/>
    <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="23"/>
    <tile gid="23"/>
    <tile gid="23"/>
@@ -982,6 +1005,7 @@
    <tile gid="23"/>
    <tile gid="23"/>
    <tile gid="23"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
