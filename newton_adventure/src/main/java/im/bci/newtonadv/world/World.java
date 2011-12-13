@@ -375,33 +375,30 @@ public strictfp class World extends net.phys2d.raw.World {
                 platform.setPosition(x * Platform.size, y * Platform.size);
                 add(platform);
             } else if (c == 'v') {
-                Activator activator = new Activator(this,1);
-                activator.setTexture(textureCache.getTexture(levelInfo.getActivator1Texture()));
+                Activator activator = new Activator(this,1,textureCache.getTexture(levelInfo.getActivator1OnTexture()), textureCache.getTexture(levelInfo.getActivator1OffTexture()));
                 activator.setPosition(x * Platform.size, y * Platform.size);
                 add(activator);
             } else if (c == 'y') {
-                Activator activator = new Activator(this,2);
-                activator.setTexture(textureCache.getTexture(levelInfo.getActivator2Texture()));
+                Activator activator = new Activator(this,2,textureCache.getTexture(levelInfo.getActivator2OnTexture()), textureCache.getTexture(levelInfo.getActivator2OffTexture()));
                 activator.setPosition(x * Platform.size, y * Platform.size);
                 add(activator);
             } else if (c == 'z') {
-                Activator activator = new Activator(this,3);
-                activator.setTexture(textureCache.getTexture(levelInfo.getActivator3Texture()));
+                Activator activator = new Activator(this,3,textureCache.getTexture(levelInfo.getActivator3OnTexture()), textureCache.getTexture(levelInfo.getActivator3OffTexture()));
                 activator.setPosition(x * Platform.size, y * Platform.size);
                 add(activator);
             } else if (c == 'V') {
-                Activable activable = new Activable(this,1);
-                activable.setTexture(textureCache.getTexture(levelInfo.getActivator1Texture()));
+                Blocker activable = new Blocker(this,1);
+                activable.setTexture(textureCache.getTexture(levelInfo.getBlocker1Texture()));
                 activable.setPosition(x * Platform.size, y * Platform.size);
                 add(activable);
             } else if (c == 'Y') {
-                Activable activable = new Activable(this,2);
-                activable.setTexture(textureCache.getTexture(levelInfo.getActivator2Texture()));
+                Blocker activable = new Blocker(this,2);
+                activable.setTexture(textureCache.getTexture(levelInfo.getBlocker2Texture()));
                 activable.setPosition(x * Platform.size, y * Platform.size);
                 add(activable);
             } else if (c == 'Z') {
-                Activable activable = new Activable(this,3);
-                activable.setTexture(textureCache.getTexture(levelInfo.getActivator3Texture()));
+                Blocker activable = new Blocker(this,3);
+                activable.setTexture(textureCache.getTexture(levelInfo.getBlocker3Texture()));
                 activable.setPosition(x * Platform.size, y * Platform.size);
                 add(activable);
             }else {
@@ -435,10 +432,28 @@ public strictfp class World extends net.phys2d.raw.World {
         private String heroAnimation;
         private String appleTexture;
         private String keyTexture;
-        private String activator1Texture;
-        private String activator2Texture;
-        private String activator3Texture;
+        private String activator1OnTexture;
+        private String activator2OnTexture;
+        private String activator3OnTexture;
+        private String activator1OffTexture;
+        private String activator2OffTexture;
+        private String activator3OffTexture;
+        private String blocker1Texture;
+        private String blocker2Texture;
+        private String blocker3Texture;
         private String musicFile = null;
+
+        public String getBlocker1Texture() {
+            return blocker1Texture;
+        }
+
+        public String getBlocker2Texture() {
+            return blocker2Texture;
+        }
+
+        public String getBlocker3Texture() {
+            return blocker3Texture;
+        }
 
         public String getMusicFile() {
             return musicFile;
@@ -492,28 +507,28 @@ public strictfp class World extends net.phys2d.raw.World {
             return appleTexture;
         }
 
-        String getActivator1Texture() {
-            return activator1Texture;
+        String getActivator1OnTexture() {
+            return activator1OnTexture;
         }
 
-        String getActivator2Texture() {
-            return activator2Texture;
+        String getActivator2OnTexture() {
+            return activator2OnTexture;
         }
 
-        String getActivator3Texture() {
-            return activator3Texture;
+        String getActivator3OnTexture() {
+            return activator3OnTexture;
         }
 
         String getBackgroundTexture() {
-            return buildTextureName(levelDir.getAbsolutePath() + File.separator, "newton_adventure.background");
+            return buildTextureName(levelDir.getAbsolutePath() + File.separator, "newton_adventure.background","sky_background.jpg");
         }
 
         String getLevelMap() {
             return levelDir.getAbsolutePath() + File.separator + properties.getProperty("newton_adventure.map");
         }
 
-        private String buildTextureName(String levelPathBase, String propertyName) {
-            String imageFilename = properties.getProperty(propertyName);
+        private String buildTextureName(String levelPathBase, String propertyName,String defaultName) {
+            String imageFilename = properties.getProperty(propertyName,defaultName);
             String path = levelPathBase + imageFilename;
             if ((new File(path)).exists()) {
                 return path;
@@ -522,24 +537,42 @@ public strictfp class World extends net.phys2d.raw.World {
             }
         }
 
+        public String getActivator1OffTexture() {
+            return activator1OffTexture;
+        }
+
+        public String getActivator2OffTexture() {
+            return activator2OffTexture;
+        }
+
+        public String getActivator3OffTexture() {
+            return activator3OffTexture;
+        }
+
         private void buildTextureNames() {
             final String pathBase = levelDir.getAbsolutePath() + File.separator;
-            mummyAnimation = buildTextureName(pathBase, "newton_adventure.mummy");
-            batAnimation = buildTextureName(pathBase, "newton_adventure.bat");
-            explosionAnimation = buildTextureName(pathBase, "newton_adventure.explosion");
-            fireBallTexture = buildTextureName(pathBase, "newton_adventure.fireball");
-            axeTexture = buildTextureName(pathBase, "newton_adventure.axe");
-            mobilePikesTexture = buildTextureName(pathBase, "newton_adventure.mobilePikes");
-            doorClosedTexture = buildTextureName(pathBase, "newton_adventure.door");
-            doorOpenTexture = buildTextureName(pathBase, "newton_adventure.door_open");
-            keyTexture = buildTextureName(pathBase, "newton_adventure.key");
-            heroAnimation = buildTextureName(pathBase, "newton_adventure.hero");
-            appleTexture = buildTextureName(pathBase, "newton_adventure.apple");
-            activator1Texture = buildTextureName(pathBase, "newton_adventure.activator1");
-            activator2Texture = buildTextureName(pathBase, "newton_adventure.activator2");
-            activator3Texture = buildTextureName(pathBase, "newton_adventure.activator3");
+            mummyAnimation = buildTextureName(pathBase, "newton_adventure.mummy","mummy.gif");
+            batAnimation = buildTextureName(pathBase, "newton_adventure.bat","bat.gif");
+            explosionAnimation = buildTextureName(pathBase, "newton_adventure.explosion","explosion.gif");
+            fireBallTexture = buildTextureName(pathBase, "newton_adventure.fireball","fireball.png");
+            axeTexture = buildTextureName(pathBase, "newton_adventure.axe","axe.png");
+            mobilePikesTexture = buildTextureName(pathBase, "newton_adventure.mobilePikes", "mobile_pikes.png");
+            doorClosedTexture = buildTextureName(pathBase, "newton_adventure.door","door.png");
+            doorOpenTexture = buildTextureName(pathBase, "newton_adventure.door_open","door_open.png");
+            keyTexture = buildTextureName(pathBase, "newton_adventure.key","key.png");
+            heroAnimation = buildTextureName(pathBase, "newton_adventure.hero","hero.gif");
+            appleTexture = buildTextureName(pathBase, "newton_adventure.apple","apple.png");
+            activator1OnTexture = buildTextureName(pathBase, "newton_adventure.activator1.on","actived1.png");
+            activator2OnTexture = buildTextureName(pathBase, "newton_adventure.activator2.on","actived2.png");
+            activator3OnTexture = buildTextureName(pathBase, "newton_adventure.activator3.on","actived3.png");
+            activator1OffTexture = buildTextureName(pathBase, "newton_adventure.activator1.off","activable1.png");
+            activator2OffTexture = buildTextureName(pathBase, "newton_adventure.activator2.off","activable2.png");
+            activator3OffTexture = buildTextureName(pathBase, "newton_adventure.activator3.off","activable3.png");
+            blocker1Texture = buildTextureName(pathBase, "newton_adventure.blocker1","blocker1.png");
+            blocker2Texture = buildTextureName(pathBase, "newton_adventure.blocker2","blocker2.png");
+            blocker3Texture = buildTextureName(pathBase, "newton_adventure.blocker3","blocker3.png");
             if (properties.getProperty("newton_adventure.music") != null) {
-                musicFile = buildTextureName(pathBase, "newton_adventure.music");
+                musicFile = buildTextureName(pathBase, "newton_adventure.music",null);
             } else {
                 musicFile = "data/hopnbop.mid";
             }

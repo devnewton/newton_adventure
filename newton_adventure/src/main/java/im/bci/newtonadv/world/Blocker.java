@@ -36,7 +36,7 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import org.lwjgl.opengl.GL11;
 
-class Activable extends Platform implements Updatable {
+class Blocker extends Platform implements Updatable {
     private final World world;
     private final int activableId;
 
@@ -45,7 +45,7 @@ class Activable extends Platform implements Updatable {
     private float alpha = 1.0f;
     private static final long disappearDuration = 1000000000L;
 
-    public Activable(World world, int activableId) {
+    public Blocker(World world, int activableId) {
         this.world = world;
         this.activableId = activableId;
     }

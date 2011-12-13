@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.Texture;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 
@@ -39,10 +40,13 @@ class Activator extends Platform {
     private final World world;
     private final int activableId;
     private boolean activated;
+    private final Texture onTexture;
 
-    Activator(World world, int activableId) {
+    Activator(World world, int activableId, Texture onTexture, Texture offTexture) {
         this.world = world;
         this.activableId = activableId;
+        this.setTexture(offTexture);
+        this.onTexture = onTexture;
     }
 
     @Override
@@ -55,10 +59,11 @@ class Activator extends Platform {
             BodyList bodies = world.getBodies();
             for (int i = 0; i < bodies.size(); ++i) {
                 Body b = bodies.get(i);
-                if (b instanceof Activable) {
-                    Activable a = (Activable) b;
+                if (b instanceof Blocker) {
+                    Blocker a = (Blocker) b;
                     if (a.getActivableId() == activableId) {
                         a.activate();
+                        this.setTexture(onTexture);
                     }
                 }
             }
