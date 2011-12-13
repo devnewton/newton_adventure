@@ -374,7 +374,37 @@ public strictfp class World extends net.phys2d.raw.World {
                 platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
                 platform.setPosition(x * Platform.size, y * Platform.size);
                 add(platform);
-            } else {
+            } else if (c == 'v') {
+                Activator activator = new Activator(this,1);
+                activator.setTexture(textureCache.getTexture(levelInfo.getActivator1Texture()));
+                activator.setPosition(x * Platform.size, y * Platform.size);
+                add(activator);
+            } else if (c == 'y') {
+                Activator activator = new Activator(this,2);
+                activator.setTexture(textureCache.getTexture(levelInfo.getActivator2Texture()));
+                activator.setPosition(x * Platform.size, y * Platform.size);
+                add(activator);
+            } else if (c == 'z') {
+                Activator activator = new Activator(this,3);
+                activator.setTexture(textureCache.getTexture(levelInfo.getActivator3Texture()));
+                activator.setPosition(x * Platform.size, y * Platform.size);
+                add(activator);
+            } else if (c == 'V') {
+                Activable activable = new Activable(this,1);
+                activable.setTexture(textureCache.getTexture(levelInfo.getActivator1Texture()));
+                activable.setPosition(x * Platform.size, y * Platform.size);
+                add(activable);
+            } else if (c == 'Y') {
+                Activable activable = new Activable(this,2);
+                activable.setTexture(textureCache.getTexture(levelInfo.getActivator2Texture()));
+                activable.setPosition(x * Platform.size, y * Platform.size);
+                add(activable);
+            } else if (c == 'Z') {
+                Activable activable = new Activable(this,3);
+                activable.setTexture(textureCache.getTexture(levelInfo.getActivator3Texture()));
+                activable.setPosition(x * Platform.size, y * Platform.size);
+                add(activable);
+            }else {
                 Platform platform = new Platform();
                 platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
                 platform.setPosition(x * Platform.size, y * Platform.size);
@@ -405,6 +435,9 @@ public strictfp class World extends net.phys2d.raw.World {
         private String heroAnimation;
         private String appleTexture;
         private String keyTexture;
+        private String activator1Texture;
+        private String activator2Texture;
+        private String activator3Texture;
         private String musicFile = null;
 
         public String getMusicFile() {
@@ -459,6 +492,18 @@ public strictfp class World extends net.phys2d.raw.World {
             return appleTexture;
         }
 
+        String getActivator1Texture() {
+            return activator1Texture;
+        }
+
+        String getActivator2Texture() {
+            return activator2Texture;
+        }
+
+        String getActivator3Texture() {
+            return activator3Texture;
+        }
+
         String getBackgroundTexture() {
             return buildTextureName(levelDir.getAbsolutePath() + File.separator, "newton_adventure.background");
         }
@@ -490,6 +535,9 @@ public strictfp class World extends net.phys2d.raw.World {
             keyTexture = buildTextureName(pathBase, "newton_adventure.key");
             heroAnimation = buildTextureName(pathBase, "newton_adventure.hero");
             appleTexture = buildTextureName(pathBase, "newton_adventure.apple");
+            activator1Texture = buildTextureName(pathBase, "newton_adventure.activator1");
+            activator2Texture = buildTextureName(pathBase, "newton_adventure.activator2");
+            activator3Texture = buildTextureName(pathBase, "newton_adventure.activator3");
             if (properties.getProperty("newton_adventure.music") != null) {
                 musicFile = buildTextureName(pathBase, "newton_adventure.music");
             } else {
