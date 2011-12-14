@@ -54,7 +54,7 @@ class Activator extends Platform {
         if (activated) {
             return;
         }
-        if (body instanceof Hero) {
+        if (body instanceof Hero || body instanceof Key) {
             activated = true;
             BodyList bodies = world.getBodies();
             for (int i = 0; i < bodies.size(); ++i) {
