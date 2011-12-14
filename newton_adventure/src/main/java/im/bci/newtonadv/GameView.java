@@ -53,7 +53,7 @@ public strictfp class GameView {
     private Game game;
     private TrueTypeFont fpsFont;
 
-    public GameView( Game game) {
+    public GameView(Game game) {
         this.game = game;
         initDisplay();
     }
@@ -66,33 +66,55 @@ public strictfp class GameView {
         }
     }
 
-    private DisplayMode findGoodDisplayMode(final int targetHeight, final int targetWidth) {
+    private DisplayMode findGoodDisplayMode(final int targetHeight, final int targetWidth, final int targetBpp) {
         try {
             DisplayMode[] modes = Display.getAvailableDisplayModes();
-            java.util.Arrays.sort(modes, new Comparator< DisplayMode >() {
+            java.util.Arrays.sort(modes, new Comparator<DisplayMode>() {
 
                 @Override
                 public int compare(DisplayMode a, DisplayMode b) {
-                   if( a.getWidth() == targetWidth && a.getHeight() == targetHeight )
-                       return -1;
-                   else if(b.getWidth() == targetWidth && b.getHeight() == targetHeight)
-                       return 1;
-                   else {
-                       Point pA = new Point(a.getWidth(), b.getHeight());
-                       Point pB = new Point(b.getWidth(), b.getHeight());
-                       Point pTarget = new Point(targetWidth, targetHeight);
-                       if( pA.distance(pTarget) < pB.distance(pTarget) )
-                           return -1;
-                       else
-                           return 1;
-                   }
+
+                    //test bpp
+                    if (a.getBitsPerPixel() >= targetBpp && b.getBitsPerPixel() < targetBpp) {
+                        return -1;
+                    }
+                    if (a.getBitsPerPixel() < targetBpp && b.getBitsPerPixel() >= targetBpp) {
+                        return 1;
+                    }
+
+                    //test resolution
+                    if (a.getWidth() == targetWidth && a.getHeight() == targetHeight) {
+                        return -1;
+                    } else if (b.getWidth() == targetWidth && b.getHeight() == targetHeight) {
+                        return 1;
+                    } else {
+                        Point pA = new Point(a.getWidth(), b.getHeight());
+                        Point pB = new Point(b.getWidth(), b.getHeight());
+                        Point pTarget = new Point(targetWidth, targetHeight);
+                        if (pA.distance(pTarget) < pB.distance(pTarget)) {
+                            return -1;
+                        } else if (pA.distance(pTarget) > pB.distance(pTarget)) {
+                            return 1;
+                        }
+                    }
+
+                    //test fullscreen capacity
+                    if (a.isFullscreenCapable() && !b.isFullscreenCapable()) {
+                        return -1;
+                    } else if (!a.isFullscreenCapable() && b.isFullscreenCapable()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+
                 }
             });
 
-            if( modes.length > 0 )
+            if (modes.length > 0) {
                 return modes[0];
-            else
+            } else {
                 return Display.getDesktopDisplayMode();
+            }
         } catch (LWJGLException e) {
             Sys.alert("Error", "Unable to determine display modes.");
         }
@@ -102,18 +124,19 @@ public strictfp class GameView {
     private void initDisplay() {
         int targetWidth = Integer.parseInt(game.getConfig().getProperty("view.width"));
         int targetHeight = Integer.parseInt(game.getConfig().getProperty("view.height"));
+        int targetBpp = Integer.parseInt(game.getConfig().getProperty("view.bpp",""+Display.getDesktopDisplayMode().getBitsPerPixel()));
         GameViewQuality quality = GameViewQuality.valueOf(game.getConfig().getProperty("view.quality"));
 
-        DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth);
+        DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth, targetBpp);
 
         if (chosenMode == null) {
             Sys.alert("Error", "Unable to find appropriate display mode.");
             System.exit(0);
         }
         try {
-            if( chosenMode.getWidth() >= Display.getDesktopDisplayMode().getWidth() || chosenMode.getHeight() >= Display.getDesktopDisplayMode().getHeight())
+            if (chosenMode.getWidth() >= Display.getDesktopDisplayMode().getWidth() || chosenMode.getHeight() >= Display.getDesktopDisplayMode().getHeight()) {
                 Display.setDisplayModeAndFullscreen(chosenMode);
-            else {
+            } else {
                 Display.setDisplayMode(chosenMode);
             }
             Display.setResizable(true);
@@ -135,15 +158,15 @@ public strictfp class GameView {
         GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
         GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, quality.toGL());
-        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);       
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        
+
         textureCache = new TextureCache();
         fpsFont = new TrueTypeFont();
     }
 
-    void draw(Sequence sequence ) {
-        if( Display.isVisible() || Display.isDirty() ||  Display.wasResized()) {
+    void draw(Sequence sequence) {
+        if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
             GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
         }
         sequence.draw();
