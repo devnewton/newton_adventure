@@ -415,6 +415,17 @@ public strictfp class World extends net.phys2d.raw.World {
         return gravityVector;
     }
 
+    public void cheatActivateAll() {
+            final BodyList allBodies = getBodies();
+            for (int i = 0; i < allBodies.size(); ++i) {
+                Body b = allBodies.get(i);
+                if (b instanceof Blocker) {
+                    Blocker a = (Blocker) b;
+                    a.activate();
+                }
+            }
+    }
+
     private class LevelInfo {
 
         private String mummyAnimation;

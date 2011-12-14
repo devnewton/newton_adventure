@@ -154,6 +154,9 @@ strictfp public class LevelSequence implements Sequence {
             world.getHero().dontMove();
         }
 
+        if(Keyboard.isKeyDown(Keyboard.KEY_F11)) {
+            world.cheatActivateAll();
+        }
         if(Keyboard.isKeyDown(Keyboard.KEY_F12)) {
             cheatCodeGotoNextLevel = true;
         }
