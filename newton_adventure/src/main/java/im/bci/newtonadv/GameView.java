@@ -121,6 +121,26 @@ public strictfp class GameView {
         return Display.getDesktopDisplayMode();
     }
 
+    String getDisplayModeInfos() {
+        try {
+            StringBuffer b = new StringBuffer();
+            b.append("Adapter : ");
+            b.append(Display.getAdapter());
+            b.append('\n');
+            b.append("Version : ");
+            b.append(Display.getVersion());
+            b.append('\n');
+            b.append("Available display modes:");
+            for (DisplayMode m : Display.getAvailableDisplayModes()) {
+                b.append(m);
+                b.append('\n');
+            }
+            return b.toString();
+        } catch (LWJGLException ex) {
+            return "Error cannot determine available display modes (" + ex + ")";
+        }
+    }
+
     private void initDisplay() {
         int targetWidth = Integer.parseInt(game.getConfig().getProperty("view.width"));
         int targetHeight = Integer.parseInt(game.getConfig().getProperty("view.height"));
@@ -129,9 +149,8 @@ public strictfp class GameView {
         GameViewQuality quality = GameViewQuality.valueOf(game.getConfig().getProperty("view.quality"));
 
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth, targetBpp);
-
         if (chosenMode == null) {
-            Sys.alert("Error", "Unable to find appropriate display mode.");
+            Sys.alert("Error", "Unable to find appropriate display mode. Try to edit data/config.properties.\n" + getDisplayModeInfos());
             System.exit(0);
         }
         try {
@@ -144,11 +163,10 @@ public strictfp class GameView {
             Display.setTitle("Newton adventure");
             Display.create();
             Display.setVSyncEnabled(true);
-            System.out.println("adapter : " + Display.getAdapter());
-            System.out.println("version : " + Display.getVersion());
         } catch (LWJGLException e) {
-            Sys.alert("error", "Unable to create display.");
+            Sys.alert("Error", e + "\nUnable to create display. Try to edit data/config.properties.\n" + getDisplayModeInfos());
             System.exit(0);
+
         }
 
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
