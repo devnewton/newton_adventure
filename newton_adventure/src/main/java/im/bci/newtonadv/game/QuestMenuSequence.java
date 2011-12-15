@@ -55,6 +55,7 @@ public class QuestMenuSequence extends MenuSequence {
 
     public QuestMenuSequence(Game game) {
         super(game);
+        verticalIncrement = QUEST_MINIATURE_BY_ROW;
         loadQuests();
     }
 

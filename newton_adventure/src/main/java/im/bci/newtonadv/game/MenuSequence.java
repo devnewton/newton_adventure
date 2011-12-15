@@ -52,7 +52,11 @@ public abstract class MenuSequence implements Sequence {
     private ArrayList<Button> buttons = new ArrayList<Button>();
     private int currentButtonIndex;
     private boolean redraw;
-    private boolean selectNextButton = false, selectPreviousButton = false, activateCurrentButton = false;
+    private boolean horizontalSelectNextButton = false, horizontalSelectPreviousButton = false;
+    private boolean verticalSelectNextButton = false, verticalSelectPreviousButton = false;
+    private boolean activateCurrentButton = false;
+    protected int horizontalIncrement = 1;
+    protected int verticalIncrement = 1;
     protected Game game;
     private String backgroundImage;
 
@@ -106,24 +110,48 @@ public abstract class MenuSequence implements Sequence {
 
     @Override
     public void processInputs() throws TransitionException {
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-            selectNextButton = true;
-        } else if (selectNextButton) {
-            selectNextButton = false;
+        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+            horizontalSelectNextButton = true;
+        } else if (horizontalSelectNextButton) {
+            horizontalSelectNextButton = false;
             buttons.get(currentButtonIndex).setOff();
-            ++currentButtonIndex;
+            currentButtonIndex += horizontalIncrement;
             if (currentButtonIndex >= buttons.size()) {
                 currentButtonIndex = 0;
             }
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-            selectPreviousButton = true;
-        } else if (selectPreviousButton) {
-            selectPreviousButton = false;
+        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+            horizontalSelectPreviousButton = true;
+        } else if (horizontalSelectPreviousButton) {
+            horizontalSelectPreviousButton = false;
             buttons.get(currentButtonIndex).setOff();
-            --currentButtonIndex;
+            currentButtonIndex -= horizontalIncrement;
+            if (currentButtonIndex < 0) {
+                currentButtonIndex = buttons.size() - 1;
+            }
+            buttons.get(currentButtonIndex).setOn();
+            redraw = true;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+            verticalSelectNextButton = true;
+        } else if (verticalSelectNextButton) {
+            verticalSelectNextButton = false;
+            buttons.get(currentButtonIndex).setOff();
+            currentButtonIndex += verticalIncrement;
+            if (currentButtonIndex >= buttons.size()) {
+                currentButtonIndex = 0;
+            }
+            buttons.get(currentButtonIndex).setOn();
+            redraw = true;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+            verticalSelectPreviousButton = true;
+        } else if (verticalSelectPreviousButton) {
+            verticalSelectPreviousButton = false;
+            buttons.get(currentButtonIndex).setOff();
+            currentButtonIndex -= verticalIncrement;
             if (currentButtonIndex < 0) {
                 currentButtonIndex = buttons.size() - 1;
             }
@@ -159,9 +187,9 @@ public abstract class MenuSequence implements Sequence {
     }
 
     protected void setCurrentButton(Button button) {
-        for(int i=0; i<buttons.size(); ++i) {
+        for (int i = 0; i < buttons.size(); ++i) {
             Button b = buttons.get(i);
-            if(b == button) {
+            if (b == button) {
                 currentButtonIndex = i;
                 b.setOn();
             } else {
