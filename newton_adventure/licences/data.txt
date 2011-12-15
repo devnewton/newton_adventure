@@ -53,7 +53,7 @@ Author: Harlad
 Author: Redshrike (Stephen Challener) ( http://opengameart.org/content/a-load-of-overworld-34-rpg-sprites ) 
 License: CC-BY 3.0
 
-* vatican quest tiles
+* most of vatican quest tiles
 
 Author: surt (Carl Olsson) (http://opengameart.org/content/classical-ruin-tiles)
 License: CC-BY-SA 3.0
