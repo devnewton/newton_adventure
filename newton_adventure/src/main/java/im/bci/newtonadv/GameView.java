@@ -125,6 +125,7 @@ public strictfp class GameView {
         int targetWidth = Integer.parseInt(game.getConfig().getProperty("view.width"));
         int targetHeight = Integer.parseInt(game.getConfig().getProperty("view.height"));
         int targetBpp = Integer.parseInt(game.getConfig().getProperty("view.bpp",""+Display.getDesktopDisplayMode().getBitsPerPixel()));
+        boolean startFullscreen = Boolean.parseBoolean(game.getConfig().getProperty("view.fullscreen", "false"));
         GameViewQuality quality = GameViewQuality.valueOf(game.getConfig().getProperty("view.quality"));
 
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth, targetBpp);
@@ -134,7 +135,7 @@ public strictfp class GameView {
             System.exit(0);
         }
         try {
-            if (chosenMode.getWidth() >= Display.getDesktopDisplayMode().getWidth() || chosenMode.getHeight() >= Display.getDesktopDisplayMode().getHeight()) {
+            if (startFullscreen) {
                 Display.setDisplayModeAndFullscreen(chosenMode);
             } else {
                 Display.setDisplayMode(chosenMode);
