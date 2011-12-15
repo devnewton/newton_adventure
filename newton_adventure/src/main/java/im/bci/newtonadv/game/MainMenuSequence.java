@@ -32,7 +32,11 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.game.special.occasion.SnowLayer;
+import im.bci.newtonadv.game.special.occasion.SpecialOccasionFactory;
+import im.bci.newtonadv.game.special.occasion.SpecialOccasionLayer;
 import java.io.File;
+import java.util.Calendar;
 
 /**
  *
@@ -43,9 +47,23 @@ public strictfp class MainMenuSequence extends MenuSequence {
     private Sequence playSequence, resumeSequence, helpSequence, quitSequence;
     private final Button playButton;
     private final Button resumeButton;
+    private final SpecialOccasionLayer specialOccasionLayer = SpecialOccasionFactory.createSpecialOccasionLayer();
+
+    @Override
+    public void draw() {
+        super.draw();
+        specialOccasionLayer.draw();
+    }
+
+    @Override
+    public void update() throws TransitionException {
+        super.update();
+        specialOccasionLayer.update();
+    }
 
     public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq) {
         super(game);
+
         this.playSequence = playSeq;
         this.quitSequence = quitSeq;
         this.helpSequence = new StoryboardSequence(game, "data" + File.separator + "help.jpg", null, this);
