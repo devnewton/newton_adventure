@@ -12,12 +12,7 @@ Newton Adventure is a free and open source 2D platform game. You play Newton, a 
 
 <h2>Faire un don</h2>
 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="K5MR7VMMMSNSS">
-<input type="image" src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - la solution de paiement en ligne la plus simple et la plus sécurisée !">
-<img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
-</form>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5MR7VMMMSNSS"><img src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donateCC_LG.gif" alt="Faire un don"></a>
 
 <h1>Captures d'écran</h1>
 <p><img src="screenshots/newton_adventure_1.0_a.png" /></p>
