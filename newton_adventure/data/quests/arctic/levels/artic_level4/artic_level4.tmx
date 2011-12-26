@@ -2,20 +2,17 @@
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="32" tileheight="32">
  <properties>
-  <property name="newton_adventure.apple" value="apple.png"/>
-  <property name="newton_adventure.axe" value="axe.png"/>
   <property name="newton_adventure.background" value="arctic_background.jpg"/>
-  <property name="newton_adventure.bat" value="bat.gif"/>
-  <property name="newton_adventure.door" value="door.png"/>
-  <property name="newton_adventure.door_open" value="door_open.png"/>
-  <property name="newton_adventure.explosion" value="explosion.gif"/>
-  <property name="newton_adventure.fireball" value="fireball.png"/>
-  <property name="newton_adventure.hero" value="hero.gif"/>
-  <property name="newton_adventure.key" value="key.png"/>
-  <property name="newton_adventure.mobilePikes" value="mobile_pikes.png"/>
   <property name="newton_adventure.mummy" value="toad.gif"/>
  </properties>
  <tileset name="newton_adventure_jungle" firstgid="1">
+   <tile id="0">
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMElEQVR42u3OIQEAAAgDMIIg6d+MDBDjZmJ+tT2XVAICAgICAgICAgICAgICAunAA67ysHk3oKLaAAAAAElFTkSuQmCC
+    </data>
+   </image>
+  </tile>
   <tile id="1">
    <properties>
     <property name="newton_adventure.char" value="H"/>
@@ -254,6 +251,20 @@
    <image format="png">
     <data encoding="base64">
      iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA/klEQVR42u2WwQrCMAyG9/5P4TP4CIJXGQxEUfEwPUwRQWQoHqIVUpq0a5f2sEsGuXT9Pv517bKq+l2zeQM5VcIi/xecuwf0rw8pM8bLHW92FyhhkbcB1ocrPPs3KTPGC8eX9QlKWORJAImIB5CyJIBZHj4pJdq3dyhhvQB8ckqEglwWH8AGkIrcADlscAUkIr4CUtYLIBWFVkDCeqfAFYwRuacghw0eQ4kIN1EuG/0OjBHxAFKWnAJXwkWhXTwUQMJGA4wRDQUYy5IA9baDxar1anO8kTIQ3sN3mMvaANqOtR1rO9Z2rO1Y27G248nbcUwSE6UCpFi7Caf+H/gCZAFbs+9HRHoAAAAASUVORK5CYII=
+    </data>
+   </image>
+  </tile>
+    <tile id="23">
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMElEQVR42u3OIQEAAAgDMIIg6d+MDBDjZmJ+tT2XVAICAgICAgICAgICAgICAunAA67ysHk3oKLaAAAAAElFTkSuQmCC
+    </data>
+   </image>
+  </tile>
+    <tile id="24">
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMElEQVR42u3OIQEAAAgDMIIg6d+MDBDjZmJ+tT2XVAICAgICAgICAgICAgICAunAA67ysHk3oKLaAAAAAElFTkSuQmCC
     </data>
    </image>
   </tile>

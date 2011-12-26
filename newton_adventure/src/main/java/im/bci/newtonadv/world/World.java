@@ -42,19 +42,13 @@ import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.util.AbsoluteAABox;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.ROVector2f;
@@ -64,8 +58,9 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
+import tiled.core.Tile;
+import tiled.io.TMXMapReader;
 
 /**
  *
@@ -95,6 +90,20 @@ public strictfp class World extends net.phys2d.raw.World {
     private Animation explosionAnimation;
     private Animation mummyAnimation;
     private Animation batAnimation;
+    private Texture keyTexture;
+    private Texture openDoorTexture;
+    private Texture closedDoorTexture;
+    private Texture mobilePikesTexture;
+    private Texture axeTexture;
+    private Texture activator1OnTexture;
+    private Texture activator2OnTexture;
+    private Texture activator3OnTexture;
+    private Texture activator1OffTexture;
+    private Texture activator2OffTexture;
+    private Texture activator3OffTexture;
+    private Texture blocker1Texture;
+    private Texture blocker2Texture;
+    private Texture blocker3Texture;
 
     public boolean areObjectivesCompleted() {
         return objectivesCompleted;
@@ -193,23 +202,110 @@ public strictfp class World extends net.phys2d.raw.World {
             super.step();
         }
     }
+    private static final Properties defaultMapProperties = new Properties();
 
-    public void loadLevel(String levelPath) throws IOException {
-        World.LevelInfo levelInfo = readLevelInfo(levelPath);
-        initLevelFromTextMap(levelInfo);
-        backgroundTexture = game.getView().getTextureCache().getTexture(levelInfo.getBackgroundTexture());
-        this.getHero().setAnimation(AnimationLoaders.loadFromGif(game.getView().getTextureCache(), levelInfo.getHeroAnimation()));
-        this.getHero().setJumpSound(game.getSoundCache().getSoundIfEnabled("data/jump.wav"));
-        if (levelInfo.getMusicFile() != null) {
-            game.getSoundCache().playMusicIfEnabled(levelInfo.getMusicFile());
+    static {
+        defaultMapProperties.put("newton_adventure.mummy", "mummy.gif");
+        defaultMapProperties.put("newton_adventure.bat", "bat.gif");
+        defaultMapProperties.put("newton_adventure.explosion", "explosion.gif");
+        defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
+        defaultMapProperties.put("newton_adventure.axe", "axe.png");
+        defaultMapProperties.put("newton_adventure.mobilePikes", "mobile_pikes.png");
+        defaultMapProperties.put("newton_adventure.door", "door.png");
+        defaultMapProperties.put("newton_adventure.door_open", "door_open.png");
+        defaultMapProperties.put("newton_adventure.key", "key.png");
+        defaultMapProperties.put("newton_adventure.hero", "hero.gif");
+        defaultMapProperties.put("newton_adventure.apple", "apple.png");
+        defaultMapProperties.put("newton_adventure.activator1.on", "actived1.png");
+        defaultMapProperties.put("newton_adventure.activator2.on", "actived2.png");
+        defaultMapProperties.put("newton_adventure.activator3.on", "actived3.png");
+        defaultMapProperties.put("newton_adventure.activator1.off", "activable1.png");
+        defaultMapProperties.put("newton_adventure.activator2.off", "activable2.png");
+        defaultMapProperties.put("newton_adventure.activator3.off", "activable3.png");
+        defaultMapProperties.put("newton_adventure.blocker1", "blocker1.png");
+        defaultMapProperties.put("newton_adventure.blocker2", "blocker2.png");
+        defaultMapProperties.put("newton_adventure.blocker3", "blocker3.png");
+    }
+
+    public String getFileFromMap(tiled.core.Map map, String filePropertyName) {
+        String filename = map.getProperties().getProperty(filePropertyName);
+        if (filename == null) {
+            filename = defaultMapProperties.getProperty(filePropertyName);
+            if (filename == null) {
+                throw new RuntimeException("error in tmx map file, cannot find property " + filePropertyName);
+            }
         }
+        String path = (new File(map.getFilename())).getParent() + File.separator + filename;
+        if ((new File(path)).exists()) {
+            return path;
+        } else {
+            return "data" + File.separator + "default_level_data" + File.separator + filename;
+        }
+    }
+
+    public void loadLevel(String levelPath) throws IOException, Exception {
+        
+         File levelDir = new File(levelPath);
+File[] tmxFiles = levelDir.listFiles(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".tmx");
+            }
+        });
+        if (tmxFiles.length == 0) {
+            throw new FileNotFoundException("cannot find *.tmx file in level path: " + levelPath);
+        }
+
+        TMXMapReader mapReader = new TMXMapReader();
+        tiled.core.Map map = mapReader.readMap(tmxFiles[0].getPath());
+
+        final TextureCache textureCache = game.getView().getTextureCache();
+        explosionAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.explosion"));
+        mummyAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.mummy"));
+        batAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.bat"));
+        appleIconTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.apple"));
+        fireBallTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.fireball"));
+        keyTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.key"));
+        closedDoorTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door"));
+        openDoorTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door_open"));
+        mobilePikesTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.mobilePikes"));
+        axeTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.axe"));
+        activator1OnTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator1.on"));
+        activator2OnTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator2.on"));
+        activator3OnTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator3.on"));
+        activator1OffTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator1.off"));
+        activator2OffTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator2.off"));
+        activator3OffTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator3.off"));
+        blocker1Texture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.blocker1"));
+        blocker2Texture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.blocker2"));
+        blocker3Texture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.blocker3"));
+
+        for (tiled.core.MapLayer layer : map.getLayers()) {
+            if (layer instanceof tiled.core.TileLayer) {
+                tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
+                for (int x = 0; x < tileLayer.getWidth(); ++x) {
+                    for (int y = 0; y < tileLayer.getHeight(); ++y) {
+                        Tile tile = tileLayer.getTileAt(x, y);
+                        if (null != tile) {
+                            initFromTile(x - map.getWidth() / 2.0f, -y + map.getHeight() / 2.0f, tile);
+                        }
+                    }
+                }
+            }
+        }
+        backgroundTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.background"));
+        this.getHero().setAnimation(AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.hero")));
+        this.getHero().setJumpSound(game.getSoundCache().getSoundIfEnabled("data/jump.wav"));
+        game.getSoundCache().playMusicIfEnabled("data/hopnbop.mid");
+
     }
 
     public float getGravityAngle() {
         return gravityAngle;
     }
 
-    public void progressiveRotateGravity(float angle) {
+    public final void progressiveRotateGravity(float angle) {
         gravityAngle += angle;
         Matrix2f rot = new Matrix2f(gravityAngle);
         this.gravityVector = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0, -gravityForce));
@@ -228,186 +324,176 @@ public strictfp class World extends net.phys2d.raw.World {
         return gravityForce;
     }
 
-    private void initLevelFromTextMap(LevelInfo levelInfo) throws IOException {
-        final TextureCache textureCache = game.getView().getTextureCache();
-        explosionAnimation = AnimationLoaders.loadFromGif(textureCache, levelInfo.getExplosionAnimation());
-        mummyAnimation = AnimationLoaders.loadFromGif(textureCache, levelInfo.getMummyAnimation());
-        batAnimation = AnimationLoaders.loadFromGif(textureCache, levelInfo.getBatAnimation());
-        appleIconTexture = textureCache.getTexture(levelInfo.getAppleTexture());
-        fireBallTexture = textureCache.getTexture(levelInfo.getFireBallTexture());
-        LevelTextMap levelTextMap = readLevelMap(levelInfo.getLevelMap());
-        for (Map.Entry<Point, Character> entry : levelTextMap.map.entrySet()) {
-            char c = entry.getValue();
-            Point pos = entry.getKey();
-            float x = pos.getX() - levelTextMap.width / 2.0f;
-            float y = -pos.getY() + levelTextMap.height / 2.0f;
-            if (c == 'H') {
-                hero.setPosition(x * Platform.size, y * Platform.size);
-                add(hero);
-            } else if (c == 'm') {
-                Mummy mummy = new Mummy(this);
-                mummy.setPosition(x * Platform.size, y * Platform.size);
-                add(mummy);
-            } else if (c == 'c') {
-                Bat bat = new Bat(this);
-                bat.setPosition(x * Platform.size, y * Platform.size);
-                add(bat);
-            } else if (c == 'A') {
-                Apple apple = new Apple(this);
-                apple.setPosition(x * Platform.size, y * Platform.size);
-                apple.setTexture(appleIconTexture);
-                add(apple);
-            } else if (c == 'K') {
-                Key key = new Key(this);
-                key.setPosition(x * Platform.size, y * Platform.size);
-                key.setTexture(textureCache.getTexture(levelInfo.getKeyTexture()));
-                add(key);
-            } else if (c == 'D') {
-                Door door = new Door(this);
-                door.setPosition(x * Platform.size/* + Door.width / 2.0f*/, y * Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
-                door.setClosedTexture(textureCache.getTexture(levelInfo.getClosedDoorTexture()));
-                door.setOpenTexture(textureCache.getTexture(levelInfo.getOpenDoorTexture()));
-                add(door);
-            } else if (c == 'C') {
-                Cloud cloud = new Cloud(this);
-                cloud.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                cloud.setPosition(x * Platform.size, y * Platform.size);
-                add(cloud);
-            } else if (c == 'W') {
-                Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
-                pikes.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                pikes.setPosition(x * Platform.size, y * Platform.size);
-                add(pikes);
-            } else if (c == 'M') {
-                Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
-                pikes.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                pikes.setPosition(x * Platform.size, y * Platform.size);
-                add(pikes);
-            } else if (c == 'Q') {
-                Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
-                pikes.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                pikes.setPosition(x * Platform.size, y * Platform.size);
-                add(pikes);
-            } else if (c == 'P') {
-                Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
-                pikes.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                pikes.setPosition(x * Platform.size, y * Platform.size);
-                add(pikes);
-            } else if (c == 'B') {
-                Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
-                cannon.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                cannon.setPosition(x * Platform.size, y * Platform.size);
-                add(cannon);
-            } else if (c == 'b') {
-                Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
-                cannon.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                cannon.setPosition(x * Platform.size, y * Platform.size);
-                add(cannon);
-            } else if (c == 'L') {
-                Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
-                cannon.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                cannon.setPosition(x * Platform.size, y * Platform.size);
-                add(cannon);
-            } else if (c == 'J') {
-                Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
-                cannon.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                cannon.setPosition(x * Platform.size, y * Platform.size);
-                add(cannon);
-            } else if (c == 'o') {
-                MobilePikeAnchor anchor = new MobilePikeAnchor();
-                anchor.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                anchor.setPosition(x * Platform.size, y * Platform.size);
-                add(anchor);
+    private void initFromTile(float x, float y, tiled.core.Tile tile) throws IOException {
 
-                MobilePikes pikes = new MobilePikes(this);
-                pikes.setTexture(textureCache.getTexture(levelInfo.getMobilePikesTexture()));
-                pikes.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY() - MobilePikes.height / 2.0f - MobilePikeAnchor.radius);
-                add(pikes);
+        TextureCache textureCache = game.getView().getTextureCache();
+        char c = tile.getProperties().getProperty("newton_adventure.char", " ").charAt(0);
+        if (c == 'H') {
+            hero.setPosition(x * Platform.size, y * Platform.size);
+            add(hero);
+        } else if (c == 'm') {
+            Mummy mummy = new Mummy(this);
+            mummy.setPosition(x * Platform.size, y * Platform.size);
+            add(mummy);
+        } else if (c == 'c') {
+            Bat bat = new Bat(this);
+            bat.setPosition(x * Platform.size, y * Platform.size);
+            add(bat);
+        } else if (c == 'A') {
+            Apple apple = new Apple(this);
+            apple.setPosition(x * Platform.size, y * Platform.size);
+            apple.setTexture(appleIconTexture);
+            add(apple);
+        } else if (c == 'K') {
+            Key key = new Key(this);
+            key.setPosition(x * Platform.size, y * Platform.size);
+            key.setTexture(keyTexture);
+            add(key);
+        } else if (c == 'D') {
+            Door door = new Door(this);
+            door.setPosition(x * Platform.size/* + Door.width / 2.0f*/, y * Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
+            door.setClosedTexture(closedDoorTexture);
+            door.setOpenTexture(openDoorTexture);
+            add(door);
+        } else if (c == 'C') {
+            Cloud cloud = new Cloud(this);
+            cloud.setTexture(textureCache.getTexture(tile));
+            cloud.setPosition(x * Platform.size, y * Platform.size);
+            add(cloud);
+        } else if (c == 'W') {
+            Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
+            pikes.setTexture(textureCache.getTexture(tile));
+            pikes.setPosition(x * Platform.size, y * Platform.size);
+            add(pikes);
+        } else if (c == 'M') {
+            Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
+            pikes.setTexture(textureCache.getTexture(tile));
+            pikes.setPosition(x * Platform.size, y * Platform.size);
+            add(pikes);
+        } else if (c == 'Q') {
+            Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
+            pikes.setTexture(textureCache.getTexture(tile));
+            pikes.setPosition(x * Platform.size, y * Platform.size);
+            add(pikes);
+        } else if (c == 'P') {
+            Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
+            pikes.setTexture(textureCache.getTexture(tile));
+            pikes.setPosition(x * Platform.size, y * Platform.size);
+            add(pikes);
+        } else if (c == 'B') {
+            Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
+            cannon.setTexture(textureCache.getTexture(tile));
+            cannon.setPosition(x * Platform.size, y * Platform.size);
+            add(cannon);
+        } else if (c == 'b') {
+            Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
+            cannon.setTexture(textureCache.getTexture(tile));
+            cannon.setPosition(x * Platform.size, y * Platform.size);
+            add(cannon);
+        } else if (c == 'L') {
+            Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
+            cannon.setTexture(textureCache.getTexture(tile));
+            cannon.setPosition(x * Platform.size, y * Platform.size);
+            add(cannon);
+        } else if (c == 'J') {
+            Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
+            cannon.setTexture(textureCache.getTexture(tile));
+            cannon.setPosition(x * Platform.size, y * Platform.size);
+            add(cannon);
+        } else if (c == 'o') {
+            MobilePikeAnchor anchor = new MobilePikeAnchor();
+            anchor.setTexture(textureCache.getTexture(tile));
+            anchor.setPosition(x * Platform.size, y * Platform.size);
+            add(anchor);
 
-                BasicJoint j = new BasicJoint(anchor, pikes, new Vector2f(anchor.getPosition()));
-                j.setRelaxation(0);
-                add(j);
-            } else if (c == 'x') {
-                AxeAnchor anchor = new AxeAnchor();
-                anchor.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                anchor.setPosition(x * Platform.size, y * Platform.size);
-                add(anchor);
+            MobilePikes pikes = new MobilePikes(this);
+            pikes.setTexture(mobilePikesTexture);
+            pikes.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY() - MobilePikes.height / 2.0f - MobilePikeAnchor.radius);
+            add(pikes);
 
-                Axe axe = new Axe(this);
-                axe.setTexture(textureCache.getTexture(levelInfo.getAxeTexture()));
-                axe.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY() - MobilePikes.height / 2.0f - MobilePikeAnchor.radius);
-                add(axe);
+            BasicJoint j = new BasicJoint(anchor, pikes, new Vector2f(anchor.getPosition()));
+            j.setRelaxation(0);
+            add(j);
+        } else if (c == 'x') {
+            AxeAnchor anchor = new AxeAnchor();
+            anchor.setTexture(textureCache.getTexture(tile));
+            anchor.setPosition(x * Platform.size, y * Platform.size);
+            add(anchor);
 
-                BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(anchor.getPosition()));
-                j.setRelaxation(0);
-                add(j);
-            } else if (c == '(') {
-                UpRightHalfPlatform platform = new UpRightHalfPlatform();
-                platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                platform.setPosition(x * Platform.size, y * Platform.size);
-                platform.setFriction(levelInfo.getPlatformFriction(c));
-                add(platform);
-            } else if (c == ')') {
-                UpLeftHalfPlatform platform = new UpLeftHalfPlatform();
-                platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                platform.setPosition(x * Platform.size, y * Platform.size);
-                platform.setFriction(levelInfo.getPlatformFriction(c));
-                add(platform);
-            } else if (c == '\\') {
-                DownLeftHalfPlatform platform = new DownLeftHalfPlatform();
-                platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                platform.setPosition(x * Platform.size, y * Platform.size);
-                platform.setFriction(levelInfo.getPlatformFriction(c));
-                add(platform);
-            } else if (c == '/') {
-                DownRightHalfPlatform platform = new DownRightHalfPlatform();
-                platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                platform.setPosition(x * Platform.size, y * Platform.size);
-                platform.setFriction(levelInfo.getPlatformFriction(c));
-                add(platform);
-            } else if (c == 'S') {
-                EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
-                boss.setBodyTexture(textureCache.getTexture("data/egyptian_boss_body.png"));
-                boss.setHandTexture(textureCache.getTexture("data/egyptian_boss_hand.png"));
-            } else if (c == 'R') {
-                BouncePlatform platform = new BouncePlatform(this);
-                platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                platform.setPosition(x * Platform.size, y * Platform.size);
-                add(platform);
-            } else if (c == 'v') {
-                Activator activator = new Activator(this,1,textureCache.getTexture(levelInfo.getActivator1OnTexture()), textureCache.getTexture(levelInfo.getActivator1OffTexture()));
-                activator.setPosition(x * Platform.size, y * Platform.size);
-                add(activator);
-            } else if (c == 'y') {
-                Activator activator = new Activator(this,2,textureCache.getTexture(levelInfo.getActivator2OnTexture()), textureCache.getTexture(levelInfo.getActivator2OffTexture()));
-                activator.setPosition(x * Platform.size, y * Platform.size);
-                add(activator);
-            } else if (c == 'z') {
-                Activator activator = new Activator(this,3,textureCache.getTexture(levelInfo.getActivator3OnTexture()), textureCache.getTexture(levelInfo.getActivator3OffTexture()));
-                activator.setPosition(x * Platform.size, y * Platform.size);
-                add(activator);
-            } else if (c == 'V') {
-                Blocker activable = new Blocker(this,1);
-                activable.setTexture(textureCache.getTexture(levelInfo.getBlocker1Texture()));
-                activable.setPosition(x * Platform.size, y * Platform.size);
-                add(activable);
-            } else if (c == 'Y') {
-                Blocker activable = new Blocker(this,2);
-                activable.setTexture(textureCache.getTexture(levelInfo.getBlocker2Texture()));
-                activable.setPosition(x * Platform.size, y * Platform.size);
-                add(activable);
-            } else if (c == 'Z') {
-                Blocker activable = new Blocker(this,3);
-                activable.setTexture(textureCache.getTexture(levelInfo.getBlocker3Texture()));
-                activable.setPosition(x * Platform.size, y * Platform.size);
-                add(activable);
-            }else {
-                Platform platform = new Platform();
-                platform.setTexture(textureCache.getTexture(levelInfo.getTextureByChar("" + c)));
-                platform.setPosition(x * Platform.size, y * Platform.size);
-                platform.setFriction(levelInfo.getPlatformFriction(c));
-                add(platform);
-            }
+            Axe axe = new Axe(this);
+            axe.setTexture(axeTexture);
+            axe.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY() - MobilePikes.height / 2.0f - MobilePikeAnchor.radius);
+            add(axe);
+
+            BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(anchor.getPosition()));
+            j.setRelaxation(0);
+            add(j);
+        } else if (c == '(') {
+            UpRightHalfPlatform platform = new UpRightHalfPlatform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c == ')') {
+            UpLeftHalfPlatform platform = new UpLeftHalfPlatform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c == '\\') {
+            DownLeftHalfPlatform platform = new DownLeftHalfPlatform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c == '/') {
+            DownRightHalfPlatform platform = new DownRightHalfPlatform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c == 'S') {
+            EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
+            boss.setBodyTexture(textureCache.getTexture("data/egyptian_boss_body.png"));
+            boss.setHandTexture(textureCache.getTexture("data/egyptian_boss_hand.png"));
+        } else if (c == 'R') {
+            BouncePlatform platform = new BouncePlatform(this);
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            add(platform);
+        } else if (c == 'v') {
+            Activator activator = new Activator(this, 1, activator1OnTexture, activator1OffTexture);
+            activator.setPosition(x * Platform.size, y * Platform.size);
+            add(activator);
+        } else if (c == 'y') {
+            Activator activator = new Activator(this, 2, activator2OnTexture, activator2OffTexture);
+            activator.setPosition(x * Platform.size, y * Platform.size);
+            add(activator);
+        } else if (c == 'z') {
+            Activator activator = new Activator(this, 3, activator3OnTexture, activator3OffTexture);
+            activator.setPosition(x * Platform.size, y * Platform.size);
+            add(activator);
+        } else if (c == 'V') {
+            Blocker activable = new Blocker(this, 1);
+            activable.setTexture(blocker1Texture);
+            activable.setPosition(x * Platform.size, y * Platform.size);
+            add(activable);
+        } else if (c == 'Y') {
+            Blocker activable = new Blocker(this, 2);
+            activable.setTexture(blocker2Texture);
+            activable.setPosition(x * Platform.size, y * Platform.size);
+            add(activable);
+        } else if (c == 'Z') {
+            Blocker activable = new Blocker(this, 3);
+            activable.setTexture(blocker3Texture);
+            activable.setPosition(x * Platform.size, y * Platform.size);
+            add(activable);
+        } else {
+            Platform platform = new Platform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
         }
     }
 
@@ -416,275 +502,14 @@ public strictfp class World extends net.phys2d.raw.World {
     }
 
     public void cheatActivateAll() {
-            final BodyList allBodies = getBodies();
-            for (int i = 0; i < allBodies.size(); ++i) {
-                Body b = allBodies.get(i);
-                if (b instanceof Blocker) {
-                    Blocker a = (Blocker) b;
-                    a.activate();
-                }
-            }
-    }
-
-    private class LevelInfo {
-
-        private String mummyAnimation;
-        private String batAnimation;
-        private String explosionAnimation;
-        private String fireBallTexture;
-        private String axeTexture;
-        private String mobilePikesTexture;
-        private String doorOpenTexture;
-        private String doorClosedTexture;
-        private File levelDir;
-        private Map<String, String> textureByChar = new HashMap();
-        private Map<String, Float> frictionByChar = new HashMap();
-        private Properties properties = new Properties();
-        private String heroAnimation;
-        private String appleTexture;
-        private String keyTexture;
-        private String activator1OnTexture;
-        private String activator2OnTexture;
-        private String activator3OnTexture;
-        private String activator1OffTexture;
-        private String activator2OffTexture;
-        private String activator3OffTexture;
-        private String blocker1Texture;
-        private String blocker2Texture;
-        private String blocker3Texture;
-        private String musicFile = null;
-
-        public String getBlocker1Texture() {
-            return blocker1Texture;
-        }
-
-        public String getBlocker2Texture() {
-            return blocker2Texture;
-        }
-
-        public String getBlocker3Texture() {
-            return blocker3Texture;
-        }
-
-        public String getMusicFile() {
-            return musicFile;
-        }
-
-        String getTextureByChar(String c) {
-            return textureByChar.get(c);
-        }
-
-        String getMummyAnimation() {
-            return mummyAnimation;
-        }
-
-        String getBatAnimation() {
-            return batAnimation;
-        }
-
-        String getExplosionAnimation() {
-            return explosionAnimation;
-        }
-
-        String getFireBallTexture() {
-            return fireBallTexture;
-        }
-
-        String getMobilePikesTexture() {
-            return mobilePikesTexture;
-        }
-
-        String getAxeTexture() {
-            return axeTexture;
-        }
-
-        String getClosedDoorTexture() {
-            return doorClosedTexture;
-        }
-
-        String getOpenDoorTexture() {
-            return doorOpenTexture;
-        }
-
-        String getKeyTexture() {
-            return keyTexture;
-        }
-
-        String getHeroAnimation() {
-            return heroAnimation;
-        }
-
-        String getAppleTexture() {
-            return appleTexture;
-        }
-
-        String getActivator1OnTexture() {
-            return activator1OnTexture;
-        }
-
-        String getActivator2OnTexture() {
-            return activator2OnTexture;
-        }
-
-        String getActivator3OnTexture() {
-            return activator3OnTexture;
-        }
-
-        String getBackgroundTexture() {
-            return buildTextureName(levelDir.getAbsolutePath() + File.separator, "newton_adventure.background","sky_background.jpg");
-        }
-
-        String getLevelMap() {
-            return levelDir.getAbsolutePath() + File.separator + properties.getProperty("newton_adventure.map");
-        }
-
-        private String buildTextureName(String levelPathBase, String propertyName,String defaultName) {
-            String imageFilename = properties.getProperty(propertyName,defaultName);
-            String path = levelPathBase + imageFilename;
-            if ((new File(path)).exists()) {
-                return path;
-            } else {
-                return "data" + File.separator + "default_level_data" + File.separator + imageFilename;
+        final BodyList allBodies = getBodies();
+        for (int i = 0; i < allBodies.size(); ++i) {
+            Body b = allBodies.get(i);
+            if (b instanceof Blocker) {
+                Blocker a = (Blocker) b;
+                a.activate();
             }
         }
-
-        public String getActivator1OffTexture() {
-            return activator1OffTexture;
-        }
-
-        public String getActivator2OffTexture() {
-            return activator2OffTexture;
-        }
-
-        public String getActivator3OffTexture() {
-            return activator3OffTexture;
-        }
-
-        private void buildTextureNames() {
-            final String pathBase = levelDir.getAbsolutePath() + File.separator;
-            mummyAnimation = buildTextureName(pathBase, "newton_adventure.mummy","mummy.gif");
-            batAnimation = buildTextureName(pathBase, "newton_adventure.bat","bat.gif");
-            explosionAnimation = buildTextureName(pathBase, "newton_adventure.explosion","explosion.gif");
-            fireBallTexture = buildTextureName(pathBase, "newton_adventure.fireball","fireball.png");
-            axeTexture = buildTextureName(pathBase, "newton_adventure.axe","axe.png");
-            mobilePikesTexture = buildTextureName(pathBase, "newton_adventure.mobilePikes", "mobile_pikes.png");
-            doorClosedTexture = buildTextureName(pathBase, "newton_adventure.door","door.png");
-            doorOpenTexture = buildTextureName(pathBase, "newton_adventure.door_open","door_open.png");
-            keyTexture = buildTextureName(pathBase, "newton_adventure.key","key.png");
-            heroAnimation = buildTextureName(pathBase, "newton_adventure.hero","hero.gif");
-            appleTexture = buildTextureName(pathBase, "newton_adventure.apple","apple.png");
-            activator1OnTexture = buildTextureName(pathBase, "newton_adventure.activator1.on","actived1.png");
-            activator2OnTexture = buildTextureName(pathBase, "newton_adventure.activator2.on","actived2.png");
-            activator3OnTexture = buildTextureName(pathBase, "newton_adventure.activator3.on","actived3.png");
-            activator1OffTexture = buildTextureName(pathBase, "newton_adventure.activator1.off","activable1.png");
-            activator2OffTexture = buildTextureName(pathBase, "newton_adventure.activator2.off","activable2.png");
-            activator3OffTexture = buildTextureName(pathBase, "newton_adventure.activator3.off","activable3.png");
-            blocker1Texture = buildTextureName(pathBase, "newton_adventure.blocker1","blocker1.png");
-            blocker2Texture = buildTextureName(pathBase, "newton_adventure.blocker2","blocker2.png");
-            blocker3Texture = buildTextureName(pathBase, "newton_adventure.blocker3","blocker3.png");
-            if (properties.getProperty("newton_adventure.music") != null) {
-                musicFile = buildTextureName(pathBase, "newton_adventure.music",null);
-            } else {
-                musicFile = "data/hopnbop.mid";
-            }
-
-            for (Entry entry : properties.entrySet()) {
-                String key = (String) entry.getKey();
-                if (key.endsWith(".char")) {
-                    String c = properties.getProperty(key);
-                    String textureFilename = properties.getProperty(key.replace(".char", ".texture.filename"));
-                    textureByChar.put(c, pathBase + textureFilename);
-                }
-            }
-        }
-
-        private void buildFrictionByChar() {
-            for (Entry entry : properties.entrySet()) {
-                String key = (String) entry.getKey();
-                if (key.endsWith(".char")) {
-                    String c = properties.getProperty(key);
-                    String friction = properties.getProperty(key.replace(".char", ".friction"));
-                    if(null != friction) {
-                        frictionByChar.put(c, Float.parseFloat(friction));
-                    }
-
-                }
-            }
-        }
-
-        private float getPlatformFriction(String key) {
-            Float f = frictionByChar.get(key);
-            if( f==null)
-                return 10.0f;
-            else
-                return f;
-        }
-
-        private float getPlatformFriction(char key) {
-            return getPlatformFriction( "" + key );
-        }
-    }
-
-    private LevelInfo readLevelInfo(String levelPath) throws FileNotFoundException, IOException {
-
-        File levelDir = new File(levelPath);
-        File[] propertyFiles = levelDir.listFiles(new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".properties");
-            }
-        });
-        if (propertyFiles.length == 0) {
-            throw new FileNotFoundException("cannot find *.properties file in level path: " + levelPath);
-        }
-
-        LevelInfo level = new LevelInfo();
-
-        FileInputStream levelFileStream = new FileInputStream(propertyFiles[0]);
-        try {
-            level.properties.load(levelFileStream);
-        } finally {
-            levelFileStream.close();
-        }
-        level.levelDir = levelDir;
-        level.buildTextureNames();
-        level.buildFrictionByChar();
-        return level;
-    }
-
-    class LevelTextMap {
-
-        Map<Point, Character> map = new HashMap();
-        int width = 0, height = 0;
-
-        private void put(Point point, char c) {
-            map.put(point, c);
-            width = Math.max(width, point.getX());
-            height = Math.max(height, point.getY());
-        }
-    }
-
-    private LevelTextMap readLevelMap(String levelMap) throws IOException {
-        FileInputStream inputStream = new FileInputStream(levelMap);
-        LevelTextMap levelTextMap = new LevelTextMap();
-        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-        try {
-            String line = null;
-            int y = 0;
-            while ((line = in.readLine()) != null) {
-                for (int x = 0; x < line.length(); ++x) {
-                    char c = line.charAt(x);
-                    if (c != ' ') {
-                        levelTextMap.put(new Point(x, y), c);
-                    }
-                }
-                ++y;
-            }
-        } finally {
-            in.close();
-        }
-        return levelTextMap;
     }
     static final float ortho2DBaseSize = World.distanceUnit * 20.0f;
     static final float ortho2DLeft = -ortho2DBaseSize;
@@ -781,5 +606,9 @@ public strictfp class World extends net.phys2d.raw.World {
                 clearArbiters(body);
             }
         }
+    }
+
+    private float getTileFriction(Tile tile) {
+        return Float.parseFloat(tile.getProperties().getProperty("newton_adventure.friction", "10"));
     }
 }

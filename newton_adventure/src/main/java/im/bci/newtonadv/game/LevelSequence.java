@@ -72,7 +72,7 @@ strictfp public class LevelSequence implements Sequence {
             world = new World(game);
             frameTimeInfos = game.getFrameTimeInfos();
             world.loadLevel(levelPath);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(LevelSequence.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-1);
         }

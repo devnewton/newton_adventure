@@ -33,6 +33,7 @@ package im.bci.newtonadv;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -104,19 +105,39 @@ public class TextureCache {
     }
 
     public Texture createTexture(String name, BufferedImage bufferedImage) {
-        Texture texture = convertImageToTexture(bufferedImage,false);
+        Texture texture = convertImageToTexture(bufferedImage, false);
         textures.put(name, new TextureWeakReference(texture, referenceQueue));
         return texture;
     }
+
     public Texture createTexture(String name, BufferedImage bufferedImage, boolean usePowerOfTwoTexture) {
-        Texture texture = convertImageToTexture(bufferedImage,usePowerOfTwoTexture);
+        Texture texture = convertImageToTexture(bufferedImage, usePowerOfTwoTexture);
         textures.put(name, new TextureWeakReference(texture, referenceQueue));
         return texture;
+    }
+
+    public Texture getTexture(tiled.core.Tile tile) {
+        String name = "#tiled_" + tile.getGid();
+        TextureWeakReference textureRef = textures.get(name);
+        if (textureRef != null) {
+            Texture texture = textureRef.get();
+            if (texture != null) {
+                return texture;
+            } else {
+                textures.remove(name);
+            }
+        }
+      
+            BufferedImage loaded = convertToBufferedImage(tile.getImage());
+            Texture texture = convertImageToTexture(loaded, false);
+            textures.put(name, new TextureWeakReference(texture, referenceQueue));
+            return texture;
     }
 
     public Texture getTexture(String name) {
         return getTexture(name, false);
     }
+
     public Texture getTexture(String name, boolean usePowerOfTwoTexture) {
         TextureWeakReference textureRef = textures.get(name);
         if (textureRef != null) {
@@ -128,7 +149,7 @@ public class TextureCache {
             }
         }
         BufferedImage loaded = loadImage(name);
-        Texture texture = convertImageToTexture(loaded,usePowerOfTwoTexture);
+        Texture texture = convertImageToTexture(loaded, usePowerOfTwoTexture);
         textures.put(name, new TextureWeakReference(texture, referenceQueue));
         return texture;
     }
@@ -152,8 +173,7 @@ public class TextureCache {
             while (texHeight < bufferedImage.getHeight()) {
                 texHeight *= 2;
             }
-        } else
-        {
+        } else {
             texWidth = bufferedImage.getWidth();
             texHeight = bufferedImage.getHeight();
         }
@@ -220,6 +240,15 @@ public class TextureCache {
             System.exit(0);
             return null;
         }
+    }
+
+    private BufferedImage convertToBufferedImage(Image image) {
+     BufferedImage bi = new BufferedImage
+        (image.getWidth(null),image.getHeight(null),BufferedImage.TYPE_INT_ARGB);
+     Graphics bg = bi.getGraphics();
+     bg.drawImage(image, 0, 0, null);
+     bg.dispose();
+     return bi;
     }
 
     private static final class TextureWeakReference extends WeakReference<Texture> {

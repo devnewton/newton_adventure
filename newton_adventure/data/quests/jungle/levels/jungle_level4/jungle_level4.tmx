@@ -2,17 +2,7 @@
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="48" height="48" tilewidth="32" tileheight="32">
  <properties>
-  <property name="newton_adventure.apple" value="apple.png"/>
-  <property name="newton_adventure.axe" value="axe.png"/>
   <property name="newton_adventure.background" value="sky_background.jpg"/>
-  <property name="newton_adventure.bat" value="bat.gif"/>
-  <property name="newton_adventure.door" value="door.png"/>
-  <property name="newton_adventure.door_open" value="door_open.png"/>
-  <property name="newton_adventure.explosion" value="explosion.gif"/>
-  <property name="newton_adventure.fireball" value="fireball.png"/>
-  <property name="newton_adventure.hero" value="hero.gif"/>
-  <property name="newton_adventure.key" value="key.png"/>
-  <property name="newton_adventure.mobilePikes" value="mobile_pikes.png"/>
   <property name="newton_adventure.mummy" value="toad.gif"/>
  </properties>
  <tileset name="newton_adventure_jungle" firstgid="1">
