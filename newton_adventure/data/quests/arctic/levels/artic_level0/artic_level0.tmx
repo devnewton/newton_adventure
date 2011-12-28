@@ -14,7 +14,7 @@
   </tile>
   <tile id="1">
    <properties>
-    <property name="newton_adventure.char" value="H"/>
+    <property name="newton_adventure.type" value="hero"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -24,7 +24,7 @@
   </tile>
   <tile id="2">
    <properties>
-    <property name="newton_adventure.char" value="A"/>
+    <property name="newton_adventure.type" value="apple"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -34,7 +34,7 @@
   </tile>
   <tile id="3">
    <properties>
-    <property name="newton_adventure.char" value="K"/>
+    <property name="newton_adventure.type" value="key"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -44,7 +44,7 @@
   </tile>
   <tile id="4">
    <properties>
-    <property name="newton_adventure.char" value="D"/>
+    <property name="newton_adventure.type" value="door"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -54,8 +54,7 @@
   </tile>
   <tile id="5">
    <properties>
-    <property name="newton_adventure.char" value="C"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="cloud"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -65,8 +64,7 @@
   </tile>
   <tile id="6">
    <properties>
-    <property name="newton_adventure.char" value="W"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="pikes_up"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -76,8 +74,7 @@
   </tile>
   <tile id="7">
    <properties>
-    <property name="newton_adventure.char" value="M"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="pikes_down"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -87,8 +84,7 @@
   </tile>
   <tile id="8">
    <properties>
-    <property name="newton_adventure.char" value="Q"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="pikes_left"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -98,8 +94,8 @@
   </tile>
   <tile id="9">
    <properties>
-    <property name="newton_adventure.char" value="P"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="pikes_right"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -109,8 +105,7 @@
   </tile>
   <tile id="10">
    <properties>
-    <property name="newton_adventure.char" value="o"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="mobile_pike_anchor"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -120,8 +115,8 @@
   </tile>
   <tile id="11">
    <properties>
-    <property name="newton_adventure.char" value="x"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="axe_anchor"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -131,8 +126,8 @@
   </tile>
   <tile id="12">
    <properties>
-    <property name="newton_adventure.char" value="B"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="cannon_up"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -142,8 +137,8 @@
   </tile>
   <tile id="13">
    <properties>
-    <property name="newton_adventure.char" value="L"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="cannon_right"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -153,8 +148,8 @@
   </tile>
   <tile id="14">
    <properties>
-    <property name="newton_adventure.char" value="b"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="cannon_down"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -164,8 +159,8 @@
   </tile>
   <tile id="15">
    <properties>
-    <property name="newton_adventure.char" value="J"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    <property name="newton_adventure.type" value="cannon_left"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -175,9 +170,9 @@
   </tile>
   <tile id="16">
    <properties>
-    <property name="newton_adventure.char" value="/"/>
+    <property name="newton_adventure.type" value="down_right_half_platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -187,9 +182,9 @@
   </tile>
   <tile id="17">
    <properties>
-    <property name="newton_adventure.char" value="\"/>
+    <property name="newton_adventure.type" value="down_left_half_platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -199,9 +194,9 @@
   </tile>
   <tile id="18">
    <properties>
-    <property name="newton_adventure.char" value=")"/>
+    <property name="newton_adventure.type" value="up_left_half_platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -211,9 +206,9 @@
   </tile>
   <tile id="19">
    <properties>
-    <property name="newton_adventure.char" value="("/>
+    <property name="newton_adventure.type" value="up_right_half_platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -223,7 +218,7 @@
   </tile>
   <tile id="20">
    <properties>
-    <property name="newton_adventure.char" value="m"/>
+    <property name="newton_adventure.type" value="mummy"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -233,7 +228,7 @@
   </tile>
   <tile id="21">
    <properties>
-    <property name="newton_adventure.char" value="c"/>
+    <property name="newton_adventure.type" value="bat"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -243,9 +238,8 @@
   </tile>
   <tile id="22">
    <properties>
-    <property name="newton_adventure.char" value="0"/>
+    <property name="newton_adventure.type" value="platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -255,7 +249,7 @@
   </tile>
   <tile id="23">
    <properties>
-    <property name="newton_adventure.char" value="H"/>
+    <property name="newton_adventure.type" value="hero"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -265,7 +259,7 @@
   </tile>
   <tile id="24">
    <properties>
-    <property name="newton_adventure.char" value="H"/>
+    <property name="newton_adventure.type" value="hero"/>
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -275,8 +269,8 @@
   </tile>
   <tile id="25">
    <properties>
-    <property name="newton_adventure.char" value="1"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -286,9 +280,9 @@
   </tile>
   <tile id="26">
    <properties>
-    <property name="newton_adventure.char" value="7"/>
+    <property name="newton_adventure.type" value="platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -298,9 +292,9 @@
   </tile>
   <tile id="27">
    <properties>
-    <property name="newton_adventure.char" value="8"/>
+    <property name="newton_adventure.type" value="platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -310,8 +304,8 @@
   </tile>
   <tile id="28">
    <properties>
-    <property name="newton_adventure.char" value="9"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -321,8 +315,8 @@
   </tile>
   <tile id="29">
    <properties>
-    <property name="newton_adventure.char" value="2"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -332,8 +326,8 @@
   </tile>
   <tile id="30">
    <properties>
-    <property name="newton_adventure.char" value="3"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -343,8 +337,8 @@
   </tile>
   <tile id="31">
    <properties>
-    <property name="newton_adventure.char" value="4"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -354,9 +348,9 @@
   </tile>
   <tile id="32">
    <properties>
-    <property name="newton_adventure.char" value="5"/>
+    <property name="newton_adventure.type" value="platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -366,9 +360,9 @@
   </tile>
   <tile id="33">
    <properties>
-    <property name="newton_adventure.char" value="6"/>
+    <property name="newton_adventure.type" value="platform"/>
     <property name="newton_adventure.friction" value="0"/>
-    <property name="newton_adventure.isPlatform" value="true"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -378,8 +372,8 @@
   </tile>
   <tile id="34">
    <properties>
-    <property name="newton_adventure.char" value="~"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -389,8 +383,8 @@
   </tile>
   <tile id="35">
    <properties>
-    <property name="newton_adventure.char" value="#"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -400,8 +394,8 @@
   </tile>
   <tile id="36">
    <properties>
-    <property name="newton_adventure.char" value="$"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -411,8 +405,8 @@
   </tile>
   <tile id="37">
    <properties>
-    <property name="newton_adventure.char" value="*"/>
-    <property name="newton_adventure.isPlatform" value="false"/>
+    <property name="newton_adventure.type" value="platform"/>
+    
    </properties>
    <image format="png">
     <data encoding="base64">

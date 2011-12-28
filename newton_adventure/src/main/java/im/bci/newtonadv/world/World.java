@@ -244,9 +244,9 @@ public strictfp class World extends net.phys2d.raw.World {
     }
 
     public void loadLevel(String levelPath) throws IOException, Exception {
-        
-         File levelDir = new File(levelPath);
-File[] tmxFiles = levelDir.listFiles(new FilenameFilter() {
+
+        File levelDir = new File(levelPath);
+        File[] tmxFiles = levelDir.listFiles(new FilenameFilter() {
 
             @Override
             public boolean accept(File dir, String name) {
@@ -327,80 +327,110 @@ File[] tmxFiles = levelDir.listFiles(new FilenameFilter() {
     private void initFromTile(float x, float y, tiled.core.Tile tile) throws IOException {
 
         TextureCache textureCache = game.getView().getTextureCache();
-        char c = tile.getProperties().getProperty("newton_adventure.char", " ").charAt(0);
-        if (c == 'H') {
+        String c = tile.getProperties().getProperty("newton_adventure.type", "unknown");
+        if (c.equals("platform")) {
+            Platform platform = new Platform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c.equals("up_right_half_platform")) {
+            UpRightHalfPlatform platform = new UpRightHalfPlatform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c.equals("up_left_half_platform")) {
+            UpLeftHalfPlatform platform = new UpLeftHalfPlatform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c.equals("down_left_half_platform")) {
+            DownLeftHalfPlatform platform = new DownLeftHalfPlatform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c.equals("down_right_half_platform")) {
+            DownRightHalfPlatform platform = new DownRightHalfPlatform();
+            platform.setTexture(textureCache.getTexture(tile));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        } else if (c.equals("hero")) {
             hero.setPosition(x * Platform.size, y * Platform.size);
             add(hero);
-        } else if (c == 'm') {
+        } else if (c.equals("mummy")) {
             Mummy mummy = new Mummy(this);
             mummy.setPosition(x * Platform.size, y * Platform.size);
             add(mummy);
-        } else if (c == 'c') {
+        } else if (c.equals("bat")) {
             Bat bat = new Bat(this);
             bat.setPosition(x * Platform.size, y * Platform.size);
             add(bat);
-        } else if (c == 'A') {
+        } else if (c.equals("apple")) {
             Apple apple = new Apple(this);
             apple.setPosition(x * Platform.size, y * Platform.size);
             apple.setTexture(appleIconTexture);
             add(apple);
-        } else if (c == 'K') {
+        } else if (c.equals("key")) {
             Key key = new Key(this);
             key.setPosition(x * Platform.size, y * Platform.size);
             key.setTexture(keyTexture);
             add(key);
-        } else if (c == 'D') {
+        } else if (c.equals("door")) {
             Door door = new Door(this);
             door.setPosition(x * Platform.size/* + Door.width / 2.0f*/, y * Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
             door.setClosedTexture(closedDoorTexture);
             door.setOpenTexture(openDoorTexture);
             add(door);
-        } else if (c == 'C') {
+        } else if (c.equals("cloud")) {
             Cloud cloud = new Cloud(this);
             cloud.setTexture(textureCache.getTexture(tile));
             cloud.setPosition(x * Platform.size, y * Platform.size);
             add(cloud);
-        } else if (c == 'W') {
+        } else if (c.equals("pikes_up")) {
             Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
             pikes.setTexture(textureCache.getTexture(tile));
             pikes.setPosition(x * Platform.size, y * Platform.size);
             add(pikes);
-        } else if (c == 'M') {
+        } else if (c.equals("pikes_down")) {
             Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
             pikes.setTexture(textureCache.getTexture(tile));
             pikes.setPosition(x * Platform.size, y * Platform.size);
             add(pikes);
-        } else if (c == 'Q') {
+        } else if (c.equals("pikes_left")) {
             Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
             pikes.setTexture(textureCache.getTexture(tile));
             pikes.setPosition(x * Platform.size, y * Platform.size);
             add(pikes);
-        } else if (c == 'P') {
+        } else if (c.equals("pikes_right")) {
             Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
             pikes.setTexture(textureCache.getTexture(tile));
             pikes.setPosition(x * Platform.size, y * Platform.size);
             add(pikes);
-        } else if (c == 'B') {
+        } else if (c.equals("cannon_up")) {
             Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
             cannon.setTexture(textureCache.getTexture(tile));
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
-        } else if (c == 'b') {
+        } else if (c.equals("cannon_down")) {
             Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
             cannon.setTexture(textureCache.getTexture(tile));
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
-        } else if (c == 'L') {
+        } else if (c.equals("cannon_right")) {
             Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
             cannon.setTexture(textureCache.getTexture(tile));
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
-        } else if (c == 'J') {
+        } else if (c.equals("cannon_left")) {
             Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
             cannon.setTexture(textureCache.getTexture(tile));
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
-        } else if (c == 'o') {
+        } else if (c.equals("mobile_pike_anchor")) {
             MobilePikeAnchor anchor = new MobilePikeAnchor();
             anchor.setTexture(textureCache.getTexture(tile));
             anchor.setPosition(x * Platform.size, y * Platform.size);
@@ -414,7 +444,7 @@ File[] tmxFiles = levelDir.listFiles(new FilenameFilter() {
             BasicJoint j = new BasicJoint(anchor, pikes, new Vector2f(anchor.getPosition()));
             j.setRelaxation(0);
             add(j);
-        } else if (c == 'x') {
+        } else if (c.equals("axe_anchor")) {
             AxeAnchor anchor = new AxeAnchor();
             anchor.setTexture(textureCache.getTexture(tile));
             anchor.setPosition(x * Platform.size, y * Platform.size);
@@ -428,71 +458,47 @@ File[] tmxFiles = levelDir.listFiles(new FilenameFilter() {
             BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(anchor.getPosition()));
             j.setRelaxation(0);
             add(j);
-        } else if (c == '(') {
-            UpRightHalfPlatform platform = new UpRightHalfPlatform();
-            platform.setTexture(textureCache.getTexture(tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c == ')') {
-            UpLeftHalfPlatform platform = new UpLeftHalfPlatform();
-            platform.setTexture(textureCache.getTexture(tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c == '\\') {
-            DownLeftHalfPlatform platform = new DownLeftHalfPlatform();
-            platform.setTexture(textureCache.getTexture(tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c == '/') {
-            DownRightHalfPlatform platform = new DownRightHalfPlatform();
-            platform.setTexture(textureCache.getTexture(tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c == 'S') {
-            EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
-            boss.setBodyTexture(textureCache.getTexture("data/egyptian_boss_body.png"));
-            boss.setHandTexture(textureCache.getTexture("data/egyptian_boss_hand.png"));
-        } else if (c == 'R') {
+        } else if (c.equals("bounce_platform")) {
             BouncePlatform platform = new BouncePlatform(this);
             platform.setTexture(textureCache.getTexture(tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             add(platform);
-        } else if (c == 'v') {
+        } else if (c.equals("activator1")) {
             Activator activator = new Activator(this, 1, activator1OnTexture, activator1OffTexture);
             activator.setPosition(x * Platform.size, y * Platform.size);
             add(activator);
-        } else if (c == 'y') {
+        } else if (c.equals("activator2")) {
             Activator activator = new Activator(this, 2, activator2OnTexture, activator2OffTexture);
             activator.setPosition(x * Platform.size, y * Platform.size);
             add(activator);
-        } else if (c == 'z') {
+        } else if (c.equals("activator3")) {
             Activator activator = new Activator(this, 3, activator3OnTexture, activator3OffTexture);
             activator.setPosition(x * Platform.size, y * Platform.size);
             add(activator);
-        } else if (c == 'V') {
+        } else if (c.equals("blocker1")) {
             Blocker activable = new Blocker(this, 1);
             activable.setTexture(blocker1Texture);
             activable.setPosition(x * Platform.size, y * Platform.size);
             add(activable);
-        } else if (c == 'Y') {
+        } else if (c.equals("blocker2")) {
             Blocker activable = new Blocker(this, 2);
             activable.setTexture(blocker2Texture);
             activable.setPosition(x * Platform.size, y * Platform.size);
             add(activable);
-        } else if (c == 'Z') {
+        } else if (c.equals("blocker3")) {
             Blocker activable = new Blocker(this, 3);
             activable.setTexture(blocker3Texture);
             activable.setPosition(x * Platform.size, y * Platform.size);
             add(activable);
+        } else if (c.equals("egyptian_boss")) {
+            EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
+            boss.setBodyTexture(textureCache.getTexture("data/egyptian_boss_body.png"));
+            boss.setHandTexture(textureCache.getTexture("data/egyptian_boss_hand.png"));
         } else {
             Platform platform = new Platform();
             platform.setTexture(textureCache.getTexture(tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
+            platform.setEnabled(false);
             add(platform);
         }
     }
