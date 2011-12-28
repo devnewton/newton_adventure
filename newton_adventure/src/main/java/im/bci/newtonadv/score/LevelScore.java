@@ -78,7 +78,7 @@ public class LevelScore {
         this.nbLosedApple += n;
     }
     
-    int computeScore() {
+    public int computeScore() {
         return nbKilledMummy * 3 + nbKilledBat * 4 + nbKilledEgyptianBoss * 10 + nbApple - nbLosedApple * 2;
     }
 }

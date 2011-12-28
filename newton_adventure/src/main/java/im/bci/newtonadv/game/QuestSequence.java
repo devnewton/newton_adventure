@@ -46,7 +46,7 @@ public class QuestSequence implements Sequence {
     private final Game game;
     List<LevelSequence> levels;
     private Sequence nextSequence;
-    private StoryboardSequence completedSequence;
+    private ScoreSequence scoreSequence;
 
     public QuestSequence(Game game, String questDirectory) {
         this.game = game;
@@ -72,6 +72,7 @@ public class QuestSequence implements Sequence {
     private void loadLevels(String questDirectory) {
         levels = new ArrayList();
         File dir = new File(questDirectory + File.separator + "levels");
+        String questName = dir.getParentFile().getName();
         LevelSequence lastSequence = null;
         File[] files = dir.listFiles();
         java.util.Arrays.sort(files, new Comparator<File>() {
@@ -92,15 +93,16 @@ public class QuestSequence implements Sequence {
         }
 
         if(lastSequence!=null) {
-            completedSequence = new StoryboardSequence(game, questDirectory + File.separator + "completed.jpg", null, nextSequence);
+            scoreSequence = new ScoreSequence(game, questName, nextSequence);
+            StoryboardSequence completedSequence = new StoryboardSequence(game, questDirectory + File.separator + "completed.jpg", null, scoreSequence);
             lastSequence.setNextSequence(completedSequence);
         }
     }
 
     public void setNextSequence(Sequence s) {
         nextSequence = s;
-        if (null != completedSequence) {
-            completedSequence.setNextSequence(nextSequence);
+        if (null != scoreSequence) {
+            scoreSequence.setNextSequence(nextSequence);
         }
     }
 }

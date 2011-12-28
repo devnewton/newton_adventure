@@ -32,11 +32,9 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.game.special.occasion.SpecialOccasionFactory;
 import im.bci.newtonadv.game.special.occasion.SpecialOccasionLayer;
 import java.io.File;
-import java.util.Calendar;
 
 /**
  *
