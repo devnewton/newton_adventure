@@ -41,6 +41,7 @@ import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -616,5 +617,9 @@ public strictfp class World extends net.phys2d.raw.World {
 
     private float getTileFriction(Tile tile) {
         return Float.parseFloat(tile.getProperties().getProperty("newton_adventure.friction", "10"));
+    }
+
+    public LevelScore getLevelScore() {
+        return hero.getLevelScore();
     }
 }

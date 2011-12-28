@@ -38,6 +38,7 @@ import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.score.LevelScore;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
@@ -67,6 +68,7 @@ public strictfp class Hero extends Body implements Drawable, Updatable {
     private static final long dyingDuration = 2000000000L;
     private long beginOfDyingDuration = -1;
     private float scale = 1;
+    private LevelScore levelScore = new LevelScore();
 
     public void setJumpSound(Clip jumpSound) {
         this.jumpSound = jumpSound;
@@ -99,6 +101,7 @@ public strictfp class Hero extends Body implements Drawable, Updatable {
         }
 
         this.nbApple -= nbAppleLose;
+        levelScore.addLosedApple(nbAppleLose);
         for (int i = 0; i < nbAppleLose; ++i) {
             world.addTopLevelEntities(new LosedApple(world, this.getPosition()));
         }
@@ -119,6 +122,22 @@ public strictfp class Hero extends Body implements Drawable, Updatable {
         }
     }
 
+    void killedMummy() {
+        levelScore.addKilledMummy();
+    }
+
+    void killedBat() {
+        levelScore.addKilledBat();
+    }
+
+    void killedEgyptianBoss() {
+        levelScore.addKilledEgyptianBoss();
+    }
+
+    LevelScore getLevelScore() {
+        return levelScore;
+    }
+
     public enum Movement {
 
         GOING_LEFT,
@@ -134,12 +153,14 @@ public strictfp class Hero extends Body implements Drawable, Updatable {
         super(new Circle(World.distanceUnit), weight);
         this.world = world;
         setRotatable(false);
+        levelScore.addApple(this.nbApple);
     }
 
     @Override
     public strictfp void collided(Body body) {
         if (body instanceof Apple) {
             ++nbApple;
+            levelScore.addApple(1);
         }
     }
 

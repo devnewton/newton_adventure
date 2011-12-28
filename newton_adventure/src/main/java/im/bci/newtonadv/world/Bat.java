@@ -88,6 +88,7 @@ public strictfp class Bat extends Body implements Drawable, Updatable {
                     if (angle < Math.PI / 4.0f) {
                         hero.hurtByBat();
                     } else {
+                        hero.killedBat();
                         isDead = true;
                     }
                 } else if (event.getBodyA() == hero) {
@@ -96,6 +97,7 @@ public strictfp class Bat extends Body implements Drawable, Updatable {
                     if (angle > Math.PI / 4.0f) {
                         hero.hurtByBat();
                     } else {
+                        hero.killedBat();
                         isDead = true;
                     }
                 }

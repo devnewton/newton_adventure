@@ -111,6 +111,7 @@ public strictfp class Mummy extends Body implements Drawable, Updatable {
                         hero.hurtByMummy();
                     } else {
                         isDead = true;
+                        hero.killedMummy();
                     }
                 } else if (event.getBodyA() == hero) {
                     Vector2f normal = new Vector2f(event.getNormal());
@@ -119,6 +120,7 @@ public strictfp class Mummy extends Body implements Drawable, Updatable {
                         hero.hurtByMummy();
                     } else {
                         isDead = true;
+                        hero.killedMummy();
                     }
                 }
             }

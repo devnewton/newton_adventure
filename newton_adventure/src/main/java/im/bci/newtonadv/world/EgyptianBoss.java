@@ -39,7 +39,6 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.AABox;
-import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Circle;
 import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.Texture;
@@ -146,6 +145,8 @@ public strictfp class EgyptianBoss extends Body implements Drawable, Updatable {
                             --lifePoints;
                             isHurt = true;
                             endOfInvincibilityDuration = -1;
+                            if(lifePoints == 0)
+                                hero.killedEgyptianBoss();
                         }
                     }
                 }

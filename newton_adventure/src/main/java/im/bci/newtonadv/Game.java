@@ -44,6 +44,7 @@ import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.game.StoryboardSequence;
+import im.bci.newtonadv.score.GameScore;
 
 /**
  *
@@ -61,6 +62,7 @@ public strictfp class Game {
     private Properties config = new Properties();
     private SoundCache soundCache = null;
     private MainMenuSequence mainMenuSequence;
+    private GameScore score = new GameScore();
     private int keyJump;
     private int keyLeft;
     private int keyRight;
@@ -260,5 +262,9 @@ public strictfp class Game {
         keyToggleFullscreen = getKeyCode("key.toggle_fullscreen");
         keyPause = getKeyCode("key.pause");
         keyReturnToMenu = getKeyCode("key.return_to_menu");
+    }
+
+    public GameScore getScore() {
+        return score;
     }
 }

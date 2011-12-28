@@ -107,6 +107,7 @@ strictfp public class LevelSequence implements Sequence {
             }
             world.update();
             if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
+                game.getScore().addScore(levelPath, world.getLevelScore());
                 throw new TransitionException(nextSequence);
             }
         } catch (GameOverException ex) {
