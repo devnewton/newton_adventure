@@ -57,6 +57,8 @@ public class ScoreSequence implements Sequence {
     private boolean redraw;
     private boolean mustQuit;
     private Sequence nextSequence;
+    private FrameTimeInfos timeInfos;
+    private long scorePerCentToShow;
 
     public ScoreSequence(Game game, String questName, Sequence nextSequence) {
         this.questScore = game.getScore().getQuestScore(questName);
@@ -68,6 +70,8 @@ public class ScoreSequence implements Sequence {
         font = new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
         redraw = true;
         mustQuit = false;
+        timeInfos = new FrameTimeInfos();
+        scorePerCentToShow = 0;
     }
 
     @Override
@@ -88,10 +92,10 @@ public class ScoreSequence implements Sequence {
             font.drawString((ortho2DLeft + ortho2DRight) / 2.0f, i++ * font.getHeight(), "SCORES", 1, -1, TrueTypeFont.ALIGN_CENTER);
             font.drawString(0, i++ * font.getHeight(), questScore.getQuestName(), 1, -1, TrueTypeFont.ALIGN_LEFT);
             for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
-                String levelScoreStr = levelEntry.getKey() + ": " + levelEntry.getValue().computeScore();
+                String levelScoreStr = levelEntry.getKey() + ": " + (scorePerCentToShow * levelEntry.getValue().computeScore() / 100);
                 font.drawString((ortho2DLeft + ortho2DRight) / 2.0f, i++ * font.getHeight(), levelScoreStr, 1, -1, TrueTypeFont.ALIGN_CENTER);
             }
-            String questScoreStr = "Quest total: " + questScore.computeScore();
+            String questScoreStr = "Quest total: " + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1, TrueTypeFont.ALIGN_LEFT);
             font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press space to continue ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
             GL11.glPopMatrix();
@@ -100,7 +104,12 @@ public class ScoreSequence implements Sequence {
     }
 
     public void update() throws TransitionException {
-    }
+        timeInfos.update();
+        long newScorePercentToShow = Math.min(100, timeInfos.currentTime * 100 / (10 * 1000000000));
+        if (newScorePercentToShow != scorePerCentToShow) {
+            scorePerCentToShow = newScorePercentToShow;
+            redraw = true;
+        }    }
 
     public void processInputs() throws TransitionException {
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {

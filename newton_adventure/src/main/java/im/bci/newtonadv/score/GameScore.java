@@ -32,7 +32,6 @@
 package im.bci.newtonadv.score;
 
 import java.io.File;
-import java.util.Map;
 import java.util.TreeMap;
 
 /**
