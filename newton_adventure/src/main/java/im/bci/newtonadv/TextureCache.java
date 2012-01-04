@@ -119,7 +119,7 @@ public class TextureCache {
     }
 
     public Texture getTexture(tiled.core.Tile tile) {
-        String name = "#tiled_" + tile.getGid();
+        String name = tile.getTileSet().getBaseDir() + "#tiled_" + tile.getGid();
         TextureWeakReference textureRef = textures.get(name);
         if (textureRef != null) {
             Texture texture = textureRef.get();

@@ -326,7 +326,6 @@ public strictfp class World extends net.phys2d.raw.World {
     }
 
     private void initFromTile(float x, float y, tiled.core.Tile tile) throws IOException {
-
         TextureCache textureCache = game.getView().getTextureCache();
         String c = tile.getProperties().getProperty("newton_adventure.type", "unknown");
         if (c.equals("platform")) {
