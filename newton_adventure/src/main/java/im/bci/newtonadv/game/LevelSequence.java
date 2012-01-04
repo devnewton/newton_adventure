@@ -96,9 +96,6 @@ strictfp public class LevelSequence implements Sequence {
             stepTime += frameTimeInfos.elapsedTime;
             if (stepTime >= 1000000000 / Game.FPS) {
                 stepTime -= 1000000000 / Game.FPS;
-                //long step = nbWorldStepByFrame * (1 + stepTime / (1000000000 / Game.FPS));
-                //step = step > 0 ? Math.min(step, maxWorldStepByFrame) : 0;
-                //System.out.println("step = " + step + " stepTime = " + stepTime);
                 final int step = 5;
                 for (int i = 0; i < step; ++i) {
                     world.step();

@@ -164,8 +164,8 @@ public class SoundCache {
             clip.open(audioInputStream);
             return clip;
         } catch (Exception e) {
-            System.out.println("Impossible de charger le son " + filename);
-            System.out.println("Erreur : " + e.getClass().getName() + " " + e.getMessage());
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Impossible de charger le son " + filename,e);
+            System.exit(0);
             return null;
         }
     }
@@ -175,8 +175,7 @@ public class SoundCache {
             Sequence sequence = MidiSystem.getSequence(new File(filename));
             return sequence;
         } catch (Exception e) {
-            System.out.println("Impossible de charger la musique " + filename);
-            System.out.println("Erreur : " + e.getClass().getName() + " " + e.getMessage());
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Impossible de charger la musique " + filename,e);
             System.exit(0);
             return null;
         }

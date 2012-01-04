@@ -50,6 +50,8 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 
@@ -235,8 +237,7 @@ public class TextureCache {
         try {
             return ImageIO.read(new File(filename));
         } catch (Exception e) {
-            System.out.println("Impossible de charger la texture " + filename);
-            System.out.println("Erreur : " + e.getClass().getName() + " " + e.getMessage());
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Impossible de charger la texture " + filename,e);
             System.exit(0);
             return null;
         }
