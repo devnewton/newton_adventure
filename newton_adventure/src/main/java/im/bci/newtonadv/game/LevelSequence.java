@@ -35,7 +35,6 @@ import im.bci.newtonadv.Game;
 import im.bci.newtonadv.util.TrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.World;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.input.Keyboard;

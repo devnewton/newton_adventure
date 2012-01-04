@@ -36,6 +36,7 @@ import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.score.QuestScore;
+import im.bci.newtonadv.score.ScoreServer;
 import im.bci.newtonadv.util.TrueTypeFont;
 import java.awt.Font;
 import org.lwjgl.input.Keyboard;
@@ -55,21 +56,25 @@ public class ScoreSequence implements Sequence {
     TrueTypeFont font;
     private final QuestScore questScore;
     private boolean redraw;
-    private boolean mustQuit;
+    private boolean mustSendScoreQuit;
+    private boolean mustQuitWithoutSendingScore;
     private Sequence nextSequence;
     private FrameTimeInfos timeInfos;
     private long scorePerCentToShow;
+    private final ScoreServer scoreServer;
 
     public ScoreSequence(Game game, String questName, Sequence nextSequence) {
         this.questScore = game.getScore().getQuestScore(questName);
         this.nextSequence = nextSequence;
+        this.scoreServer = new ScoreServer(game.getConfig());
     }
 
     @Override
     public void start() {
         font = new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
         redraw = true;
-        mustQuit = false;
+        mustSendScoreQuit = false;
+        mustQuitWithoutSendingScore = false;
         timeInfos = new FrameTimeInfos();
         scorePerCentToShow = 0;
     }
@@ -97,7 +102,8 @@ public class ScoreSequence implements Sequence {
             }
             String questScoreStr = "Quest total: " + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1, TrueTypeFont.ALIGN_LEFT);
-            font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press space to continue ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
+            font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press space to send score to server ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
+            font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press right to skip ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
         }
@@ -109,12 +115,19 @@ public class ScoreSequence implements Sequence {
         if (newScorePercentToShow != scorePerCentToShow) {
             scorePerCentToShow = newScorePercentToShow;
             redraw = true;
-        }    }
+        }
+    }
 
     public void processInputs() throws TransitionException {
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            mustQuit = true;
-        } else if (mustQuit) {
+            mustSendScoreQuit = true;
+        } else if (mustSendScoreQuit) {
+            scoreServer.sendScore(questScore.getQuestName(), questScore.computeScore());
+            throw new Sequence.TransitionException(nextSequence);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+            mustQuitWithoutSendingScore = true;
+        } else if (mustQuitWithoutSendingScore) {
             throw new Sequence.TransitionException(nextSequence);
         }
     }
