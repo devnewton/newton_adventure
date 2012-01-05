@@ -261,6 +261,7 @@ public strictfp class World extends net.phys2d.raw.World {
         TMXMapReader mapReader = new TMXMapReader();
         tiled.core.Map map = mapReader.readMap(tmxFiles[0].getPath());
 
+
         final TextureCache textureCache = game.getView().getTextureCache();
         explosionAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.explosion"));
         mummyAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.mummy"));
@@ -289,7 +290,7 @@ public strictfp class World extends net.phys2d.raw.World {
                     for (int y = 0; y < tileLayer.getHeight(); ++y) {
                         Tile tile = tileLayer.getTileAt(x, y);
                         if (null != tile) {
-                            initFromTile(x - map.getWidth() / 2.0f, -y + map.getHeight() / 2.0f, tile);
+                            initFromTile(x - map.getWidth() / 2.0f, -y + map.getHeight() / 2.0f, map, tile);
                         }
                     }
                 }
@@ -325,36 +326,36 @@ public strictfp class World extends net.phys2d.raw.World {
         return gravityForce;
     }
 
-    private void initFromTile(float x, float y, tiled.core.Tile tile) throws IOException {
+    private void initFromTile(float x, float y, tiled.core.Map map, tiled.core.Tile tile) throws IOException {
         TextureCache textureCache = game.getView().getTextureCache();
         String c = tile.getProperties().getProperty("newton_adventure.type", "unknown");
         if (c.equals("platform")) {
             Platform platform = new Platform();
-            platform.setTexture(textureCache.getTexture(tile));
+            platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
         } else if (c.equals("up_right_half_platform")) {
             UpRightHalfPlatform platform = new UpRightHalfPlatform();
-            platform.setTexture(textureCache.getTexture(tile));
+            platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
         } else if (c.equals("up_left_half_platform")) {
             UpLeftHalfPlatform platform = new UpLeftHalfPlatform();
-            platform.setTexture(textureCache.getTexture(tile));
+            platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
         } else if (c.equals("down_left_half_platform")) {
             DownLeftHalfPlatform platform = new DownLeftHalfPlatform();
-            platform.setTexture(textureCache.getTexture(tile));
+            platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
         } else if (c.equals("down_right_half_platform")) {
             DownRightHalfPlatform platform = new DownRightHalfPlatform();
-            platform.setTexture(textureCache.getTexture(tile));
+            platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
@@ -387,52 +388,52 @@ public strictfp class World extends net.phys2d.raw.World {
             add(door);
         } else if (c.equals("cloud")) {
             Cloud cloud = new Cloud(this);
-            cloud.setTexture(textureCache.getTexture(tile));
+            cloud.setTexture(textureCache.getTexture(map, tile));
             cloud.setPosition(x * Platform.size, y * Platform.size);
             add(cloud);
         } else if (c.equals("pikes_up")) {
             Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
-            pikes.setTexture(textureCache.getTexture(tile));
+            pikes.setTexture(textureCache.getTexture(map, tile));
             pikes.setPosition(x * Platform.size, y * Platform.size);
             add(pikes);
         } else if (c.equals("pikes_down")) {
             Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
-            pikes.setTexture(textureCache.getTexture(tile));
+            pikes.setTexture(textureCache.getTexture(map, tile));
             pikes.setPosition(x * Platform.size, y * Platform.size);
             add(pikes);
         } else if (c.equals("pikes_left")) {
             Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
-            pikes.setTexture(textureCache.getTexture(tile));
+            pikes.setTexture(textureCache.getTexture(map, tile));
             pikes.setPosition(x * Platform.size, y * Platform.size);
             add(pikes);
         } else if (c.equals("pikes_right")) {
             Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
-            pikes.setTexture(textureCache.getTexture(tile));
+            pikes.setTexture(textureCache.getTexture(map, tile));
             pikes.setPosition(x * Platform.size, y * Platform.size);
             add(pikes);
         } else if (c.equals("cannon_up")) {
             Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
-            cannon.setTexture(textureCache.getTexture(tile));
+            cannon.setTexture(textureCache.getTexture(map, tile));
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
         } else if (c.equals("cannon_down")) {
             Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
-            cannon.setTexture(textureCache.getTexture(tile));
+            cannon.setTexture(textureCache.getTexture(map, tile));
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
         } else if (c.equals("cannon_right")) {
             Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
-            cannon.setTexture(textureCache.getTexture(tile));
+            cannon.setTexture(textureCache.getTexture(map, tile));
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
         } else if (c.equals("cannon_left")) {
             Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
-            cannon.setTexture(textureCache.getTexture(tile));
+            cannon.setTexture(textureCache.getTexture(map, tile));
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
         } else if (c.equals("mobile_pike_anchor")) {
             MobilePikeAnchor anchor = new MobilePikeAnchor();
-            anchor.setTexture(textureCache.getTexture(tile));
+            anchor.setTexture(textureCache.getTexture(map, tile));
             anchor.setPosition(x * Platform.size, y * Platform.size);
             add(anchor);
 
@@ -446,7 +447,7 @@ public strictfp class World extends net.phys2d.raw.World {
             add(j);
         } else if (c.equals("axe_anchor")) {
             AxeAnchor anchor = new AxeAnchor();
-            anchor.setTexture(textureCache.getTexture(tile));
+            anchor.setTexture(textureCache.getTexture(map, tile));
             anchor.setPosition(x * Platform.size, y * Platform.size);
             add(anchor);
 
@@ -460,7 +461,7 @@ public strictfp class World extends net.phys2d.raw.World {
             add(j);
         } else if (c.equals("bounce_platform")) {
             BouncePlatform platform = new BouncePlatform(this);
-            platform.setTexture(textureCache.getTexture(tile));
+            platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             add(platform);
         } else if (c.equals("activator1")) {
@@ -496,7 +497,7 @@ public strictfp class World extends net.phys2d.raw.World {
             boss.setHandTexture(textureCache.getTexture("data/egyptian_boss_hand.png"));
         } else {
             Platform platform = new Platform();
-            platform.setTexture(textureCache.getTexture(tile));
+            platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setEnabled(false);
             add(platform);
