@@ -102,7 +102,7 @@ public class ScoreSequence implements Sequence {
             }
             String questScoreStr = "Quest total: " + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1, TrueTypeFont.ALIGN_LEFT);
-            font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press space to send score to server ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
+            font.drawString(ortho2DRight, ortho2DBottom - font.getHeight() * 2, "Press space to send score to server ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
             font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press right to skip ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();

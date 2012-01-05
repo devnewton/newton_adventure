@@ -33,7 +33,8 @@ public class ScoreServer {
 
     public void sendScore(String level, int score) {
         try {
-            URL url = new URL(serverUrl);
+            String hurle =  serverUrl + "/score/";
+            URL url = new URL(hurle);
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
@@ -56,9 +57,9 @@ public class ScoreServer {
 
     private String encodeScore(String level, int score) throws UnsupportedEncodingException {
         return encodeParameter("level", level)
-                + encodeParameter("player", player)
-                + encodeParameter("secret", secret)
-                + encodeParameter("score", "" + score);
+                + '&' + encodeParameter("player", player)
+                + '&' + encodeParameter("secret", secret)
+                + '&' + encodeParameter("score", "" + score);
     }
 
     private String encodeParameter(String key, String value) throws UnsupportedEncodingException {
