@@ -36,6 +36,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.util.TrueTypeFont;
+import java.awt.Font;
 
 public class StoryboardSequence implements Sequence {
 
@@ -49,6 +51,7 @@ public class StoryboardSequence implements Sequence {
     private Game game;
     private final String music;
     private boolean redraw = true;
+    protected TrueTypeFont font;
 
     public StoryboardSequence(Game game, String texture, String music, Sequence nextSequence) {
         this.game = game;
@@ -80,8 +83,17 @@ public class StoryboardSequence implements Sequence {
             GL11.glTexCoord2f(u1, 1.0f);
             GL11.glVertex2f(x1, y1);
             GL11.glEnd();
+            drawContinueText();
             GL11.glPopMatrix();
         }
+    }
+
+    protected void drawContinueText() {
+        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+        font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press enter to continue ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
+        GL11.glPopAttrib();
     }
 
     @Override
@@ -92,7 +104,7 @@ public class StoryboardSequence implements Sequence {
 
     @Override
     public void processInputs() throws TransitionException {
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
             mustQuit = true;
         } else if (mustQuit) {
             throw new Sequence.TransitionException(nextSequence);
@@ -105,12 +117,14 @@ public class StoryboardSequence implements Sequence {
         }
         redraw = true;
         mustQuit = false;
+        font = new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
     }
 
     public void stop() {
         if (music != null) {
             game.getSoundCache().stopMusic();
         }
+        font.destroy();
     }
 
     void setNextSequence(Sequence nextSequence) {
