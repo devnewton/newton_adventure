@@ -44,10 +44,10 @@ public class StoryboardSequence implements Sequence {
     Sequence nextSequence;
     String texture;
     static final float ortho2DBaseSize = 100.0f;
-    static final float ortho2DLeft = -ortho2DBaseSize;
-    static final float ortho2DBottom = -ortho2DBaseSize;
-    static final float ortho2DRight = ortho2DBaseSize;
-    static final float ortho2DTop = ortho2DBaseSize;
+    static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
+    static final float ortho2DLeft = 0;
+    static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
+    static final float ortho2DTop = 0;
     private Game game;
     private final String music;
     private boolean redraw = true;

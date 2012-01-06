@@ -56,6 +56,7 @@ public class GameOverSequence extends StoryboardSequence {
 
     @Override
     protected void drawContinueText() {
+        super.drawContinueText();
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
