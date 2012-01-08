@@ -115,6 +115,13 @@
             <systemPath>${basedir}/lib/libtiled.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jorbis</artifactId>
+            <version>0.0.17</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/jorbis.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>

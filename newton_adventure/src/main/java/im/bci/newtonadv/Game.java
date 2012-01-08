@@ -170,7 +170,7 @@ public strictfp class Game {
     }
 
     Sequence setupSequences() {
-        Sequence outroSequence = new StoryboardSequence(this, "data" + File.separator + "outro.jpg", "data" + File.separator + "The_End.mid", null);
+        Sequence outroSequence = new StoryboardSequence(this, "data" + File.separator + "outro.jpg", "data" + File.separator + "The_End.ogg", null);
         QuestMenuSequence questMenuSequence = new QuestMenuSequence(this);
         mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence);
         questMenuSequence.setNextSequence(mainMenuSequence);

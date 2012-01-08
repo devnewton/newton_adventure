@@ -126,6 +126,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
         super.start();
         if (resumeSequence == null) {
             setCurrentButton(playButton);
+            game.getSoundCache().playMusicIfEnabled("data/lovelace_0.ogg");
         } else {
             setCurrentButton(resumeButton);
         }

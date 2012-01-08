@@ -33,15 +33,20 @@ Author: Adrian Nock <acespark@gmail.com> (http://ace-spark.deviantart.com/art/Ro
 
 Author: YoFrankie! (c) 2008, Blender Foundation (http://opengameart.org/content/cartoony-jump-and-bounce)
 
-* The_End.mid, Game_Over.mid, Lava_City.mid
+* The_End.ogg, Game_Over.ogg, Lava_City.ogg
 
 License: CC-BY-SA 3.0
 Author: Metaruka (http://sites.google.com/site/metaruka/GameGame, http://opengameart.org/content/game-game)
 
-* hopnbob.mid
+* hopnbob.ogg
 
 License: copyright free.
 Author: Net4TV (http://www.net4tv.com/net4TV/music/resources/hopnbop.mid)
+
+* caravan.ogg
+
+License: CC0
+Author: yd (http://opengameart.org/content/desert-theme)
 
 * Some of jungle tiles ( http://opengameart.org/content/pixel-ground )
 
@@ -63,6 +68,26 @@ License: CC-BY-SA 3.0
 Original photo author: xiquinhosilva ( http://www.flickr.com/photos/xiquinho/ )
 Artistic filters author: devnewton@bci.im
 License: CC-BY
+
+* lovelace_0.ogg
+
+Author: Matthew Lagoe ( http://opengameart.org/content/lovelace )
+License: CC-BY-SA 3.0
+
+* jump_and_run_tropics.ogg
+
+Author: bart (http://opengameart.org/content/jump-and-run-tropical-mix)
+License: CC-BY-SA 3.0
+
+* northindianbeat.ogg
+
+Author: SouljahdeShiva (http://opengameart.org/content/india-rythm)
+License: CC-BY 3.0
+
+* story_time.ogg
+
+Author: Augmentality (http://opengameart.org/content/story-time)
+License: CC-BY 3.0
 
 * Other files
 

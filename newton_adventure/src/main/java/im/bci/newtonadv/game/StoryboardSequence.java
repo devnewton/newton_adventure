@@ -121,9 +121,6 @@ public class StoryboardSequence implements Sequence {
     }
 
     public void stop() {
-        if (music != null) {
-            game.getSoundCache().stopMusic();
-        }
         font.destroy();
     }
 

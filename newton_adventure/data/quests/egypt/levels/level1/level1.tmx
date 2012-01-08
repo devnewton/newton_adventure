@@ -3,6 +3,7 @@
 <map version="1.0" orientation="orthogonal" width="64" height="33" tilewidth="32" tileheight="32">
  <properties>
   <property name="newton_adventure.background" value="pyramid_background.jpg"/>
+  <property name="newton_adventure.music" value="caravan.ogg"/>
  </properties>
  <tileset name="newton_adventure_desert" firstgid="1">
   <tile id="0">

@@ -81,7 +81,6 @@ strictfp public class LevelSequence implements Sequence {
     public void stop() {
         appleFont.destroy();
         appleFont = null;
-        game.getSoundCache().stopMusic();
         world = null;
     }
 

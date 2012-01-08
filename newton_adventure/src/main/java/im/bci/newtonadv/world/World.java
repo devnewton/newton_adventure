@@ -226,6 +226,7 @@ public strictfp class World extends net.phys2d.raw.World {
         defaultMapProperties.put("newton_adventure.blocker1", "blocker1.png");
         defaultMapProperties.put("newton_adventure.blocker2", "blocker2.png");
         defaultMapProperties.put("newton_adventure.blocker3", "blocker3.png");
+        defaultMapProperties.put("newton_adventure.music", "hopnbop.ogg");
     }
 
     public String getFileFromMap(tiled.core.Map map, String filePropertyName) {
@@ -299,7 +300,7 @@ public strictfp class World extends net.phys2d.raw.World {
         backgroundTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.background"));
         this.getHero().setAnimation(AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.hero")));
         this.getHero().setJumpSound(game.getSoundCache().getSoundIfEnabled("data/jump.wav"));
-        game.getSoundCache().playMusicIfEnabled("data/hopnbop.mid");
+        game.getSoundCache().playMusicIfEnabled(getFileFromMap(map,"newton_adventure.music"));
 
     }
 

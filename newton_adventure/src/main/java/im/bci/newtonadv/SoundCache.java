@@ -31,16 +31,13 @@
  */
 package im.bci.newtonadv;
 
+import im.bci.newtonadv.util.OggClip;
 import java.io.File;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -55,63 +52,54 @@ public class SoundCache {
 
     private HashMap<String/*name*/, ClipWeakReference> clips = new HashMap();
     private ReferenceQueue<Clip> clipReferenceQueue = new ReferenceQueue<Clip>();
-    private Sequencer sequencer;
-    private String currentSequenceName;
+    private String currentMusicName;
+    private OggClip currentMusic;
     private boolean enabled;
+
+    public static interface Playable {
+
+        void play();
+
+        void stop();
+    }
 
     SoundCache(boolean enabled) {
         this.enabled = enabled;
-        if (enabled) {
-            try {
-                sequencer = MidiSystem.getSequencer();
-            } catch (MidiUnavailableException ex) {
-                Logger.getLogger(SoundCache.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
 
     public void stopMusic() {
-        currentSequenceName = null;
-        if (null != sequencer && sequencer.isOpen()) {
-            if (sequencer.isRunning()) {
-                sequencer.stop();
-            }
+        currentMusicName = null;
+        if (null != currentMusic) {
+            currentMusic.stop();
+            currentMusic.close();
         }
     }
 
     public void playMusicIfEnabled(String name) {
-        if (sequencer == null) {
+        if (name.equals(currentMusicName)) {
             return;
         }
-        if (name.equals(currentSequenceName)) {
-            return;
+
+        if (null != currentMusic) {
+            currentMusic.stop();
+            currentMusic.close();
         }
 
         try {
-            Sequence music = getMusicIfEnabled(name);
-            if (sequencer.isOpen()) {
-                if (sequencer.isRunning()) {
-                    sequencer.stop();
-                }
-            } else {
-                sequencer.open();
-            }
-
-            sequencer.setSequence(music);
-            sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-            sequencer.start();
-            currentSequenceName = name;
+            currentMusic = getMusicIfEnabled(name);
+            currentMusic.loop();
+            currentMusicName = name;
         } catch (Exception ex) {
             Logger.getLogger(SoundCache.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private Sequence getMusicIfEnabled(String name) {
+    private OggClip getMusicIfEnabled(String name) {
         if (!enabled) {
             return null;
         }
-        Sequence sequence = loadSequence(name);
-        return sequence;
+        OggClip clip = loadOggClip(name);
+        return clip;
     }
 
     public Clip getSoundIfEnabled(String name) {
@@ -164,18 +152,18 @@ public class SoundCache {
             clip.open(audioInputStream);
             return clip;
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Impossible de charger le son " + filename,e);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Impossible de charger le son " + filename, e);
             System.exit(0);
             return null;
         }
     }
 
-    private Sequence loadSequence(String filename) {
+    private OggClip loadOggClip(String filename) {
         try {
-            Sequence sequence = MidiSystem.getSequence(new File(filename));
-            return sequence;
+            OggClip clip = new OggClip(new File(filename));
+            return clip;
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Impossible de charger la musique " + filename,e);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Impossible de charger la musique " + filename, e);
             System.exit(0);
             return null;
         }
