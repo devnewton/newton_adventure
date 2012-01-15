@@ -31,7 +31,6 @@
  */
 package im.bci.newtonadv.game;
 
-import org.lwjgl.input.Keyboard;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import java.awt.Font;
@@ -69,7 +68,7 @@ public class StoryboardSequence implements Sequence {
 
     @Override
     public void processInputs() throws TransitionException {
-        if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
+        if (game.getInput().isKeyReturnDown()) {
             mustQuit = true;
         } else if (mustQuit) {
             throw new Sequence.TransitionException(nextSequence);

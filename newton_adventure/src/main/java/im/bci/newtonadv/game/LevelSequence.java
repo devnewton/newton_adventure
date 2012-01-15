@@ -37,7 +37,6 @@ import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.World;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.lwjgl.input.Keyboard;
 
 /**
  *
@@ -116,31 +115,31 @@ strictfp public class LevelSequence implements Sequence {
         }
 
         float stepRate = 1.0f;//frameTimeInfos.elapsedTime / (1000000000.0f / Game.FPSf);
-        if (Keyboard.isKeyDown(game.getKeyRotateClockwise())) {
+        if (game.getInput().isKeyRotateClockwiseDown()) {
             world.progressiveRotateGravity(0.05f * stepRate);
         }
-        if (Keyboard.isKeyDown(game.getKeyRotateCounterClockwise())) {
+        if (game.getInput().isKeyRotateCounterClockwiseDown()) {
             world.progressiveRotateGravity(-0.05f * stepRate);
         }
 
-        if (Keyboard.isKeyDown(game.getKeyRotate90Clockwise())) {
+        if (game.getInput().isKeyRotate90ClockwiseDown()) {
             world.rotateGravity((float) (Math.PI / 4.0));
         }
-        if (Keyboard.isKeyDown(game.getKeyRotate90CounterClockwise())) {
+        if (game.getInput().isKeyRotate90CounterClockwiseDown()) {
             world.rotateGravity((float) (-Math.PI / 4.0));
         }
 
         boolean heroIsMoving = false;
-        if (Keyboard.isKeyDown(game.getKeyLeft())) {
+        if (game.getInput().isKeyLeftDown()) {
             world.getHero().moveLeft(stepRate);
             heroIsMoving = true;
         }
-        if (Keyboard.isKeyDown(game.getKeyRight())) {
+        if (game.getInput().isKeyRightDown()) {
             world.getHero().moveRight(stepRate);
             heroIsMoving = true;
         }
 
-        if (Keyboard.isKeyDown(game.getKeyJump())) {
+        if (game.getInput().isKeyJumpDown()) {
             world.getHero().jump(stepRate);
             heroIsMoving = true;
         }
@@ -148,10 +147,10 @@ strictfp public class LevelSequence implements Sequence {
             world.getHero().dontMove();
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_F11)) {
+        if (game.getInput().isKeyCheatActivateAllDown()) {
             world.cheatActivateAll();
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_F12)) {
+        if (game.getInput().isKeyCheatGotoNextLevelDown()) {
             cheatCodeGotoNextLevel = true;
         }
     }

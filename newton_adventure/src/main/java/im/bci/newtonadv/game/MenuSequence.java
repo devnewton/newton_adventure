@@ -32,9 +32,7 @@
 package im.bci.newtonadv.game;
 
 import java.util.ArrayList;
-import org.lwjgl.input.Keyboard;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.lwjgl.Texture;
 import java.util.List;
 
 /**
@@ -78,7 +76,7 @@ public abstract class MenuSequence implements Sequence {
 
     @Override
     public void processInputs() throws TransitionException {
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+        if (game.getInput().isKeyRightDown()) {
             horizontalSelectNextButton = true;
         } else if (horizontalSelectNextButton) {
             horizontalSelectNextButton = false;
@@ -90,7 +88,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+        if (game.getInput().isKeyLeftDown()) {
             horizontalSelectPreviousButton = true;
         } else if (horizontalSelectPreviousButton) {
             horizontalSelectPreviousButton = false;
@@ -102,7 +100,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+        if (game.getInput().isKeyDownDown()) {
             verticalSelectNextButton = true;
         } else if (verticalSelectNextButton) {
             verticalSelectNextButton = false;
@@ -114,7 +112,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+        if (game.getInput().isKeyUpDown()) {
             verticalSelectPreviousButton = true;
         } else if (verticalSelectPreviousButton) {
             verticalSelectPreviousButton = false;
@@ -126,7 +124,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
+        if (game.getInput().isKeyReturnDown()) {
             activateCurrentButton = true;
         } else if (activateCurrentButton) {
             activateCurrentButton = false;

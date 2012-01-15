@@ -32,8 +32,6 @@
 package im.bci.newtonadv.game.special.occasion;
 
 import im.bci.newtonadv.platform.lwjgl.GameView;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.glu.GLU;
 
 /**
  *

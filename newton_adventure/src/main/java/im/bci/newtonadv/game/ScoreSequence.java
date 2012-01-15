@@ -36,7 +36,6 @@ import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.score.ScoreServer;
 import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import java.awt.Font;
-import org.lwjgl.input.Keyboard;
 
 /**
  *
@@ -95,13 +94,13 @@ public class ScoreSequence implements Sequence {
     }
 
     public void processInputs() throws TransitionException {
-        if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
+        if (game.getInput().isKeyReturnDown()) {
             mustSendScoreQuit = true;
         } else if (mustSendScoreQuit) {
             scoreServer.sendScore(questScore.getQuestName(), questScore.computeScore());
             throw new Sequence.TransitionException(nextSequence);
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+        if (game.getInput().isKeyRightDown()) {
             mustQuitWithoutSendingScore = true;
         } else if (mustQuitWithoutSendingScore) {
             throw new Sequence.TransitionException(nextSequence);
