@@ -32,19 +32,18 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.math.Matrix2f;
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
-import org.lwjgl.opengl.GL11;
 
 /**
  *
  * @author devnewton
  */
 public strictfp class LosedApple implements Entity {
-    
+
     float size = Apple.size / 2.0f;
     private World world;
     private Texture texture;
@@ -59,53 +58,36 @@ public strictfp class LosedApple implements Entity {
         this.world = world;
         this.texture = world.getAppleIconTexture();
         this.position = new Vector2f(position);
-        this.direction = net.phys2d.math.MathUtil.mul(new Matrix2f( (float)( Math.random() * Math.PI * 2.0 )), new Vector2f( 1, 0 ));
+        this.direction = net.phys2d.math.MathUtil.mul(new Matrix2f((float) (Math.random() * Math.PI * 2.0)), new Vector2f(1, 0));
     }
 
     @Override
     public void draw() {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(position.getX(), position.getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -size / 2.0f;
-        final float x2 = size / 2.0f;
-        final float y1 = -size / 2.0f;
-        final float y2 = size / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable (GL11.GL_BLEND);
-        GL11.glBlendFunc (GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-        texture.bind();
-
-        final float u1 = 0.0f,  u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
+        world.getView().drawLosedApple(this, world, texture, alpha);
     }
 
     @Override
     public void update(FrameTimeInfos frameTimeInfos) {
-        if( deadTime < 0)
+        if (deadTime < 0) {
             deadTime = frameTimeInfos.currentTime + livingDuration;
-        else if( frameTimeInfos.currentTime > deadTime )
+        } else if (frameTimeInfos.currentTime > deadTime) {
             isDead = true;
-        
+        }
+
         position.add(direction);
-        alpha =  (deadTime -  frameTimeInfos.currentTime) / (float)livingDuration;
+        alpha = (deadTime - frameTimeInfos.currentTime) / (float) livingDuration;
     }
 
     @Override
     public boolean isDead() {
         return isDead;
+    }
+
+    public Vector2f getPosition() {
+        return position;
+    }
+
+    public float getSize() {
+        return size;
     }
 }

@@ -87,8 +87,10 @@ public class SoundCache {
 
         try {
             currentMusic = getMusicIfEnabled(name);
-            currentMusic.loop();
-            currentMusicName = name;
+            if (null != currentMusic) {
+                currentMusic.loop();
+                currentMusicName = name;
+            }
         } catch (Exception ex) {
             Logger.getLogger(SoundCache.class.getName()).log(Level.SEVERE, null, ex);
         }

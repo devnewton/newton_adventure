@@ -32,12 +32,11 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.math.ROVector2f;
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.ConvexPolygon;
-import org.lwjgl.opengl.GL11;
 
 /**
  *
@@ -48,11 +47,13 @@ public class UpRightHalfPlatform extends StaticBody implements Drawable {
     static final float size = 2.0f * World.distanceUnit;
     static final ROVector2f[] vertices = new ROVector2f[] { new Vector2f(-size/2.0f, size/2.0f), new Vector2f(size/2.0f, -size/2.0f), new Vector2f(size/2.0f, size/2.0f) };
     private Texture texture;
+    private final World world;
 
-    UpRightHalfPlatform() {
+    UpRightHalfPlatform(World world) {
         super(new ConvexPolygon(vertices));
         setFriction(10.0f);
         addBit(World.STATIC_BODY_COLLIDE_BIT);
+        this.world = world;
     }
 
     public void setTexture(Texture texture) {
@@ -61,21 +62,6 @@ public class UpRightHalfPlatform extends StaticBody implements Drawable {
 
     @Override
     public void draw() {
-        ConvexPolygon polygon = (ConvexPolygon) getShape();
-        Vector2f[] pts = polygon.getVertices(getPosition(), getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
+        world.getView().drawUpRightHalfPlatform(this,texture);
     }
 }

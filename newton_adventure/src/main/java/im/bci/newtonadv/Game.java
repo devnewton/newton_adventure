@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv;
 
+import im.bci.newtonadv.platform.lwjgl.GameView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.logging.Level;
@@ -41,7 +42,6 @@ import java.util.Properties;
 import org.lwjgl.input.Keyboard;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.QuestMenuSequence;
-import im.bci.newtonadv.game.ScoreSequence;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.game.StoryboardSequence;

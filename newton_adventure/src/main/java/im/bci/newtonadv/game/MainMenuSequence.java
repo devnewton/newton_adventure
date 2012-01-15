@@ -45,7 +45,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
     private Sequence playSequence, resumeSequence, helpSequence, quitSequence;
     private final Button playButton;
     private final Button resumeButton;
-    private final SpecialOccasionLayer specialOccasionLayer = SpecialOccasionFactory.createSpecialOccasionLayer();
+    private final SpecialOccasionLayer specialOccasionLayer;
 
     @Override
     public void draw() {
@@ -61,6 +61,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
 
     public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq) {
         super(game);
+        
+        specialOccasionLayer = SpecialOccasionFactory.createSpecialOccasionLayer(game.getView());
 
         this.playSequence = playSeq;
         this.quitSequence = quitSeq;

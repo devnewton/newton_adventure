@@ -40,8 +40,7 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Circle;
-import org.lwjgl.opengl.GL11;
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
 import im.bci.newtonadv.util.Vector;
 
 /**
@@ -49,6 +48,14 @@ import im.bci.newtonadv.util.Vector;
  * @author devnewton
  */
 public strictfp class EgyptianBoss extends Body implements Drawable, Updatable {
+
+    public EgyptianBossHand getLeftHand() {
+        return leftHand;
+    }
+
+    public EgyptianBossHand getRightHand() {
+        return rightHand;
+    }
 
     private Texture bodyTexture;
     private static final float weight = 10.0f;
@@ -76,17 +83,14 @@ public strictfp class EgyptianBoss extends Body implements Drawable, Updatable {
         this.world = world;
         setRotatable(false);
         setGravityEffected(false);
-        world.add(this);
-        leftHand = new EgyptianBossHand(this, EgyptianBossHand.Side.LEFT);
+        leftHand = new EgyptianBossHand(this, EgyptianBossHand.Side.LEFT,world);
         leftHand.setPosition(getHandPosition(EgyptianBossHand.Side.LEFT).x, getHandPosition(EgyptianBossHand.Side.LEFT).y);
-        rightHand = new EgyptianBossHand(this, EgyptianBossHand.Side.RIGHT);
+        rightHand = new EgyptianBossHand(this, EgyptianBossHand.Side.RIGHT,world);
         rightHand.setPosition(getHandPosition(EgyptianBossHand.Side.RIGHT).x, getHandPosition(EgyptianBossHand.Side.RIGHT).y);
-        world.add(leftHand);
-        world.add(rightHand);
         setPosition(x, y);
     }
 
-    Vector2f getHandPosition(EgyptianBossHand.Side side) {
+    final Vector2f getHandPosition(EgyptianBossHand.Side side) {
         Vector2f pos = new Vector2f(this.getPosition());
         pos.y -= 0.327005f * size;
         if (side == EgyptianBossHand.Side.LEFT) {
@@ -167,46 +171,13 @@ public strictfp class EgyptianBoss extends Body implements Drawable, Updatable {
 
     @Override
     public void draw() {
+        
         if (isHurt) {
             isHurtBlinkState = !isHurtBlinkState;
         } else {
             isHurtBlinkState = false;
         }
-
-        AABox bounds = getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(getPosition().getX(), getPosition().getY(), 0.0f);
-        float x1 = -bounds.getWidth() / 2.0f;
-        float x2 = bounds.getWidth() / 2.0f;
-        float y1 = -bounds.getHeight() / 2.0f;
-        float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-
-        bodyTexture.bind();
-
-        if (isHurtBlinkState) {
-            GL11.glColor3f(1, 0, 0);
-        }
-        final float u1 = 1, u2 = 0;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        if (isHurtBlinkState) {
-            GL11.glColor3f(1, 1, 1);
-        }
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
+        world.getView().drawEgyptianBoss(this,this.bodyTexture,isHurtBlinkState);
     }
 
     @Override

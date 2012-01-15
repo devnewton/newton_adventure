@@ -31,12 +31,11 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
-import org.lwjgl.opengl.GL11;
 
 /**
  *
@@ -60,32 +59,7 @@ public strictfp class PickedUpApple implements Entity {
 
     @Override
     public void draw() {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(position.getX(), position.getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -size / 2.0f;
-        final float x2 = size / 2.0f;
-        final float y1 = -size / 2.0f;
-        final float y2 = size / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
-
-        final float u1 = 0.0f,  u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
+        world.getView().drawPickedUpApple(this,world,texture);
     }
 
     @Override
@@ -109,5 +83,13 @@ public strictfp class PickedUpApple implements Entity {
     @Override
     public boolean isDead() {
         return canMove && position.distance(world.getHero().getPosition()) < size;
+    }
+
+    public Vector2f getPosition() {
+        return position;
+    }
+
+    public float getSize() {
+        return size;
     }
 }

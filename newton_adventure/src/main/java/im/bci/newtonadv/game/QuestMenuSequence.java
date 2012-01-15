@@ -35,9 +35,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.util.TrueTypeFont;
+import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 
 /**
  *
@@ -51,7 +50,7 @@ public class QuestMenuSequence extends MenuSequence {
     static final int QUEST_MINIATURE_BY_COLUMN = 2;
     static final float QUEST_MINIATURE_SPACING = 60;
     static final float QUEST_MINIATURE_WIDTH = ( ortho2DRight - QUEST_MINIATURE_SPACING * (QUEST_MINIATURE_BY_ROW + 1) ) / QUEST_MINIATURE_BY_ROW;
-    static final float QUEST_MINIATURE_HEIGHT = ( ortho2DBottom - QUEST_MINIATURE_SPACING * (QUEST_MINIATURE_BY_COLUMN + 1) ) / QUEST_MINIATURE_BY_COLUMN;
+    public static final float QUEST_MINIATURE_HEIGHT = ( ortho2DBottom - QUEST_MINIATURE_SPACING * (QUEST_MINIATURE_BY_COLUMN + 1) ) / QUEST_MINIATURE_BY_COLUMN;
 
     public QuestMenuSequence(Game game) {
         super(game);
@@ -105,13 +104,8 @@ public class QuestMenuSequence extends MenuSequence {
             }
             
             @Override
-            void draw() {
-                super.draw();
-                GL11.glPushMatrix();
-                GL11.glTranslatef(x, y + QUEST_MINIATURE_HEIGHT + questNameFont.getHeight(), 0);
-                GL11.glScalef(1, -1, 1);
-                questNameFont.drawString(questDir.getName());
-                GL11.glPopMatrix();
+            public void draw() {
+                game.getView().drawQuestMenuButton(this,questNameFont,questDir.getName());
             }
         };
         questButton.offTexture = questDir.getAbsolutePath() + File.separator + "bt-quest-off.jpg";

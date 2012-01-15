@@ -35,15 +35,12 @@ import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
-import net.phys2d.raw.shapes.Box;
 
 /**
  *
  * @author bci
  */
 public strictfp class Pikes extends Platform {
-
-    private World world;
 
     public enum DangerousSide {
 
@@ -55,7 +52,7 @@ public strictfp class Pikes extends Platform {
     DangerousSide dangerousSide;
 
     public Pikes(World world, DangerousSide dangerousSide) {
-        this.world = world;
+        super(world);
         this.dangerousSide = dangerousSide;
     }
 

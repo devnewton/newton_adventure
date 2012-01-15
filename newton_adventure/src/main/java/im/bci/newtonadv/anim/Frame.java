@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.anim;
 
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
 
 /**
  *

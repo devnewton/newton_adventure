@@ -34,8 +34,6 @@ package im.bci.newtonadv.game;
 import org.lwjgl.input.Keyboard;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.Sequence.TransitionException;
-import im.bci.newtonadv.util.TrueTypeFont;
-import org.lwjgl.opengl.GL11;
 
 public class GameOverSequence extends StoryboardSequence {
 
@@ -53,14 +51,9 @@ public class GameOverSequence extends StoryboardSequence {
         }
         super.processInputs();
     }
-
+    
     @Override
-    protected void drawContinueText() {
-        super.drawContinueText();
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-        font.drawString(ortho2DRight, ortho2DBottom - font.getHeight() * 2, "Press up to retry ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
-        GL11.glPopAttrib();
+    public void draw() {
+        game.getView().drawGameOverSequence(this,font);
     }
 }

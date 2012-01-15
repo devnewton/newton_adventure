@@ -31,19 +31,17 @@
  */
 package im.bci.newtonadv.world;
 
-import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Box;
-import org.lwjgl.opengl.GL11;
 
 /**
  *
  * @author devnewton
  */
-strictfp class Door extends StaticBody implements Drawable, CollisionDetectionOnly {
+public strictfp class Door extends StaticBody implements Drawable, CollisionDetectionOnly {
 
     static final float width = 2.0f * World.distanceUnit;
     static final float height = 4.0f * World.distanceUnit;
@@ -60,28 +58,7 @@ strictfp class Door extends StaticBody implements Drawable, CollisionDetectionOn
 
     @Override
     public void draw() {
-        Box box = (Box) getShape();
-        Vector2f[] pts = box.getPoints(getPosition(), getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        if (isClose) {
-            closedTexture.bind();
-        } else {
-            openTexture.bind();
-        }
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[3].x, pts[3].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
+        world.getView().drawDoor(this, isClose ? closedTexture : openTexture );
     }
 
     void setOpenTexture(Texture texture) {

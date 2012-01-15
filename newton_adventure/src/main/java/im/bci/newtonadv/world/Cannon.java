@@ -32,7 +32,6 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.math.Vector2f;
-import im.bci.newtonadv.Texture;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
@@ -44,7 +43,6 @@ public strictfp class Cannon extends Platform implements Updatable {
 
     private static final long durationBetweenFireballGeneration = 2000000000;
     private long nextFireballTime = 0;
-    private World world;
     private static final float shotForce = 10000.0f;
 
     public enum Orientation {
@@ -57,7 +55,7 @@ public strictfp class Cannon extends Platform implements Updatable {
     private Orientation orientation;
 
     public Cannon(World world, Orientation orientation) {
-        this.world = world;
+        super(world);
         this.orientation = orientation;
         setEnabled(false);
     }

@@ -32,15 +32,15 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.Texture;
-import im.bci.newtonadv.TextureCache;
+import im.bci.newtonadv.platform.lwjgl.Texture;
+import im.bci.newtonadv.platform.lwjgl.TextureCache;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationLoaders;
-import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
 import java.io.File;
@@ -52,14 +52,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import net.phys2d.math.Matrix2f;
-import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.BasicJoint;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import tiled.core.Tile;
 import tiled.io.TMXMapReader;
 
@@ -300,7 +296,7 @@ public strictfp class World extends net.phys2d.raw.World {
         backgroundTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.background"));
         this.getHero().setAnimation(AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.hero")));
         this.getHero().setJumpSound(game.getSoundCache().getSoundIfEnabled("data/jump.wav"));
-        game.getSoundCache().playMusicIfEnabled(getFileFromMap(map,"newton_adventure.music"));
+        game.getSoundCache().playMusicIfEnabled(getFileFromMap(map, "newton_adventure.music"));
 
     }
 
@@ -331,31 +327,31 @@ public strictfp class World extends net.phys2d.raw.World {
         TextureCache textureCache = game.getView().getTextureCache();
         String c = tile.getProperties().getProperty("newton_adventure.type", "unknown");
         if (c.equals("platform")) {
-            Platform platform = new Platform();
+            Platform platform = new Platform(this);
             platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
         } else if (c.equals("up_right_half_platform")) {
-            UpRightHalfPlatform platform = new UpRightHalfPlatform();
+            UpRightHalfPlatform platform = new UpRightHalfPlatform(this);
             platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
         } else if (c.equals("up_left_half_platform")) {
-            UpLeftHalfPlatform platform = new UpLeftHalfPlatform();
+            UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this);
             platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
         } else if (c.equals("down_left_half_platform")) {
-            DownLeftHalfPlatform platform = new DownLeftHalfPlatform();
+            DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this);
             platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
         } else if (c.equals("down_right_half_platform")) {
-            DownRightHalfPlatform platform = new DownRightHalfPlatform();
+            DownRightHalfPlatform platform = new DownRightHalfPlatform(this);
             platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
@@ -433,7 +429,7 @@ public strictfp class World extends net.phys2d.raw.World {
             cannon.setPosition(x * Platform.size, y * Platform.size);
             add(cannon);
         } else if (c.equals("mobile_pike_anchor")) {
-            MobilePikeAnchor anchor = new MobilePikeAnchor();
+            MobilePikeAnchor anchor = new MobilePikeAnchor(this);
             anchor.setTexture(textureCache.getTexture(map, tile));
             anchor.setPosition(x * Platform.size, y * Platform.size);
             add(anchor);
@@ -447,7 +443,7 @@ public strictfp class World extends net.phys2d.raw.World {
             j.setRelaxation(0);
             add(j);
         } else if (c.equals("axe_anchor")) {
-            AxeAnchor anchor = new AxeAnchor();
+            AxeAnchor anchor = new AxeAnchor(this);
             anchor.setTexture(textureCache.getTexture(map, tile));
             anchor.setPosition(x * Platform.size, y * Platform.size);
             add(anchor);
@@ -496,8 +492,11 @@ public strictfp class World extends net.phys2d.raw.World {
             EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
             boss.setBodyTexture(textureCache.getTexture("data/egyptian_boss_body.png"));
             boss.setHandTexture(textureCache.getTexture("data/egyptian_boss_hand.png"));
+            add(boss);
+            add(boss.getLeftHand());
+            add(boss.getRightHand());
         } else {
-            Platform platform = new Platform();
+            Platform platform = new Platform(this);
             platform.setTexture(textureCache.getTexture(map, tile));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setEnabled(false);
@@ -519,41 +518,15 @@ public strictfp class World extends net.phys2d.raw.World {
             }
         }
     }
-    static final float ortho2DBaseSize = World.distanceUnit * 20.0f;
-    static final float ortho2DLeft = -ortho2DBaseSize;
-    static final float ortho2DBottom = -ortho2DBaseSize;
-    static final float ortho2DRight = ortho2DBaseSize;
-    static final float ortho2DTop = ortho2DBaseSize;
+    public static final float ortho2DBaseSize = World.distanceUnit * 20.0f;
+    public static final float ortho2DLeft = -ortho2DBaseSize;
+    public static final float ortho2DBottom = -ortho2DBaseSize;
+    public static final float ortho2DRight = ortho2DBaseSize;
+    public static final float ortho2DTop = ortho2DBaseSize;
     float aspectRatio = 1.0f;
 
     public void draw() {
-        GL11.glPushMatrix();
-
-        aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        GLU.gluOrtho2D(ortho2DLeft * aspectRatio, ortho2DRight * aspectRatio, ortho2DBottom, ortho2DTop);
-
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-        GL11.glRotatef((float) Math.toDegrees(-getGravityAngle()), 0, 0, 1.0f);
-        drawBackground();
-
-        ROVector2f heroPos = hero.getPosition();
-        GL11.glTranslatef(-heroPos.getX(), -heroPos.getY(), 0.0f);
-
-        final float cameraSize = ortho2DBaseSize * 1.5f;
-        final BodyList visibleBodies = getVisibleBodies(heroPos.getX() - cameraSize, heroPos.getY() - cameraSize, heroPos.getX() + cameraSize, heroPos.getY() + cameraSize);
-        //  final BodyList bodies = world.getBodies();
-
-        for (int i = 0; i < visibleBodies.size(); i++) {
-            Body body = visibleBodies.get(i);
-            if (body instanceof Drawable) {
-                ((Drawable) body).draw();
-            }
-        }
-
-        topLevelEntities.draw();
-        GL11.glPopMatrix();
-
+        getView().drawWorld(this);
     }
 
     public void update() throws GameOverException {
@@ -563,45 +536,6 @@ public strictfp class World extends net.phys2d.raw.World {
         }
 
         topLevelEntities.update(frameTimeInfos);
-    }
-
-    private void drawBackground() {
-        GL11.glPushMatrix();
-        backgroundTexture.bind();
-
-        ROVector2f heroPos = hero.getPosition();
-
-        AbsoluteAABox worldStaticBounds = getStaticBounds();
-        AbsoluteAABox staticBounds = new AbsoluteAABox();
-        staticBounds.x1 = ortho2DLeft * aspectRatio * 2.0f;
-        staticBounds.x2 = ortho2DRight * aspectRatio * 2.0f;
-        staticBounds.y1 = ortho2DBottom * aspectRatio * 2.0f;
-        staticBounds.y2 = ortho2DTop * aspectRatio * 2.0f;
-        float xt = -heroPos.getX() * (staticBounds.getWidth() / worldStaticBounds.getWidth());
-        float yt = -heroPos.getY() * (staticBounds.getHeight() / worldStaticBounds.getHeight());
-
-        xt = Math.max(xt, -ortho2DBaseSize / 2.0f);
-        xt = Math.min(xt, ortho2DBaseSize / 2.0f);
-        yt = Math.max(yt, -ortho2DBaseSize / 2.0f);
-        yt = Math.min(yt, ortho2DBaseSize / 2.0f);
-
-        staticBounds.x1 += xt;
-        staticBounds.x2 += xt;
-        staticBounds.y1 += yt;
-        staticBounds.y2 += yt;
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(staticBounds.x1, staticBounds.y2);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(staticBounds.x2, staticBounds.y2);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(staticBounds.x2, staticBounds.y1);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(staticBounds.x1, staticBounds.y1);
-        GL11.glEnd();
-        GL11.glPopMatrix();
     }
 
     @Override
@@ -622,5 +556,17 @@ public strictfp class World extends net.phys2d.raw.World {
 
     public LevelScore getLevelScore() {
         return hero.getLevelScore();
+    }
+
+    GameView getView() {
+        return game.getView();
+    }
+
+    public Texture getBackgroundTexture() {
+        return backgroundTexture;
+    }
+
+    public EntityList getTopLevelEntities() {
+        return topLevelEntities;
     }
 }

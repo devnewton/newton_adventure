@@ -31,8 +31,8 @@
  */
 package im.bci.newtonadv.game.special.occasion;
 
+import im.bci.newtonadv.platform.lwjgl.GameView;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 /**
@@ -42,18 +42,31 @@ import org.lwjgl.util.glu.GLU;
 public class SnowLayer implements SpecialOccasionLayer {
 
     static final float ortho2DBaseSize = 100.0f;
-    static final float ortho2DLeft = -ortho2DBaseSize;
-    static final float ortho2DBottom = -ortho2DBaseSize;
-    static final float ortho2DRight = ortho2DBaseSize;
-    static final float ortho2DTop = ortho2DBaseSize;
+    public static final float ortho2DLeft = -ortho2DBaseSize;
+    public static final float ortho2DBottom = -ortho2DBaseSize;
+    public static final float ortho2DRight = ortho2DBaseSize;
+    public static final float ortho2DTop = ortho2DBaseSize;
     static final int updateRate = 4;
     int lastUpdate;
     float aspectRatio = 1.0f;
+    private final GameView view;
+    
+    SnowLayer(GameView view) {
+        this.view = view;
+    }
 
-    private class SnowFlake {
+    public void setAspectRatio(float aspectRatio) {
+        this.aspectRatio = aspectRatio;
+    }
 
-        float x = aspectRatio * ((float) Math.random() * (ortho2DRight - ortho2DLeft) + ortho2DLeft);
-        float y = ortho2DTop;
+    public SnowFlake[] getFlakes() {
+        return flakes;
+    }
+
+    public class SnowFlake {
+
+        public float x = aspectRatio * ((float) Math.random() * (ortho2DRight - ortho2DLeft) + ortho2DLeft);
+        public float y = ortho2DTop;
     };
     final SnowFlake[] flakes = new SnowFlake[1000];
 
@@ -81,22 +94,6 @@ public class SnowLayer implements SpecialOccasionLayer {
 
     @Override
     public void draw() {
-        GL11.glPushMatrix();
-
-        aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        GLU.gluOrtho2D(ortho2DLeft * aspectRatio, ortho2DRight * aspectRatio, ortho2DBottom, ortho2DTop);
-
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        GL11.glBegin(GL11.GL_POINTS);
-        for (int i = 0; i < flakes.length; ++i) {
-            if (null != flakes[i]) {
-                GL11.glVertex2f(flakes[i].x, flakes[i].y);
-            }
-        }
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
+        view.drawSnowLayer(this);
     }
 }

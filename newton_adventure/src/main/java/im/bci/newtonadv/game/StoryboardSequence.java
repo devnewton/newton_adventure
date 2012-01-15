@@ -32,23 +32,19 @@
 package im.bci.newtonadv.game;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.util.TrueTypeFont;
+import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import java.awt.Font;
 
 public class StoryboardSequence implements Sequence {
 
     Sequence nextSequence;
     String texture;
-    static final float ortho2DBaseSize = 100.0f;
-    static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
-    static final float ortho2DLeft = 0;
-    static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
-    static final float ortho2DTop = 0;
-    private Game game;
+    static public final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
+    static public final float ortho2DLeft = 0;
+    static public final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
+    static public final float ortho2DTop = 0;
+    protected Game game;
     private final String music;
     private boolean redraw = true;
     protected TrueTypeFont font;
@@ -62,38 +58,7 @@ public class StoryboardSequence implements Sequence {
 
     @Override
     public void draw() {
-        if (Display.isVisible() || Display.wasResized() || Display.isDirty() || redraw) {
-            redraw = false;
-
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(ortho2DLeft, ortho2DRight, ortho2DBottom, ortho2DTop);
-            game.getView().getTextureCache().getTexture(texture).bind();
-            final float x1 = ortho2DLeft;
-            final float x2 = ortho2DRight;
-            final float y1 = ortho2DBottom;
-            final float y2 = ortho2DTop;
-            final float u1 = 0.0f, u2 = 1.0f;
-            GL11.glBegin(GL11.GL_QUADS);
-            GL11.glTexCoord2f(u1, 0.0f);
-            GL11.glVertex2f(x1, y2);
-            GL11.glTexCoord2f(u2, 0.0f);
-            GL11.glVertex2f(x2, y2);
-            GL11.glTexCoord2f(u2, 1.0f);
-            GL11.glVertex2f(x2, y1);
-            GL11.glTexCoord2f(u1, 1.0f);
-            GL11.glVertex2f(x1, y1);
-            GL11.glEnd();
-            drawContinueText();
-            GL11.glPopMatrix();
-        }
-    }
-
-    protected void drawContinueText() {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-        font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press enter to continue ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
-        GL11.glPopAttrib();
+        game.getView().drawStoryBoardSequence(this,font);
     }
 
     @Override
@@ -126,5 +91,17 @@ public class StoryboardSequence implements Sequence {
 
     void setNextSequence(Sequence nextSequence) {
         this.nextSequence = nextSequence;
+    }
+
+    public boolean isDirty() {
+        return redraw;
+    }
+
+    public void setDirty(boolean b) {
+        redraw = b;
+    }
+
+    public String getTexture() {
+        return texture;
     }
 }

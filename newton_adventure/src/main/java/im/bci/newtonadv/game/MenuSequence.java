@@ -33,11 +33,9 @@ package im.bci.newtonadv.game;
 
 import java.util.ArrayList;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
+import java.util.List;
 
 /**
  *
@@ -45,10 +43,10 @@ import im.bci.newtonadv.Texture;
  */
 public abstract class MenuSequence implements Sequence {
 
-    static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
-    static final float ortho2DLeft = 0;
-    static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
-    static final float ortho2DTop = 0;
+    public static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
+    public static final float ortho2DLeft = 0;
+    public static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
+    public static final float ortho2DTop = 0;
     private ArrayList<Button> buttons = new ArrayList<Button>();
     private int currentButtonIndex;
     private boolean redraw;
@@ -67,45 +65,15 @@ public abstract class MenuSequence implements Sequence {
     public void setBackgroundImage(String backgroundImage) {
         this.backgroundImage = backgroundImage;
     }
+    
+    public List<Button> getButtons()
+    {
+    return buttons;
+    }
 
     @Override
     public void draw() {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized() || redraw) {
-            redraw = false;
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(MainMenuSequence.ortho2DLeft, MainMenuSequence.ortho2DRight, MainMenuSequence.ortho2DBottom, MainMenuSequence.ortho2DTop);
-
-            if (backgroundImage != null) {
-                game.getView().getTextureCache().getTexture(backgroundImage).bind();
-                final float x1 = MainMenuSequence.ortho2DLeft;
-                final float x2 = MainMenuSequence.ortho2DRight;
-                final float y1 = MainMenuSequence.ortho2DBottom;
-                final float y2 = MainMenuSequence.ortho2DTop;
-                final float u1 = 0.0F;
-                final float u2 = 1.0F;
-                GL11.glBegin(GL11.GL_QUADS);
-                GL11.glTexCoord2f(u1, 0.0F);
-                GL11.glVertex2f(x1, y2);
-                GL11.glTexCoord2f(u2, 0.0F);
-                GL11.glVertex2f(x2, y2);
-                GL11.glTexCoord2f(u2, 1.0F);
-                GL11.glVertex2f(x2, y1);
-                GL11.glTexCoord2f(u1, 1.0F);
-                GL11.glVertex2f(x1, y1);
-                GL11.glEnd();
-            } else {
-                GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-            }
-
-            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-            GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F); // sets aplha function
-            for (Button b : buttons) {
-                b.draw();
-            }
-            GL11.glPopAttrib();
-            GL11.glPopMatrix();
-        }
+        game.getView().drawMenuSequence(this);
     }
 
     @Override
@@ -200,33 +168,27 @@ public abstract class MenuSequence implements Sequence {
         redraw = true;
     }
 
-    protected abstract class Button {
+    public boolean isDirty() {
+        return redraw;
+    }
 
-        String onTexture, offTexture, currentTexture = null;
-        float x = 273, y;
-        float w = -1.0f;
-        float h = -1.0f;
+    public void setDirty(boolean b) {
+        redraw = b;
+    }
 
-        void draw() {
-            if (currentTexture != null) {
-                Texture texture = game.getView().getTextureCache().getTexture(currentTexture);
-                texture.bind();
-                final float x1 = x;
-                final float x2 = x + (w > 0 ? w : texture.getWidth());
-                final float y1 = y + (h > 0 ? h : texture.getHeight());
-                final float y2 = y;
-                final float u1 = 0.0f, u2 = 1.0f;
-                GL11.glBegin(GL11.GL_QUADS);
-                GL11.glTexCoord2f(u1, 0.0f);
-                GL11.glVertex2f(x1, y2);
-                GL11.glTexCoord2f(u2, 0.0f);
-                GL11.glVertex2f(x2, y2);
-                GL11.glTexCoord2f(u2, 1.0f);
-                GL11.glVertex2f(x2, y1);
-                GL11.glTexCoord2f(u1, 1.0f);
-                GL11.glVertex2f(x1, y1);
-                GL11.glEnd();
-            }
+    public String getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public abstract class Button {
+
+        public String onTexture, offTexture, currentTexture = null;
+        public float x = 273, y;
+        public float w = -1.0f;
+        public float h = -1.0f;
+
+        public void draw() {
+            game.getView().drawButton(this);
         }
 
         void setOn() {

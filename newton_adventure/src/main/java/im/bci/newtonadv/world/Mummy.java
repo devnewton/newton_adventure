@@ -41,7 +41,6 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Circle;
-import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.util.Vector;
 
 /**
@@ -154,43 +153,7 @@ public strictfp class Mummy extends Body implements Drawable, Updatable {
 
     @Override
     public void draw() {
-        AABox bounds = getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(getPosition().getX(), getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        GL11.glScalef(scale, scale, 1);
-        float x1 = -bounds.getWidth() / 2.0f;
-        float x2 = bounds.getWidth() / 2.0f;
-        float y1 = -bounds.getHeight() / 2.0f;
-        float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-
-        getAnimation().getCurrentTexture().bind();
-
-        float u1, u2;
-        if (isLookingLeft()) {
-            u1 = 1.0f;
-            u2 = 0.0f;
-        } else {
-            u1 = 0.0f;
-            u2 = 1.0f;
-        }
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
+        world.getView().drawMummy(this,world,getAnimation().getCurrentTexture(),scale);
     }
 
     @Override

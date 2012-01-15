@@ -32,7 +32,6 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.raw.Body;
-import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
@@ -42,10 +41,9 @@ public class Cloud extends Platform implements Updatable {
     private long disappearEndTime = -1;
     private float alpha = 1.0f;
     private static final long disappearDuration = 1000000000L;
-    private World world;
 
     public Cloud(World world) {
-        this.world = world;
+        super(world);
     }
     
     @Override
@@ -56,13 +54,7 @@ public class Cloud extends Platform implements Updatable {
 
     @Override
     public void draw() {
-         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable (GL11.GL_BLEND); 
-        GL11.glBlendFunc (GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-        super.draw();
-        GL11.glPopAttrib();
-        
+        world.getView().drawCloud(this, texture,alpha);       
     }
 
     @Override

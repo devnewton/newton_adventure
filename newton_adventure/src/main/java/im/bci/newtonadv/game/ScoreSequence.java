@@ -31,17 +31,12 @@
  */
 package im.bci.newtonadv.game;
 
-import java.util.Map.Entry;
-import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.score.ScoreServer;
-import im.bci.newtonadv.util.TrueTypeFont;
+import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import java.awt.Font;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.glu.GLU;
 
 /**
  *
@@ -49,10 +44,10 @@ import org.lwjgl.util.glu.GLU;
  */
 public class ScoreSequence implements Sequence {
 
-    static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
-    static final float ortho2DLeft = 0;
-    static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
-    static final float ortho2DTop = 0;
+    public static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
+    public static final float ortho2DLeft = 0;
+    public static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
+    public static final float ortho2DTop = 0;
     TrueTypeFont font;
     private final QuestScore questScore;
     private boolean redraw;
@@ -62,11 +57,13 @@ public class ScoreSequence implements Sequence {
     private FrameTimeInfos timeInfos;
     private long scorePerCentToShow;
     private final ScoreServer scoreServer;
+    private final Game game;
 
     public ScoreSequence(Game game, String questName, Sequence nextSequence) {
         this.questScore = game.getScore().getQuestScore(questName);
         this.nextSequence = nextSequence;
         this.scoreServer = new ScoreServer(game.getConfig());
+        this.game = game;
     }
 
     @Override
@@ -85,28 +82,7 @@ public class ScoreSequence implements Sequence {
     }
 
     public void draw() {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized() || redraw) {
-            redraw = false;
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(ortho2DLeft, ortho2DRight, ortho2DBottom, ortho2DTop);
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-            int i = 1;
-            font.drawString((ortho2DLeft + ortho2DRight) / 2.0f, i++ * font.getHeight(), "SCORES", 1, -1, TrueTypeFont.ALIGN_CENTER);
-            font.drawString(0, i++ * font.getHeight(), questScore.getQuestName(), 1, -1, TrueTypeFont.ALIGN_LEFT);
-            for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
-                String levelScoreStr = levelEntry.getKey() + ": " + (scorePerCentToShow * levelEntry.getValue().computeScore() / 100);
-                font.drawString((ortho2DLeft + ortho2DRight) / 2.0f, i++ * font.getHeight(), levelScoreStr, 1, -1, TrueTypeFont.ALIGN_CENTER);
-            }
-            String questScoreStr = "Quest total: " + (scorePerCentToShow * questScore.computeScore() / 100);
-            font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1, TrueTypeFont.ALIGN_LEFT);
-            font.drawString(ortho2DRight, ortho2DBottom - font.getHeight() * 2, "Press enter to send score to server ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
-            font.drawString(ortho2DRight, ortho2DBottom - font.getHeight(), "Press right to skip ", 1, -1, TrueTypeFont.ALIGN_RIGHT);
-            GL11.glPopMatrix();
-            GL11.glPopAttrib();
-        }
+        game.getView().drawScoreSequence(this,font,questScore,scorePerCentToShow);
     }
 
     public void update() throws TransitionException {
@@ -134,5 +110,13 @@ public class ScoreSequence implements Sequence {
 
     void setNextSequence(Sequence nextSequence) {
         this.nextSequence = nextSequence;
+    }
+
+    public boolean isDirty() {
+        return redraw;
+    }
+
+    public void setDirty(boolean b) {
+        redraw = b;
     }
 }

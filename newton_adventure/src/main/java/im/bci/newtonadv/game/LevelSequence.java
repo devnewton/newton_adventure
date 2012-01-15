@@ -32,14 +32,12 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.util.TrueTypeFont;
+import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.World;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
 
 /**
  *
@@ -150,10 +148,10 @@ strictfp public class LevelSequence implements Sequence {
             world.getHero().dontMove();
         }
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_F11)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_F11)) {
             world.cheatActivateAll();
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_F12)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_F12)) {
             cheatCodeGotoNextLevel = true;
         }
     }
@@ -169,45 +167,8 @@ strictfp public class LevelSequence implements Sequence {
         drawIndicators();
     }
 
-    private void drawAppleIndicatorIcon(float x, float y, float w, float h) {
-        final float x1 = x;
-        final float x2 = x + w;
-        final float y1 = y;
-        final float y2 = y + h;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        world.getAppleIconTexture().bind();
-
-        final float u1 = 0.0f,  u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
     private void drawIndicators() {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-        GL11.glTranslatef(0, Display.getHeight() - 64, 0);
-        String nbAppleStr = "" + world.getHero().getNbApple();
-        appleFont.drawString(nbAppleStr);
-        int iconWidth = appleFont.getWidth("O");
-        drawAppleIndicatorIcon(appleFont.getWidth(nbAppleStr), appleFont.getWidth(nbAppleStr), iconWidth, iconWidth);
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
+        game.getView().drawLevelIndicators(world, appleFont);
     }
 
     public void setNextSequence(Sequence nextSequence) {

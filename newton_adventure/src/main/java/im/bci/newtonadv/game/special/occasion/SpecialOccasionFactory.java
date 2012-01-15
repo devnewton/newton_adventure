@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.game.special.occasion;
 
+import im.bci.newtonadv.platform.lwjgl.GameView;
 import java.util.Calendar;
 
 /**
@@ -39,10 +40,10 @@ import java.util.Calendar;
  */
 public class SpecialOccasionFactory {
 
-    public static SpecialOccasionLayer createSpecialOccasionLayer() {
+    public static SpecialOccasionLayer createSpecialOccasionLayer(GameView view) {
         Calendar now = Calendar.getInstance();
         if(now.get(Calendar.MONTH) == Calendar.DECEMBER) {
-            return new SnowLayer();
+            return new SnowLayer(view);
         }
         return new NullOccasionLayer();
     }

@@ -29,45 +29,24 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv;
+package im.bci.newtonadv.platform.lwjgl;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import org.lwjgl.opengl.GL11;
 
-/**
- *
- * @author devnewton
- */
-public class Texture {
+enum GameViewQuality {
 
-    private int id;
-    private int width, height;
+    DEFAULT,
+    NICEST,
+    FASTEST;
 
-    public Texture(int width, int height) {
-        ByteBuffer temp = ByteBuffer.allocateDirect(4);
-        temp.order(ByteOrder.nativeOrder());
-        IntBuffer intBuffer = temp.asIntBuffer();
-        GL11.glGenTextures(intBuffer);
-        id = intBuffer.get(0);
-        this.width = width;
-        this.height = height;
-    }
-
-    int getId() {
-        return id;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void bind() {
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
+    int toGL() {
+        switch(this) {
+            case NICEST:
+                return GL11.GL_NICEST;
+            case FASTEST:
+                return GL11.GL_FASTEST;
+            default:
+                return GL11.GL_DONT_CARE;
+        }
     }
 }

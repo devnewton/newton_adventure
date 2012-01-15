@@ -39,8 +39,7 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Circle;
-import org.lwjgl.opengl.GL11;
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
 import im.bci.newtonadv.util.Vector;
 
 /**
@@ -48,6 +47,7 @@ import im.bci.newtonadv.util.Vector;
  * @author devnewton
  */
 public strictfp class EgyptianBossHand extends Body implements Drawable, Updatable {
+    private final World world;
 
     enum Side {
 
@@ -66,10 +66,11 @@ public strictfp class EgyptianBossHand extends Body implements Drawable, Updatab
     private Side side;
     private State state = State.MOVING_TO_BOSS;
 
-    EgyptianBossHand(EgyptianBoss boss, Side side) {
+    EgyptianBossHand(EgyptianBoss boss, Side side, World world) {
         super(new Circle(World.distanceUnit /* * 2.0f, World.distanceUnit * 2.0f*/), weight);
         this.boss = boss;
         this.side = side;
+        this.world = world;
         setRotatable(false);
         setGravityEffected(false);
         addExcludedBody(boss);
@@ -93,34 +94,7 @@ public strictfp class EgyptianBossHand extends Body implements Drawable, Updatab
 
     @Override
     public void draw() {
-        AABox bounds = getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(getPosition().getX(), getPosition().getY(), 0.0f);
-        float x1 = -bounds.getWidth() / 2.0f;
-        float x2 = bounds.getWidth() / 2.0f;
-        float y1 = -bounds.getHeight() / 2.0f;
-        float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-
-        texture.bind();
-
-        final float u1 = 1, u2 = 0;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
+        world.getView().drawEgyptianBossHand(this, texture);
     }
 
     @Override

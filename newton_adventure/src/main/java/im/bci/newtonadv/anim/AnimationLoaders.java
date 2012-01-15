@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.anim;
 
-import im.bci.newtonadv.TextureCache;
+import im.bci.newtonadv.platform.lwjgl.TextureCache;
 import im.bci.newtonadv.util.GifDecoder;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;

@@ -31,11 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.Texture;
+import im.bci.newtonadv.platform.lwjgl.Texture;
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Circle;
-import org.lwjgl.opengl.GL11;
 
 /**
  *
@@ -45,11 +44,13 @@ public class AxeAnchor extends StaticBody implements Drawable {
 
     static final float radius = World.distanceUnit;
     private Texture texture;
+    private final World world;
 
-    AxeAnchor() {
+    AxeAnchor(World world) {
         super(new Circle(radius));
         setFriction(10.0f);
         addBit(World.STATIC_BODY_COLLIDE_BIT);
+        this.world = world;
     }
 
     public void setTexture(Texture texture) {
@@ -58,31 +59,6 @@ public class AxeAnchor extends StaticBody implements Drawable {
 
     @Override
     public void draw() {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(getPosition().getX(), getPosition().getY(), 0.0f);
-        final float x1 = -radius;
-        final float x2 = radius;
-        final float y1 = -radius;
-        final float y2 = radius;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT |  GL11.GL_CURRENT_BIT);
-                GL11.glEnable (GL11.GL_BLEND); 
-        GL11.glBlendFunc (GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        texture.bind();
-
-        final float u1 = 0.18f,  u2 = 0.8f;
-        final float v1 = 0.2f,  v2 = 0.8f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, v1);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, v1);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, v2);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, v2);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
+        world.getView().drawAxeAnchor(this,radius, texture);
     }
 }

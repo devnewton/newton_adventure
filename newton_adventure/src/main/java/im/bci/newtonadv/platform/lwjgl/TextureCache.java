@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv;
+package im.bci.newtonadv.platform.lwjgl;
 
 import java.awt.Color;
 import java.awt.Graphics;
