@@ -31,7 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.lwjgl.Texture;
+import im.bci.newtonadv.platform.interfaces.ITexture;
+
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Box;
@@ -43,7 +44,7 @@ import net.phys2d.raw.shapes.Box;
 public class Platform extends StaticBody implements Drawable {
 
     static final float size = 2.0f * World.distanceUnit;
-    protected Texture texture;
+    protected ITexture texture;
     protected final World world;
 
     Platform(World world) {
@@ -53,7 +54,7 @@ public class Platform extends StaticBody implements Drawable {
         this.world = world;
     }
 
-    public void setTexture(Texture texture) {
+    public void setTexture(ITexture texture) {
         this.texture = texture;
     }
 

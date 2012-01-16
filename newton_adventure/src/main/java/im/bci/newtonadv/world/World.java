@@ -32,15 +32,15 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.lwjgl.Texture;
-import im.bci.newtonadv.platform.lwjgl.TextureCache;
+import im.bci.newtonadv.platform.interfaces.ITexture;
+import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationLoaders;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
-import im.bci.newtonadv.platform.lwjgl.GameView;
+import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
 import java.io.File;
@@ -77,30 +77,30 @@ public strictfp class World extends net.phys2d.raw.World {
     private static final float gravityForce = 2f;
     private Vector2f gravityVector = new Vector2f();
     private Game game;
-    private Texture backgroundTexture;
+    private ITexture backgroundTexture;
     private List<Updatable> updatableBodies = new LinkedList();
     protected EntityList topLevelEntities = new EntityList();
-    private Texture appleIconTexture;
-    private Texture fireBallTexture;
+    private ITexture appleIconTexture;
+    private ITexture fireBallTexture;
     private boolean objectivesCompleted = false;
     private float nonProgressiveGravityRotationStep;
     private Animation explosionAnimation;
     private Animation mummyAnimation;
     private Animation batAnimation;
-    private Texture keyTexture;
-    private Texture openDoorTexture;
-    private Texture closedDoorTexture;
-    private Texture mobilePikesTexture;
-    private Texture axeTexture;
-    private Texture activator1OnTexture;
-    private Texture activator2OnTexture;
-    private Texture activator3OnTexture;
-    private Texture activator1OffTexture;
-    private Texture activator2OffTexture;
-    private Texture activator3OffTexture;
-    private Texture blocker1Texture;
-    private Texture blocker2Texture;
-    private Texture blocker3Texture;
+    private ITexture keyTexture;
+    private ITexture openDoorTexture;
+    private ITexture closedDoorTexture;
+    private ITexture mobilePikesTexture;
+    private ITexture axeTexture;
+    private ITexture activator1OnTexture;
+    private ITexture activator2OnTexture;
+    private ITexture activator3OnTexture;
+    private ITexture activator1OffTexture;
+    private ITexture activator2OffTexture;
+    private ITexture activator3OffTexture;
+    private ITexture blocker1Texture;
+    private ITexture blocker2Texture;
+    private ITexture blocker3Texture;
 
     public boolean areObjectivesCompleted() {
         return objectivesCompleted;
@@ -110,11 +110,11 @@ public strictfp class World extends net.phys2d.raw.World {
         this.objectivesCompleted = objectivesCompleted;
     }
 
-    public Texture getAppleIconTexture() {
+    public ITexture getAppleIconTexture() {
         return appleIconTexture;
     }
 
-    public Texture getFireBallTexture() {
+    public ITexture getFireBallTexture() {
         return fireBallTexture;
     }
 
@@ -259,7 +259,7 @@ public strictfp class World extends net.phys2d.raw.World {
         tiled.core.Map map = mapReader.readMap(tmxFiles[0].getPath());
 
 
-        final TextureCache textureCache = game.getView().getTextureCache();
+        final ITextureCache textureCache = game.getView().getTextureCache();
         explosionAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.explosion"));
         mummyAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.mummy"));
         batAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.bat"));
@@ -324,7 +324,7 @@ public strictfp class World extends net.phys2d.raw.World {
     }
 
     private void initFromTile(float x, float y, tiled.core.Map map, tiled.core.Tile tile) throws IOException {
-        TextureCache textureCache = game.getView().getTextureCache();
+        ITextureCache textureCache = game.getView().getTextureCache();
         String c = tile.getProperties().getProperty("newton_adventure.type", "unknown");
         if (c.equals("platform")) {
             Platform platform = new Platform(this);
@@ -558,11 +558,11 @@ public strictfp class World extends net.phys2d.raw.World {
         return hero.getLevelScore();
     }
 
-    GameView getView() {
+    IGameView getView() {
         return game.getView();
     }
 
-    public Texture getBackgroundTexture() {
+    public ITexture getBackgroundTexture() {
         return backgroundTexture;
     }
 

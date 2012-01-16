@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -40,7 +41,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @author devnewton
  */
-public class Texture {
+public class Texture implements ITexture {
 
     private int id;
     private int width, height;

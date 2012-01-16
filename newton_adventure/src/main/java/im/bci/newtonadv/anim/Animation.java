@@ -31,7 +31,8 @@
  */
 package im.bci.newtonadv.anim;
 
-import im.bci.newtonadv.platform.lwjgl.Texture;
+import im.bci.newtonadv.platform.interfaces.ITexture;
+
 import java.util.ArrayList;
 
 /**
@@ -58,12 +59,12 @@ public class Animation {
     private PlayMode mode = PlayMode.LOOP;
     private State state = State.STOPPED;
 
-    public Texture getCurrentTexture() {
+    public ITexture getCurrentTexture() {
         assert !frames.isEmpty();
         return frames.get(currentFrameIndex).getImage();
     }
 
-    public void addFrame(Texture image, long duration) {
+    public void addFrame(ITexture image, long duration) {
         final Frame frame = new Frame(image, duration);
         frames.add(frame);
         totalDuration += duration;

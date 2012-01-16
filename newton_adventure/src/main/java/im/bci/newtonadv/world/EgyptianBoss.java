@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.BodyList;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -40,7 +41,7 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Circle;
-import im.bci.newtonadv.platform.lwjgl.Texture;
+
 import im.bci.newtonadv.util.Vector;
 
 /**
@@ -57,7 +58,7 @@ public strictfp class EgyptianBoss extends Body implements Drawable, Updatable {
         return rightHand;
     }
 
-    private Texture bodyTexture;
+    private ITexture bodyTexture;
     private static final float weight = 10.0f;
     static final float normalSpeed = 1.0f;
     float speed = normalSpeed;
@@ -101,11 +102,11 @@ public strictfp class EgyptianBoss extends Body implements Drawable, Updatable {
         return pos;
     }
 
-    public void setBodyTexture(Texture bodyTexture) {
+    public void setBodyTexture(ITexture bodyTexture) {
         this.bodyTexture = bodyTexture;
     }
 
-    public void setHandTexture(Texture handTexture) {
+    public void setHandTexture(ITexture handTexture) {
         leftHand.setTexture(handTexture);
         rightHand.setTexture(handTexture);
     }

@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.game.special.occasion;
 
-import im.bci.newtonadv.platform.lwjgl.GameView;
+import im.bci.newtonadv.platform.interfaces.IGameView;
 
 /**
  *
@@ -47,9 +47,9 @@ public class SnowLayer implements SpecialOccasionLayer {
     static final int updateRate = 4;
     int lastUpdate;
     float aspectRatio = 1.0f;
-    private final GameView view;
+    private final IGameView view;
     
-    SnowLayer(GameView view) {
+    SnowLayer(IGameView view) {
         this.view = view;
     }
 

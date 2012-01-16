@@ -31,6 +31,8 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -59,7 +61,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @author devnewton
  */
-public class TextureCache {
+public class TextureCache implements ITextureCache {
 
     private HashMap<String/*name*/, TextureWeakReference> textures = new HashMap();
     private ReferenceQueue<Texture> referenceQueue = new ReferenceQueue<Texture>();
@@ -95,34 +97,17 @@ public class TextureCache {
         }
     }
 
-    public Texture getTextureIfLoaded(String name) {
-        TextureWeakReference textureRef = textures.get(name);
-        if (textureRef != null) {
-            Texture texture = textureRef.get();
-            if (texture != null) {
-                return texture;
-            }
-        }
-        return null;
-    }
-
-    public Texture createTexture(String name, BufferedImage bufferedImage) {
+    public ITexture createTexture(String name, BufferedImage bufferedImage) {
         Texture texture = convertImageToTexture(bufferedImage, false);
         textures.put(name, new TextureWeakReference(texture, referenceQueue));
         return texture;
     }
 
-    public Texture createTexture(String name, BufferedImage bufferedImage, boolean usePowerOfTwoTexture) {
-        Texture texture = convertImageToTexture(bufferedImage, usePowerOfTwoTexture);
-        textures.put(name, new TextureWeakReference(texture, referenceQueue));
-        return texture;
-    }
-
-    public Texture getTexture(tiled.core.Map map, tiled.core.Tile tile) {
+    public ITexture getTexture(tiled.core.Map map, tiled.core.Tile tile) {
         String name = map.getFilename() + "#tiled_" + tile.getGid();
         TextureWeakReference textureRef = textures.get(name);
         if (textureRef != null) {
-            Texture texture = textureRef.get();
+            ITexture texture = textureRef.get();
             if (texture != null) {
                 return texture;
             } else {
@@ -136,11 +121,11 @@ public class TextureCache {
             return texture;
     }
 
-    public Texture getTexture(String name) {
+    public ITexture getTexture(String name) {
         return getTexture(name, false);
     }
 
-    public Texture getTexture(String name, boolean usePowerOfTwoTexture) {
+    private Texture getTexture(String name, boolean usePowerOfTwoTexture) {
         TextureWeakReference textureRef = textures.get(name);
         if (textureRef != null) {
             Texture texture = textureRef.get();
@@ -156,7 +141,7 @@ public class TextureCache {
         return texture;
     }
 
-    public static Texture convertImageToTexture(BufferedImage bufferedImage, boolean usePowerOfTwoTexture) {
+    private static Texture convertImageToTexture(BufferedImage bufferedImage, boolean usePowerOfTwoTexture) {
         ByteBuffer imageBuffer = null;
         WritableRaster raster;
         BufferedImage texImage;

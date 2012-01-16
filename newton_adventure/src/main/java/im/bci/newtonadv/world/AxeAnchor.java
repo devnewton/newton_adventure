@@ -31,7 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.lwjgl.Texture;
+import im.bci.newtonadv.platform.interfaces.ITexture;
+
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Circle;
@@ -43,7 +44,7 @@ import net.phys2d.raw.shapes.Circle;
 public class AxeAnchor extends StaticBody implements Drawable {
 
     static final float radius = World.distanceUnit;
-    private Texture texture;
+    private ITexture texture;
     private final World world;
 
     AxeAnchor(World world) {
@@ -53,7 +54,7 @@ public class AxeAnchor extends StaticBody implements Drawable {
         this.world = world;
     }
 
-    public void setTexture(Texture texture) {
+    public void setTexture(ITexture texture) {
         this.texture = texture;
     }
 

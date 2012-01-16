@@ -31,8 +31,10 @@
  */
 package im.bci.newtonadv;
 
-import im.bci.newtonadv.platform.lwjgl.SoundCache;
-import im.bci.newtonadv.platform.lwjgl.GameView;
+import im.bci.newtonadv.platform.interfaces.IGameInput;
+import im.bci.newtonadv.platform.interfaces.IGameView;
+import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+import im.bci.newtonadv.util.SoundCache;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.logging.Level;
@@ -45,8 +47,6 @@ import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.game.StoryboardSequence;
-import im.bci.newtonadv.platform.lwjgl.GameInput;
-import im.bci.newtonadv.platform.lwjgl.PlatformFactory;
 import im.bci.newtonadv.score.GameScore;
 
 /**
@@ -55,8 +55,8 @@ import im.bci.newtonadv.score.GameScore;
  */
 public strictfp class Game {
 
-    private final GameView view;
-    private final GameInput input;
+    private final IGameView view;
+    private final IGameInput input;
     private boolean running = true;
     static public final int FPS = 60;
     static public final float FPSf = (float) FPS;
@@ -76,7 +76,7 @@ public strictfp class Game {
         return frameTimeInfos;
     }
 
-    public GameView getView() {
+    public IGameView getView() {
         return view;
     }
 
@@ -84,7 +84,7 @@ public strictfp class Game {
         return soundCache;
     }
 
-    public Game(PlatformFactory platform) throws Exception {
+    public Game(IPlatformFactory platform) throws Exception {
         try {
             config.setProperty("view.width", Integer.toString(DEFAULT_SCREEN_WIDTH));
             config.setProperty("view.height", Integer.toString(DEFAULT_SCREEN_HEIGHT));
@@ -186,7 +186,7 @@ public strictfp class Game {
         return score;
     }
 
-    final public GameInput getInput() {
+    final public IGameInput getInput() {
         return input;
     }
 }

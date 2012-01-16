@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
-import im.bci.newtonadv.platform.lwjgl.Texture;
+
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
@@ -50,7 +51,7 @@ public strictfp class Axe extends Body implements Drawable, Updatable {
     private static final float weight = 10.0f;
     static final float width = World.distanceUnit;
     static final float height = 3.9f * World.distanceUnit;
-    private Texture texture;
+    private ITexture texture;
     private World world;
 
     Axe(World world) {
@@ -60,7 +61,7 @@ public strictfp class Axe extends Body implements Drawable, Updatable {
         setGravityEffected(false);
     }
 
-    public void setTexture(Texture texture) {
+    public void setTexture(ITexture texture) {
         this.texture = texture;
     }
 

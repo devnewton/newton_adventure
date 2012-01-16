@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -39,7 +40,7 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Circle;
-import im.bci.newtonadv.platform.lwjgl.Texture;
+
 import im.bci.newtonadv.util.Vector;
 
 /**
@@ -62,7 +63,7 @@ public strictfp class EgyptianBossHand extends Body implements Drawable, Updatab
     }
     private static final float weight = 5.0f;
     private EgyptianBoss boss;
-    private Texture texture;
+    private ITexture texture;
     private Side side;
     private State state = State.MOVING_TO_BOSS;
 
@@ -76,7 +77,7 @@ public strictfp class EgyptianBossHand extends Body implements Drawable, Updatab
         addExcludedBody(boss);
     }
 
-    public void setTexture(Texture t) {
+    public void setTexture(ITexture t) {
         this.texture = t;
     }
 

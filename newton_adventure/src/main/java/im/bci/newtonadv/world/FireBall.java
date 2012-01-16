@@ -31,21 +31,22 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Circle;
-import im.bci.newtonadv.platform.lwjgl.Texture;
+
 import im.bci.newtonadv.game.Drawable;
 
 public strictfp class FireBall extends Body  implements Drawable {
     public static final float size = Cannon.size / 2.0f;
     World world;
-    private Texture texture;
+    private ITexture texture;
     FireBall(World world) {
         super(new Circle(size/2.0f), 40.0f);
         this.world = world;
     }
 
-    void setTexture(Texture texture) {
+    void setTexture(ITexture texture) {
         this.texture = texture;
     }
 

@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.Matrix2f;
-import im.bci.newtonadv.platform.lwjgl.Texture;
+
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
@@ -46,7 +47,7 @@ public strictfp class LosedApple implements Entity {
 
     float size = Apple.size / 2.0f;
     private World world;
-    private Texture texture;
+    private ITexture texture;
     private Vector2f position;
     private Vector2f direction;
     private boolean isDead = false;

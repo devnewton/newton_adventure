@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
+import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 
 /**
  *
@@ -45,7 +45,7 @@ import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 public class QuestMenuSequence extends MenuSequence {
 
     List<QuestSequence> quests;
-    TrueTypeFont questNameFont;
+    ITrueTypeFont questNameFont;
     static final int QUEST_MINIATURE_BY_ROW = 2;
     static final int QUEST_MINIATURE_BY_COLUMN = 2;
     static final float QUEST_MINIATURE_SPACING = 60;
@@ -61,7 +61,7 @@ public class QuestMenuSequence extends MenuSequence {
     @Override
     public void start() {
         super.start();
-        questNameFont = new TrueTypeFont();
+        questNameFont = game.getView().createQuestNameFont();
     }
 
     @Override

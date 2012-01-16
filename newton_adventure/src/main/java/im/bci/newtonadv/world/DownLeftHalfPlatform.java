@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
-import im.bci.newtonadv.platform.lwjgl.Texture;
+
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.StaticBody;
@@ -46,7 +47,7 @@ public class DownLeftHalfPlatform extends StaticBody implements Drawable {
 
     static final float size = 2.0f * World.distanceUnit;
     static final ROVector2f[] vertices = new ROVector2f[] { new Vector2f(-size/2.0f, size/2.0f), new Vector2f(-size/2.0f, -size/2.0f), new Vector2f(size/2.0f, -size/2.0f) };
-    private Texture texture;
+    private ITexture texture;
     private final World world;
 
     DownLeftHalfPlatform(World world) {
@@ -56,7 +57,7 @@ public class DownLeftHalfPlatform extends StaticBody implements Drawable {
         this.world = world;
     }
 
-    public void setTexture(Texture texture) {
+    public void setTexture(ITexture texture) {
         this.texture = texture;
     }
 

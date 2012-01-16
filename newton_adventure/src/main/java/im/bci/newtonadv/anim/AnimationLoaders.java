@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.anim;
 
-import im.bci.newtonadv.platform.lwjgl.TextureCache;
+import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.util.GifDecoder;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -43,7 +43,7 @@ import java.io.FileNotFoundException;
  */
 public class AnimationLoaders {
 
-    static public  Animation loadFromGif(TextureCache textureCache, String name) throws FileNotFoundException {
+    static public  Animation loadFromGif(ITextureCache textureCache, String name) throws FileNotFoundException {
         GifDecoder d = new GifDecoder();
         d.read(new FileInputStream(name));
         Animation animation = new Animation();

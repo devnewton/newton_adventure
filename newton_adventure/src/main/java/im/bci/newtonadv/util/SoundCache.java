@@ -29,9 +29,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.platform.lwjgl;
+package im.bci.newtonadv.util;
 
-import im.bci.newtonadv.util.OggClip;
 import java.io.File;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -63,7 +62,7 @@ public class SoundCache {
         void stop();
     }
 
-    SoundCache(boolean enabled) {
+    public SoundCache(boolean enabled) {
         this.enabled = enabled;
     }
 

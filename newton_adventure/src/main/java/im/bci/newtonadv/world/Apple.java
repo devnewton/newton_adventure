@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.lwjgl.Texture;
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.StaticBody;
@@ -44,7 +44,7 @@ import net.phys2d.raw.shapes.Circle;
 public strictfp class Apple extends StaticBody implements Drawable, CollisionDetectionOnly{
     
     static final float size = 2.0f * World.distanceUnit;
-    private Texture texture;
+    private ITexture texture;
     private World world;
 
     Apple(World world) {
@@ -61,7 +61,7 @@ public strictfp class Apple extends StaticBody implements Drawable, CollisionDet
         }
     }
 
-    public void setTexture(Texture texture) {
+    public void setTexture(ITexture texture) {
         this.texture = texture;
     }
 

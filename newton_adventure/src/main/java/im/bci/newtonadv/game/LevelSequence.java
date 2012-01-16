@@ -32,7 +32,7 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
+import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.World;
 import java.util.logging.Level;
@@ -49,7 +49,7 @@ strictfp public class LevelSequence implements Sequence {
     private FrameTimeInfos frameTimeInfos;
     private World world;
     public long stepTime = 0;
-    private TrueTypeFont appleFont;
+    private ITrueTypeFont appleFont;
     private Sequence nextSequence;
     private Game game;
     private String levelPath;
@@ -64,7 +64,7 @@ strictfp public class LevelSequence implements Sequence {
     public void start() {
         try {
             cheatCodeGotoNextLevel = false;
-            appleFont = new TrueTypeFont();
+            appleFont = game.getView().createAppleFont();
             world = new World(game);
             frameTimeInfos = game.getFrameTimeInfos();
             world.loadLevel(levelPath);

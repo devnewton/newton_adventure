@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
-import im.bci.newtonadv.platform.lwjgl.Texture;
+
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Box;
@@ -46,8 +47,8 @@ public strictfp class Door extends StaticBody implements Drawable, CollisionDete
     static final float width = 2.0f * World.distanceUnit;
     static final float height = 4.0f * World.distanceUnit;
     private World world;
-    private Texture closedTexture;
-    private Texture openTexture;
+    private ITexture closedTexture;
+    private ITexture openTexture;
     private boolean isClose = true;
 
     Door(World world) {
@@ -61,11 +62,11 @@ public strictfp class Door extends StaticBody implements Drawable, CollisionDete
         world.getView().drawDoor(this, isClose ? closedTexture : openTexture );
     }
 
-    void setOpenTexture(Texture texture) {
+    void setOpenTexture(ITexture texture) {
         this.openTexture = texture;
     }
 
-    void setClosedTexture(Texture texture) {
+    void setClosedTexture(ITexture texture) {
         this.closedTexture = texture;
     }
 

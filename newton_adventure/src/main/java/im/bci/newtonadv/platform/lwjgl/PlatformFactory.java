@@ -4,13 +4,15 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+import im.bci.newtonadv.util.SoundCache;
 import java.util.Properties;
 
 /**
  *
  * @author Borome
  */
-public class PlatformFactory {
+public class PlatformFactory implements IPlatformFactory {
 
     public SoundCache createSoundCache(Properties config) {
         return new SoundCache(config.getProperty("sound.enabled").equals("true"));

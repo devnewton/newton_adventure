@@ -31,7 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.lwjgl.Texture;
+import im.bci.newtonadv.platform.interfaces.ITexture;
+
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
@@ -45,13 +46,13 @@ public strictfp class PickedUpApple implements Entity {
     
     float size = Apple.size;
     private World world;
-    private Texture texture;
+    private ITexture texture;
     private Vector2f position;
     private boolean canMove = false;
     private long canMoveTime = -1;
     private static final long waitingDuration = 300000000L;
 
-    PickedUpApple(World world, Texture texture, ROVector2f position) {
+    PickedUpApple(World world, ITexture texture, ROVector2f position) {
         this.world = world;
         this.texture = texture;
         this.position = new Vector2f(position);

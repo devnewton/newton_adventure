@@ -4,6 +4,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.IGameInput;
 import java.util.Properties;
 import org.lwjgl.input.Keyboard;
 
@@ -11,7 +12,7 @@ import org.lwjgl.input.Keyboard;
  *
  * @author bob
  */
-public class GameInput {
+public class GameInput implements IGameInput {
 
     Properties config;
     private int keyJump;

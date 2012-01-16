@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.Game;
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class Main {
 
         setupLibraryPath();
         
-        final PlatformFactory platform = new PlatformFactory();
+        final IPlatformFactory platform = new PlatformFactory();
         final Game game = new Game(platform);
         game.start();
         System.exit(0);

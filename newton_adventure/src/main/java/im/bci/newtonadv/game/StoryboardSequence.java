@@ -32,8 +32,7 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
-import java.awt.Font;
+import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 
 public class StoryboardSequence implements Sequence {
 
@@ -46,7 +45,7 @@ public class StoryboardSequence implements Sequence {
     protected Game game;
     private final String music;
     private boolean redraw = true;
-    protected TrueTypeFont font;
+    protected ITrueTypeFont font;
 
     public StoryboardSequence(Game game, String texture, String music, Sequence nextSequence) {
         this.game = game;
@@ -81,7 +80,7 @@ public class StoryboardSequence implements Sequence {
         }
         redraw = true;
         mustQuit = false;
-        font = new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+        font = game.getView().createStoryBoardSequenceFont();
     }
 
     public void stop() {

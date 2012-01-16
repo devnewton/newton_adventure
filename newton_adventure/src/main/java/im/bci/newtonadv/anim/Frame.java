@@ -31,7 +31,8 @@
  */
 package im.bci.newtonadv.anim;
 
-import im.bci.newtonadv.platform.lwjgl.Texture;
+import im.bci.newtonadv.platform.interfaces.ITexture;
+
 
 /**
  *
@@ -39,10 +40,10 @@ import im.bci.newtonadv.platform.lwjgl.Texture;
  */
 class Frame {
 
-    private Texture image;
+    private ITexture image;
     private long duration;//milliseconds
     long endTime;//milliseconds
-    public Frame(Texture image, long duration) {
+    public Frame(ITexture image, long duration) {
         this.image = image;
         this.duration = duration;
     }
@@ -51,7 +52,7 @@ class Frame {
         return duration;
     }
 
-    public Texture getImage() {
+    public ITexture getImage() {
         return image;
     }
 }

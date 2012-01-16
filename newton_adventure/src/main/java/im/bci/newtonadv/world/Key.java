@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
-import im.bci.newtonadv.platform.lwjgl.Texture;
+
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.raw.shapes.Circle;
 
@@ -44,7 +45,7 @@ public strictfp class Key extends Body implements Drawable {
 
     static final float size = 2.0f * World.distanceUnit;
     private World world;
-    private Texture texture;
+    private ITexture texture;
 
     Key(World world) {
         super(new Circle(size / 2.0f), 1.0f);
@@ -57,7 +58,7 @@ public strictfp class Key extends Body implements Drawable {
         world.getView().drawKey(this, texture, world);
     }
 
-    void setTexture(Texture texture) {
+    void setTexture(ITexture texture) {
         this.texture = texture;
     }
 

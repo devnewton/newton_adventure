@@ -34,7 +34,7 @@ package im.bci.newtonadv.game;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.score.ScoreServer;
-import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
+import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import java.awt.Font;
 
 /**
@@ -47,7 +47,7 @@ public class ScoreSequence implements Sequence {
     public static final float ortho2DLeft = 0;
     public static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
     public static final float ortho2DTop = 0;
-    TrueTypeFont font;
+    ITrueTypeFont font;
     private final QuestScore questScore;
     private boolean redraw;
     private boolean mustSendScoreQuit;
@@ -67,7 +67,7 @@ public class ScoreSequence implements Sequence {
 
     @Override
     public void start() {
-        font = new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+        font = game.getView().createScoreSequenceFont();
         redraw = true;
         mustSendScoreQuit = false;
         mustQuitWithoutSendingScore = false;
