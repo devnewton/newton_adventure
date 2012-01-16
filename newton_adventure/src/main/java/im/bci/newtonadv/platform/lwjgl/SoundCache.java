@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv;
+package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.util.OggClip;
 import java.io.File;
@@ -134,7 +134,7 @@ public class SoundCache {
         stopMusic();
     }
 
-    void clearUseless() {
+    public void clearUseless() {
         ClipWeakReference ref;
         while ((ref = (ClipWeakReference) clipReferenceQueue.poll()) != null) {
             if (ref.get() != null) {

@@ -55,7 +55,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>im.bci.newtonadv.Main</mainClass>
+                            <mainClass>im.bci.newtonadv.platform.lwjgl.Main</mainClass>
                             <packageName>im.bci.newtonadv</packageName>
                             <addClasspath>true</addClasspath>
                             <addExtensions>true</addExtensions>
@@ -64,7 +64,7 @@
                         <manifestEntries>
                             <mode>development</mode>
                             <url>${pom.url}</url>
-                            <Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar lib/jinput.jar lib/phys2d.jar</Class-Path>
+                            <Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar lib/jinput.jar lib/phys2d.jar lib/libtiled.jar lib/jorbis.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>

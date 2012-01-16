@@ -79,6 +79,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.world.World;
 import java.util.Map.Entry;
+import java.util.Properties;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
@@ -95,12 +96,10 @@ import org.lwjgl.util.glu.GLU;
 public strictfp class GameView {
     
     private TextureCache textureCache;
-    private Game game;
     private TrueTypeFont fpsFont;
     
-    public GameView(Game game) {
-        this.game = game;
-        initDisplay();
+    public GameView(Properties config) {
+        initDisplay(config);
     }
     
     public void toggleFullscreen() {
@@ -186,12 +185,12 @@ public strictfp class GameView {
         }
     }
     
-    private void initDisplay() {
-        int targetWidth = Integer.parseInt(game.getConfig().getProperty("view.width"));
-        int targetHeight = Integer.parseInt(game.getConfig().getProperty("view.height"));
-        int targetBpp = Integer.parseInt(game.getConfig().getProperty("view.bpp", "" + Display.getDesktopDisplayMode().getBitsPerPixel()));
-        boolean startFullscreen = Boolean.parseBoolean(game.getConfig().getProperty("view.fullscreen", "false"));
-        GameViewQuality quality = GameViewQuality.valueOf(game.getConfig().getProperty("view.quality"));
+    private void initDisplay(Properties config) {
+        int targetWidth = Integer.parseInt(config.getProperty("view.width"));
+        int targetHeight = Integer.parseInt(config.getProperty("view.height"));
+        int targetBpp = Integer.parseInt(config.getProperty("view.bpp", "" + Display.getDesktopDisplayMode().getBitsPerPixel()));
+        boolean startFullscreen = Boolean.parseBoolean(config.getProperty("view.fullscreen", "false"));
+        GameViewQuality quality = GameViewQuality.valueOf(config.getProperty("view.quality"));
         
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth, targetBpp);
         if (chosenMode == null) {
@@ -247,8 +246,8 @@ public strictfp class GameView {
         }
     }
     
-    public void drawFPS() {
-        String fps = game.getFrameTimeInfos().fps + " FPS";
+    public void drawFPS(int nbFps) {
+        String fps = nbFps + " FPS";
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
@@ -1070,7 +1069,7 @@ public strictfp class GameView {
             GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight, MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
             
             if (sequence.getBackgroundImage() != null) {
-                game.getView().getTextureCache().getTexture(sequence.getBackgroundImage()).bind();
+                getTextureCache().getTexture(sequence.getBackgroundImage()).bind();
                 final float x1 = MenuSequence.ortho2DLeft;
                 final float x2 = MenuSequence.ortho2DRight;
                 final float y1 = MenuSequence.ortho2DBottom;
@@ -1104,7 +1103,7 @@ public strictfp class GameView {
     
     public void drawButton(Button button) {
         if (button.currentTexture != null) {
-            Texture texture = game.getView().getTextureCache().getTexture(button.currentTexture);
+            Texture texture = getTextureCache().getTexture(button.currentTexture);
             texture.bind();
             final float x1 = button.x;
             final float x2 = button.x + (button.w > 0 ? button.w : texture.getWidth());

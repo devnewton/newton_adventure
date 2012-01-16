@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv;
 
+import im.bci.newtonadv.platform.lwjgl.SoundCache;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +46,7 @@ import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
+import im.bci.newtonadv.platform.lwjgl.PlatformFactory;
 import im.bci.newtonadv.score.GameScore;
 
 /**
@@ -82,7 +84,7 @@ public strictfp class Game {
         return soundCache;
     }
 
-    Game() throws Exception {
+    public Game(PlatformFactory platform) throws Exception {
         try {
             config.setProperty("view.width", Integer.toString(DEFAULT_SCREEN_WIDTH));
             config.setProperty("view.height", Integer.toString(DEFAULT_SCREEN_HEIGHT));
@@ -99,9 +101,9 @@ public strictfp class Game {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.soundCache = new SoundCache(config.getProperty("sound.enabled").equals("true"));
-        this.view = new GameView(this);
-        this.input = new GameInput(config);
+        this.soundCache = platform.createSoundCache(config);
+        this.view = platform.createGameView(config);
+        this.input = platform.createGameInput(config);
     }
 
     void stopGame() {

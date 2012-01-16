@@ -31,7 +31,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-classpath %classpath im.bci.newtonadv.Main</exec.args>
+                <exec.args>-classpath %classpath im.bci.newtonadv.platform.lwjgl.Main</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -43,7 +43,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-classpath %classpath im.bci.newtonadv.Main</exec.args>
+                <exec.args>-classpath %classpath im.bci.newtonadv.platform.lwjgl.Main</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -55,7 +55,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath im.bci.newtonadv.Main</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath im.bci.newtonadv.platform.lwjgl.Main</exec.args>
                 <jpda.listen>true</jpda.listen>
                 <exec.executable>java</exec.executable>
             </properties>
@@ -68,7 +68,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath im.bci.newtonadv.Main</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath im.bci.newtonadv.platform.lwjgl.Main</exec.args>
                 <jpda.listen>true</jpda.listen>
                 <exec.executable>java</exec.executable>
             </properties>
@@ -81,7 +81,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath im.bci.newtonadv.Main</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath im.bci.newtonadv.platform.lwjgl.Main</exec.args>
                 <jpda.listen>true</jpda.listen>
                 <exec.executable>java</exec.executable>
             </properties>

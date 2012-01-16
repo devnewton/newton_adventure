@@ -162,7 +162,7 @@ strictfp public class LevelSequence implements Sequence {
     @Override
     public void draw() {
         world.draw();
-        game.getView().drawFPS();
+        game.getView().drawFPS(game.getFrameTimeInfos().fps);
         drawIndicators();
     }
 

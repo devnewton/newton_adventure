@@ -29,8 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv;
+package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.Game;
 import java.io.File;
 import java.io.IOException;
 
@@ -67,7 +68,8 @@ public class Main {
 
         setupLibraryPath();
         
-        final Game game = new Game();
+        final PlatformFactory platform = new PlatformFactory();
+        final Game game = new Game(platform);
         game.start();
         System.exit(0);
     }
