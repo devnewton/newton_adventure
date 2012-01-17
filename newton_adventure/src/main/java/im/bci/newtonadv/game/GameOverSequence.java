@@ -32,7 +32,6 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.game.Sequence.TransitionException;
 
 public class GameOverSequence extends StoryboardSequence {
 

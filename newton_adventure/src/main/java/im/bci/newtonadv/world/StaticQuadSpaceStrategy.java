@@ -32,6 +32,7 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.util.AbsoluteAABox;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -52,11 +53,11 @@ class StaticQuadSpaceStrategy implements BroadCollisionStrategy {
     private int maxInSpace;
     private int maxLevels;
     private boolean needToBeRebuild = true;
-    private ArrayList<Body> staticBodies = new ArrayList();
+    private ArrayList<Body> staticBodies = new ArrayList<Body>();
     private BodyList dynamicBodies = new BodyList();
     private Space rootSpace;
-    private ArrayList<Space> spaceWithPotentialCollision = new ArrayList();
-    private ArrayList<Body> removedStaticBodies = new ArrayList();
+    private ArrayList<Space> spaceWithPotentialCollision = new ArrayList<Space>();
+    private ArrayList<Body> removedStaticBodies = new ArrayList<Body>();
 
     /**
      * Create a new strategy
@@ -113,7 +114,7 @@ class StaticQuadSpaceStrategy implements BroadCollisionStrategy {
         if (needToBeRebuild) {
             return visibleBodies;
         }
-        HashSet<Body> bodiesSet = new HashSet();
+        HashSet<Body> bodiesSet = new HashSet<Body>();
         recursiveFindVisibleBodies(rootSpace, camera_x1, camera_y1, camera_x2, camera_y2, bodiesSet);
 
         for (Body b : bodiesSet) {
@@ -130,7 +131,7 @@ class StaticQuadSpaceStrategy implements BroadCollisionStrategy {
         return !removedStaticBodies.isEmpty();
     }
 
-    private void recursiveFindVisibleBodies(Space space, float camera_x1, float camera_y1, float camera_x2, float camera_y2, Collection visibleBodies) {
+    private void recursiveFindVisibleBodies(Space space, float camera_x1, float camera_y1, float camera_x2, float camera_y2, Collection<Body> visibleBodies) {
         if (space.touches(camera_x1, camera_y1, camera_x2, camera_y2)) {
             if (space.isLeaf()) {
                 for (int i = 0; i < space.staticBodiesInSpace.size(); ++i) {
@@ -219,7 +220,7 @@ class StaticQuadSpaceStrategy implements BroadCollisionStrategy {
     private final class Space extends AbsoluteAABox {
 
         ArrayList<Body> staticBodiesInSpace = new ArrayList<Body>();
-        ArrayList<Space> subSpaces = new ArrayList();
+        ArrayList<Space> subSpaces = new ArrayList<Space>();
         BodyList bodiesForCollides = new BodyList();
 
         Space(Collection<Body> bodies) {

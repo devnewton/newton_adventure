@@ -31,7 +31,6 @@
  */
 package im.bci.newtonadv.world;
 
-import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
@@ -54,7 +53,6 @@ public strictfp class BouncePlatform extends Platform {
 
             for (int i = 0; i < events.length; i++) {
                 CollisionEvent event = events[i];
-                ROVector2f point = event.getPoint();
                     if (event.getBodyB() == hero) {
                         Vector2f normal = new Vector2f(event.getNormal());
                         hero.collisionWithBouncePlatform(normal/*.negate()*/);

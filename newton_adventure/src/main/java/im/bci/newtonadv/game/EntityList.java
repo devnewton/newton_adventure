@@ -41,7 +41,9 @@ import im.bci.newtonadv.world.GameOverException;
  */
 public class EntityList extends ArrayList<Entity> {
 
-    public void draw() {
+	private static final long serialVersionUID = -774329323255199905L;
+
+	public void draw() {
         for (Entity e : this) {
             e.draw();
         }

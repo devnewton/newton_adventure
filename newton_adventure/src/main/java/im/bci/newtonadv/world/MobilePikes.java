@@ -32,7 +32,6 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.platform.interfaces.ITexture;
-import net.phys2d.math.ROVector2f;
 
 import im.bci.newtonadv.game.Drawable;
 import net.phys2d.math.Vector2f;
@@ -72,9 +71,7 @@ public strictfp class MobilePikes extends Body implements Drawable {
 
             CollisionEvent[] events = world.getContacts(this);
 
-            for (int i = 0; i < events.length; i++) {
-                CollisionEvent event = events[i];
-                ROVector2f point = event.getPoint();
+            for (CollisionEvent event : events) {
                 if (event.getBodyB() == hero) {
                     Vector2f normal = new Vector2f(event.getNormal());
                     hero.hurtByPike(normal/*.negate()*/);

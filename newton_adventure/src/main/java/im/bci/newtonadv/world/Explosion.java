@@ -47,7 +47,6 @@ public strictfp class Explosion implements Entity {
     private World world;
     private Animation animation;
     private Vector2f position;
-    private boolean isDead = false;
 
     Explosion(World world, ROVector2f position) {
         this.world = world;

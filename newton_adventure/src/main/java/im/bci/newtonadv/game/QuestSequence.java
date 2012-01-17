@@ -70,7 +70,7 @@ public class QuestSequence implements Sequence {
     }
 
     private void loadLevels(String questDirectory) {
-        levels = new ArrayList();
+        levels = new ArrayList<LevelSequence>();
         File dir = new File(questDirectory + File.separator + "levels");
         String questName = dir.getParentFile().getName();
         LevelSequence lastSequence = null;

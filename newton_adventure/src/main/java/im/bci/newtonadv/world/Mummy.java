@@ -39,7 +39,6 @@ import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
-import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Circle;
 import im.bci.newtonadv.util.Vector;
 
@@ -201,9 +200,5 @@ public strictfp class Mummy extends Body implements Drawable, Updatable {
         Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step * world.getGravityForce() * horizontalSpeed, 0.0f));
         adjustBiasedVelocity(velocity);
         setCurrentMovement(Mummy.Movement.GOING_RIGHT);
-    }
-
-    private void dontMove() {
-        setCurrentMovement(Movement.NOT_GOING_ANYWHERE);
     }
 }

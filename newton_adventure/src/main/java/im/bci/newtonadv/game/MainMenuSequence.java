@@ -38,7 +38,7 @@ import java.io.File;
 
 /**
  *
- * @author bob
+ * @author devnewton
  */
 public strictfp class MainMenuSequence extends MenuSequence {
 

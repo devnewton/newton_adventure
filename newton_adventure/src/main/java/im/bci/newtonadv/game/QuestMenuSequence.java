@@ -70,7 +70,7 @@ public class QuestMenuSequence extends MenuSequence {
         questNameFont.destroy();
     }
     private void loadQuests() {
-        quests = new ArrayList();
+        quests = new ArrayList<QuestSequence>();
         File dir = new File("data" + File.separator + "quests");
         File[] files = dir.listFiles();
         java.util.Arrays.sort(files, new Comparator<File>() {

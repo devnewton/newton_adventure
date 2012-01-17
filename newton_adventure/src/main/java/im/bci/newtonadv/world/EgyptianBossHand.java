@@ -38,7 +38,6 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
-import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Circle;
 
 import im.bci.newtonadv.util.Vector;

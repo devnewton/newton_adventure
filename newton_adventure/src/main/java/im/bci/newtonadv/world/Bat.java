@@ -39,7 +39,6 @@ import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
-import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
 import im.bci.newtonadv.util.Vector;
 
