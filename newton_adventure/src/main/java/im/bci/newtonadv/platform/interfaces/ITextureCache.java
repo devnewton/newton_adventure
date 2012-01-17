@@ -5,7 +5,6 @@
 
 package im.bci.newtonadv.platform.interfaces;
 
-import java.awt.image.BufferedImage;
 import tiled.core.Map;
 import tiled.core.Tile;
 
@@ -18,8 +17,6 @@ public interface ITextureCache {
     void clearAll();
 
     void clearUseless();
-
-    ITexture createTexture(String name, BufferedImage bufferedImage);
 
     ITexture getTexture(Map map, Tile tile);
 

@@ -34,7 +34,7 @@ package im.bci.newtonadv;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
-import im.bci.newtonadv.util.SoundCache;
+import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.logging.Level;
@@ -64,7 +64,7 @@ public strictfp class Game {
     static public final int DEFAULT_SCREEN_HEIGHT = 800;
     private FrameTimeInfos frameTimeInfos = new FrameTimeInfos();
     private Properties config = new Properties();
-    private SoundCache soundCache = null;
+    private ISoundCache soundCache = null;
     private MainMenuSequence mainMenuSequence;
     private GameScore score = new GameScore();
 
@@ -80,7 +80,7 @@ public strictfp class Game {
         return view;
     }
 
-    public SoundCache getSoundCache() {
+    public ISoundCache getSoundCache() {
         return soundCache;
     }
 

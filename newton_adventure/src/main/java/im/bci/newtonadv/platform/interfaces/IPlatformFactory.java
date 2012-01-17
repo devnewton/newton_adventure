@@ -5,7 +5,6 @@
 
 package im.bci.newtonadv.platform.interfaces;
 
-import im.bci.newtonadv.util.SoundCache;
 import java.util.Properties;
 
 /**
@@ -18,6 +17,6 @@ public interface IPlatformFactory {
 
     IGameView createGameView(Properties config);
 
-    SoundCache createSoundCache(Properties config);
+    ISoundCache createSoundCache(Properties config);
 
 }

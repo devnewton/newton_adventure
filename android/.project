@@ -30,4 +30,27 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>java</name>
+			<type>2</type>
+			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/src/main/java</locationURI>
+		</link>
+		<link>
+			<name>lib</name>
+			<type>2</type>
+			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/lib</locationURI>
+		</link>
+		<link>
+			<name>.settings/lib</name>
+			<type>2</type>
+			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/lib</locationURI>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>NEWTON_ADVENTURE_BASEDIR</name>
+			<value>file:/home/devnewton/newton_adventure_projects</value>
+		</variable>
+	</variableList>
 </projectDescription>

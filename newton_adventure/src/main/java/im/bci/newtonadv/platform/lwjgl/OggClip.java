@@ -1,4 +1,4 @@
-package im.bci.newtonadv.util;
+package im.bci.newtonadv.platform.lwjgl;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

@@ -35,7 +35,6 @@ import im.bci.newtonadv.Game;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.score.ScoreServer;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
-import java.awt.Font;
 
 /**
  *

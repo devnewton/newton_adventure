@@ -29,30 +29,28 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.anim;
-
-import im.bci.newtonadv.platform.interfaces.ITextureCache;
-import im.bci.newtonadv.util.GifDecoder;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+package im.bci.newtonadv.platform.interfaces;
 
 /**
  *
  * @author devnewton
  */
-public class AnimationLoaders {
+public interface ISoundCache {
 
-    static public  Animation loadFromGif(ITextureCache textureCache, String name) throws FileNotFoundException {
-        GifDecoder d = new GifDecoder();
-        d.read(new FileInputStream(name));
-        Animation animation = new Animation();
-        int n = d.getFrameCount();
-        for (int i = 0; i < n; i++) {
-            BufferedImage frameImage = d.getFrame(i);  // frame i
-            int t = d.getDelay(i);  // display duration of frame in milliseconds
-            animation.addFrame(textureCache.createTexture(name + '#' + i, frameImage), t);
-        }
-        return animation;
+    public static interface Playable {
+
+        void play();
+
+        void stop();
     }
+
+    void clearAll();
+
+    void clearUseless();
+
+    Playable getSoundIfEnabled(String name);
+
+    void playMusicIfEnabled(String name);
+
+    void stopMusic();
 }

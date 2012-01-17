@@ -5,7 +5,6 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
-import im.bci.newtonadv.util.SoundCache;
 import java.util.Properties;
 
 /**

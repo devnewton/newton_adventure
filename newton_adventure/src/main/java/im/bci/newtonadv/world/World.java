@@ -35,7 +35,6 @@ import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.anim.Animation;
-import im.bci.newtonadv.anim.AnimationLoaders;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -78,7 +77,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private Vector2f gravityVector = new Vector2f();
     private Game game;
     private ITexture backgroundTexture;
-    private List<Updatable> updatableBodies = new LinkedList();
+    private List<Updatable> updatableBodies = new LinkedList<Updatable>();
     protected EntityList topLevelEntities = new EntityList();
     private ITexture appleIconTexture;
     private ITexture fireBallTexture;
@@ -260,9 +259,9 @@ public strictfp class World extends net.phys2d.raw.World {
 
 
         final ITextureCache textureCache = game.getView().getTextureCache();
-        explosionAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.explosion"));
-        mummyAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.mummy"));
-        batAnimation = AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.bat"));
+        explosionAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.explosion"));
+        mummyAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.mummy"));
+        batAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.bat"));
         appleIconTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.apple"));
         fireBallTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.fireball"));
         keyTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.key"));
@@ -294,7 +293,7 @@ public strictfp class World extends net.phys2d.raw.World {
             }
         }
         backgroundTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.background"));
-        this.getHero().setAnimation(AnimationLoaders.loadFromGif(textureCache, getFileFromMap(map, "newton_adventure.hero")));
+        this.getHero().setAnimation(game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.hero")));
         this.getHero().setJumpSound(game.getSoundCache().getSoundIfEnabled("data/jump.wav"));
         game.getSoundCache().playMusicIfEnabled(getFileFromMap(map, "newton_adventure.music"));
 

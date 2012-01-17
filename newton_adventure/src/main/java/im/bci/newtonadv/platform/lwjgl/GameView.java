@@ -33,6 +33,7 @@ package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.GameOverSequence;
 import im.bci.newtonadv.game.MenuSequence;
@@ -83,6 +84,9 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.world.World;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Map.Entry;
 import java.util.Properties;
 import net.phys2d.math.ROVector2f;
@@ -100,7 +104,7 @@ import org.lwjgl.util.glu.GLU;
  */
 public strictfp class GameView implements IGameView {
 
-    private ITextureCache textureCache;
+    private TextureCache textureCache;
     private ITrueTypeFont fpsFont;
 
     public GameView(Properties config) {
@@ -1216,5 +1220,18 @@ public strictfp class GameView implements IGameView {
 
     public ITrueTypeFont createScoreSequenceFont() {
         return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+    }
+
+    public Animation loadFromGif(String name) throws FileNotFoundException {
+        GifDecoder d = new GifDecoder();
+        d.read(new FileInputStream(name));
+        Animation animation = new Animation();
+        int n = d.getFrameCount();
+        for (int i = 0; i < n; i++) {
+            BufferedImage frameImage = d.getFrame(i);  // frame i
+            int t = d.getDelay(i);  // display duration of frame in milliseconds
+            animation.addFrame(textureCache.createTexture(name + '#' + i, frameImage), t);
+        }
+        return animation;
     }
 }

@@ -31,13 +31,13 @@
  */
 package im.bci.newtonadv.world;
 
-import javax.sound.sampled.Clip;
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.ROVector2f;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.LevelScore;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
@@ -50,7 +50,7 @@ import net.phys2d.raw.shapes.Circle;
  */
 public strictfp class Hero extends Body implements Drawable, Updatable {
 
-    private Clip jumpSound;
+    private ISoundCache.Playable jumpSound;
     private Animation animation;
     private int nbApple = 10;
     private static final float jumpForce = 180.0f;
@@ -68,7 +68,7 @@ public strictfp class Hero extends Body implements Drawable, Updatable {
     private float scale = 1;
     private LevelScore levelScore = new LevelScore();
 
-    public void setJumpSound(Clip jumpSound) {
+    public void setJumpSound(ISoundCache.Playable jumpSound) {
         this.jumpSound = jumpSound;
     }
 
@@ -277,8 +277,7 @@ public strictfp class Hero extends Body implements Drawable, Updatable {
             addForce(jump);
 
             if(jumpSound!=null) {
-                jumpSound.setFramePosition(0);
-                jumpSound.loop(0);
+                jumpSound.play();
             }
 
 //            Vector2f jump = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0, /*stepRate **/ world.getGravityForce() * 1.0f));

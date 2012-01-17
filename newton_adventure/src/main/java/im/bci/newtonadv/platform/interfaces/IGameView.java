@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package im.bci.newtonadv.platform.interfaces;
 
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.game.GameOverSequence;
 import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.MenuSequence.Button;
@@ -38,6 +38,7 @@ import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
+import java.io.FileNotFoundException;
 
 /**
  *
@@ -127,4 +128,5 @@ public interface IGameView {
 
     public ITrueTypeFont createScoreSequenceFont();
 
+    public Animation loadFromGif(String name) throws FileNotFoundException;
 }

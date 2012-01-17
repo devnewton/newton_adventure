@@ -29,8 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.util;
+package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import java.io.File;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -47,7 +48,7 @@ import javax.sound.sampled.DataLine;
  *
  * @author bci
  */
-public class SoundCache {
+public class SoundCache implements ISoundCache {
 
     private HashMap<String/*name*/, ClipWeakReference> clips = new HashMap();
     private ReferenceQueue<Clip> clipReferenceQueue = new ReferenceQueue<Clip>();
@@ -55,11 +56,22 @@ public class SoundCache {
     private OggClip currentMusic;
     private boolean enabled;
 
-    public static interface Playable {
+    public static final class PlayableClipWrapper implements Playable {
 
-        void play();
+        private final Clip clip;
 
-        void stop();
+        PlayableClipWrapper(Clip clip) {
+            this.clip = clip;
+        }
+
+        public void play() {
+            clip.setFramePosition(0);
+            clip.loop(0);
+        }
+
+        public void stop() {
+            clip.stop();
+        }
     }
 
     public SoundCache(boolean enabled) {
@@ -103,7 +115,7 @@ public class SoundCache {
         return clip;
     }
 
-    public Clip getSoundIfEnabled(String name) {
+    public Playable getSoundIfEnabled(String name) {
         if (!enabled) {
             return null;
         }
@@ -111,16 +123,16 @@ public class SoundCache {
         if (clipRef != null) {
             Clip clip = clipRef.get();
             if (clip != null) {
-                return clip;
+                return new PlayableClipWrapper(clip);
             } else {
                 clips.remove(name);
             }
         }
-        Clip clip = loadClip(name);
+        final Clip clip = loadClip(name);
         if (clip != null) {
             clips.put(name, new ClipWeakReference(clip, clipReferenceQueue));
         }
-        return clip;
+        return new PlayableClipWrapper(clip);
     }
 
     public void clearAll() {
