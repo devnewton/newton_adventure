@@ -32,14 +32,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>java</name>
-			<type>2</type>
-			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/src/main/java</locationURI>
-		</link>
-		<link>
 			<name>lib</name>
 			<type>2</type>
 			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/lib</locationURI>
+		</link>
+		<link>
+			<name>newton_adventure_core</name>
+			<type>2</type>
+			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/src/main/java</locationURI>
 		</link>
 		<link>
 			<name>.settings/lib</name>
@@ -50,7 +50,7 @@
 	<variableList>
 		<variable>
 			<name>NEWTON_ADVENTURE_BASEDIR</name>
-			<value>file:/home/devnewton/newton_adventure_projects</value>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D</value>
 		</variable>
 	</variableList>
 </projectDescription>
