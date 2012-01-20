@@ -32,6 +32,7 @@
 package im.bci.newtonadv.platform.android;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.platform.interfaces.IGameView;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -41,6 +42,7 @@ import android.opengl.GLSurfaceView.Renderer;
 public class AndroidGameRenderer implements Renderer {
 
 	private Game game;
+	private AndroidGameView gameView;
 
 	@Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -59,10 +61,12 @@ public class AndroidGameRenderer implements Renderer {
     
 	@Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        gl.glViewport(0, 0, width, height);
+		gameView.setGl(gl);
+		gameView.setViewPort(width,height);
     }
 
 	public void setGame(Game game) {
 		this.game = game;		
+		this.gameView = (AndroidGameView) game.getView();
 	}
 }
