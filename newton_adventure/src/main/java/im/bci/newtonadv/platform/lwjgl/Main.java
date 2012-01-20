@@ -72,6 +72,9 @@ public class Main {
         final IPlatformFactory platform = new PlatformFactory();
         final Game game = new Game(platform);
         game.start();
+        while (game.isRunning()) {
+            game.tick();
+        }
         System.exit(0);
     }
 }

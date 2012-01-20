@@ -31,13 +31,19 @@
  */
 package im.bci.newtonadv.platform.android;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import im.bci.newtonadv.Game;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
 public class AndroidActivity extends Activity {
 	 
-    private GLSurfaceView mGLView;
+    private AndroidGLSurfaceView mGLView;
+    private AndroidPlatformFactory platform;
+	private Game game;
   
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,8 +51,16 @@ public class AndroidActivity extends Activity {
         
         // Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity.
-        mGLView = new AndroidGameView(this);
+        mGLView = new AndroidGLSurfaceView(this);
         setContentView(mGLView);
+        
+        platform = new AndroidPlatformFactory(getAssets());
+        try {
+			game = new Game(platform);
+			mGLView.setGame(game);
+		} catch (Exception e) {
+			Logger.getLogger(AndroidPlatformFactory.class.getName()).log(Level.SEVERE, null, e);
+		}
     }
     
     @Override

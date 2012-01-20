@@ -36,9 +36,6 @@ import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import java.io.File;
-import java.io.FileInputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import java.io.IOException;
 import java.util.Properties;
@@ -67,6 +64,7 @@ public strictfp class Game {
     private ISoundCache soundCache = null;
     private MainMenuSequence mainMenuSequence;
     private GameScore score = new GameScore();
+    private Sequence currentSequence;
 
     public Properties getConfig() {
         return config;
@@ -85,25 +83,52 @@ public strictfp class Game {
     }
 
     public Game(IPlatformFactory platform) throws Exception {
-        try {
-            config.setProperty("view.width", Integer.toString(DEFAULT_SCREEN_WIDTH));
-            config.setProperty("view.height", Integer.toString(DEFAULT_SCREEN_HEIGHT));
-            config.setProperty("view.quality", "NICEST");
-            config.setProperty("sound.enabled", "true");
-
-            FileInputStream f = new FileInputStream("data/config.properties");
-            try {
-                config.load(f);
-            } finally {
-                f.close();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        config.setProperty("view.width", Integer.toString(DEFAULT_SCREEN_WIDTH));
+        config.setProperty("view.height", Integer.toString(DEFAULT_SCREEN_HEIGHT));
+        config.setProperty("view.quality", "NICEST");
+        config.setProperty("sound.enabled", "true");
+        
+        platform.loadConfig(config);
 
         this.soundCache = platform.createSoundCache(config);
         this.view = platform.createGameView(config);
         this.input = platform.createGameInput(config);
+    }
+
+    public void tick() {
+        try {
+            if (bShowMainMenu) {
+                bShowMainMenu = false;
+                if (currentSequence != mainMenuSequence) {
+                    mainMenuSequence.setResumeSequence(currentSequence);
+                    currentSequence = mainMenuSequence;
+                    mainMenuSequence.start();
+                }
+            }
+            frameTimeInfos.update();
+            view.draw(currentSequence);
+            processInputs(currentSequence);
+            if (!frameTimeInfos.paused) {
+                currentSequence.processInputs();
+                currentSequence.update();
+            }
+        } catch (TransitionException ex) {
+            if (mainMenuSequence.isResumeSequence(ex.getNextSequence())) {
+                mainMenuSequence.stop();
+                currentSequence = ex.getNextSequence();
+            } else {
+                currentSequence.stop();
+                currentSequence = ex.getNextSequence();
+                System.gc();
+                getView().getTextureCache().clearUseless();
+                getSoundCache().clearUseless();
+                if (currentSequence == null) {
+                    stopGame();
+                } else {
+                    currentSequence.start();
+                }
+            }
+        }
     }
 
     void stopGame() {
@@ -122,43 +147,8 @@ public strictfp class Game {
 
     public void start() throws IOException {
 
-        Sequence currentSequence = setupSequences();
+        currentSequence = setupSequences();
         currentSequence.start();
-        while (running) {
-            try {
-                if (bShowMainMenu) {
-                    bShowMainMenu = false;
-                    if (currentSequence != mainMenuSequence) {
-                        mainMenuSequence.setResumeSequence(currentSequence);
-                        currentSequence = mainMenuSequence;
-                        mainMenuSequence.start();
-                    }
-                }
-                frameTimeInfos.update();
-                view.draw(currentSequence);
-                processInputs(currentSequence);
-                if (!frameTimeInfos.paused) {
-                    currentSequence.processInputs();
-                    currentSequence.update();
-                }
-            } catch (TransitionException ex) {
-                if (mainMenuSequence.isResumeSequence(ex.getNextSequence())) {
-                    mainMenuSequence.stop();
-                    currentSequence = ex.getNextSequence();
-                } else {
-                    currentSequence.stop();
-                    currentSequence = ex.getNextSequence();
-                    System.gc();
-                    getView().getTextureCache().clearUseless();
-                    getSoundCache().clearUseless();
-                    if (currentSequence == null) {
-                        stopGame();
-                    } else {
-                        currentSequence.start();
-                    }
-                }
-            }
-        }
     }
     private boolean bToggleFullscreen = false;
     private boolean bTogglePause = false;
@@ -188,5 +178,9 @@ public strictfp class Game {
 
     final public IGameInput getInput() {
         return input;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

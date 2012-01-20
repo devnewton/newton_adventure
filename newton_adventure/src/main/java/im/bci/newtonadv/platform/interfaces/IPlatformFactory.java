@@ -46,4 +46,6 @@ public interface IPlatformFactory {
 
     ISoundCache createSoundCache(Properties config);
 
+	void loadConfig(Properties config);
+
 }

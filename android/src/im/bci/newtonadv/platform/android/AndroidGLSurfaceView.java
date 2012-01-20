@@ -32,37 +32,22 @@
 package im.bci.newtonadv.platform.android;
 
 import im.bci.newtonadv.Game;
+import android.content.Context;
+import android.opengl.GLSurfaceView;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
+public class AndroidGLSurfaceView extends GLSurfaceView {
 
-import android.opengl.GLSurfaceView.Renderer;
+	private final AndroidGameRenderer renderer;
 
-public class AndroidGameRenderer implements Renderer {
-
-	private Game game;
-
-	@Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        // Set the background frame color
-        gl.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    }
-    
-	@Override
-    public void onDrawFrame(GL10 gl) {
-        // Redraw background color
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-        if(null != game) {
-        	game.tick();
-        }
-    }
-    
-	@Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        gl.glViewport(0, 0, width, height);
-    }
+	public AndroidGLSurfaceView(Context context) {
+		super(context);
+		
+        // Set the Renderer for drawing on the GLSurfaceView
+		renderer = new AndroidGameRenderer();
+        setRenderer(renderer);
+	}
 
 	public void setGame(Game game) {
-		this.game = game;		
+		renderer.setGame(game);		
 	}
 }

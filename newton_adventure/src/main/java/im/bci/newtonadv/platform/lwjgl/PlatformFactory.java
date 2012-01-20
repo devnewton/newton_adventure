@@ -32,7 +32,11 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,16 +44,32 @@ import java.util.Properties;
  */
 public class PlatformFactory implements IPlatformFactory {
 
+    @Override
     public SoundCache createSoundCache(Properties config) {
         return new SoundCache(config.getProperty("sound.enabled").equals("true"));
     }
 
+    @Override
     public GameView createGameView(Properties config) {
         return new GameView(config);
     }
 
+    @Override
     public GameInput createGameInput(Properties config) throws Exception {
         return new GameInput(config);
     }
-    
+
+    @Override
+    public void loadConfig(Properties config) {
+        try {
+            FileInputStream f = new FileInputStream("data/config.properties");
+            try {
+                config.load(f);
+            } finally {
+                f.close();
+            }
+        } catch (IOException e) {
+            Logger.getLogger(PlatformFactory.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
 }
