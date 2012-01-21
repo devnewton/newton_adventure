@@ -32,7 +32,6 @@
 package im.bci.newtonadv.platform.android;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.interfaces.IGameView;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

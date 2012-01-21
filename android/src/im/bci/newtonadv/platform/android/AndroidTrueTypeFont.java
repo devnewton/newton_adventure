@@ -2,7 +2,12 @@ package im.bci.newtonadv.platform.android;
 
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 
+
 public class AndroidTrueTypeFont implements ITrueTypeFont {
+
+	public AndroidTrueTypeFont() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void destroy() {

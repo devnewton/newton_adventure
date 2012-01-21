@@ -36,7 +36,6 @@ import java.util.logging.Logger;
 
 import im.bci.newtonadv.Game;
 import android.app.Activity;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
 public class AndroidActivity extends Activity {

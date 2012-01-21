@@ -66,6 +66,7 @@ import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  *
@@ -155,5 +156,5 @@ public interface IGameView {
 
     public ITrueTypeFont createScoreSequenceFont();
 
-    public Animation loadFromGif(String name) throws FileNotFoundException;
+    public Animation loadFromGif(String name) throws FileNotFoundException, IOException;
 }

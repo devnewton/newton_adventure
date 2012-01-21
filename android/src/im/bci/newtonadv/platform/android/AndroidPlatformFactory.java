@@ -28,7 +28,7 @@ public class AndroidPlatformFactory implements IPlatformFactory {
 
 	@Override
 	public IGameView createGameView(Properties config) {
-		return new AndroidGameView(config);
+		return new AndroidGameView(assets,config);
 	}
 
 	@Override

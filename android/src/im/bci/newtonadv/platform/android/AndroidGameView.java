@@ -1,16 +1,15 @@
 package im.bci.newtonadv.platform.android;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.nio.ByteBuffer;
+import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.Comparator;
 import java.util.Properties;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
 
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
@@ -20,7 +19,6 @@ import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.ConvexPolygon;
 
-import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.GameOverSequence;
@@ -72,41 +70,46 @@ public class AndroidGameView implements IGameView {
 	private GL10 gl;
 	private int viewPortWidth;
 	private int viewPortHeight;
+	private AssetManager assets;
 
-	public AndroidGameView(Properties config) {
+	public AndroidGameView(AssetManager assets, Properties config) {
 		this.quality = AndroidGameViewQuality.valueOf(config
 				.getProperty("view.quality"));
+		this.assets = assets;
 		initDisplay(config);
 	}
 
+	@Override
 	public void toggleFullscreen() {
 	}
 
 	private void initDisplay(Properties config) {
 
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.glDisable(gl.GL_DEPTH_TEST);
-		gl.glDisable(gl.GL_DITHER);
-		gl.glDisable(gl.GL_FOG);
-		gl.glDisable(gl.GL_LIGHTING);
-		gl.glShadeModel(gl.GL_FLAT);
-		gl.glHint(gl.GL_PERSPECTIVE_CORRECTION_HINT, gl.GL_FASTEST);
-		gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, quality.toGL());
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+		gl.glDisable(GL10.GL_DITHER);
+		gl.glDisable(GL10.GL_FOG);
+		gl.glDisable(GL10.GL_LIGHTING);
+		gl.glShadeModel(GL10.GL_FLAT);
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
+		gl.glHint(GL10.GL_POLYGON_SMOOTH_HINT, quality.toGL());
 		// gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL);
-		gl.glEnable(gl.GL_TEXTURE_2D);
+		gl.glEnable(GL10.GL_TEXTURE_2D);
 
-		textureCache = new AndroidTextureCache();
+		textureCache = new AndroidTextureCache(assets);
 		fpsFont = new AndroidTrueTypeFont();
 	}
 
+	@Override
 	public void draw(Sequence sequence) {
 		sequence.draw();
 	}
 
+	@Override
 	public void drawFPS(int nbFps) {
 		String fps = nbFps + " FPS";
-		gl.glEnable(gl.GL_ALPHA_TEST);
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f);
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glOrthox(0, viewPortWidth, 0, viewPortHeight, -1, 1);
@@ -114,33 +117,46 @@ public class AndroidGameView implements IGameView {
 				viewPortHeight - 64, 0);
 		fpsFont.drawString(fps);
 		gl.glPopMatrix();
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
-	private void close() {
-		textureCache.clearAll();
-	}
-
+	@Override
 	public ITextureCache getTextureCache() {
 		return textureCache;
 	}
-	
-	public void drawTexturedQuad(ITexture texture, float box[],	float tex[])
-	{
+
+	public void drawTexturedQuad(ITexture texture, float vert[], float tex[]) {
 		texture.bind();
-	 	
-		gl.glEnableClientState(gl.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(gl.GL_TEXTURE_COORD_ARRAY);
-	 
-		gl.glVertexPointer(2, gl.GL_FLOAT, 0,FloatBuffer.wrap(box));
-		gl.glTexCoordPointer(2, gl.GL_FLOAT, 0, FloatBuffer.wrap(tex));
-	 
-		gl.glDrawArrays(gl.GL_TRIANGLE_STRIP,0,4);
-	 
-		gl.glDisableClientState(gl.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(gl.GL_TEXTURE_COORD_ARRAY);
+
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(vert));
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(tex));
+
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
+
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 	}
 
+	public void drawTexturedTriangle(ITexture texture, float vert[],
+			float tex[]) {
+		texture.bind();
+
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(vert));
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(tex));
+
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 3);
+
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+	}
+
+	@Override
 	public void drawApple(Apple apple, ITexture texture, World world) {
 		AABox bounds = apple.getShape().getBounds();
 
@@ -154,53 +170,49 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -bounds.getHeight() / 2.0f;
 		final float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
 
-		final float u1 = 0.0f, u2 = 1.0f;
-		/*gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();*/
-		float box[] = {x1,y1, x2,y2, x2,y1, x1,y1};
-		float tex[] = {0,0, 1,0, 1,1, 0,1};
-		drawTexturedQuad(texture,box,tex);
+		/*
+		 * final float u1 = 0.0f, u2 = 1.0f;
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float tex[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
+		float vert[] = { x1, y1, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(texture, vert, tex);
 		gl.glPopMatrix();
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawAxe(Axe axe, ITexture texture) {
 		Box box = (Box) axe.getShape();
 		Vector2f[] pts = box.getPoints(axe.getPosition(), axe.getRotation());
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
-		/*gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(0.0f, 1.0f);
-		gl.glVertex2f(pts[0].x, pts[0].y);
-		gl.glTexCoord2f(1.0f, 1.0f);
-		gl.glVertex2f(pts[1].x, pts[1].y);
-		gl.glTexCoord2f(1.0f, 0.0f);
-		gl.glVertex2f(pts[2].x, pts[2].y);
-		gl.glTexCoord2f(0.0f, 0.0f);
-		gl.glVertex2f(pts[3].x, pts[3].y);
-		gl.glEnd();*/
-		float vert[] = {pts[0].x,pts[0].y, pts[1].x,pts[1].y,  pts[2].x,pts[2].y,  pts[3].x,pts[3].y};
-		float tex[] = {0,1, 1,1, 1,0, 0,0};
-		drawTexturedQuad(texture,vert,tex);
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 0.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glTexCoord2f(0.0f, 0.0f);
+		 * gl.glVertex2f(pts[3].x, pts[3].y); gl.glEnd();
+		 */
+		float tex[] = { 0, 1, 1, 1, 1, 0, 0, 0 };
+		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y, pts[3].x, pts[3].y };
+		drawTexturedQuad(texture, vert, tex);
 
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 
 	}
 
+	@Override
 	public void drawAxeAnchor(AxeAnchor axeAnchor, float radius,
 			ITexture texture) {
 		gl.glPushMatrix();
@@ -211,29 +223,26 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -radius;
 		final float y2 = radius;
 
-		gl.glEnable(gl.GL_BLEND);
-		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		texture.bind();
 
 		final float u1 = 0.18f, u2 = 0.8f;
 		final float v1 = 0.2f, v2 = 0.8f;
-		/*gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, v1);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, v1);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, v2);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, v2);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();*/
-		float vert[] = {x1, y2, x2, y2, x2, y1, x1, y1 };
-		float tex[] = {u1,v1, u2, v1, u2, v2, u1, v2};
-		drawTexturedQuad(texture,vert,tex);
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, v1); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, v1); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, v2); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * v2); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float tex[] = { u1, v1, u2, v1, u2, v2, u1, v2 };
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(texture, vert, tex);
 		gl.glPopMatrix();
-		gl.glDisable(gl.GL_BLEND);
+		gl.glDisable(GL10.GL_BLEND);
 	}
 
+	@Override
 	public void drawBat(Bat bat, float scale, ITexture texture, World world) {
 		AABox bounds = bat.getShape().getBounds();
 
@@ -248,176 +257,184 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 
 		texture.bind();
 
 		final float u1 = 1, u2 = 0;
-		/*gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();*/
-		float vert[] = {x1, y2, x2, y2, x2, y1, x1, y1 };
-		float tex[] = {u1, 0, u2, 0, u2, 1, u1, 1  };
-		drawTexturedQuad(texture,vert,tex);
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(texture, vert, tex);
 		gl.glPopMatrix();
 
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawBlocker(Blocker blocker, ITexture texture, float alpha) {
-		gl.glEnable(gl.GL_BLEND);
-		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
 		drawPlatform(blocker, texture);
-		gl.glDisable(gl.GL_BLEND);
+		gl.glDisable(GL10.GL_BLEND);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
+	@Override
 	public void drawPlatform(Platform platform, ITexture texture) {
 		Box box = (Box) platform.getShape();
 		Vector2f[] pts = box.getPoints(platform.getPosition(),
 				platform.getRotation());
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.0f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.0f); // sets aplha function
 		texture.bind();
-		/*gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(0.0f, 1.0f);
-		gl.glVertex2f(pts[0].x, pts[0].y);
-		gl.glTexCoord2f(1.0f, 1.0f);
-		gl.glVertex2f(pts[1].x, pts[1].y);
-		gl.glTexCoord2f(1.0f, 0.0f);
-		gl.glVertex2f(pts[2].x, pts[2].y);
-		gl.glTexCoord2f(0.0f, 0.0f);
-		gl.glVertex2f(pts[3].x, pts[3].y);
-		gl.glEnd();*/
-		float vert[] = {0.0f,1.0f, 1.0f,1.0f, 1.0f, 0.0f, 0.0f, 0.0f};
-		float tex[] = {pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x, pts[2].y, pts[3].x, pts[3].y };
-		drawTexturedQuad(texture,vert,tex);
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 0.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glTexCoord2f(0.0f, 0.0f);
+		 * gl.glVertex2f(pts[3].x, pts[3].y); gl.glEnd();
+		 */
+		float tex[] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
+		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y, pts[3].x, pts[3].y };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawCloud(Cloud cloud, ITexture texture, float alpha) {
-		gl.glEnable(gl.GL_BLEND);
-		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
 		drawPlatform(cloud, texture);
-		gl.glDisable(gl.GL_BLEND);
+		gl.glDisable(GL10.GL_BLEND);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
+	@Override
 	public void drawDoor(Door door, ITexture texture) {
 		Box box = (Box) door.getShape();
 		Vector2f[] pts = box.getPoints(door.getPosition(), door.getRotation());
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
-		/*gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(0.0f, 1.0f);
-		gl.glVertex2f(pts[0].x, pts[0].y);
-		gl.glTexCoord2f(1.0f, 1.0f);
-		gl.glVertex2f(pts[1].x, pts[1].y);
-		gl.glTexCoord2f(1.0f, 0.0f);
-		gl.glVertex2f(pts[2].x, pts[2].y);
-		gl.glTexCoord2f(0.0f, 0.0f);
-		gl.glVertex2f(pts[3].x, pts[3].y);
-		gl.glEnd();*/
-		float vert[] = {0.0f,1.0f, 1.0f,1.0f, 1.0f, 0.0f, 0.0f, 0.0f};
-		float tex[] = {pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x, pts[2].y, pts[3].x, pts[3].y };
-		drawTexturedQuad(texture,vert,tex);
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 0.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glTexCoord2f(0.0f, 0.0f);
+		 * gl.glVertex2f(pts[3].x, pts[3].y); gl.glEnd();
+		 */
+		float tex[] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
+		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y, pts[3].x, pts[3].y };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawDownLeftHalfPlatform(DownLeftHalfPlatform platform,
 			ITexture texture) {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
 		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
 				platform.getRotation());
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
-		gl.glBegin(gl.GL_TRIANGLES);
-		gl.glTexCoord2f(0.0f, 0.0f);
-		gl.glVertex2f(pts[0].x, pts[0].y);
-		gl.glTexCoord2f(0.0f, 1.0f);
-		gl.glVertex2f(pts[1].x, pts[1].y);
-		gl.glTexCoord2f(1.0f, 1.0f);
-		gl.glVertex2f(pts[2].x, pts[2].y);
-		gl.glEnd();
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		/*
+		 * gl.glBegin(gl.GL_TRIANGLES); gl.glTexCoord2f(0.0f, 0.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(0.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 1.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glEnd();
+		 */
+		float tex[] = { 0, 0, 0, 1, 1, 1 };
+		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y };
+		drawTexturedTriangle(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawDownRightHalfPlatform(DownRightHalfPlatform platform,
 			ITexture texture) {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
 		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
 				platform.getRotation());
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
-		gl.glBegin(gl.GL_TRIANGLES);
-		gl.glTexCoord2f(0.0f, 1.0f);
-		gl.glVertex2f(pts[0].x, pts[0].y);
-		gl.glTexCoord2f(1.0f, 1.0f);
-		gl.glVertex2f(pts[1].x, pts[1].y);
-		gl.glTexCoord2f(1.0f, 0.0f);
-		gl.glVertex2f(pts[2].x, pts[2].y);
-		gl.glEnd();
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		/*
+		 * gl.glBegin(gl.GL_TRIANGLES); gl.glTexCoord2f(0.0f, 1.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 0.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glEnd();
+		 */
+		float tex[] = { 0, 1, 1, 1, 1, 0 };
+		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y };
+		drawTexturedTriangle(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform,
 			ITexture texture) {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
 		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
 				platform.getRotation());
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
-		gl.glColor4f(1.0f, 1.0f, 1.0f, 0.9999f);
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
-		gl.glBegin(gl.GL_TRIANGLES);
-		gl.glTexCoord2f(0.0f, 0.0f);
-		gl.glVertex2f(pts[0].x, pts[0].y);
-		gl.glTexCoord2f(0.0f, 1.0f);
-		gl.glVertex2f(pts[1].x, pts[1].y);
-		gl.glTexCoord2f(1.0f, 0.0f);
-		gl.glVertex2f(pts[2].x, pts[2].y);
-		gl.glEnd();
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		/*
+		 * gl.glBegin(gl.GL_TRIANGLES); gl.glTexCoord2f(0.0f, 0.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(0.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 0.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glEnd();
+		 */
+		float tex[] = { 0, 0, 0, 1, 1, 0 };
+		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y };
+		drawTexturedTriangle(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawUpRightHalfPlatform(UpRightHalfPlatform platform,
 			ITexture texture) {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
 		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
 				platform.getRotation());
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
-		gl.glBegin(gl.GL_TRIANGLES);
-		gl.glTexCoord2f(0.0f, 0.0f);
-		gl.glVertex2f(pts[0].x, pts[0].y);
-		gl.glTexCoord2f(1.0f, 1.0f);
-		gl.glVertex2f(pts[1].x, pts[1].y);
-		gl.glTexCoord2f(1.0f, 0.0f);
-		gl.glVertex2f(pts[2].x, pts[2].y);
-		gl.glEnd();
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		/*
+		 * gl.glBegin(gl.GL_TRIANGLES); gl.glTexCoord2f(0.0f, 0.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 0.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glEnd();
+		 */
+		float tex[] = { 0, 0, 1, 1, 1, 0 };
+		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y };
+		drawTexturedTriangle(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawExplosion(Explosion explosion, ITexture texture, World world) {
 		gl.glPushMatrix();
 		gl.glTranslatef(explosion.getPosition().getX(), explosion.getPosition()
@@ -429,25 +446,25 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -explosion.getSize() / 2.0f;
 		final float y2 = explosion.getSize() / 2.0f;
 
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glDisable(gl.GL_ALPHA_TEST);
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawFireBall(FireBall fireball, ITexture texture, World world) {
 		gl.glPushMatrix();
 		ROVector2f pos = fireball.getPosition();
@@ -459,26 +476,26 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -fireball.getSize() / 2.0f;
 		final float y2 = fireball.getSize() / 2.0f;
 
-		gl.glEnable(gl.GL_BLEND);
-		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glDisable(gl.GL_BLEND);
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_BLEND);
 		gl.glPopMatrix();
 
 	}
 
+	@Override
 	public void drawHero(Hero hero, ITexture texture, World world, float scale) {
 		AABox bounds = hero.getShape().getBounds();
 
@@ -493,9 +510,9 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		// gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 
 		texture.bind();
 
@@ -507,20 +524,20 @@ public class AndroidGameView implements IGameView {
 			u1 = 0.0f;
 			u2 = 1.0f;
 		}
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glPopAttrib();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawKey(Key key, ITexture texture, World world) {
 		AABox bounds = key.getShape().getBounds();
 
@@ -534,27 +551,26 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -bounds.getHeight() / 2.0f;
 		final float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
-		gl.glPopAttrib();
 
 	}
 
+	@Override
 	public void drawLosedApple(LosedApple apple, World world, ITexture texture,
 			float alpha) {
 		gl.glPushMatrix();
@@ -567,28 +583,27 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -apple.getSize() / 2.0f;
 		final float y2 = apple.getSize() / 2.0f;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT
-				| gl.GL_CURRENT_BIT);
-		gl.glEnable(gl.GL_BLEND);
-		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
 		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glPopAttrib();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_BLEND);
+		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawMobilePikeAnchor(MobilePikeAnchor anchor, ITexture texture) {
 		gl.glPushMatrix();
 		gl.glTranslatef(anchor.getPosition().getX(), anchor.getPosition()
@@ -598,50 +613,52 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -anchor.getRadius();
 		final float y2 = anchor.getRadius();
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT
-				| gl.GL_CURRENT_BIT);
-		gl.glEnable(gl.GL_BLEND);
-		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		texture.bind();
 
 		final float u1 = 0.18f, u2 = 0.8f;
 		final float v1 = 0.2f, v2 = 0.8f;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, v1);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, v1);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, v2);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, v2);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, v1); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, v1); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, v2); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * v2); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		float tex[] = { u1, v1, u2, v1, u2, v2, u1, v2 };
+		drawTexturedQuad(texture, vert, tex);
 		gl.glPopMatrix();
-		gl.glPopAttrib();
+		gl.glDisable(GL10.GL_BLEND);
+		// gl.glPopAttrib();
 	}
 
+	@Override
 	public void drawMobilePikes(MobilePikes pikes, ITexture texture) {
 		Box box = (Box) pikes.getShape();
 		Vector2f[] pts = box
 				.getPoints(pikes.getPosition(), pikes.getRotation());
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		// gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(0.0f, 1.0f);
-		gl.glVertex2f(pts[0].x, pts[0].y);
-		gl.glTexCoord2f(1.0f, 1.0f);
-		gl.glVertex2f(pts[1].x, pts[1].y);
-		gl.glTexCoord2f(1.0f, 0.0f);
-		gl.glVertex2f(pts[2].x, pts[2].y);
-		gl.glTexCoord2f(0.0f, 0.0f);
-		gl.glVertex2f(pts[3].x, pts[3].y);
-		gl.glEnd();
-		gl.glPopAttrib();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 0.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glTexCoord2f(0.0f, 0.0f);
+		 * gl.glVertex2f(pts[3].x, pts[3].y); gl.glEnd();
+		 */
+		float vert[] = { 0, 1, 1, 1, 1, 0, 0, 0 };
+		float tex[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y, pts[3].x, pts[3].y };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glPopMatrix();
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawMummy(Mummy mummy, World world, ITexture texture,
 			float scale) {
 		AABox bounds = mummy.getShape().getBounds();
@@ -657,9 +674,8 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 
 		texture.bind();
 
@@ -671,20 +687,20 @@ public class AndroidGameView implements IGameView {
 			u1 = 0.0f;
 			u2 = 1.0f;
 		}
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glPopAttrib();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawPickedUpApple(PickedUpApple apple, World world,
 			ITexture texture) {
 		gl.glPushMatrix();
@@ -697,26 +713,25 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -apple.getSize() / 2.0f;
 		final float y2 = apple.getSize() / 2.0f;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glPopAttrib();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawUsedKey(UsedKey key, ITexture texture, World world) {
 		gl.glPushMatrix();
 		gl.glTranslatef(key.getPosition().getX(), key.getPosition().getY(),
@@ -728,26 +743,25 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -key.getSize() / 2.0f;
 		final float y2 = key.getSize() / 2.0f;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glPopAttrib();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawEgyptianBoss(EgyptianBoss boss, ITexture bodyTexture,
 			boolean isHurtBlinkState) {
 		AABox bounds = boss.getShape().getBounds();
@@ -760,33 +774,30 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
-
-		bodyTexture.bind();
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 
 		if (isHurtBlinkState) {
-			gl.glColor3f(1, 0, 0);
+			gl.glColor4f(1, 0, 0, 1);
 		}
 		final float u1 = 1, u2 = 0;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(bodyTexture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 		if (isHurtBlinkState) {
-			gl.glColor3f(1, 1, 1);
+			gl.glColor4f(1, 1, 1, 1);
 		}
-		gl.glPopAttrib();
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawEgyptianBossHand(EgyptianBossHand hand, ITexture texture) {
 		AABox bounds = hand.getShape().getBounds();
 
@@ -798,180 +809,146 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
-
-		texture.bind();
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 
 		final float u1 = 1, u2 = 0;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glPopAttrib();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 
 	}
 
+	@Override
 	public void drawStoryBoardSequence(StoryboardSequence sequence,
 			ITrueTypeFont font) {
-		if (Display.isVisible() || Display.wasResized() || Display.isDirty()
-				|| sequence.isDirty()) {
-			sequence.setDirty(false);
+		sequence.setDirty(false);
 
-			gl.glPushMatrix();
-			GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft,
-					StoryboardSequence.ortho2DRight,
-					StoryboardSequence.ortho2DBottom,
-					StoryboardSequence.ortho2DTop);
-			getTextureCache().getTexture(sequence.getTexture()).bind();
-			final float x1 = StoryboardSequence.ortho2DLeft;
-			final float x2 = StoryboardSequence.ortho2DRight;
-			final float y1 = StoryboardSequence.ortho2DBottom;
-			final float y2 = StoryboardSequence.ortho2DTop;
-			final float u1 = 0.0f, u2 = 1.0f;
-			gl.glBegin(gl.GL_QUADS);
-			gl.glTexCoord2f(u1, 0.0f);
-			gl.glVertex2f(x1, y2);
-			gl.glTexCoord2f(u2, 0.0f);
-			gl.glVertex2f(x2, y2);
-			gl.glTexCoord2f(u2, 1.0f);
-			gl.glVertex2f(x2, y1);
-			gl.glTexCoord2f(u1, 1.0f);
-			gl.glVertex2f(x1, y1);
-			gl.glEnd();
-			drawContinueText(font);
-			gl.glPopMatrix();
-		}
+		gl.glPushMatrix();
+		gl.glOrthof(StoryboardSequence.ortho2DLeft,
+				StoryboardSequence.ortho2DRight,
+				StoryboardSequence.ortho2DBottom,
+				StoryboardSequence.ortho2DTop, -1, 1);
+		final float x1 = StoryboardSequence.ortho2DLeft;
+		final float x2 = StoryboardSequence.ortho2DRight;
+		final float y1 = StoryboardSequence.ortho2DBottom;
+		final float y2 = StoryboardSequence.ortho2DTop;
+		final float u1 = 0.0f, u2 = 1.0f;
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(getTextureCache().getTexture(sequence.getTexture()),
+				vert, tex);
+		drawContinueText(font);
+		gl.glPopMatrix();
 	}
 
 	private void drawContinueText(ITrueTypeFont font) {
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST);
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f);
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		font.drawString(StoryboardSequence.ortho2DRight,
 				StoryboardSequence.ortho2DBottom - font.getHeight(),
 				"Press enter to continue ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-		gl.glPopAttrib();
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	private void drawGameOverText(ITrueTypeFont font) {
 		drawContinueText(font);
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST);
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f);
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		font.drawString(StoryboardSequence.ortho2DRight,
 				StoryboardSequence.ortho2DBottom - font.getHeight() * 2,
 				"Press up to retry ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-		gl.glPopAttrib();
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font,
 			QuestScore questScore, long scorePerCentToShow) {
-		if (Display.isVisible() || Display.isDirty() || Display.wasResized()
-				|| sequence.isDirty()) {
-			sequence.setDirty(false);
-			gl.glPushMatrix();
-			GLU.gluOrtho2D(ScoreSequence.ortho2DLeft,
-					ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom,
-					ScoreSequence.ortho2DTop);
-			gl.glClear(gl.GL_COLOR_BUFFER_BIT);
-			gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-			gl.glEnable(gl.GL_ALPHA_TEST);
-			gl.glAlphaFunc(gl.GL_GREATER, 0.1f);
-			int i = 1;
+		sequence.setDirty(false);
+		gl.glPushMatrix();
+		gl.glOrthof(ScoreSequence.ortho2DLeft, ScoreSequence.ortho2DRight,
+				ScoreSequence.ortho2DBottom, ScoreSequence.ortho2DTop, -1, 1);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
+		int i = 1;
+		font.drawString(
+				(ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
+				i++ * font.getHeight(), "SCORES", 1, -1,
+				ITrueTypeFont.ALIGN_CENTER);
+		font.drawString(0, i++ * font.getHeight(), questScore.getQuestName(),
+				1, -1, ITrueTypeFont.ALIGN_LEFT);
+		for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
+			String levelScoreStr = levelEntry.getKey()
+					+ ": "
+					+ (scorePerCentToShow
+							* levelEntry.getValue().computeScore() / 100);
 			font.drawString(
 					(ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
-					i++ * font.getHeight(), "SCORES", 1, -1,
+					i++ * font.getHeight(), levelScoreStr, 1, -1,
 					ITrueTypeFont.ALIGN_CENTER);
-			font.drawString(0, i++ * font.getHeight(),
-					questScore.getQuestName(), 1, -1, ITrueTypeFont.ALIGN_LEFT);
-			for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
-				String levelScoreStr = levelEntry.getKey()
-						+ ": "
-						+ (scorePerCentToShow
-								* levelEntry.getValue().computeScore() / 100);
-				font.drawString(
-						(ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
-						i++ * font.getHeight(), levelScoreStr, 1, -1,
-						ITrueTypeFont.ALIGN_CENTER);
-			}
-			String questScoreStr = "Quest total: "
-					+ (scorePerCentToShow * questScore.computeScore() / 100);
-			font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
-					ITrueTypeFont.ALIGN_LEFT);
-			font.drawString(ScoreSequence.ortho2DRight,
-					ScoreSequence.ortho2DBottom - font.getHeight() * 2,
-					"Press enter to send score to server ", 1, -1,
-					ITrueTypeFont.ALIGN_RIGHT);
-			font.drawString(ScoreSequence.ortho2DRight,
-					ScoreSequence.ortho2DBottom - font.getHeight(),
-					"Press right to skip ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-			gl.glPopMatrix();
-			gl.glPopAttrib();
 		}
+		String questScoreStr = "Quest total: "
+				+ (scorePerCentToShow * questScore.computeScore() / 100);
+		font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
+				ITrueTypeFont.ALIGN_LEFT);
+		font.drawString(ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom
+				- font.getHeight() * 2, "Press enter to send score to server ",
+				1, -1, ITrueTypeFont.ALIGN_RIGHT);
+		font.drawString(ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom
+				- font.getHeight(), "Press right to skip ", 1, -1,
+				ITrueTypeFont.ALIGN_RIGHT);
+		gl.glPopMatrix();
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawGameOverSequence(GameOverSequence sequence,
 			ITrueTypeFont font) {
-		if (Display.isVisible() || Display.wasResized() || Display.isDirty()
-				|| sequence.isDirty()) {
-			sequence.setDirty(false);
+		sequence.setDirty(false);
 
-			gl.glPushMatrix();
-			GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft,
-					StoryboardSequence.ortho2DRight,
-					StoryboardSequence.ortho2DBottom,
-					StoryboardSequence.ortho2DTop);
-			getTextureCache().getTexture(sequence.getTexture()).bind();
-			final float x1 = StoryboardSequence.ortho2DLeft;
-			final float x2 = StoryboardSequence.ortho2DRight;
-			final float y1 = StoryboardSequence.ortho2DBottom;
-			final float y2 = StoryboardSequence.ortho2DTop;
-			final float u1 = 0.0f, u2 = 1.0f;
-			gl.glBegin(gl.GL_QUADS);
-			gl.glTexCoord2f(u1, 0.0f);
-			gl.glVertex2f(x1, y2);
-			gl.glTexCoord2f(u2, 0.0f);
-			gl.glVertex2f(x2, y2);
-			gl.glTexCoord2f(u2, 1.0f);
-			gl.glVertex2f(x2, y1);
-			gl.glTexCoord2f(u1, 1.0f);
-			gl.glVertex2f(x1, y1);
-			gl.glEnd();
-			drawGameOverText(font);
-			gl.glPopMatrix();
-		}
+		gl.glPushMatrix();
+		gl.glOrthof(StoryboardSequence.ortho2DLeft,
+				StoryboardSequence.ortho2DRight,
+				StoryboardSequence.ortho2DBottom,
+				StoryboardSequence.ortho2DTop, -1, 1);
+		getTextureCache().getTexture(sequence.getTexture()).bind();
+		final float x1 = StoryboardSequence.ortho2DLeft;
+		final float x2 = StoryboardSequence.ortho2DRight;
+		final float y1 = StoryboardSequence.ortho2DBottom;
+		final float y2 = StoryboardSequence.ortho2DTop;
+		final float u1 = 0.0f, u2 = 1.0f;
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(getTextureCache().getTexture(sequence.getTexture()),
+				vert, tex);
+		drawGameOverText(font);
+		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawSnowLayer(SnowLayer layer) {
-		gl.glPushMatrix();
-
-		float aspectRatio = (float) viewPortWidth / (float) viewPortHeight;
-		GLU.gluOrtho2D(SnowLayer.ortho2DLeft * aspectRatio,
-				SnowLayer.ortho2DRight * aspectRatio, SnowLayer.ortho2DBottom,
-				SnowLayer.ortho2DTop);
-		layer.setAspectRatio(aspectRatio);
-
-		gl.glPushAttrib(gl.GL_ENABLE_BIT);
-		gl.glDisable(gl.GL_TEXTURE_2D);
-		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		gl.glBegin(gl.GL_POINTS);
-		for (int i = 0; i < layer.getFlakes().length; ++i) {
-			if (null != layer.getFlakes()[i]) {
-				gl.glVertex2f(layer.getFlakes()[i].x, layer.getFlakes()[i].y);
-			}
-		}
-		gl.glEnd();
-		gl.glPopMatrix();
-		gl.glPopAttrib();
+		// todo
 	}
 
 	private void drawAppleIndicatorIcon(World world, float x, float y, float w,
@@ -981,32 +958,29 @@ public class AndroidGameView implements IGameView {
 		final float y1 = y;
 		final float y2 = y + h;
 
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or transperancy
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f); // sets aplha function
-		world.getAppleIconTexture().bind();
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 
 		final float u1 = 0.0f, u2 = 1.0f;
-		gl.glBegin(gl.GL_QUADS);
-		gl.glTexCoord2f(u1, 0.0f);
-		gl.glVertex2f(x1, y2);
-		gl.glTexCoord2f(u2, 0.0f);
-		gl.glVertex2f(x2, y2);
-		gl.glTexCoord2f(u2, 1.0f);
-		gl.glVertex2f(x2, y1);
-		gl.glTexCoord2f(u1, 1.0f);
-		gl.glVertex2f(x1, y1);
-		gl.glEnd();
-		gl.glPopAttrib();
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
+		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
+		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
+		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
+		 */
+		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedQuad(world.getAppleIconTexture(), vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawLevelIndicators(World world, ITrueTypeFont appleFont) {
-		gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(gl.GL_ALPHA_TEST);
-		gl.glAlphaFunc(gl.GL_GREATER, 0.1f);
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
-		gl.glOrtho(0, viewPortWidth, 0, viewPortHeight, -1, 1);
+		gl.glOrthof(0, viewPortWidth, 0, viewPortHeight, -1, 1);
 		gl.glTranslatef(0, viewPortHeight - 64, 0);
 		String nbAppleStr = "" + world.getHero().getNbApple();
 		appleFont.drawString(nbAppleStr);
@@ -1014,52 +988,50 @@ public class AndroidGameView implements IGameView {
 		drawAppleIndicatorIcon(world, appleFont.getWidth(nbAppleStr),
 				appleFont.getWidth(nbAppleStr), iconWidth, iconWidth);
 		gl.glPopMatrix();
-		gl.glPopAttrib();
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
+	@Override
 	public void drawMenuSequence(MenuSequence sequence) {
-		if (Display.isVisible() || Display.isDirty() || Display.wasResized()
-				|| sequence.isDirty()) {
-			sequence.setDirty(false);
-			gl.glPushMatrix();
-			GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight,
-					MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
 
-			if (sequence.getBackgroundImage() != null) {
-				getTextureCache().getTexture(sequence.getBackgroundImage())
-						.bind();
-				final float x1 = MenuSequence.ortho2DLeft;
-				final float x2 = MenuSequence.ortho2DRight;
-				final float y1 = MenuSequence.ortho2DBottom;
-				final float y2 = MenuSequence.ortho2DTop;
-				final float u1 = 0.0F;
-				final float u2 = 1.0F;
-				gl.glBegin(gl.GL_QUADS);
-				gl.glTexCoord2f(u1, 0.0F);
-				gl.glVertex2f(x1, y2);
-				gl.glTexCoord2f(u2, 0.0F);
-				gl.glVertex2f(x2, y2);
-				gl.glTexCoord2f(u2, 1.0F);
-				gl.glVertex2f(x2, y1);
-				gl.glTexCoord2f(u1, 1.0F);
-				gl.glVertex2f(x1, y1);
-				gl.glEnd();
-			} else {
-				gl.glClear(gl.GL_COLOR_BUFFER_BIT);
-			}
+		sequence.setDirty(false);
+		gl.glPushMatrix();
+		gl.glOrthof(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight,
+				MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop, -1, 1);
 
-			gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-			gl.glEnable(gl.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-			gl.glAlphaFunc(gl.GL_GREATER, 0.1F); // sets aplha function
-			for (Button b : sequence.getButtons()) {
-				b.draw();
-			}
-			gl.glPopAttrib();
-			gl.glPopMatrix();
+		if (sequence.getBackgroundImage() != null) {
+			final float x1 = MenuSequence.ortho2DLeft;
+			final float x2 = MenuSequence.ortho2DRight;
+			final float y1 = MenuSequence.ortho2DBottom;
+			final float y2 = MenuSequence.ortho2DTop;
+			final float u1 = 0.0F;
+			final float u2 = 1.0F;
+			/*
+			 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0F);
+			 * gl.glVertex2f(x1, y2); gl.glTexCoord2f(u2, 0.0F);
+			 * gl.glVertex2f(x2, y2); gl.glTexCoord2f(u2, 1.0F);
+			 * gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1, 1.0F);
+			 * gl.glVertex2f(x1, y1); gl.glEnd();
+			 */
+			float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+			float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+			drawTexturedQuad(
+					getTextureCache().getTexture(sequence.getBackgroundImage()),
+					vert, tex);
+		} else {
+			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		}
+
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.1F);
+		for (Button b : sequence.getButtons()) {
+			b.draw();
+		}
+		gl.glDisable(GL10.GL_ALPHA_TEST);
+		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawButton(Button button) {
 		if (button.currentTexture != null) {
 			ITexture texture = getTextureCache().getTexture(
@@ -1072,7 +1044,7 @@ public class AndroidGameView implements IGameView {
 					+ (button.h > 0 ? button.h : texture.getHeight());
 			final float y2 = button.y;
 			final float u1 = 0.0f, u2 = 1.0f;
-			gl.glBegin(gl.GL_QUADS);
+			/*gl.glBegin(gl.GL_QUADS);
 			gl.glTexCoord2f(u1, 0.0f);
 			gl.glVertex2f(x1, y2);
 			gl.glTexCoord2f(u2, 0.0f);
@@ -1081,10 +1053,16 @@ public class AndroidGameView implements IGameView {
 			gl.glVertex2f(x2, y1);
 			gl.glTexCoord2f(u1, 1.0f);
 			gl.glVertex2f(x1, y1);
-			gl.glEnd();
+			gl.glEnd();*/
+			float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+			float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+			drawTexturedQuad(
+					texture,
+					vert, tex);
 		}
 	}
 
+	@Override
 	public void drawQuestMenuButton(Button button, ITrueTypeFont questNameFont,
 			String questName) {
 		drawButton(button);
@@ -1097,12 +1075,13 @@ public class AndroidGameView implements IGameView {
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public void drawWorld(World world) {
 		gl.glPushMatrix();
 
 		float aspectRatio = (float) viewPortWidth / (float) viewPortHeight;
-		GLU.gluOrtho2D(World.ortho2DLeft * aspectRatio, World.ortho2DRight
-				* aspectRatio, World.ortho2DBottom, World.ortho2DTop);
+		gl.glOrthof(World.ortho2DLeft * aspectRatio, World.ortho2DRight
+				* aspectRatio, World.ortho2DBottom, World.ortho2DTop, -1,1);
 
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -1129,7 +1108,6 @@ public class AndroidGameView implements IGameView {
 
 	private void drawWorldBackground(World world, float aspectRatio) {
 		gl.glPushMatrix();
-		world.getBackgroundTexture().bind();
 
 		ROVector2f heroPos = world.getHero().getPosition();
 
@@ -1154,8 +1132,7 @@ public class AndroidGameView implements IGameView {
 		staticBounds.y1 += yt;
 		staticBounds.y2 += yt;
 
-		gl.glEnable(gl.GL_TEXTURE_2D);
-		gl.glBegin(gl.GL_QUADS);
+		/*gl.glBegin(gl.GL_QUADS);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex2f(staticBounds.x1, staticBounds.y2);
 		gl.glTexCoord2f(1.0f, 0.0f);
@@ -1164,33 +1141,41 @@ public class AndroidGameView implements IGameView {
 		gl.glVertex2f(staticBounds.x2, staticBounds.y1);
 		gl.glTexCoord2f(0.0f, 1.0f);
 		gl.glVertex2f(staticBounds.x1, staticBounds.y1);
-		gl.glEnd();
+		gl.glEnd();*/
+		float vert[] = { staticBounds.x1, staticBounds.y2, staticBounds.x2, staticBounds.y2, staticBounds.x2, staticBounds.y1, staticBounds.x1, staticBounds.y1 };
+		float tex[] = { 0,0, 1,0, 1,1, 0,1 };
+		drawTexturedQuad(world.getBackgroundTexture(), vert, tex);
 		gl.glPopMatrix();
 	}
 
+	@Override
 	public ITrueTypeFont createStoryBoardSequenceFont() {
-		return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+		return new AndroidTrueTypeFont(/*new Font("monospaced", Font.BOLD, 32), false*/);
 	}
 
+	@Override
 	public ITrueTypeFont createQuestNameFont() {
-		return new TrueTypeFont();
+		return new AndroidTrueTypeFont();
 	}
 
+	@Override
 	public ITrueTypeFont createAppleFont() {
-		return new TrueTypeFont();
+		return new AndroidTrueTypeFont();
 	}
 
+	@Override
 	public ITrueTypeFont createScoreSequenceFont() {
-		return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+		return new AndroidTrueTypeFont(/*new Font("monospaced", Font.BOLD, 32), false*/);
 	}
 
-	public Animation loadFromGif(String name) throws FileNotFoundException {
-		GifDecoder d = new GifDecoder();
-		d.read(new FileInputStream(name));
+	@Override
+	public Animation loadFromGif(String name) throws FileNotFoundException, IOException {
+		AndroidGifDecoder d = new AndroidGifDecoder();
+		d.read(assets.open(name));
 		Animation animation = new Animation();
 		int n = d.getFrameCount();
 		for (int i = 0; i < n; i++) {
-			BufferedImage frameImage = d.getFrame(i); // frame i
+			Bitmap frameImage = d.getFrame(i); // frame i
 			int t = d.getDelay(i); // display duration of frame in milliseconds
 			animation.addFrame(
 					textureCache.createTexture(name + '#' + i, frameImage), t);
