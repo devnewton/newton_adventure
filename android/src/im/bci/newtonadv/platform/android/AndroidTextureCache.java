@@ -23,7 +23,7 @@ public class AndroidTextureCache implements ITextureCache {
 	}
 
 	private HashMap<String/* name */, TextureWeakReference> textures = new HashMap<String, TextureWeakReference>();
-	private ReferenceQueue<Texture> referenceQueue = new ReferenceQueue<Texture>();
+	private ReferenceQueue<AndroidTexture> referenceQueue = new ReferenceQueue<AndroidTexture>();
 
 	public void clearAll() {
 		for (TextureWeakReference ref : textures.values()) {
@@ -40,7 +40,7 @@ public class AndroidTextureCache implements ITextureCache {
 	}
 
 	public ITexture createTexture(String name, Bitmap Bitmap) {
-		Texture texture = convertImageToTexture(Bitmap, false);
+		AndroidTexture texture = convertImageToTexture(Bitmap, false);
 		textures.put(name, new TextureWeakReference(texture, referenceQueue));
 		return texture;
 	}
@@ -56,7 +56,7 @@ public class AndroidTextureCache implements ITextureCache {
 				textures.remove(name);
 			}
 		}
-		Texture texture = convertImageToTexture(tile.getImage(), false);
+		AndroidTexture texture = convertImageToTexture(tile.getImage(), false);
 		textures.put(name, new TextureWeakReference(texture, referenceQueue));
 		return texture;
 	}
@@ -65,10 +65,10 @@ public class AndroidTextureCache implements ITextureCache {
 		return getTexture(name, false);
 	}
 
-	private Texture getTexture(String name, boolean usePowerOfTwoTexture) {
+	private AndroidTexture getTexture(String name, boolean usePowerOfTwoTexture) {
 		TextureWeakReference textureRef = textures.get(name);
 		if (textureRef != null) {
-			Texture texture = textureRef.get();
+			AndroidTexture texture = textureRef.get();
 			if (texture != null) {
 				return texture;
 			} else {
@@ -76,12 +76,12 @@ public class AndroidTextureCache implements ITextureCache {
 			}
 		}
 		Bitmap loaded = loadImage(name);
-		Texture texture = convertImageToTexture(loaded, usePowerOfTwoTexture);
+		AndroidTexture texture = convertImageToTexture(loaded, usePowerOfTwoTexture);
 		textures.put(name, new TextureWeakReference(texture, referenceQueue));
 		return texture;
 	}
 
-	private static Texture convertImageToTexture(Bitmap bitmap,
+	private static AndroidTexture convertImageToTexture(Bitmap bitmap,
 			boolean usePowerOfTwoTexture) {
 		int texWidth;
 		int texHeight;
@@ -104,7 +104,7 @@ public class AndroidTextureCache implements ITextureCache {
 			texHeight = bitmap.getHeight();
 		}
 
-		Texture texture = new Texture(texWidth, texHeight);
+		AndroidTexture texture = new AndroidTexture(texWidth, texHeight);
 
 		// produce a texture from the byte buffer
 		texture.bind();
@@ -141,11 +141,11 @@ public class AndroidTextureCache implements ITextureCache {
 	}
 
 	private static final class TextureWeakReference extends
-			WeakReference<Texture> {
+			WeakReference<AndroidTexture> {
 
 		int textureId;
 
-		TextureWeakReference(Texture texture, ReferenceQueue<Texture> queue) {
+		TextureWeakReference(AndroidTexture texture, ReferenceQueue<AndroidTexture> queue) {
 			super(texture, queue);
 			textureId = texture.getId();
 		}
