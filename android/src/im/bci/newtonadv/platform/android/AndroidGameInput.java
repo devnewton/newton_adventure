@@ -6,98 +6,105 @@ import im.bci.newtonadv.platform.interfaces.IGameInput;
 
 public class AndroidGameInput implements IGameInput {
 
+	boolean keyJumpDown;
+	boolean keyLeftDown;
+	boolean keyRightDown;
+	boolean keyRotateClockwiseDown;
+	boolean keyRotateCounterClockwiseDown;
+	boolean keyRotate90ClockwiseDown;
+	boolean keyRotate90CounterClockwiseDown;
+	boolean keyPauseDown;
+	boolean keyReturnToMenuDown;
+	boolean keyCheatActivateAllDown;
+	boolean keyCheatGotoNextLevelDown;
+	boolean keyDownDown;
+	boolean keyReturnDown;
+	boolean keyUpDown;
+
 	public AndroidGameInput(Properties config) {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public boolean isKeyCheatActivateAllDown() {
-		// TODO Auto-generated method stub
-		return false;
+		return keyCheatActivateAllDown;
 	}
 
 	@Override
 	public boolean isKeyCheatGotoNextLevelDown() {
-		// TODO Auto-generated method stub
-		return false;
+		return keyCheatGotoNextLevelDown;
 	}
 
 	@Override
 	public boolean isKeyDownDown() {
-		// TODO Auto-generated method stub
-		return false;
+		return keyDownDown;
 	}
 
 	@Override
 	public boolean isKeyJumpDown() {
-		// TODO Auto-generated method stub
-		return false;
+		return keyJumpDown;
 	}
 
 	@Override
 	public boolean isKeyLeftDown() {
-		// TODO Auto-generated method stub
-		return false;
+		return keyLeftDown;
 	}
 
 	@Override
 	public boolean isKeyPauseDown() {
-		// TODO Auto-generated method stub
-		return false;
+		return keyPauseDown;
 	}
 
 	@Override
 	public boolean isKeyReturnDown() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return keyReturnDown;
 	}
 
 	@Override
 	public boolean isKeyReturnToMenuDown() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return keyReturnToMenuDown;
 	}
 
 	@Override
 	public boolean isKeyRightDown() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return keyRightDown;
 	}
 
 	@Override
 	public boolean isKeyRotate90ClockwiseDown() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return keyRotate90ClockwiseDown;
 	}
 
 	@Override
 	public boolean isKeyRotate90CounterClockwiseDown() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return keyRotate90CounterClockwiseDown;
 	}
 
 	@Override
 	public boolean isKeyRotateClockwiseDown() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return keyRotateClockwiseDown;
 	}
 
 	@Override
 	public boolean isKeyRotateCounterClockwiseDown() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return keyRotateCounterClockwiseDown;
 	}
 
 	@Override
 	public boolean isKeyToggleFullscreenDown() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isKeyUpDown() {
-		// TODO Auto-generated method stub
-		return false;
+		return keyUpDown;
 	}
 
 }

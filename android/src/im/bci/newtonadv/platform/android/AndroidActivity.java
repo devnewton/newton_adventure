@@ -48,15 +48,15 @@ public class AndroidActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Create a GLSurfaceView instance and set it
-        // as the ContentView for this Activity.
-        mGLView = new AndroidGLSurfaceView(this);
-        setContentView(mGLView);
-        
-        platform = new AndroidPlatformFactory(getAssets());
         try {
+        	platform = new AndroidPlatformFactory(getAssets());
 			game = new Game(platform);
 			game.start();
+			
+	        // Create a GLSurfaceView instance and set it
+	        // as the ContentView for this Activity.
+	        mGLView = new AndroidGLSurfaceView(this,(AndroidGameInput) game.getInput());
+	        setContentView(mGLView);
 			mGLView.setGame(game);
 		} catch (Exception e) {
 			Logger.getLogger(AndroidPlatformFactory.class.getName()).log(Level.SEVERE, null, e);

@@ -34,20 +34,95 @@ package im.bci.newtonadv.platform.android;
 import im.bci.newtonadv.Game;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.view.KeyEvent;
 
 public class AndroidGLSurfaceView extends GLSurfaceView {
 
 	private final AndroidGameRenderer renderer;
+	private final AndroidGameInput input;
 
-	public AndroidGLSurfaceView(Context context) {
+	public AndroidGLSurfaceView(Context context, AndroidGameInput input) {
 		super(context);
-		
-        // Set the Renderer for drawing on the GLSurfaceView
+
+		this.input = input;
+
+		// Set the Renderer for drawing on the GLSurfaceView
 		renderer = new AndroidGameRenderer();
-        setRenderer(renderer);
+		setRenderer(renderer);
+
+		this.setFocusable(true);
+		this.requestFocus();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
+			input.keyRightDown = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_LEFT:
+			input.keyLeftDown = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_UP:
+			input.keyUpDown = true;
+			input.keyRotateClockwiseDown = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_DOWN:
+			input.keyDownDown = true;
+			input.keyRotateCounterClockwiseDown = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_CENTER:
+			input.keyReturnDown = true;
+			input.keyJumpDown = true;
+			break;
+		case KeyEvent.KEYCODE_MENU:
+			input.keyReturnToMenuDown = true;
+			break;
+		case KeyEvent.KEYCODE_N:
+			input.keyCheatGotoNextLevelDown = true;
+			break;
+		case KeyEvent.KEYCODE_A:
+			input.keyCheatActivateAllDown = true;
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
+			input.keyRightDown = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_LEFT:
+			input.keyLeftDown = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_UP:
+			input.keyUpDown = true;
+			input.keyRotateClockwiseDown = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_DOWN:
+			input.keyDownDown = true;
+			input.keyRotateCounterClockwiseDown = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_CENTER:
+			input.keyReturnDown = true;
+			input.keyJumpDown = true;
+			break;
+		case KeyEvent.KEYCODE_MENU:
+			input.keyReturnToMenuDown = true;
+			break;
+		case KeyEvent.KEYCODE_N:
+			input.keyCheatGotoNextLevelDown = true;
+			break;
+		case KeyEvent.KEYCODE_A:
+			input.keyCheatActivateAllDown = true;
+			break;
+		}
+		return super.onKeyUp(keyCode, event);
 	}
 
 	public void setGame(Game game) {
-		renderer.setGame(game);		
+		renderer.setGame(game);
 	}
 }
