@@ -71,12 +71,13 @@ public class AndroidGameView implements IGameView {
 	private int viewPortWidth;
 	private int viewPortHeight;
 	private AssetManager assets;
+	private Properties config;
 
 	public AndroidGameView(AssetManager assets, Properties config) {
 		this.quality = AndroidGameViewQuality.valueOf(config
 				.getProperty("view.quality"));
 		this.assets = assets;
-		initDisplay(config);
+		this.config = config;
 	}
 
 	@Override
@@ -1159,7 +1160,11 @@ public class AndroidGameView implements IGameView {
 	}
 
 	public void setGl(GL10 gl2) {
-		gl = gl2;
+		if(null == gl) {
+			gl = gl2;
+			initDisplay(config);
+		}
+		
 	}
 
 	public void setViewPort(int width, int height) {
