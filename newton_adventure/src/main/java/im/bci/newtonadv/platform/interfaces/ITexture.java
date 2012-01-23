@@ -38,10 +38,10 @@ package im.bci.newtonadv.platform.interfaces;
  */
 public interface ITexture {
 
-    void bind();
-
     int getHeight();
 
     int getWidth();
+
+	int getId();
 
 }

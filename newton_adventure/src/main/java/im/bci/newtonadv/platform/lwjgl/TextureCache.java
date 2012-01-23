@@ -198,7 +198,7 @@ public class TextureCache implements ITextureCache {
         Texture texture = new Texture(texWidth, texHeight);
 
         // produce a texture from the byte buffer
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);

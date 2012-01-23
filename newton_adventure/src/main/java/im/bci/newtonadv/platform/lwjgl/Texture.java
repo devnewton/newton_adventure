@@ -56,7 +56,7 @@ public class Texture implements ITexture {
         this.height = height;
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
@@ -66,9 +66,5 @@ public class Texture implements ITexture {
 
     public int getWidth() {
         return width;
-    }
-
-    public void bind() {
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
     }
 }

@@ -56,6 +56,7 @@ public class AndroidActivity extends Activity {
         platform = new AndroidPlatformFactory(getAssets());
         try {
 			game = new Game(platform);
+			game.start();
 			mGLView.setGame(game);
 		} catch (Exception e) {
 			Logger.getLogger(AndroidPlatformFactory.class.getName()).log(Level.SEVERE, null, e);

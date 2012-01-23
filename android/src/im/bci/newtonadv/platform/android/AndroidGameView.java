@@ -126,7 +126,7 @@ public class AndroidGameView implements IGameView {
 	}
 
 	public void drawTexturedQuad(ITexture texture, float vert[], float tex[]) {
-		texture.bind();
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.getId());
 
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -142,7 +142,7 @@ public class AndroidGameView implements IGameView {
 
 	public void drawTexturedTriangle(ITexture texture, float vert[],
 			float tex[]) {
-		texture.bind();
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.getId());
 
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -172,7 +172,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 
 		/*
 		 * final float u1 = 0.0f, u2 = 1.0f;
@@ -195,7 +194,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 		/*
 		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
 		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
@@ -225,7 +223,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		texture.bind();
 
 		final float u1 = 0.18f, u2 = 0.8f;
 		final float v1 = 0.2f, v2 = 0.8f;
@@ -260,8 +257,6 @@ public class AndroidGameView implements IGameView {
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 
-		texture.bind();
-
 		final float u1 = 1, u2 = 0;
 		/*
 		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
@@ -295,7 +290,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.0f); // sets aplha function
-		texture.bind();
 		/*
 		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
 		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
@@ -327,7 +321,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 		/*
 		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
 		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
@@ -351,7 +344,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 		/*
 		 * gl.glBegin(gl.GL_TRIANGLES); gl.glTexCoord2f(0.0f, 0.0f);
 		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(0.0f, 1.0f);
@@ -374,7 +366,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 		/*
 		 * gl.glBegin(gl.GL_TRIANGLES); gl.glTexCoord2f(0.0f, 1.0f);
 		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
@@ -397,7 +388,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 		/*
 		 * gl.glBegin(gl.GL_TRIANGLES); gl.glTexCoord2f(0.0f, 0.0f);
 		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(0.0f, 1.0f);
@@ -420,7 +410,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 		/*
 		 * gl.glBegin(gl.GL_TRIANGLES); gl.glTexCoord2f(0.0f, 0.0f);
 		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
@@ -448,7 +437,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
 		/*
@@ -478,7 +466,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
 		/*
@@ -513,8 +500,6 @@ public class AndroidGameView implements IGameView {
 		// gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-
-		texture.bind();
 
 		float u1, u2;
 		if (hero.isLookingLeft()) {
@@ -553,7 +538,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
 		/*
@@ -586,7 +570,6 @@ public class AndroidGameView implements IGameView {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
 		/*
@@ -615,7 +598,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		texture.bind();
 
 		final float u1 = 0.18f, u2 = 0.8f;
 		final float v1 = 0.2f, v2 = 0.8f;
@@ -642,7 +624,6 @@ public class AndroidGameView implements IGameView {
 		// gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 		/*
 		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
 		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
@@ -676,8 +657,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST);
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
-
-		texture.bind();
 
 		float u1, u2;
 		if (mummy.isLookingLeft()) {
@@ -715,7 +694,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST);
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
-		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
 		/*
@@ -745,7 +723,6 @@ public class AndroidGameView implements IGameView {
 
 		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or transperancy
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-		texture.bind();
 
 		final float u1 = 0.0f, u2 = 1.0f;
 		/*
@@ -926,7 +903,6 @@ public class AndroidGameView implements IGameView {
 				StoryboardSequence.ortho2DRight,
 				StoryboardSequence.ortho2DBottom,
 				StoryboardSequence.ortho2DTop, -1, 1);
-		getTextureCache().getTexture(sequence.getTexture()).bind();
 		final float x1 = StoryboardSequence.ortho2DLeft;
 		final float x2 = StoryboardSequence.ortho2DRight;
 		final float y1 = StoryboardSequence.ortho2DBottom;
@@ -1036,7 +1012,6 @@ public class AndroidGameView implements IGameView {
 		if (button.currentTexture != null) {
 			ITexture texture = getTextureCache().getTexture(
 					button.currentTexture);
-			texture.bind();
 			final float x1 = button.x;
 			final float x2 = button.x
 					+ (button.w > 0 ? button.w : texture.getWidth());

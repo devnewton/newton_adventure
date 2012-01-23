@@ -17,7 +17,7 @@ public class AndroidTexture implements ITexture {
         this.height = height;
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
@@ -27,9 +27,5 @@ public class AndroidTexture implements ITexture {
 
     public int getWidth() {
         return width;
-    }
-
-    public void bind() {
-    	GLES10.glBindTexture(GLES10.GL_TEXTURE_2D, id);
     }
 }

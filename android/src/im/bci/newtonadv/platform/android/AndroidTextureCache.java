@@ -107,7 +107,7 @@ public class AndroidTextureCache implements ITextureCache {
 		AndroidTexture texture = new AndroidTexture(texWidth, texHeight);
 
 		// produce a texture from the byte buffer
-		texture.bind();
+		GLES10.glBindTexture(GLES10.GL_TEXTURE_2D, texture.getId());
 		GLES10.glPixelStorei(GLES10.GL_UNPACK_ALIGNMENT, 1);
 		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_S,
 				GLES10.GL_CLAMP_TO_EDGE);

@@ -292,8 +292,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
-
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 0.0f, u2 = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
@@ -317,7 +316,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.0f, 1.0f);
         GL11.glVertex2f(pts[0].x, pts[0].y);
@@ -343,7 +342,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 0.18f, u2 = 0.8f;
         final float v1 = 0.2f, v2 = 0.8f;
@@ -377,7 +376,7 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
 
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 1, u2 = 0;
         GL11.glBegin(GL11.GL_QUADS);
@@ -411,7 +410,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.0f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.0f, 1.0f);
         GL11.glVertex2f(pts[0].x, pts[0].y);
@@ -442,7 +441,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.0f, 1.0f);
         GL11.glVertex2f(pts[0].x, pts[0].y);
@@ -463,7 +462,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_TRIANGLES);
         GL11.glTexCoord2f(0.0f, 0.0f);
         GL11.glVertex2f(pts[0].x, pts[0].y);
@@ -482,7 +481,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_TRIANGLES);
         GL11.glTexCoord2f(0.0f, 1.0f);
         GL11.glVertex2f(pts[0].x, pts[0].y);
@@ -502,7 +501,7 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.9999f);
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_TRIANGLES);
         GL11.glTexCoord2f(0.0f, 0.0f);
         GL11.glVertex2f(pts[0].x, pts[0].y);
@@ -521,7 +520,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_TRIANGLES);
         GL11.glTexCoord2f(0.0f, 0.0f);
         GL11.glVertex2f(pts[0].x, pts[0].y);
@@ -545,7 +544,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 0.0f, u2 = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
@@ -575,7 +574,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 0.0f, u2 = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
@@ -609,7 +608,7 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
 
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         float u1, u2;
         if (hero.isLookingLeft()) {
@@ -647,7 +646,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
 
         final float u1 = 0.0f, u2 = 1.0f;
@@ -679,7 +678,7 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 0.0f, u2 = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
@@ -707,7 +706,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 0.18f, u2 = 0.8f;
         final float v1 = 0.2f, v2 = 0.8f;
@@ -732,7 +731,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.0f, 1.0f);
         GL11.glVertex2f(pts[0].x, pts[0].y);
@@ -762,7 +761,7 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
 
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         float u1, u2;
         if (mummy.isLookingLeft()) {
@@ -798,7 +797,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 0.0f, u2 = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
@@ -827,7 +826,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 0.0f, u2 = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
@@ -844,7 +843,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPopMatrix();
     }
 
-    public void drawEgyptianBoss(EgyptianBoss boss, ITexture bodyTexture, boolean isHurtBlinkState) {
+    public void drawEgyptianBoss(EgyptianBoss boss, ITexture texture, boolean isHurtBlinkState) {
         AABox bounds = boss.getShape().getBounds();
 
         GL11.glPushMatrix();
@@ -858,7 +857,7 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
 
-        bodyTexture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         if (isHurtBlinkState) {
             GL11.glColor3f(1, 0, 0);
@@ -895,7 +894,7 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
 
-        texture.bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
         final float u1 = 1, u2 = 0;
         GL11.glBegin(GL11.GL_QUADS);
@@ -919,7 +918,7 @@ public strictfp class GameView implements IGameView {
 
             GL11.glPushMatrix();
             GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft, StoryboardSequence.ortho2DRight, StoryboardSequence.ortho2DBottom, StoryboardSequence.ortho2DTop);
-            getTextureCache().getTexture(sequence.getTexture()).bind();
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache().getTexture(sequence.getTexture()).getId());
             final float x1 = StoryboardSequence.ortho2DLeft;
             final float x2 = StoryboardSequence.ortho2DRight;
             final float y1 = StoryboardSequence.ortho2DBottom;
@@ -988,7 +987,7 @@ public strictfp class GameView implements IGameView {
 
             GL11.glPushMatrix();
             GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft, StoryboardSequence.ortho2DRight, StoryboardSequence.ortho2DBottom, StoryboardSequence.ortho2DTop);
-            getTextureCache().getTexture(sequence.getTexture()).bind();
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache().getTexture(sequence.getTexture()).getId());
             final float x1 = StoryboardSequence.ortho2DLeft;
             final float x2 = StoryboardSequence.ortho2DRight;
             final float y1 = StoryboardSequence.ortho2DBottom;
@@ -1039,7 +1038,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        world.getAppleIconTexture().bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, world.getAppleIconTexture().getId());
 
         final float u1 = 0.0f, u2 = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
@@ -1078,7 +1077,7 @@ public strictfp class GameView implements IGameView {
             GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight, MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
 
             if (sequence.getBackgroundImage() != null) {
-                getTextureCache().getTexture(sequence.getBackgroundImage()).bind();
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache().getTexture(sequence.getBackgroundImage()).getId());
                 final float x1 = MenuSequence.ortho2DLeft;
                 final float x2 = MenuSequence.ortho2DRight;
                 final float y1 = MenuSequence.ortho2DBottom;
@@ -1113,7 +1112,7 @@ public strictfp class GameView implements IGameView {
     public void drawButton(Button button) {
         if (button.currentTexture != null) {
             ITexture texture = getTextureCache().getTexture(button.currentTexture);
-            texture.bind();
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
             final float x1 = button.x;
             final float x2 = button.x + (button.w > 0 ? button.w : texture.getWidth());
             final float y1 = button.y + (button.h > 0 ? button.h : texture.getHeight());
@@ -1169,7 +1168,7 @@ public strictfp class GameView implements IGameView {
 
     private void drawWorldBackground(World world, float aspectRatio) {
         GL11.glPushMatrix();
-        world.getBackgroundTexture().bind();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, world.getBackgroundTexture().getId());
 
         ROVector2f heroPos = world.getHero().getPosition();
 
