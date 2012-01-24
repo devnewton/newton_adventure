@@ -1020,8 +1020,8 @@ public class AndroidGameView implements IGameView {
 			 * gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1, 1.0F);
 			 * gl.glVertex2f(x1, y1); gl.glEnd();
 			 */
-			float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
-			float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+			float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+			float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 			drawTexturedQuad(
 					getTextureCache().getTexture(sequence.getBackgroundImage()),
 					vert, tex);
