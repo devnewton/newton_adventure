@@ -68,7 +68,6 @@ public class AndroidGameView implements IGameView {
 
 	private AndroidTextureCache textureCache;
 	private ITrueTypeFont fpsFont;
-	private AndroidGameViewQuality quality;
 	private GL10 gl;
 	private int viewPortWidth;
 	private int viewPortHeight;
@@ -76,8 +75,6 @@ public class AndroidGameView implements IGameView {
 	private Properties config;
 
 	public AndroidGameView(AssetManager assets, Properties config) {
-		this.quality = AndroidGameViewQuality.valueOf(config
-				.getProperty("view.quality"));
 		this.assets = assets;
 		this.config = config;
 	}
@@ -127,7 +124,7 @@ public class AndroidGameView implements IGameView {
 		return textureCache;
 	}
 
-	public void drawTexturedQuad(ITexture texture, float vert[], float tex[]) {
+	public void drawTexturedTriangleFans(ITexture texture, float vert[], float tex[]) {
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.getId());
 
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
@@ -150,23 +147,7 @@ public class AndroidGameView implements IGameView {
 		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vb);
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, tb);
 
-		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, vert.length / 2);
-
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-	}
-
-	public void drawTexturedTriangle(ITexture texture, float vert[],
-			float tex[]) {
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.getId());
-
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
-		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(vert));
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(tex));
-
-		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 3);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, vert.length / 2);
 
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -199,7 +180,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float tex[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
 		float vert[] = { x1, y1, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glPopMatrix();
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
@@ -222,7 +203,7 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { 0, 1, 1, 1, 1, 0, 0, 0 };
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 
@@ -252,7 +233,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float tex[] = { u1, v1, u2, v1, u2, v2, u1, v2 };
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glPopMatrix();
 		gl.glDisable(GL10.GL_BLEND);
 	}
@@ -285,7 +266,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glPopMatrix();
 
 		gl.glDisable(GL10.GL_ALPHA_TEST);
@@ -320,7 +301,7 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -352,7 +333,7 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -375,7 +356,7 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { 0, 0, 0, 1, 1, 1 };
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
-		drawTexturedTriangle(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -398,7 +379,7 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { 0, 1, 1, 1, 1, 0 };
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
-		drawTexturedTriangle(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -421,7 +402,7 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { 0, 0, 0, 1, 1, 0 };
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
-		drawTexturedTriangle(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -444,7 +425,7 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { 0, 0, 1, 1, 1, 0 };
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
-		drawTexturedTriangle(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -473,7 +454,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
@@ -502,7 +483,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glPopMatrix();
 
@@ -544,7 +525,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
@@ -576,7 +557,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 
@@ -608,7 +589,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		gl.glPopMatrix();
@@ -637,7 +618,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		float tex[] = { u1, v1, u2, v1, u2, v2, u1, v2 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glPopMatrix();
 		gl.glDisable(GL10.GL_BLEND);
 		// gl.glPopAttrib();
@@ -663,7 +644,7 @@ public class AndroidGameView implements IGameView {
 		float vert[] = { 0, 1, 1, 1, 1, 0, 0, 0 };
 		float tex[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glPopMatrix();
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
@@ -703,7 +684,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
@@ -733,7 +714,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
@@ -763,7 +744,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
@@ -797,7 +778,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(bodyTexture, vert, tex);
+		drawTexturedTriangleFans(bodyTexture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		if (isHurtBlinkState) {
 			gl.glColor4f(1, 1, 1, 1);
@@ -829,7 +810,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(texture, vert, tex);
+		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 
@@ -858,7 +839,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(getTextureCache().getTexture(sequence.getTexture()),
+		drawTexturedTriangleFans(getTextureCache().getTexture(sequence.getTexture()),
 				vert, tex);
 		drawContinueText(font);
 		gl.glPopMatrix();
@@ -947,7 +928,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(getTextureCache().getTexture(sequence.getTexture()),
+		drawTexturedTriangleFans(getTextureCache().getTexture(sequence.getTexture()),
 				vert, tex);
 		drawGameOverText(font);
 		gl.glPopMatrix();
@@ -977,7 +958,7 @@ public class AndroidGameView implements IGameView {
 		 */
 		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedQuad(world.getAppleIconTexture(), vert, tex);
+		drawTexturedTriangleFans(world.getAppleIconTexture(), vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -1022,7 +1003,7 @@ public class AndroidGameView implements IGameView {
 			 */
 			float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 			float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-			drawTexturedQuad(
+			drawTexturedTriangleFans(
 					getTextureCache().getTexture(sequence.getBackgroundImage()),
 					vert, tex);
 		} else {
@@ -1057,9 +1038,9 @@ public class AndroidGameView implements IGameView {
 			 * gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1, 1.0f);
 			 * gl.glVertex2f(x1, y1); gl.glEnd();
 			 */
-			float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
-			float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-			drawTexturedQuad(texture, vert, tex);
+			float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+			float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+			drawTexturedTriangleFans(texture, vert, tex);
 		}
 	}
 
@@ -1146,7 +1127,7 @@ public class AndroidGameView implements IGameView {
 				staticBounds.y2, staticBounds.x2, staticBounds.y1,
 				staticBounds.x1, staticBounds.y1 };
 		float tex[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
-		drawTexturedQuad(world.getBackgroundTexture(), vert, tex);
+		drawTexturedTriangleFans(world.getBackgroundTexture(), vert, tex);
 		gl.glPopMatrix();
 	}
 

@@ -95,31 +95,31 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			input.keyRightDown = true;
+			input.keyRightDown = false;
 			break;
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			input.keyLeftDown = true;
+			input.keyLeftDown = false;
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP:
-			input.keyUpDown = true;
-			input.keyRotateClockwiseDown = true;
+			input.keyUpDown = false;
+			input.keyRotateClockwiseDown = false;
 			break;
 		case KeyEvent.KEYCODE_DPAD_DOWN:
-			input.keyDownDown = true;
-			input.keyRotateCounterClockwiseDown = true;
+			input.keyDownDown = false;
+			input.keyRotateCounterClockwiseDown = false;
 			break;
 		case KeyEvent.KEYCODE_DPAD_CENTER:
-			input.keyReturnDown = true;
-			input.keyJumpDown = true;
+			input.keyReturnDown = false;
+			input.keyJumpDown = false;
 			break;
 		case KeyEvent.KEYCODE_MENU:
-			input.keyReturnToMenuDown = true;
+			input.keyReturnToMenuDown = false;
 			break;
 		case KeyEvent.KEYCODE_N:
-			input.keyCheatGotoNextLevelDown = true;
+			input.keyCheatGotoNextLevelDown = false;
 			break;
 		case KeyEvent.KEYCODE_A:
-			input.keyCheatActivateAllDown = true;
+			input.keyCheatActivateAllDown = false;
 			break;
 		}
 		return super.onKeyUp(keyCode, event);

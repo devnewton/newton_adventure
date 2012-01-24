@@ -53,7 +53,7 @@ public class AndroidGameData implements IGameData {
 		String path = "quests/" + questName + "/levels/" + levelName;
 		for (String file : assets.list(path)) {
 			if (file.endsWith(".tmx"))
-				return assets.open(file);
+				return assets.open(path + "/" + file);
 		}
 		throw new RuntimeException("no tmx file found in level path " + path);
 	}
