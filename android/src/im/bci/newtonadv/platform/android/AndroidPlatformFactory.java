@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import android.content.res.AssetManager;
 
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
@@ -50,6 +51,11 @@ public class AndroidPlatformFactory implements IPlatformFactory {
 		} catch (IOException e) {
 			Logger.getLogger(AndroidPlatformFactory.class.getName()).log(Level.SEVERE, null, e);
 		}
+	}
+
+	@Override
+	public IGameData createGameData(Properties config) {
+		return new AndroidGameData(assets);
 	}
 
 }

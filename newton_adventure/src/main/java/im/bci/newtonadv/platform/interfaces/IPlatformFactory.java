@@ -48,4 +48,6 @@ public interface IPlatformFactory {
 
 	void loadConfig(Properties config);
 
+	IGameData createGameData(Properties config);
+
 }

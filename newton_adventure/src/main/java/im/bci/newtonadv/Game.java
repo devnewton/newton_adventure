@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv;
 
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
@@ -54,6 +55,7 @@ public strictfp class Game {
 
     private final IGameView view;
     private final IGameInput input;
+	private final IGameData data;
     private boolean running = true;
     static public final int FPS = 60;
     static public final float FPSf = (float) FPS;
@@ -93,6 +95,7 @@ public strictfp class Game {
         this.soundCache = platform.createSoundCache(config);
         this.view = platform.createGameView(config);
         this.input = platform.createGameInput(config);
+        this.data = platform.createGameData(config);
     }
 
     public void tick() {
@@ -183,4 +186,8 @@ public strictfp class Game {
     public boolean isRunning() {
         return running;
     }
+
+	public IGameData getData() {
+		return data;
+	}
 }

@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -71,5 +72,9 @@ public class PlatformFactory implements IPlatformFactory {
         } catch (IOException e) {
             Logger.getLogger(PlatformFactory.class.getName()).log(Level.SEVERE, null, e);
         }
+    }
+
+    public IGameData createGameData(Properties config) {
+        return new GameData(config);
     }
 }
