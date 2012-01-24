@@ -52,12 +52,13 @@ strictfp public class LevelSequence implements Sequence {
     private ITrueTypeFont appleFont;
     private Sequence nextSequence;
     private Game game;
-    private String levelPath;
+    private String questName, levelName;
     private boolean cheatCodeGotoNextLevel = false;
 
-    public LevelSequence(Game game, String levelPath) {
+    public LevelSequence(Game game, String questName, String levelName) {
         this.game = game;
-        this.levelPath = levelPath;
+        this.questName = questName;
+        this.levelName = levelName;
     }
 
     @Override
@@ -65,9 +66,9 @@ strictfp public class LevelSequence implements Sequence {
         try {
             cheatCodeGotoNextLevel = false;
             appleFont = game.getView().createAppleFont();
-            world = new World(game);
+            world = new World(game,questName,levelName);
             frameTimeInfos = game.getFrameTimeInfos();
-            world.loadLevel(levelPath);
+            world.loadLevel();
         } catch (Exception ex) {
             Logger.getLogger(LevelSequence.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-1);
@@ -99,7 +100,7 @@ strictfp public class LevelSequence implements Sequence {
             }
             world.update();
             if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
-                game.getScore().setLevelScore(levelPath, world.getLevelScore());
+                game.getScore().setLevelScore(questName,levelName, world.getLevelScore());
                 throw new TransitionException(nextSequence);
             }
         } catch (GameOverException ex) {

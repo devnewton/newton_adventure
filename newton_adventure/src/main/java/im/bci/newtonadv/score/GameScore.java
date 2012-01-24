@@ -31,7 +31,6 @@
  */
 package im.bci.newtonadv.score;
 
-import java.io.File;
 import java.util.TreeMap;
 
 /**
@@ -42,15 +41,9 @@ public class GameScore {
 
     private TreeMap<String, QuestScore> questScores = new TreeMap<String, QuestScore>();
 
-    public void setLevelScore(String levelPath, LevelScore score) {
-        QuestScore bestScores = getQuestScoreFromLevelPath(levelPath);
-        String levelName = buildLevelNameFromLevelPath(levelPath);
+    public void setLevelScore(String questName, String levelName, LevelScore score) {
+        QuestScore bestScores = getQuestScore(questName);
         bestScores.setLevelScore(levelName, score);
-    }
-
-    public QuestScore getQuestScoreFromLevelPath(String levelPath) {
-        String questName = buildQuestNameFromLevelPath(levelPath);
-        return getQuestScore(questName);
     }
 
     public QuestScore getQuestScore(String questName) {
@@ -61,15 +54,5 @@ public class GameScore {
             questScores.put(questName, score);
         }
         return score;
-    }
-
-    private String buildQuestNameFromLevelPath(String levelPath) {
-        File f = new File(levelPath);
-        return f.getParentFile().getParentFile().getName();
-    }
-
-    private String buildLevelNameFromLevelPath(String levelPath) {
-        File f = new File(levelPath);
-        return f.getName();
     }
 }

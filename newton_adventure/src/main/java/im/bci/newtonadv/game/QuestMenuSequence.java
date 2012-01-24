@@ -99,8 +99,8 @@ public class QuestMenuSequence extends MenuSequence {
                 game.getView().drawQuestMenuButton(this, questNameFont, questName);
             }
         };
-        questButton.offTexture = game.getData().getQuestOffButton(questName);
-        questButton.onTexture = game.getData().getQuestOnButton(questName);
+        questButton.offTexture = game.getData().getQuestFile(questName, "bt-quest-off.jpg");
+        questButton.onTexture = game.getData().getQuestFile(questName, "bt-quest-on.jpg");
 
         questButton.x = QUEST_MINIATURE_SPACING + (i % QUEST_MINIATURE_BY_COLUMN) * (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
         questButton.y = QUEST_MINIATURE_SPACING + (i / QUEST_MINIATURE_BY_ROW) * (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);

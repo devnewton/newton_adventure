@@ -42,10 +42,8 @@ import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -100,6 +98,8 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITexture blocker1Texture;
     private ITexture blocker2Texture;
     private ITexture blocker3Texture;
+    private final String questName;
+    private final String levelName;
 
     public boolean areObjectivesCompleted() {
         return objectivesCompleted;
@@ -133,10 +133,12 @@ public strictfp class World extends net.phys2d.raw.World {
         return hero;
     }
 
-    public World(Game game) {
+    public World(Game game, String questName, String levelName) {
         super(new Vector2f(0.0f, -gravityForce), 2, new StaticQuadSpaceStrategy(20, 5));
         this.game = game;
         progressiveRotateGravity(0.0f);
+        this.questName = questName;
+        this.levelName = levelName;
     }
 
     public AbsoluteAABox getStaticBounds() {
@@ -232,30 +234,19 @@ public strictfp class World extends net.phys2d.raw.World {
                 throw new RuntimeException("error in tmx map file, cannot find property " + filePropertyName);
             }
         }
-        String path = (new File(map.getFilename())).getParent() + File.separator + filename;
-        if ((new File(path)).exists()) {
-            return path;
-        } else {
-            return "data" + File.separator + "default_level_data" + File.separator + filename;
-        }
+        return game.getData().getLevelFile(questName, levelName, filename);
     }
 
-    public void loadLevel(String levelPath) throws IOException, Exception {
-
-        File levelDir = new File(levelPath);
-        File[] tmxFiles = levelDir.listFiles(new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".tmx");
-            }
-        });
-        if (tmxFiles.length == 0) {
-            throw new FileNotFoundException("cannot find *.tmx file in level path: " + levelPath);
-        }
+    public void loadLevel() throws IOException, Exception {
 
         TMXMapReader mapReader = new TMXMapReader();
-        tiled.core.Map map = mapReader.readMap(tmxFiles[0].getPath());
+        tiled.core.Map map;
+        InputStream mapInputStream = game.getData().openLevelTmx(questName, levelName);
+        try {
+            map = mapReader.readMap(mapInputStream);
+        } finally {
+            mapInputStream.close();
+        }
 
 
         final ITextureCache textureCache = game.getView().getTextureCache();
@@ -294,7 +285,7 @@ public strictfp class World extends net.phys2d.raw.World {
         }
         backgroundTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.background"));
         this.getHero().setAnimation(game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.hero")));
-        this.getHero().setJumpSound(game.getSoundCache().getSoundIfEnabled("data/jump.wav"));
+        this.getHero().setJumpSound(game.getSoundCache().getSoundIfEnabled(game.getData().getFile("jump.wav")));
         game.getSoundCache().playMusicIfEnabled(getFileFromMap(map, "newton_adventure.music"));
 
     }
@@ -489,8 +480,8 @@ public strictfp class World extends net.phys2d.raw.World {
             add(activable);
         } else if (c.equals("egyptian_boss")) {
             EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
-            boss.setBodyTexture(textureCache.getTexture("data/egyptian_boss_body.png"));
-            boss.setHandTexture(textureCache.getTexture("data/egyptian_boss_hand.png"));
+            boss.setBodyTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_body.png")));
+            boss.setHandTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_hand.png")));
             add(boss);
             add(boss.getLeftHand());
             add(boss.getRightHand());

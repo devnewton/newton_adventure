@@ -31,9 +31,7 @@
  */
 package im.bci.newtonadv.game;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import im.bci.newtonadv.Game;
 
@@ -69,32 +67,23 @@ public class QuestSequence implements Sequence {
     public void processInputs() throws TransitionException {
     }
 
-    private void loadLevels(String questDirectory) {
+    private void loadLevels(String questName) {
         levels = new ArrayList<LevelSequence>();
-        File dir = new File( "data/quests/" + questDirectory + File.separator + "levels");
-        String questName = dir.getParentFile().getName();
+        List<String> levelNames = game.getData().listQuestLevels(questName);
         LevelSequence lastSequence = null;
-        File[] files = dir.listFiles();
-        java.util.Arrays.sort(files, new Comparator<File>() {
-
-            public int compare(File a, File b) {
-                return a.getName().compareTo(b.getName());
-            }
-        });
-        for (File f : files) {
-            if (f.isDirectory()) {
-                LevelSequence levelSequence = new LevelSequence(game, f.getAbsolutePath());
+        
+        for (String levelName : levelNames) {
+                LevelSequence levelSequence = new LevelSequence(game, questName, levelName);
                 levels.add(levelSequence);
                 if (lastSequence != null) {
                     lastSequence.setNextSequence(levelSequence);
                 }
                 lastSequence = levelSequence;
-            }
         }
 
         if(lastSequence!=null) {
             scoreSequence = new ScoreSequence(game, questName, nextSequence);
-            StoryboardSequence completedSequence = new StoryboardSequence(game, questDirectory + File.separator + "completed.jpg", "data" + File.separator + "story_time.ogg", scoreSequence);
+            StoryboardSequence completedSequence = new StoryboardSequence(game, game.getData().getQuestFile(questName,"completed.jpg"), game.getData().getFile("story_time.ogg"), scoreSequence);
             lastSequence.setNextSequence(completedSequence);
         }
     }

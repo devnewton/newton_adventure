@@ -34,7 +34,6 @@ package im.bci.newtonadv.game;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.special.occasion.SpecialOccasionFactory;
 import im.bci.newtonadv.game.special.occasion.SpecialOccasionLayer;
-import java.io.File;
 
 /**
  *
@@ -66,9 +65,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
 
         this.playSequence = playSeq;
         this.quitSequence = quitSeq;
-        this.helpSequence = new StoryboardSequence(game, "data" + File.separator + "help.jpg", null, this);
+        this.helpSequence = new StoryboardSequence(game, game.getData().getFile("help.jpg"), null, this);
 
-        setBackgroundImage("data/main_menu/home.png");
+        setBackgroundImage(game.getData().getFile("main_menu/home.png"));
 
         playButton = new Button() {
 
@@ -77,8 +76,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 throw new Sequence.TransitionException(playSequence);
             }
         };
-        playButton.offTexture = "data/main_menu/bt-play-off.png";
-        playButton.currentTexture = playButton.onTexture = "data/main_menu/bt-play-on.png";
+        playButton.offTexture = game.getData().getFile("main_menu/bt-play-off.png");
+        playButton.currentTexture = playButton.onTexture = game.getData().getFile("main_menu/bt-play-on.png");
         playButton.y = 318;
         addButton(playButton);
 
@@ -91,8 +90,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 }
             }
         };
-        resumeButton.currentTexture = resumeButton.offTexture = "data/main_menu/bt-resume-off.png";
-        resumeButton.onTexture = "data/main_menu/bt-resume-on.png";
+        resumeButton.currentTexture = resumeButton.offTexture = game.getData().getFile("main_menu/bt-resume-off.png");
+        resumeButton.onTexture = game.getData().getFile("main_menu/bt-resume-on.png");
         resumeButton.y = 441;
         addButton(resumeButton);
 
@@ -105,8 +104,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 }
             }
         };
-        helpButton.currentTexture = helpButton.offTexture = "data/main_menu/bt-help-off.png";
-        helpButton.onTexture = "data/main_menu/bt-help-on.png";
+        helpButton.currentTexture = helpButton.offTexture = game.getData().getFile("main_menu/bt-help-off.png");
+        helpButton.onTexture = game.getData().getFile("main_menu/bt-help-on.png");
         helpButton.y = 558;
         addButton(helpButton);
 
@@ -117,8 +116,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 throw new Sequence.TransitionException(quitSequence);
             }
         };
-        quitButton.currentTexture = quitButton.offTexture = "data/main_menu/bt-quit-off.png";
-        quitButton.onTexture = "data/main_menu/bt-quit-on.png";
+        quitButton.currentTexture = quitButton.offTexture = game.getData().getFile("main_menu/bt-quit-off.png");
+        quitButton.onTexture = game.getData().getFile("main_menu/bt-quit-on.png");
         quitButton.y = 675;
         addButton(quitButton);
     }
@@ -128,7 +127,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
         super.start();
         if (resumeSequence == null) {
             setCurrentButton(playButton);
-            game.getSoundCache().playMusicIfEnabled("data/lovelace_0.ogg");
+            game.getSoundCache().playMusicIfEnabled(game.getData().getFile("lovelace_0.ogg"));
         } else {
             setCurrentButton(resumeButton);
         }

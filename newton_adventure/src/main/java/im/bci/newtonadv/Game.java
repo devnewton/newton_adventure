@@ -36,7 +36,6 @@ import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
-import java.io.File;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import java.io.IOException;
 import java.util.Properties;
@@ -141,7 +140,7 @@ public strictfp class Game {
     }
 
     Sequence setupSequences() {
-        Sequence outroSequence = new StoryboardSequence(this, "data" + File.separator + "outro.jpg", "data" + File.separator + "The_End.ogg", null);
+        Sequence outroSequence = new StoryboardSequence(this, data.getFile("outro.jpg"), data.getFile("The_End.ogg"), null);
         QuestMenuSequence questMenuSequence = new QuestMenuSequence(this);
         mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence);
         questMenuSequence.setNextSequence(mainMenuSequence);

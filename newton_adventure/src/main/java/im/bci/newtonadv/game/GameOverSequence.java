@@ -38,7 +38,7 @@ public class GameOverSequence extends StoryboardSequence {
     private LevelSequence level;
 
     GameOverSequence(Game game, LevelSequence level, Sequence nextSequence) {
-        super(game, "data/gameover.jpg", "data/Game_Over.ogg", nextSequence);
+        super(game, game.getData().getFile("gameover.jpg"), game.getData().getFile("Game_Over.ogg"), nextSequence);
         this.level = level;
     }
 
