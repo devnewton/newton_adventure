@@ -46,15 +46,11 @@ public class AndroidGameRenderer implements Renderer {
 	@Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		gameView.setGl(gl);
-        // Set the background frame color
-        gl.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     }
     
 	@Override
     public void onDrawFrame(GL10 gl) {
 		gameView.setGl(gl);
-        // Redraw background color
-        //gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         if(null != game) {
         	game.tick();
         }

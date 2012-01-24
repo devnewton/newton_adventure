@@ -130,8 +130,7 @@ public class AndroidTextureCache implements ITextureCache {
 
 	private Bitmap loadImage(String filename) {
 		try {
-			return BitmapFactory.decodeStream(assets.open(AndroidUtil
-					.adjustFilename(filename)));
+			return BitmapFactory.decodeStream(assets.open(filename));
 		} catch (Exception e) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
 					"Impossible de charger la texture " + filename, e);

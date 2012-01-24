@@ -43,6 +43,9 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 
 	public AndroidGLSurfaceView(Context context, AndroidGameInput input) {
 		super(context);
+		setEGLConfigChooser(false);
+		setDebugFlags(DEBUG_CHECK_GL_ERROR);
+
 
 		this.input = input;
 
