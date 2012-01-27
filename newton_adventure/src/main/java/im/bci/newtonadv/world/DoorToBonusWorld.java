@@ -31,42 +31,22 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.game.Drawable;
 import net.phys2d.raw.Body;
-import net.phys2d.raw.StaticBody;
-import net.phys2d.raw.shapes.Circle;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class Apple extends StaticBody implements Drawable, CollisionDetectionOnly{
-    
-    static final float size = 2.0f * World.distanceUnit;
-    private ITexture texture;
-    private World world;
+public strictfp class DoorToBonusWorld extends Door {
 
-    Apple(World world) {
-        super(new Circle(size / 2.0f));
-        this.world = world;
-         addBit(World.STATIC_BODY_COLLIDE_BIT);
+    DoorToBonusWorld(World world) {
+        super(world);
     }
 
     @Override
-    public void collided(Body body) {
-        if( body instanceof Hero) {
-            world.removeApple(this);
-            world.addTopLevelEntities( new PickedUpApple(world, texture, getPosition()));
+    public strictfp void collided(Body body) {
+        if (!isClose && body instanceof Hero) {
+            world.goToBonusWorld();
         }
     }
-
-    public void setTexture(ITexture texture) {
-        this.texture = texture;
-    }
-
-    @Override
-    public void draw() {
-        world.getView().drawApple(this, texture, world);
-    }    
 }

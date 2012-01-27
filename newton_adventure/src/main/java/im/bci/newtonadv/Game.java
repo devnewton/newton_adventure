@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv;
 
+import im.bci.newtonadv.game.BonusSequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
@@ -45,6 +46,8 @@ import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.score.GameScore;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -66,6 +69,7 @@ public strictfp class Game {
     private MainMenuSequence mainMenuSequence;
     private GameScore score = new GameScore();
     private Sequence currentSequence;
+    private List<BonusSequence> bonusSequences;
 
     public Properties getConfig() {
         return config;
@@ -144,6 +148,7 @@ public strictfp class Game {
         QuestMenuSequence questMenuSequence = new QuestMenuSequence(this);
         mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence);
         questMenuSequence.setNextSequence(mainMenuSequence);
+        loadBonusSequences();
         return mainMenuSequence;
     }
 
@@ -189,4 +194,22 @@ public strictfp class Game {
 	public IGameData getData() {
 		return data;
 	}
+
+    public void goToBonusWorld() throws TransitionException {
+        if(!bonusSequences.isEmpty()) {
+            BonusSequence bonusSequence = bonusSequences.get(frameTimeInfos.random.nextInt(bonusSequences.size()));
+            bonusSequence.setNextSequence(currentSequence);
+            throw new TransitionException(bonusSequence);
+        }
+    }
+
+    private void loadBonusSequences() {
+        bonusSequences = new ArrayList<BonusSequence>();
+        List<String> levelNames = getData().listQuestLevels("bonus");
+       
+        for (String levelName : levelNames) {
+                BonusSequence levelSequence = new BonusSequence(this, levelName);
+                bonusSequences.add(levelSequence);
+        }
+    }
 }

@@ -29,44 +29,20 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.world;
+package im.bci.newtonadv.game;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.game.Drawable;
-import net.phys2d.raw.Body;
-import net.phys2d.raw.StaticBody;
-import net.phys2d.raw.shapes.Circle;
+import im.bci.newtonadv.Game;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class Apple extends StaticBody implements Drawable, CollisionDetectionOnly{
-    
-    static final float size = 2.0f * World.distanceUnit;
-    private ITexture texture;
-    private World world;
-
-    Apple(World world) {
-        super(new Circle(size / 2.0f));
-        this.world = world;
-         addBit(World.STATIC_BODY_COLLIDE_BIT);
+public strictfp class BonusSequence extends LevelSequence {
+    public BonusSequence(Game game, String levelName) {
+        super(game, "bonus", levelName);
     }
 
     @Override
-    public void collided(Body body) {
-        if( body instanceof Hero) {
-            world.removeApple(this);
-            world.addTopLevelEntities( new PickedUpApple(world, texture, getPosition()));
-        }
+    protected void processRotateInputs() {
     }
-
-    public void setTexture(ITexture texture) {
-        this.texture = texture;
-    }
-
-    @Override
-    public void draw() {
-        world.getView().drawApple(this, texture, world);
-    }    
 }

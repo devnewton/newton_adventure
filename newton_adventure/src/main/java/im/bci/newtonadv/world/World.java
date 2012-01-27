@@ -32,6 +32,7 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.anim.Animation;
@@ -100,6 +101,8 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITexture blocker3Texture;
     private final String questName;
     private final String levelName;
+    private int nbCollectableApple;
+    private boolean gotoBonusWorld;
 
     public boolean areObjectivesCompleted() {
         return objectivesCompleted;
@@ -359,6 +362,7 @@ public strictfp class World extends net.phys2d.raw.World {
             add(bat);
         } else if (c.equals("apple")) {
             Apple apple = new Apple(this);
+            ++nbCollectableApple;
             apple.setPosition(x * Platform.size, y * Platform.size);
             apple.setTexture(appleIconTexture);
             add(apple);
@@ -519,12 +523,14 @@ public strictfp class World extends net.phys2d.raw.World {
         getView().drawWorld(this);
     }
 
-    public void update() throws GameOverException {
+    public void update() throws GameOverException, TransitionException {
+        if (gotoBonusWorld) {
+            game.goToBonusWorld();
+        }
         FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
         for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {//copy to allow updatable body to be removed from list
             u.update(frameTimeInfos);
         }
-
         topLevelEntities.update(frameTimeInfos);
     }
 
@@ -558,5 +564,23 @@ public strictfp class World extends net.phys2d.raw.World {
 
     public EntityList getTopLevelEntities() {
         return topLevelEntities;
+    }
+
+    void goToBonusWorld() {
+        gotoBonusWorld = true;
+        objectivesCompleted = true;
+    }
+
+    void removeApple(Apple apple) {
+        remove(apple);
+        --nbCollectableApple;
+        if (nbCollectableApple <= 0) {
+            for (int i = 0; i < bodies.size(); ++i) {
+                Body body = bodies.get(i);
+                if (body instanceof DoorToBonusWorld) {
+                    ((DoorToBonusWorld) body).open();
+                }
+            }
+        }
     }
 }

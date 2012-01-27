@@ -114,22 +114,22 @@ strictfp public class LevelSequence implements Sequence {
         if (world.getHero().isDead()) {
             return;
         }
+        processRotateInputs();
+        processMovingInput();
+        processCheatInput();
+    }
 
-        float stepRate = 1.0f;//frameTimeInfos.elapsedTime / (1000000000.0f / Game.FPSf);
-        if (game.getInput().isKeyRotateClockwiseDown()) {
-            world.progressiveRotateGravity(0.05f * stepRate);
+    protected void processCheatInput() {
+        if (game.getInput().isKeyCheatActivateAllDown()) {
+            world.cheatActivateAll();
         }
-        if (game.getInput().isKeyRotateCounterClockwiseDown()) {
-            world.progressiveRotateGravity(-0.05f * stepRate);
+        if (game.getInput().isKeyCheatGotoNextLevelDown()) {
+            cheatCodeGotoNextLevel = true;
         }
+    }
 
-        if (game.getInput().isKeyRotate90ClockwiseDown()) {
-            world.rotateGravity((float) (Math.PI / 4.0));
-        }
-        if (game.getInput().isKeyRotate90CounterClockwiseDown()) {
-            world.rotateGravity((float) (-Math.PI / 4.0));
-        }
-
+    protected void processMovingInput() {
+        final float stepRate = 1.0f;//frameTimeInfos.elapsedTime / (1000000000.0f / Game.FPSf);
         boolean heroIsMoving = false;
         if (game.getInput().isKeyLeftDown()) {
             world.getHero().moveLeft(stepRate);
@@ -147,12 +147,21 @@ strictfp public class LevelSequence implements Sequence {
         if (!heroIsMoving) {
             world.getHero().dontMove();
         }
+    }
 
-        if (game.getInput().isKeyCheatActivateAllDown()) {
-            world.cheatActivateAll();
+    protected void processRotateInputs() {
+        final float stepRate = 1.0f;//frameTimeInfos.elapsedTime / (1000000000.0f / Game.FPSf);
+        if (game.getInput().isKeyRotateClockwiseDown()) {
+            world.progressiveRotateGravity(0.05f * stepRate);
         }
-        if (game.getInput().isKeyCheatGotoNextLevelDown()) {
-            cheatCodeGotoNextLevel = true;
+        if (game.getInput().isKeyRotateCounterClockwiseDown()) {
+            world.progressiveRotateGravity(-0.05f * stepRate);
+        }
+        if (game.getInput().isKeyRotate90ClockwiseDown()) {
+            world.rotateGravity((float) (Math.PI / 4.0));
+        }
+        if (game.getInput().isKeyRotate90CounterClockwiseDown()) {
+            world.rotateGravity((float) (-Math.PI / 4.0));
         }
     }
 

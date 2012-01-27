@@ -43,6 +43,7 @@ class GameData implements IGameData {
                 questNames.add(f.getName());
             }
         }
+        questNames.remove("bonus");
         return questNames;
     }
 

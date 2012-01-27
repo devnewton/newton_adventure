@@ -46,10 +46,10 @@ public strictfp class Door extends StaticBody implements Drawable, CollisionDete
 
     static final float width = 2.0f * World.distanceUnit;
     static final float height = 4.0f * World.distanceUnit;
-    private World world;
+    protected final World world;
     private ITexture closedTexture;
     private ITexture openTexture;
-    private boolean isClose = true;
+    protected boolean isClose = true;
 
     Door(World world) {
         super(new Box(width, height));
