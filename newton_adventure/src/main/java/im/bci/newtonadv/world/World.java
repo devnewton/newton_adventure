@@ -88,6 +88,8 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITexture keyTexture;
     private ITexture openDoorTexture;
     private ITexture closedDoorTexture;
+    private ITexture openDoorToBonusWorldTexture;
+    private ITexture closedDoorToBonusWorldTexture;
     private ITexture mobilePikesTexture;
     private ITexture axeTexture;
     private ITexture activator1OnTexture;
@@ -212,6 +214,8 @@ public strictfp class World extends net.phys2d.raw.World {
         defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
         defaultMapProperties.put("newton_adventure.axe", "axe.png");
         defaultMapProperties.put("newton_adventure.mobilePikes", "mobile_pikes.png");
+        defaultMapProperties.put("newton_adventure.door", "door_to_bonus_world.png");
+        defaultMapProperties.put("newton_adventure.door_open", "door_to_bonus_world_open.png");
         defaultMapProperties.put("newton_adventure.door", "door.png");
         defaultMapProperties.put("newton_adventure.door_open", "door_open.png");
         defaultMapProperties.put("newton_adventure.key", "key.png");
@@ -261,6 +265,8 @@ public strictfp class World extends net.phys2d.raw.World {
         keyTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.key"));
         closedDoorTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door"));
         openDoorTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door_open"));
+        closedDoorToBonusWorldTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door_to_bonus_world"));
+        openDoorToBonusWorldTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door_to_bonus_world_open"));
         mobilePikesTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.mobilePikes"));
         axeTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.axe"));
         activator1OnTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator1.on"));
@@ -376,6 +382,12 @@ public strictfp class World extends net.phys2d.raw.World {
             door.setPosition(x * Platform.size/* + Door.width / 2.0f*/, y * Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
             door.setClosedTexture(closedDoorTexture);
             door.setOpenTexture(openDoorTexture);
+            add(door);
+        } else if (c.equals("door_to_bonus_world")) {
+            DoorToBonusWorld door = new DoorToBonusWorld(this);
+            door.setPosition(x * Platform.size/* + Door.width / 2.0f*/, y * Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
+            door.setClosedTexture(closedDoorToBonusWorldTexture);
+            door.setOpenTexture(openDoorToBonusWorldTexture);
             add(door);
         } else if (c.equals("cloud")) {
             Cloud cloud = new Cloud(this);

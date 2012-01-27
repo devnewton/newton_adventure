@@ -44,7 +44,7 @@ public strictfp class DoorToBonusWorld extends Door {
     }
 
     @Override
-    public strictfp void collided(Body body) {
+    public void collided(Body body) {
         if (!isClose && body instanceof Hero) {
             world.goToBonusWorld();
         }
