@@ -1031,45 +1031,17 @@ public strictfp class GameView implements IGameView {
         GL11.glPopAttrib();
     }
 
-    private void drawAppleIndicatorIcon(World world, float x, float y, float w, float h) {
-        final float x1 = x;
-        final float x2 = x + w;
-        final float y1 = y;
-        final float y2 = y + h;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, world.getAppleIconTexture().getId());
-
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawLevelIndicators(World world, ITrueTypeFont appleFont) {
+    public void drawLevelIndicators(String indicators, ITrueTypeFont indicatorsFont) {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
         GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-        GL11.glTranslatef(0, Display.getHeight() - 64, 0);
-        String nbAppleStr = "" + world.getHero().getNbApple();
-        appleFont.drawString(nbAppleStr);
-        int iconWidth = appleFont.getWidth("O");
-        drawAppleIndicatorIcon(world, appleFont.getWidth(nbAppleStr), appleFont.getWidth(nbAppleStr), iconWidth, iconWidth);
-        GL11.glPopMatrix();
+        GL11.glTranslatef(0, Display.getHeight() - indicatorsFont.getHeight(), 0);
+        indicatorsFont.drawString(indicators);
         GL11.glPopAttrib();
+        GL11.glPopMatrix();
     }
 
     public void drawMenuSequence(MenuSequence sequence) {

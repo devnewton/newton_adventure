@@ -177,7 +177,7 @@ strictfp public class LevelSequence implements Sequence {
     }
 
     private void drawIndicators() {
-        game.getView().drawLevelIndicators(world, appleFont);
+        game.getView().drawLevelIndicators(world.getHero().getNbApple() + "$", appleFont);
     }
 
     public void setNextSequence(Sequence nextSequence) {

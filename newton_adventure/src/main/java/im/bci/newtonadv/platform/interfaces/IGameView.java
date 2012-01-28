@@ -112,7 +112,7 @@ public interface IGameView {
 
     void drawKey(Key key, ITexture texture, World world);
 
-    void drawLevelIndicators(World world, ITrueTypeFont appleFont);
+    void drawLevelIndicators(String indicators, ITrueTypeFont appleFont);
 
     void drawLosedApple(LosedApple apple, World world, ITexture texture, float alpha);
 

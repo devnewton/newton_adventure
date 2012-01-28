@@ -939,42 +939,15 @@ public class AndroidGameView implements IGameView {
 		// todo
 	}
 
-	private void drawAppleIndicatorIcon(World world, float x, float y, float w,
-			float h) {
-		final float x1 = x;
-		final float x2 = x + w;
-		final float y1 = y;
-		final float y2 = y + h;
-
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
-
-		final float u1 = 0.0f, u2 = 1.0f;
-		/*
-		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(u1, 0.0f); gl.glVertex2f(x1,
-		 * y2); gl.glTexCoord2f(u2, 0.0f); gl.glVertex2f(x2, y2);
-		 * gl.glTexCoord2f(u2, 1.0f); gl.glVertex2f(x2, y1); gl.glTexCoord2f(u1,
-		 * 1.0f); gl.glVertex2f(x1, y1); gl.glEnd();
-		 */
-		float vert[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
-		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedTriangleFans(world.getAppleIconTexture(), vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
-	}
-
 	@Override
-	public void drawLevelIndicators(World world, ITrueTypeFont appleFont) {
+	public void drawLevelIndicators(String indicators, ITrueTypeFont indicatorsFont) {
 		gl.glEnable(GL10.GL_ALPHA_TEST);
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glOrthof(0, viewPortWidth, 0, viewPortHeight, -1, 1);
-		gl.glTranslatef(0, viewPortHeight - 64, 0);
-		String nbAppleStr = "" + world.getHero().getNbApple();
-		appleFont.drawString(nbAppleStr);
-		int iconWidth = appleFont.getWidth("O");
-		drawAppleIndicatorIcon(world, appleFont.getWidth(nbAppleStr),
-				appleFont.getWidth(nbAppleStr), iconWidth, iconWidth);
+		gl.glTranslatef(0, viewPortHeight - indicatorsFont.getHeight(), 0);
+		indicatorsFont.drawString(indicators);
 		gl.glPopMatrix();
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}

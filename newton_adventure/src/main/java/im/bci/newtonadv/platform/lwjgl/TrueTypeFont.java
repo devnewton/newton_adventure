@@ -16,6 +16,8 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.GraphicsEnvironment;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -57,6 +59,29 @@ public class TrueTypeFont implements ITrueTypeFont {
 
     public void drawString(String msg) {
         drawString(0, 0, msg, 1, 1);
+    }
+
+    private BufferedImage getCharacterImage(int charwidth, int charheight, char ch) {
+
+        if (ch == '$') {
+            try {
+                return ImageIO.read(new File("data/default_level_data/apple.png"));
+            } catch (Exception e) {
+            }
+        }
+
+        BufferedImage fontImage;
+        fontImage = new BufferedImage(charwidth, charheight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D gt = (Graphics2D) fontImage.getGraphics();
+        if (antiAlias == true) {
+            gt.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        }
+        gt.setFont(font);
+        gt.setColor(Color.WHITE);
+        int charx = 3;
+        int chary = 1;
+        gt.drawString(String.valueOf(ch), charx, (chary) + fontMetrics.getAscent());
+        return fontImage;
     }
 
     private class IntObject {
@@ -122,25 +147,7 @@ public class TrueTypeFont implements ITrueTypeFont {
         if (charheight <= 0) {
             charheight = fontSize;
         }
-
-        // Create another image holding the character we are creating
-        BufferedImage fontImage;
-        fontImage = new BufferedImage(charwidth, charheight,
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D gt = (Graphics2D) fontImage.getGraphics();
-        if (antiAlias == true) {
-            gt.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-        }
-        gt.setFont(font);
-
-        gt.setColor(Color.WHITE);
-        int charx = 3;
-        int chary = 1;
-        gt.drawString(String.valueOf(ch), (charx), (chary)
-                + fontMetrics.getAscent());
-
-        return fontImage;
+        return getCharacterImage(charwidth, charheight, ch);
 
     }
 
@@ -150,7 +157,7 @@ public class TrueTypeFont implements ITrueTypeFont {
             textureWidth *= 2;
         }
 
-        // In any case this should be done in other way. ITexture with size 512x512
+        // In any case this should be done in other way. Texture with size 512x512
         // can maintain only 256 characters with resolution of 32x32. The texture
         // size should be calculated dynamicaly by looking at character sizes.
 
