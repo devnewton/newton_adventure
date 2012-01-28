@@ -47,11 +47,11 @@ strictfp public class LevelSequence implements Sequence {
     static final int nbWorldStepByFrame = 1;
     static final int maxWorldStepByFrame = 5;
     private FrameTimeInfos frameTimeInfos;
-    private World world;
+    protected World world;
     public long stepTime = 0;
-    private ITrueTypeFont appleFont;
-    private Sequence nextSequence;
-    private Game game;
+    protected ITrueTypeFont indicatorsFont;
+    protected Sequence nextSequence;
+    protected Game game;
     private String questName, levelName;
     private boolean cheatCodeGotoNextLevel = false;
 
@@ -65,7 +65,7 @@ strictfp public class LevelSequence implements Sequence {
     public void start() {
         try {
             cheatCodeGotoNextLevel = false;
-            appleFont = game.getView().createAppleFont();
+            indicatorsFont = game.getView().createAppleFont();
             world = new World(game,questName,levelName);
             frameTimeInfos = game.getFrameTimeInfos();
             world.loadLevel();
@@ -77,8 +77,8 @@ strictfp public class LevelSequence implements Sequence {
 
     @Override
     public void stop() {
-        appleFont.destroy();
-        appleFont = null;
+        indicatorsFont.destroy();
+        indicatorsFont = null;
         world = null;
     }
 
@@ -176,8 +176,8 @@ strictfp public class LevelSequence implements Sequence {
         drawIndicators();
     }
 
-    private void drawIndicators() {
-        game.getView().drawLevelIndicators(world.getHero().getNbApple() + "$", appleFont);
+    protected void drawIndicators() {
+        game.getView().drawLevelIndicators(world.getHero().getNbApple() + "$", indicatorsFont);
     }
 
     public void setNextSequence(Sequence nextSequence) {

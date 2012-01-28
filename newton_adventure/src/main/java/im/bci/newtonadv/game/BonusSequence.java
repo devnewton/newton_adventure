@@ -38,6 +38,7 @@ import im.bci.newtonadv.Game;
  * @author devnewton
  */
 public strictfp class BonusSequence extends LevelSequence {
+    private long endTime;
     public BonusSequence(Game game, String levelName) {
         super(game, "bonus", levelName);
     }
@@ -45,4 +46,32 @@ public strictfp class BonusSequence extends LevelSequence {
     @Override
     protected void processRotateInputs() {
     }
+
+    @Override
+    public strictfp void start() {
+        super.start();
+        endTime = game.getFrameTimeInfos().currentTime + 60000000000L;
+    }
+
+    @Override
+    public strictfp void update() throws TransitionException {
+        super.update();
+
+        if(game.getFrameTimeInfos().currentTime > endTime) {
+            throw new TransitionException(nextSequence);
+        }
+    }
+
+    @Override
+    protected strictfp void drawIndicators() {
+        StringBuilder b = new StringBuilder();
+        b.append(world.getHero().getNbApple());
+        b.append("$ ");
+        long seconds = (endTime - game.getFrameTimeInfos().currentTime) / 1000000000L;
+        b.append(seconds / 60);
+        b.append(":");
+        b.append(String.format("%02d", seconds % 60));
+        game.getView().drawLevelIndicators(b.toString(), indicatorsFont);
+    }
+
 }

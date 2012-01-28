@@ -57,7 +57,7 @@ public strictfp class Game {
 
     private final IGameView view;
     private final IGameInput input;
-	private final IGameData data;
+    private final IGameData data;
     private boolean running = true;
     static public final int FPS = 60;
     static public final float FPSf = (float) FPS;
@@ -92,7 +92,7 @@ public strictfp class Game {
         config.setProperty("view.height", Integer.toString(DEFAULT_SCREEN_HEIGHT));
         config.setProperty("view.quality", "NICEST");
         config.setProperty("sound.enabled", "true");
-        
+
         platform.loadConfig(config);
 
         this.soundCache = platform.createSoundCache(config);
@@ -191,12 +191,12 @@ public strictfp class Game {
         return running;
     }
 
-	public IGameData getData() {
-		return data;
-	}
+    public IGameData getData() {
+        return data;
+    }
 
     public void goToBonusWorld() throws TransitionException {
-        if(!bonusSequences.isEmpty()) {
+        if (!bonusSequences.isEmpty()) {
             BonusSequence bonusSequence = bonusSequences.get(frameTimeInfos.random.nextInt(bonusSequences.size()));
             bonusSequence.setNextSequence(currentSequence);
             throw new TransitionException(bonusSequence);
@@ -206,10 +206,10 @@ public strictfp class Game {
     private void loadBonusSequences() {
         bonusSequences = new ArrayList<BonusSequence>();
         List<String> levelNames = getData().listQuestLevels("bonus");
-       
+
         for (String levelName : levelNames) {
-                BonusSequence levelSequence = new BonusSequence(this, levelName);
-                bonusSequences.add(levelSequence);
+            BonusSequence levelSequence = new BonusSequence(this, levelName);
+            bonusSequences.add(levelSequence);
         }
     }
 }
