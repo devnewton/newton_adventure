@@ -40,7 +40,6 @@ import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.score.QuestScore;
-import im.bci.newtonadv.world.Apple;
 import im.bci.newtonadv.world.Axe;
 import im.bci.newtonadv.world.AxeAnchor;
 import im.bci.newtonadv.world.Bat;
@@ -59,7 +58,8 @@ import im.bci.newtonadv.world.LosedApple;
 import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
 import im.bci.newtonadv.world.Mummy;
-import im.bci.newtonadv.world.PickedUpApple;
+import im.bci.newtonadv.world.PickableObject;
+import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.Platform;
 import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
@@ -76,7 +76,7 @@ public interface IGameView {
 
     void draw(Sequence sequence);
 
-    void drawApple(Apple apple, ITexture texture, World world);
+    void drawPickableObject(PickableObject pickable, ITexture texture, World world);
 
     void drawAxe(Axe axe, ITexture texture);
 
@@ -124,7 +124,7 @@ public interface IGameView {
 
     void drawMummy(Mummy mummy, World world, ITexture texture, float scale);
 
-    void drawPickedUpApple(PickedUpApple apple, World world, ITexture texture);
+    void drawPickedUpObject(PickedUpObject apple, World world, ITexture texture);
 
     void drawPlatform(Platform platform, ITexture texture);
 

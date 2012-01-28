@@ -32,65 +32,41 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.platform.interfaces.ITexture;
-
-import im.bci.newtonadv.game.Entity;
-import im.bci.newtonadv.game.FrameTimeInfos;
-import net.phys2d.math.ROVector2f;
-import net.phys2d.math.Vector2f;
+import im.bci.newtonadv.game.Drawable;
+import net.phys2d.raw.Body;
+import net.phys2d.raw.StaticBody;
+import net.phys2d.raw.shapes.Circle;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class PickedUpApple implements Entity {
+public abstract strictfp class PickableObject extends StaticBody implements Drawable, CollisionDetectionOnly{
     
-    float size = Apple.size;
-    private World world;
-    private ITexture texture;
-    private Vector2f position;
-    private boolean canMove = false;
-    private long canMoveTime = -1;
-    private static final long waitingDuration = 300000000L;
+    static final float size = 2.0f * World.distanceUnit;
+    protected ITexture texture;
+    protected World world;
 
-    PickedUpApple(World world, ITexture texture, ROVector2f position) {
+    PickableObject(World world) {
+        super(new Circle(size / 2.0f));
         this.world = world;
+         addBit(World.STATIC_BODY_COLLIDE_BIT);
+    }
+
+    @Override
+    public void collided(Body body) {
+        if( body instanceof Hero) {
+            world.remove(this);
+            world.addTopLevelEntities( new PickedUpObject(world, texture, getPosition(),size));
+        }
+    }
+
+    public void setTexture(ITexture texture) {
         this.texture = texture;
-        this.position = new Vector2f(position);
     }
 
     @Override
     public void draw() {
-        world.getView().drawPickedUpApple(this,world,texture);
-    }
-
-    @Override
-    public void update(FrameTimeInfos frameTimeInfos) {
-        if( canMove ) {   
-        Vector2f direction = new Vector2f( world.getHero().getPosition() );
-        direction.sub(position);
-        direction.normalise();
-        position.add(direction);
-        } else {
-            if( canMoveTime < 0) {
-                canMoveTime = frameTimeInfos.currentTime + waitingDuration;
-            }
-            else {
-                canMove = frameTimeInfos.currentTime > canMoveTime;
-                size = Apple.size * ( 0.5f + 0.5f * (canMoveTime -  frameTimeInfos.currentTime) / (float)waitingDuration);
-            }
-        }
-    }
-
-    @Override
-    public boolean isDead() {
-        return canMove && position.distance(world.getHero().getPosition()) < size;
-    }
-
-    public Vector2f getPosition() {
-        return position;
-    }
-
-    public float getSize() {
-        return size;
-    }
+        world.getView().drawPickableObject(this, texture, world);
+    }    
 }

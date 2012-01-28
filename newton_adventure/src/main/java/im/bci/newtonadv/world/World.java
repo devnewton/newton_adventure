@@ -79,6 +79,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private List<Updatable> updatableBodies = new LinkedList<Updatable>();
     protected EntityList topLevelEntities = new EntityList();
     private ITexture appleIconTexture;
+    private ITexture coinTexture;
     private ITexture fireBallTexture;
     private boolean objectivesCompleted = false;
     private float nonProgressiveGravityRotationStep;
@@ -214,13 +215,14 @@ public strictfp class World extends net.phys2d.raw.World {
         defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
         defaultMapProperties.put("newton_adventure.axe", "axe.png");
         defaultMapProperties.put("newton_adventure.mobilePikes", "mobile_pikes.png");
-        defaultMapProperties.put("newton_adventure.door", "door_to_bonus_world.png");
-        defaultMapProperties.put("newton_adventure.door_open", "door_to_bonus_world_open.png");
+        defaultMapProperties.put("newton_adventure.door_to_bonus_world", "door_to_bonus_world.png");
+        defaultMapProperties.put("newton_adventure.door_to_bonus_world_open", "door_to_bonus_world_open.png");
         defaultMapProperties.put("newton_adventure.door", "door.png");
         defaultMapProperties.put("newton_adventure.door_open", "door_open.png");
         defaultMapProperties.put("newton_adventure.key", "key.png");
         defaultMapProperties.put("newton_adventure.hero", "hero.gif");
         defaultMapProperties.put("newton_adventure.apple", "apple.png");
+        defaultMapProperties.put("newton_adventure.coin", "coin.png");
         defaultMapProperties.put("newton_adventure.activator1.on", "actived1.png");
         defaultMapProperties.put("newton_adventure.activator2.on", "actived2.png");
         defaultMapProperties.put("newton_adventure.activator3.on", "actived3.png");
@@ -261,6 +263,7 @@ public strictfp class World extends net.phys2d.raw.World {
         mummyAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.mummy"));
         batAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.bat"));
         appleIconTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.apple"));
+        coinTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.coin"));
         fireBallTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.fireball"));
         keyTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.key"));
         closedDoorTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door"));
@@ -372,7 +375,12 @@ public strictfp class World extends net.phys2d.raw.World {
             apple.setPosition(x * Platform.size, y * Platform.size);
             apple.setTexture(appleIconTexture);
             add(apple);
-        } else if (c.equals("key")) {
+        } else if (c.equals("coin")) {
+            Coin apple = new Coin(this);
+            apple.setPosition(x * Platform.size, y * Platform.size);
+            apple.setTexture(coinTexture);
+            add(apple);
+        }else if (c.equals("key")) {
             Key key = new Key(this);
             key.setPosition(x * Platform.size, y * Platform.size);
             key.setTexture(keyTexture);

@@ -44,7 +44,6 @@ import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
-import im.bci.newtonadv.world.Apple;
 import im.bci.newtonadv.world.Axe;
 import im.bci.newtonadv.world.AxeAnchor;
 import im.bci.newtonadv.world.Bat;
@@ -63,7 +62,7 @@ import im.bci.newtonadv.world.LosedApple;
 import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
 import im.bci.newtonadv.world.Mummy;
-import im.bci.newtonadv.world.PickedUpApple;
+import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.Platform;
 import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
@@ -75,6 +74,7 @@ import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
+import im.bci.newtonadv.world.PickableObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
@@ -278,11 +278,12 @@ public strictfp class GameView implements IGameView {
         return textureCache;
     }
 
-    public void drawApple(Apple apple, ITexture texture, World world) {
-        AABox bounds = apple.getShape().getBounds();
+    @Override
+    public void drawPickableObject(PickableObject pickableObject, ITexture texture, World world) {
+        AABox bounds = pickableObject.getShape().getBounds();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(apple.getPosition().getX(), apple.getPosition().getY(), 0.0f);
+        GL11.glTranslatef(pickableObject.getPosition().getX(), pickableObject.getPosition().getY(), 0.0f);
         GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         final float x1 = -bounds.getWidth() / 2.0f;
         final float x2 = bounds.getWidth() / 2.0f;
@@ -785,14 +786,15 @@ public strictfp class GameView implements IGameView {
         GL11.glPopMatrix();
     }
 
-    public void drawPickedUpApple(PickedUpApple apple, World world, ITexture texture) {
+    @Override
+    public void drawPickedUpObject(PickedUpObject pickedUpObject, World world, ITexture texture) {
         GL11.glPushMatrix();
-        GL11.glTranslatef(apple.getPosition().getX(), apple.getPosition().getY(), 0.0f);
+        GL11.glTranslatef(pickedUpObject.getPosition().getX(), pickedUpObject.getPosition().getY(), 0.0f);
         GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -apple.getSize() / 2.0f;
-        final float x2 = apple.getSize() / 2.0f;
-        final float y1 = -apple.getSize() / 2.0f;
-        final float y2 = apple.getSize() / 2.0f;
+        final float x1 = -pickedUpObject.getSize() / 2.0f;
+        final float x2 = pickedUpObject.getSize() / 2.0f;
+        final float y1 = -pickedUpObject.getSize() / 2.0f;
+        final float y2 = pickedUpObject.getSize() / 2.0f;
 
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
