@@ -502,7 +502,12 @@ public strictfp class World extends net.phys2d.raw.World {
             activable.setTexture(blocker3Texture);
             activable.setPosition(x * Platform.size, y * Platform.size);
             add(activable);
-        } else if (c.equals("egyptian_boss")) {
+        } else if (c.equals("moving_platform")) {
+            MovingPlatform platform = new MovingPlatform(this, textureCache.getTexture(questName, levelName, map, tile), getMovingPlatformDestination(tile,x,y));
+            platform.setPosition(x * Platform.size, y * Platform.size);
+            platform.setFriction(getTileFriction(tile));
+            add(platform);
+        }else if (c.equals("egyptian_boss")) {
             EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
             boss.setBodyTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_body.png")));
             boss.setHandTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_hand.png")));
@@ -570,6 +575,14 @@ public strictfp class World extends net.phys2d.raw.World {
         return Float.parseFloat(tile.getProperties().getProperty("newton_adventure.friction", "10"));
     }
 
+    private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile, float x, float y) {
+        MovingPlatform.Destinations dest = new MovingPlatform.Destinations();
+        dest.xMin = Platform.size * (x + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmin", "-1")));
+        dest.xMax = Platform.size * (x + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmax", "1")));
+        dest.yMin = Platform.size * (y + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymin", "-1")));
+        dest.yMax = Platform.size * (y + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymax", "1")));
+        return dest;
+    }
     public LevelScore getLevelScore() {
         return hero.getLevelScore();
     }

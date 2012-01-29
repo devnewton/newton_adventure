@@ -57,6 +57,7 @@ import im.bci.newtonadv.world.Key;
 import im.bci.newtonadv.world.LosedApple;
 import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
+import im.bci.newtonadv.world.MovingPlatform;
 import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
@@ -159,4 +160,6 @@ public interface IGameView {
     public Animation loadFromGif(String name) throws FileNotFoundException, IOException;
 
     public void drawFadeSequence(float r, float g, float b, float a);
+
+    public void drawMovingPlatform(MovingPlatform aThis, ITexture texture);
 }

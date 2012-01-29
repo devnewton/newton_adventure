@@ -61,6 +61,7 @@ import im.bci.newtonadv.world.Key;
 import im.bci.newtonadv.world.LosedApple;
 import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
+import im.bci.newtonadv.world.MovingPlatform;
 import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.Platform;
@@ -405,6 +406,27 @@ public strictfp class GameView implements IGameView {
     }
 
     public void drawPlatform(Platform platform, ITexture texture) {
+        Box box = (Box) platform.getShape();
+        Vector2f[] pts = box.getPoints(platform.getPosition(), platform.getRotation());
+
+        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
+        GL11.glAlphaFunc(GL11.GL_GREATER, 0.0f); // sets aplha function
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(0.0f, 1.0f);
+        GL11.glVertex2f(pts[0].x, pts[0].y);
+        GL11.glTexCoord2f(1.0f, 1.0f);
+        GL11.glVertex2f(pts[1].x, pts[1].y);
+        GL11.glTexCoord2f(1.0f, 0.0f);
+        GL11.glVertex2f(pts[2].x, pts[2].y);
+        GL11.glTexCoord2f(0.0f, 0.0f);
+        GL11.glVertex2f(pts[3].x, pts[3].y);
+        GL11.glEnd();
+        GL11.glPopAttrib();
+    }
+
+    public void drawMovingPlatform(MovingPlatform platform, ITexture texture) {
         Box box = (Box) platform.getShape();
         Vector2f[] pts = box.getPoints(platform.getPosition(), platform.getRotation());
 
