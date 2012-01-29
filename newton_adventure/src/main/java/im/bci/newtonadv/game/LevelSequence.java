@@ -52,7 +52,7 @@ strictfp public class LevelSequence implements Sequence {
     protected ITrueTypeFont indicatorsFont;
     protected Sequence nextSequence;
     protected Game game;
-    private String questName, levelName;
+    protected String questName, levelName;
     private boolean cheatCodeGotoNextLevel = false;
 
     public LevelSequence(Game game, String questName, String levelName) {

@@ -159,6 +159,8 @@ public strictfp class Hero extends Body implements Drawable, Updatable {
         if (body instanceof Apple) {
             ++nbApple;
             levelScore.addApple(1);
+        } else if( body instanceof Coin) {
+            levelScore.addCoin(1);
         }
     }
 

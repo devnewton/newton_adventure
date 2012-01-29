@@ -157,4 +157,6 @@ public interface IGameView {
     public ITrueTypeFont createScoreSequenceFont();
 
     public Animation loadFromGif(String name) throws FileNotFoundException, IOException;
+
+    public void drawFadeSequence(float r, float g, float b, float a);
 }

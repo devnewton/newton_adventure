@@ -38,9 +38,16 @@ import im.bci.newtonadv.Game;
  * @author devnewton
  */
 public strictfp class BonusSequence extends LevelSequence {
+
     private long endTime;
+    private String currentQuestName;
+
     public BonusSequence(Game game, String levelName) {
         super(game, "bonus", levelName);
+    }
+
+    public void setCurrentQuestName(String currentQuestName) {
+        this.currentQuestName = currentQuestName;
     }
 
     @Override
@@ -57,8 +64,9 @@ public strictfp class BonusSequence extends LevelSequence {
     public strictfp void update() throws TransitionException {
         super.update();
 
-        if(game.getFrameTimeInfos().currentTime > endTime) {
-            throw new TransitionException(nextSequence);
+        if (game.getFrameTimeInfos().currentTime > endTime) {
+            game.getScore().setLevelScore(currentQuestName, levelName, world.getLevelScore());
+            throw new TransitionException(new FadeSequence(game, nextSequence, 1, 1, 1, 1000000000L));
         }
     }
 
@@ -73,5 +81,4 @@ public strictfp class BonusSequence extends LevelSequence {
         b.append(String.format("%02d", seconds % 60));
         game.getView().drawLevelIndicators(b.toString(), indicatorsFont);
     }
-
 }

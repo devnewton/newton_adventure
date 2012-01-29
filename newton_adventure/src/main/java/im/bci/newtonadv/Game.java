@@ -32,6 +32,7 @@
 package im.bci.newtonadv;
 
 import im.bci.newtonadv.game.BonusSequence;
+import im.bci.newtonadv.game.FadeSequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
@@ -195,11 +196,12 @@ public strictfp class Game {
         return data;
     }
 
-    public void goToBonusWorld() throws TransitionException {
+    public void goToBonusWorld(String currentQuestName) throws TransitionException {
         if (!bonusSequences.isEmpty()) {
             BonusSequence bonusSequence = bonusSequences.get(frameTimeInfos.random.nextInt(bonusSequences.size()));
+            bonusSequence.setCurrentQuestName(currentQuestName);
             bonusSequence.setNextSequence(currentSequence);
-            throw new TransitionException(bonusSequence);
+            throw new TransitionException(new FadeSequence(this, bonusSequence, 1, 1, 1, 1000000000L));
         }
     }
 

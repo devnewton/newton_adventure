@@ -1207,4 +1207,18 @@ public strictfp class GameView implements IGameView {
         }
         return animation;
     }
+
+    public void drawFadeSequence(float r, float g, float b, float a) {
+        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glPushMatrix();
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, 1, 0, 1, -1, 1);
+        GL11.glColor4f(r, g, b, a);
+        GL11.glRectf(0, 0, 1, 1);
+        GL11.glPopMatrix();
+        GL11.glPopAttrib();
+    }
 }

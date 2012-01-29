@@ -43,6 +43,7 @@ public class LevelScore {
     private int nbKilledEgyptianBoss;
     private int nbApple;
     private int nbLosedApple;
+    private int nbCoin;
     
     static final Comparator<LevelScore> comparator = new Comparator<LevelScore>() {
 
@@ -79,6 +80,10 @@ public class LevelScore {
     }
     
     public int computeScore() {
-        return nbKilledMummy * 3 + nbKilledBat * 4 + nbKilledEgyptianBoss * 10 + nbApple - nbLosedApple * 2;
+        return nbKilledMummy * 3 + nbKilledBat * 4 + nbKilledEgyptianBoss * 10 + nbCoin * 5 +  nbApple - nbLosedApple * 2;
+    }
+
+    public void addCoin(int n) {
+        this.nbCoin += n;
     }
 }

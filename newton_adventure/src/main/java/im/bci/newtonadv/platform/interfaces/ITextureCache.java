@@ -45,7 +45,7 @@ public interface ITextureCache {
 
     void clearUseless();
 
-    ITexture getTexture(Map map, Tile tile);
+    ITexture getTexture(String questName, String levelName, Map map, Tile tile);
 
     ITexture getTexture(String name);
 
