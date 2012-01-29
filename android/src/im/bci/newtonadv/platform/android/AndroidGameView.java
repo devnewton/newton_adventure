@@ -152,6 +152,22 @@ public class AndroidGameView implements IGameView {
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 	}
+	
+	public void drawNonTexturedTriangleFans(float vert[]) {
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		
+		ByteBuffer bb = ByteBuffer.allocateDirect(vert.length
+				* (Float.SIZE / Byte.SIZE));
+		bb.order(ByteOrder.nativeOrder());
+		FloatBuffer vb = bb.asFloatBuffer();
+		vb.put(vert);
+		vb.position(0);
+		
+		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vb);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, vert.length / 2);
+
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+	}
 
 	@Override
 	public void drawPickableObject(PickableObject pickableObject, ITexture texture, World world) {
@@ -1159,6 +1175,23 @@ public class AndroidGameView implements IGameView {
 		this.viewPortWidth = width;
 		this.viewPortHeight = height;
 
+	}
+
+	@Override
+	public void drawFadeSequence(float r, float g, float b, float a) {
+        gl.glEnable(GL10.GL_BLEND);
+        gl.glDisable(GL10.GL_TEXTURE_2D);
+        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glPushMatrix();
+        gl.glLoadIdentity();
+        gl.glOrthof(0, 1, 0, 1, -1, 1);
+        gl.glColor4f(r, g, b, a);
+        final float x1 = 0, x2 = 1, y1 = 0, y2 = 1;
+        float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+        drawNonTexturedTriangleFans(vert);
+        gl.glPopMatrix();
+        gl.glDisable(GL10.GL_BLEND);
+        gl.glEnable(GL10.GL_TEXTURE_2D);
 	}
 
 }

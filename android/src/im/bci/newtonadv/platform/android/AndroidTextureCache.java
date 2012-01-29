@@ -45,8 +45,8 @@ public class AndroidTextureCache implements ITextureCache {
 		return texture;
 	}
 
-	public ITexture getTexture(tiled.core.Map map, tiled.core.Tile tile) {
-		String name = map.getFilename() + "#tiled_" + tile.getGid();
+	public ITexture getTexture(String questName, String levelName, tiled.core.Map map, tiled.core.Tile tile) {
+		String name = questName + "#" + levelName + "#tiled_" + tile.getGid();
 		TextureWeakReference textureRef = textures.get(name);
 		if (textureRef != null) {
 			ITexture texture = textureRef.get();
