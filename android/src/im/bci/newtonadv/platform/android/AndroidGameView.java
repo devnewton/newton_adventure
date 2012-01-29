@@ -55,6 +55,7 @@ import im.bci.newtonadv.world.Key;
 import im.bci.newtonadv.world.LosedApple;
 import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
+import im.bci.newtonadv.world.MovingPlatform;
 import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
@@ -1192,6 +1193,29 @@ public class AndroidGameView implements IGameView {
         gl.glPopMatrix();
         gl.glDisable(GL10.GL_BLEND);
         gl.glEnable(GL10.GL_TEXTURE_2D);
+	}
+
+	@Override
+	public void drawMovingPlatform(MovingPlatform platform, ITexture texture) {
+		Box box = (Box) platform.getShape();
+		Vector2f[] pts = box.getPoints(platform.getPosition(),
+				platform.getRotation());
+
+		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		gl.glAlphaFunc(GL10.GL_GREATER, 0.0f); // sets aplha function
+		/*
+		 * gl.glBegin(gl.GL_QUADS); gl.glTexCoord2f(0.0f, 1.0f);
+		 * gl.glVertex2f(pts[0].x, pts[0].y); gl.glTexCoord2f(1.0f, 1.0f);
+		 * gl.glVertex2f(pts[1].x, pts[1].y); gl.glTexCoord2f(1.0f, 0.0f);
+		 * gl.glVertex2f(pts[2].x, pts[2].y); gl.glTexCoord2f(0.0f, 0.0f);
+		 * gl.glVertex2f(pts[3].x, pts[3].y); gl.glEnd();
+		 */
+		float tex[] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
+		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
+				pts[2].y, pts[3].x, pts[3].y };
+		drawTexturedTriangleFans(texture, vert, tex);
+		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 }
