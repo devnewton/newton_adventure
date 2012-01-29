@@ -63,7 +63,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class TextureCache implements ITextureCache {
 
-    private HashMap<String/*name*/, TextureWeakReference> textures = new HashMap();
+    private HashMap<String/*name*/, TextureWeakReference> textures = new HashMap<String, TextureWeakReference>();
     private ReferenceQueue<Texture> referenceQueue = new ReferenceQueue<Texture>();
     /** The colour model including alpha for the GL image */
     private static final ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
@@ -169,10 +169,10 @@ public class TextureCache implements ITextureCache {
         // for a texture
         if (bufferedImage.getColorModel().hasAlpha()) {
             raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, texWidth, texHeight, 4, null);
-            texImage = new BufferedImage(glAlphaColorModel, raster, false, new Hashtable());
+            texImage = new BufferedImage(glAlphaColorModel, raster, false, new Hashtable<String,Object>());
         } else {
             raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, texWidth, texHeight, 3, null);
-            texImage = new BufferedImage(glColorModel, raster, false, new Hashtable());
+            texImage = new BufferedImage(glColorModel, raster, false, new Hashtable<String,Object>());
         }
 
         // create a raster that can be used by OpenGL as a source
@@ -241,7 +241,7 @@ public class TextureCache implements ITextureCache {
 
         int textureId;
 
-        TextureWeakReference(Texture texture, ReferenceQueue queue) {
+        TextureWeakReference(Texture texture, ReferenceQueue<Texture> queue) {
             super(texture, queue);
             textureId = texture.getId();
         }

@@ -50,7 +50,7 @@ import javax.sound.sampled.DataLine;
  */
 public class SoundCache implements ISoundCache {
 
-    private HashMap<String/*name*/, ClipWeakReference> clips = new HashMap();
+    private HashMap<String/*name*/, ClipWeakReference> clips = new HashMap<String, ClipWeakReference>();
     private ReferenceQueue<Clip> clipReferenceQueue = new ReferenceQueue<Clip>();
     private String currentMusicName;
     private OggClip currentMusic;
@@ -184,7 +184,7 @@ public class SoundCache implements ISoundCache {
 
     private static final class ClipWeakReference extends WeakReference<Clip> {
 
-        ClipWeakReference(Clip clip, ReferenceQueue queue) {
+        ClipWeakReference(Clip clip, ReferenceQueue<Clip> queue) {
             super(clip, queue);
         }
     }
