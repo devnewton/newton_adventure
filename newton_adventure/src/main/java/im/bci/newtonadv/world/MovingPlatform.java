@@ -44,19 +44,19 @@ import net.phys2d.raw.shapes.Box;
  * @author devnewton
  */
 public strictfp class MovingPlatform extends Body implements Drawable, Updatable {
+
     private final Destinations destinations;
 
     public static class Destinations {
+
         Vector2f a = new Vector2f(), b = new Vector2f();
     }
     static final float size = 2.0f * World.distanceUnit;
     private static final float weight = 10000.0f;
+    private static final float moveForce = 1000;
     final World world;
     final ITexture texture;
-    
-    static final float moveForce = 1000;
-    boolean gotoA;
-    Vector2f f;
+    final Vector2f f = new Vector2f();
 
     public MovingPlatform(World world, ITexture texture, Destinations destinations) {
         super(new Box(size, size), weight);
@@ -72,15 +72,15 @@ public strictfp class MovingPlatform extends Body implements Drawable, Updatable
     }
 
     public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-        f.set(destinations.a);
-        f.sub(this.getPosition());                      
-        f.normalise();
-        f.scale(moveForce);  
-        this.addForce(f);
-        if(f.distanceSquared(destinations.a)<0.1f) {
+        if (this.getPosition().distance(destinations.a) < 1f) {
             Vector2f swap = destinations.a;
             destinations.a = destinations.b;
             destinations.b = swap;
         }
+        f.set(destinations.a);
+        f.sub(this.getPosition());
+        f.normalise();
+        f.scale(moveForce);
+        this.setForce(f.x, f.y);
     }
 }
