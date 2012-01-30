@@ -63,6 +63,11 @@ License: CC-BY 3.0
 Author: surt (Carl Olsson) (http://opengameart.org/content/classical-ruin-tiles)
 License: CC-BY-SA 3.0
 
+* most of bonus levels tiles
+
+Author: Scribe (Daniel Stephens) (http://opengameart.org/content/breakout-graphics-no-shadow)
+License: CC0
+
 * vatican quest bt-quest-off.jpg  bt-quest-on.jpg  completed.jpg illustration
 
 Original photo author: xiquinhosilva ( http://www.flickr.com/photos/xiquinho/ )
@@ -88,6 +93,12 @@ License: CC-BY 3.0
 
 Author: Augmentality (http://opengameart.org/content/story-time)
 License: CC-BY 3.0
+
+* starfield.jpg
+
+Author: Sauer2 (http://opengameart.org/content/starfield-background)
+License: CC0
+
 
 * Other files
 
