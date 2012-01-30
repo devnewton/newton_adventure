@@ -577,24 +577,23 @@ public strictfp class World extends net.phys2d.raw.World {
 
     private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile, float x, float y) {
         MovingPlatform.Destinations dest = new MovingPlatform.Destinations();
-        /*        dest.xMin = Platform.size * (x + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmin", "-1")));
-        dest.xMax = Platform.size * (x + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmax", "1")));
-        dest.yMin = Platform.size * (y + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymin", "-1")));
-        dest.yMax = Platform.size * (y + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymax", "1")));*/
-        dest.xMin = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmin", "-1"));
-        dest.xMax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmax", "1"));
-        dest.yMin = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymin", "-1"));
-        dest.yMax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymax", "1"));
+        float ax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmin", "-1"));
+        float bx = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmax", "1"));
+        float ay = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymin", "-1"));
+        float by = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymax", "1"));
 
-        dest.xMin += x;
-        dest.xMax += x;
-        dest.yMin += y;
-        dest.yMax += y;
+        ax += x;
+        bx += x;
+        ay += y;
+        by += y;
 
-        dest.xMin *= Platform.size;
-        dest.xMax *= Platform.size;
-        dest.yMin *= Platform.size;
-        dest.yMax *= Platform.size;
+        ax *= Platform.size;
+        bx *= Platform.size;
+        ay *= Platform.size;
+        by *= Platform.size;
+
+        dest.a.set(ax, ay);
+        dest.b.set(bx, by);
 
         return dest;
     }

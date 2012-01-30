@@ -43,11 +43,11 @@ import net.phys2d.raw.shapes.Box;
  *
  * @author devnewton
  */
-public class MovingPlatform extends Body implements Drawable, Updatable {
+public strictfp class MovingPlatform extends Body implements Drawable, Updatable {
     private final Destinations destinations;
 
     public static class Destinations {
-        float xMin, yMin, xMax, yMax;
+        Vector2f a = new Vector2f(), b = new Vector2f();
     }
     static final float size = 2.0f * World.distanceUnit;
     private static final float weight = 10000.0f;
@@ -55,7 +55,8 @@ public class MovingPlatform extends Body implements Drawable, Updatable {
     final ITexture texture;
     
     static final float moveForce = 1000;
-    float dx, dy;
+    boolean gotoA;
+    Vector2f f;
 
     public MovingPlatform(World world, ITexture texture, Destinations destinations) {
         super(new Box(size, size), weight);
@@ -71,19 +72,15 @@ public class MovingPlatform extends Body implements Drawable, Updatable {
     }
 
     public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-        float x = this.getPosition().getX();
-        float y = this.getPosition().getY();
-        if (x > destinations.xMin) {
-            dx = -moveForce;
-        } else if (x < destinations.xMax) {
-            dx = moveForce;
+        f.set(destinations.a);
+        f.sub(this.getPosition());                      
+        f.normalise();
+        f.scale(moveForce);  
+        this.addForce(f);
+        if(f.distanceSquared(destinations.a)<0.1f) {
+            Vector2f swap = destinations.a;
+            destinations.a = destinations.b;
+            destinations.b = swap;
         }
-        if (y > destinations.yMin) {
-            dy = -moveForce;
-        } else if (y < destinations.yMax) {
-            dy = moveForce;
-        }
-        this.addForce(new Vector2f(dx, dy));
-        //this.addForce(dx, dy);
     }
 }
