@@ -66,6 +66,7 @@ strictfp public class LevelSequence implements Sequence {
     public void start() {
         try {
             cheatCodeGotoNextLevel = false;
+            cheatCodeGotoNextBonusLevel = false;
             indicatorsFont = game.getView().createAppleFont();
             world = new World(game, questName, levelName);
             frameTimeInfos = game.getFrameTimeInfos();
