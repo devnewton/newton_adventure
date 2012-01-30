@@ -46,7 +46,6 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 		setEGLConfigChooser(false);
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 
-
 		this.input = input;
 
 		// Set the Renderer for drawing on the GLSurfaceView
@@ -87,6 +86,9 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 		case KeyEvent.KEYCODE_A:
 			input.keyCheatActivateAllDown = true;
 			break;
+		case KeyEvent.KEYCODE_B:
+			input.keyCheatGotoNextBonusLevelDown = true;
+			break;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -120,6 +122,9 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 			break;
 		case KeyEvent.KEYCODE_A:
 			input.keyCheatActivateAllDown = false;
+			break;
+		case KeyEvent.KEYCODE_B:
+			input.keyCheatGotoNextBonusLevelDown = false;
 			break;
 		}
 		return super.onKeyUp(keyCode, event);
