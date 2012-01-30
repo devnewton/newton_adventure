@@ -53,7 +53,6 @@ public strictfp class MovingPlatform extends Body implements Drawable, Updatable
     }
     static final float size = 2.0f * World.distanceUnit;
     private static final float weight = 10000.0f;
-    private static final float moveForce = 1000;
     final World world;
     final ITexture texture;
     final Vector2f f = new Vector2f();
@@ -80,7 +79,7 @@ public strictfp class MovingPlatform extends Body implements Drawable, Updatable
         f.set(destinations.a);
         f.sub(this.getPosition());
         f.normalise();
-        f.scale(moveForce);
-        this.setForce(f.x, f.y);
+        f.scale(world.getGravityForce());
+        this.adjustBiasedVelocity(f);
     }
 }
