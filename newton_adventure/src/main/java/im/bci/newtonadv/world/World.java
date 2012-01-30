@@ -380,7 +380,7 @@ public strictfp class World extends net.phys2d.raw.World {
             apple.setPosition(x * Platform.size, y * Platform.size);
             apple.setTexture(coinTexture);
             add(apple);
-        }else if (c.equals("key")) {
+        } else if (c.equals("key")) {
             Key key = new Key(this);
             key.setPosition(x * Platform.size, y * Platform.size);
             key.setTexture(keyTexture);
@@ -503,11 +503,11 @@ public strictfp class World extends net.phys2d.raw.World {
             activable.setPosition(x * Platform.size, y * Platform.size);
             add(activable);
         } else if (c.equals("moving_platform")) {
-            MovingPlatform platform = new MovingPlatform(this, textureCache.getTexture(questName, levelName, map, tile), getMovingPlatformDestination(tile,x,y));
+            MovingPlatform platform = new MovingPlatform(this, textureCache.getTexture(questName, levelName, map, tile), getMovingPlatformDestination(tile, x, y));
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
-        }else if (c.equals("egyptian_boss")) {
+        } else if (c.equals("egyptian_boss")) {
             EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
             boss.setBodyTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_body.png")));
             boss.setHandTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_hand.png")));
@@ -550,7 +550,7 @@ public strictfp class World extends net.phys2d.raw.World {
 
     public void update() throws GameOverException, TransitionException {
         if (gotoBonusWorld) {
-            game.goToBonusWorld(questName);
+            game.goToRandomBonusLevel(questName);
         }
         FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
         for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {//copy to allow updatable body to be removed from list
@@ -577,12 +577,28 @@ public strictfp class World extends net.phys2d.raw.World {
 
     private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile, float x, float y) {
         MovingPlatform.Destinations dest = new MovingPlatform.Destinations();
-        dest.xMin = Platform.size * (x + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmin", "-1")));
+        /*        dest.xMin = Platform.size * (x + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmin", "-1")));
         dest.xMax = Platform.size * (x + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmax", "1")));
         dest.yMin = Platform.size * (y + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymin", "-1")));
-        dest.yMax = Platform.size * (y + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymax", "1")));
+        dest.yMax = Platform.size * (y + Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymax", "1")));*/
+        dest.xMin = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmin", "-1"));
+        dest.xMax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmax", "1"));
+        dest.yMin = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymin", "-1"));
+        dest.yMax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymax", "1"));
+
+        dest.xMin += x;
+        dest.xMax += x;
+        dest.yMin += y;
+        dest.yMax += y;
+
+        dest.xMin *= Platform.size;
+        dest.xMax *= Platform.size;
+        dest.yMin *= Platform.size;
+        dest.yMax *= Platform.size;
+
         return dest;
     }
+
     public LevelScore getLevelScore() {
         return hero.getLevelScore();
     }

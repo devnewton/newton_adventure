@@ -156,4 +156,8 @@ public class GameInput implements IGameInput {
     public boolean isKeyReturnDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_RETURN);
     }
+
+    public boolean isKeyCheatGotoNextBonusLevelDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_F10);
+    }
 }

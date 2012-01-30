@@ -54,6 +54,7 @@ strictfp public class LevelSequence implements Sequence {
     protected Game game;
     protected String questName, levelName;
     private boolean cheatCodeGotoNextLevel = false;
+    private boolean cheatCodeGotoNextBonusLevel = false;
 
     public LevelSequence(Game game, String questName, String levelName) {
         this.game = game;
@@ -66,7 +67,7 @@ strictfp public class LevelSequence implements Sequence {
         try {
             cheatCodeGotoNextLevel = false;
             indicatorsFont = game.getView().createAppleFont();
-            world = new World(game,questName,levelName);
+            world = new World(game, questName, levelName);
             frameTimeInfos = game.getFrameTimeInfos();
             world.loadLevel();
         } catch (Exception ex) {
@@ -100,8 +101,11 @@ strictfp public class LevelSequence implements Sequence {
             }
             world.update();
             if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
-                game.getScore().setLevelScore(questName,levelName, world.getLevelScore());
+                game.getScore().setLevelScore(questName, levelName, world.getLevelScore());
                 throw new TransitionException(nextSequence);
+            }
+            if (cheatCodeGotoNextBonusLevel) {
+                game.goToNextBonusLevel(questName);
             }
         } catch (GameOverException ex) {
             GameOverSequence gameOverSequence = new GameOverSequence(game, this, null);
@@ -125,6 +129,9 @@ strictfp public class LevelSequence implements Sequence {
         }
         if (game.getInput().isKeyCheatGotoNextLevelDown()) {
             cheatCodeGotoNextLevel = true;
+        }
+        if (game.getInput().isKeyCheatGotoNextBonusLevelDown()) {
+            cheatCodeGotoNextBonusLevel = true;
         }
     }
 

@@ -35,6 +35,7 @@ import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.ITexture;
+import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Box;
 
@@ -82,6 +83,7 @@ public class MovingPlatform extends Body implements Drawable, Updatable {
         } else if (y < destinations.yMax) {
             dy = moveForce;
         }
-        this.setForce(dx, dy);
+        this.addForce(new Vector2f(dx, dy));
+        //this.addForce(dx, dy);
     }
 }

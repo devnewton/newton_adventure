@@ -71,6 +71,7 @@ public strictfp class Game {
     private GameScore score = new GameScore();
     private Sequence currentSequence;
     private List<BonusSequence> bonusSequences;
+    private BonusSequence lastBonusSequence;
 
     public Properties getConfig() {
         return config;
@@ -196,12 +197,25 @@ public strictfp class Game {
         return data;
     }
 
-    public void goToBonusWorld(String currentQuestName) throws TransitionException {
+    public void goToRandomBonusLevel(String currentQuestName) throws TransitionException {
         if (!bonusSequences.isEmpty()) {
             BonusSequence bonusSequence = bonusSequences.get(frameTimeInfos.random.nextInt(bonusSequences.size()));
             bonusSequence.setCurrentQuestName(currentQuestName);
             bonusSequence.setNextSequence(currentSequence);
             throw new TransitionException(new FadeSequence(this, bonusSequence, 1, 1, 1, 1000000000L));
+        }
+    }
+
+    public void goToNextBonusLevel(String currentQuestName) throws TransitionException {
+        if (!bonusSequences.isEmpty()) {
+            int i = bonusSequences.indexOf(lastBonusSequence) + 1;
+            if (i < 0 || i >= bonusSequences.size()) {
+                i = 0;
+            }
+            lastBonusSequence = bonusSequences.get(i);
+            lastBonusSequence.setCurrentQuestName(currentQuestName);
+            lastBonusSequence.setNextSequence(currentSequence);
+            throw new TransitionException(new FadeSequence(this, lastBonusSequence, 1, 1, 1, 1000000000L));
         }
     }
 
