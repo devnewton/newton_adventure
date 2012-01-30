@@ -577,10 +577,10 @@ public strictfp class World extends net.phys2d.raw.World {
 
     private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile, float x, float y) {
         MovingPlatform.Destinations dest = new MovingPlatform.Destinations();
-        float ax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmin", "-1"));
-        float bx = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.xmax", "1"));
-        float ay = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymin", "-1"));
-        float by = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.ymax", "1"));
+        float ax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.a.x", "-1"));
+        float ay = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.a.y", "-1"));
+        float bx = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.b.x", "1"));
+        float by = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.b.y", "1"));
 
         ax += x;
         bx += x;

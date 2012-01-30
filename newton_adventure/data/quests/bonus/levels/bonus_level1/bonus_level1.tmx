@@ -391,10 +391,10 @@
   </tile>
   <tile id="38">
    <properties>
-    <property name="newton_adventure.moving_platform.xmax" value="3"/>
-    <property name="newton_adventure.moving_platform.xmin" value="-3"/>
-    <property name="newton_adventure.moving_platform.ymax" value="0"/>
-    <property name="newton_adventure.moving_platform.ymin" value="0"/>
+    <property name="newton_adventure.moving_platform.b.x" value="3"/>
+    <property name="newton_adventure.moving_platform.a.x" value="-3"/>
+    <property name="nnewton_adventure.moving_platform.b.y" value="0"/>
+    <property name="newton_adventure.moving_platform.a.y" value="0"/>
     <property name="newton_adventure.type" value="moving_platform"/>
    </properties>
    <image format="png">
@@ -405,10 +405,10 @@
   </tile>
   <tile id="39">
    <properties>
-    <property name="newton_adventure.moving_platform.xmax" value="3"/>
-    <property name="newton_adventure.moving_platform.xmin" value="-3"/>
-    <property name="newton_adventure.moving_platform.ymax" value="0"/>
-    <property name="newton_adventure.moving_platform.ymin" value="0"/>
+    <property name="newton_adventure.moving_platform.b.x" value="3"/>
+    <property name="newton_adventure.moving_platform.a.x" value="-3"/>
+    <property name="nnewton_adventure.moving_platform.b.y" value="0"/>
+    <property name="newton_adventure.moving_platform.a.y" value="0"/>
     <property name="newton_adventure.type" value="moving_platform"/>
    </properties>
    <image format="png">
@@ -419,10 +419,10 @@
   </tile>
   <tile id="40">
    <properties>
-    <property name="newton_adventure.moving_platform.xmax" value="0"/>
-    <property name="newton_adventure.moving_platform.xmin" value="0"/>
-    <property name="newton_adventure.moving_platform.ymax" value="3"/>
-    <property name="newton_adventure.moving_platform.ymin" value="-3"/>
+    <property name="newton_adventure.moving_platform.b.x" value="0"/>
+    <property name="newton_adventure.moving_platform.a.x" value="0"/>
+    <property name="nnewton_adventure.moving_platform.b.y" value="3"/>
+    <property name="newton_adventure.moving_platform.a.y" value="-3"/>
     <property name="newton_adventure.type" value="moving_platform"/>
    </properties>
    <image format="png">
@@ -433,10 +433,10 @@
   </tile>
   <tile id="41">
    <properties>
-    <property name="newton_adventure.moving_platform.xmax" value="0"/>
-    <property name="newton_adventure.moving_platform.xmin" value="0"/>
-    <property name="newton_adventure.moving_platform.ymax" value="3"/>
-    <property name="newton_adventure.moving_platform.ymin" value="-3"/>
+    <property name="newton_adventure.moving_platform.b.x" value="0"/>
+    <property name="newton_adventure.moving_platform.a.x" value="0"/>
+    <property name="nnewton_adventure.moving_platform.b.y" value="3"/>
+    <property name="newton_adventure.moving_platform.a.y" value="-3"/>
     <property name="newton_adventure.type" value="moving_platform"/>
    </properties>
    <image format="png">
