@@ -409,9 +409,9 @@ public strictfp class GameView implements IGameView {
         Box box = (Box) platform.getShape();
         Vector2f[] pts = box.getPoints(platform.getPosition(), platform.getRotation());
 
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.0f); // sets aplha function
+        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.0f, 1.0f);
@@ -430,9 +430,9 @@ public strictfp class GameView implements IGameView {
         Box box = (Box) platform.getShape();
         Vector2f[] pts = box.getPoints(platform.getPosition(), platform.getRotation());
 
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.0f); // sets aplha function
+        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.0f, 1.0f);
