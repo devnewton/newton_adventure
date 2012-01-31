@@ -228,4 +228,8 @@ public strictfp class Game {
             bonusSequences.add(levelSequence);
         }
     }
+
+	public Sequence getMainMenuSequence() {
+		return mainMenuSequence;
+	}
 }

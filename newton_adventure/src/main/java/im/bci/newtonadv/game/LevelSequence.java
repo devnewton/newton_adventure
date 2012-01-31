@@ -109,8 +109,7 @@ strictfp public class LevelSequence implements Sequence {
                 game.goToNextBonusLevel(questName);
             }
         } catch (GameOverException ex) {
-            GameOverSequence gameOverSequence = new GameOverSequence(game, this, null);
-            throw new TransitionException(gameOverSequence);
+            throw new TransitionException(new GameOverSequence(game, this));
         }
     }
 
