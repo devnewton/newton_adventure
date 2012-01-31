@@ -418,7 +418,7 @@
      iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABx0lEQVR42p1XS05DQQybcyGxYIeE1A0b4AbADrFC4iq9Ckcrmkqp/Dyxk/cWUT9TNY7HcfLG7+fj5fx9usb78/01Xk53t/cz5m9mxJmLt6+HND7OT5efv9clRiQPAJgczyaASIJnDCpLjLEAyKqLqjE5n2fAFQMWAFKN1QeAeMUkCO4ICAQyMDEDwECQASK+Z/1UQDYMIK34nsUXnzkJnymhMhMbAHwNWRe4DmAWOywEiIF3qipQ7CiRdlryBoAVXQHh5FkrdirfiLBSNbdnVr3rgpYPMAgluKx6p36VeGGgajsWJnuHA6CSL0aUOZ7qjmDC3X1V/eIDLhFXiWwdufvFCRXValoq4J2BtFixM6A9HdLxgMUH4k8dAwhETc2sazq7wWYfcB5fjezOfpBeAf6Jcz43sjH5XlEOpNcNG6eTbGtqr2SV6UTLZUJjjWR2XLVi2gWsfjfnO8up2wtHNWoViMySu9MwXclU9WorzjbnIywMd6cqedegOovp6PR+VHfEIatrGNXIddUzkM6TkpwFSoxoPsgMtl7HhmfSFAD6gOpzdz3d5LINu8uo2oj2en/qhEpIagLueQ5oAVDU8hg++njuAPwDV+dwrhd+0K8AAAAASUVORK5CYII=
     </data>
    </image>
-  </tile>
+  </tile>  
  </tileset>
  <layer name="level" width="25" height="24">
   <data>
