@@ -45,20 +45,34 @@ public strictfp class MainMenuSequence extends MenuSequence {
     private final Button playButton;
     private final Button resumeButton;
     private final SpecialOccasionLayer specialOccasionLayer;
+	private Sequence optionsSequence;
 
     @Override
     public void draw() {
         super.draw();
         specialOccasionLayer.draw();
     }
+    
+    
 
     @Override
+	public void processInputs() throws TransitionException {
+		super.processInputs();
+		
+		if(game.getInput().isKeyShowOptionsDown()) {
+			throw new TransitionException(optionsSequence);
+		}
+	}
+
+
+
+	@Override
     public void update() throws TransitionException {
         super.update();
         specialOccasionLayer.update();
     }
 
-    public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq) {
+    public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq, Sequence optionsSequence) {
         super(game);
         
         specialOccasionLayer = SpecialOccasionFactory.createSpecialOccasionLayer(game.getView());
@@ -120,6 +134,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
         quitButton.onTexture = game.getData().getFile("main_menu/bt-quit-on.png");
         quitButton.y = 675;
         addButton(quitButton);
+     
+        this.optionsSequence = optionsSequence;
     }
 
     @Override

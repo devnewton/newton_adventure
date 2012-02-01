@@ -21,6 +21,7 @@ public class AndroidGameInput implements IGameInput {
 	boolean keyReturnDown;
 	boolean keyUpDown;
 	boolean keyCheatGotoNextBonusLevelDown;
+	boolean keyShowOptionsDown;
 
 	public AndroidGameInput(Properties config) {
 		// TODO Auto-generated constructor stub
@@ -111,6 +112,11 @@ public class AndroidGameInput implements IGameInput {
 	@Override
 	public boolean isKeyCheatGotoNextBonusLevelDown() {
 		return keyCheatGotoNextBonusLevelDown;
+	}
+
+	@Override
+	public boolean isKeyShowOptionsDown() {
+		return keyShowOptionsDown;
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import android.content.res.AssetManager;
 
+import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
@@ -56,6 +57,11 @@ public class AndroidPlatformFactory implements IPlatformFactory {
 	@Override
 	public IGameData createGameData(Properties config) {
 		return new AndroidGameData(assets);
+	}
+
+	@Override
+	public Sequence createOptionsSequence() {
+		return null;
 	}
 
 }

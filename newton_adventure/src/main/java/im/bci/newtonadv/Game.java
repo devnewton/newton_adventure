@@ -72,6 +72,7 @@ public strictfp class Game {
     private Sequence currentSequence;
     private List<BonusSequence> bonusSequences;
     private BonusSequence lastBonusSequence;
+	private Sequence optionsSequence;
 
     public Properties getConfig() {
         return config;
@@ -101,6 +102,7 @@ public strictfp class Game {
         this.view = platform.createGameView(config);
         this.input = platform.createGameInput(config);
         this.data = platform.createGameData(config);
+        this.optionsSequence = platform.createOptionsSequence();
     }
 
     public void tick() {
@@ -148,7 +150,7 @@ public strictfp class Game {
     Sequence setupSequences() {
         Sequence outroSequence = new StoryboardSequence(this, data.getFile("outro.jpg"), data.getFile("The_End.ogg"), null);
         QuestMenuSequence questMenuSequence = new QuestMenuSequence(this);
-        mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence);
+        mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence, optionsSequence);
         questMenuSequence.setNextSequence(mainMenuSequence);
         loadBonusSequences();
         return mainMenuSequence;

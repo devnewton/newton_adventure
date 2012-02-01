@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
-import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+
 import java.io.File;
 import java.io.IOException;
 

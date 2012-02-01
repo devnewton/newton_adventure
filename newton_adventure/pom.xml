@@ -1,133 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-/*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions of source code must retain the above copyright
- *   notice, this list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
- *
- * * Neither the name of 'devnewton <devnewton@bci.im>' nor the names of
- *   its contributors may be used to endorse or promote products derived
- *   from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
---><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>im.bci.newtonadv</groupId>
-    <artifactId>newton_adventure</artifactId>
-    <packaging>jar</packaging>
-    <version>1.1-SNAPSHOT</version>
-    <name>newton_adventure</name>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>im.bci.newtonadv.platform.lwjgl.Main</mainClass>
-                            <packageName>im.bci.newtonadv</packageName>
-                            <addClasspath>true</addClasspath>
-                            <addExtensions>true</addExtensions>
-                            <classpathPrefix>lib/</classpathPrefix>
-                        </manifest>
-                        <manifestEntries>
-                            <mode>development</mode>
-                            <url>${pom.url}</url>
-                            <Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar lib/jinput.jar lib/phys2d.jar lib/libtiled.jar lib/jorbis.jar</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    <dependencies>
-        <dependency>
-            <groupId>lwjgl</groupId>
-            <artifactId>lwjgl</artifactId>
-            <version>2.4.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/lwjgl.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>lwjgl</groupId>
-            <artifactId>lwjgl_test</artifactId>
-            <version>2.4.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/lwjgl_test.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>lwjgl</groupId>
-            <artifactId>lwjgl_util</artifactId>
-            <version>2.4.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/lwjgl_util.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>jinput</groupId>
-            <artifactId>jinput</artifactId>
-            <version>unknown</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jinput.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>phys2d</groupId>
-            <artifactId>phys2d</artifactId>
-            <version>2008.04.06</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/phys2d.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>tiled</groupId>
-            <artifactId>libtiled</artifactId>
-            <version>0.8.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/libtiled.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jorbis</artifactId>
-            <version>0.0.17</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jorbis.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+<!-- /* * Copyright (c) 2009-2010 devnewton <devnewton@bci.im> * All rights 
+	reserved. * * Redistribution and use in source and binary forms, with or 
+	without * modification, are permitted provided that the following conditions 
+	are * met: * * * Redistributions of source code must retain the above copyright 
+	* notice, this list of conditions and the following disclaimer. * * * Redistributions 
+	in binary form must reproduce the above copyright * notice, this list of 
+	conditions and the following disclaimer in the * documentation and/or other 
+	materials provided with the distribution. * * * Neither the name of 'devnewton 
+	<devnewton@bci.im>' nor the names of * its contributors may be used to endorse 
+	or promote products derived * from this software without specific prior written 
+	permission. * * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
+	* TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+	* PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR * CONTRIBUTORS 
+	BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, * EXEMPLARY, OR 
+	CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, * PROCUREMENT OF SUBSTITUTE 
+	GOODS OR SERVICES; LOSS OF USE, DATA, OR * PROFITS; OR BUSINESS INTERRUPTION) 
+	HOWEVER CAUSED AND ON ANY THEORY OF * LIABILITY, WHETHER IN CONTRACT, STRICT 
+	LIABILITY, OR TORT (INCLUDING * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
+	OUT OF THE USE OF THIS * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
+	SUCH DAMAGE. */ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>im.bci.newtonadv</groupId>
+	<artifactId>newton_adventure</artifactId>
+	<packaging>jar</packaging>
+	<version>1.1-SNAPSHOT</version>
+	<name>newton_adventure</name>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>im.bci.newtonadv.platform.lwjgl.Main</mainClass>
+							<packageName>im.bci.newtonadv</packageName>
+							<addClasspath>true</addClasspath>
+							<addExtensions>true</addExtensions>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+						<manifestEntries>
+							<mode>development</mode>
+							<url>${pom.url}</url>
+							<Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar
+								lib/jinput.jar lib/phys2d.jar lib/libtiled.jar lib/jorbis.jar</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+			<version>2.4.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/lwjgl.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>lwjgl</groupId>
+			<artifactId>lwjgl_test</artifactId>
+			<version>2.4.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/lwjgl_test.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>lwjgl</groupId>
+			<artifactId>lwjgl_util</artifactId>
+			<version>2.4.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/lwjgl_util.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>jinput</groupId>
+			<artifactId>jinput</artifactId>
+			<version>unknown</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/jinput.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>phys2d</groupId>
+			<artifactId>phys2d</artifactId>
+			<version>2008.04.06</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/phys2d.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>tiled</groupId>
+			<artifactId>libtiled</artifactId>
+			<version>0.8.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/libtiled.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jorbis</artifactId>
+			<version>0.0.17</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/jorbis.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.l33tlabs</groupId>
+			<artifactId>twl</artifactId>
+			<version>1026.0a69af514009</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/TWL.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>extreme.indiana.edu</groupId>
+			<artifactId>xpp3</artifactId>
+			<version>1.1.4c</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xpp3-1.1.4c.jar</systemPath>
+		</dependency>
+	</dependencies>
 </project>
 
 

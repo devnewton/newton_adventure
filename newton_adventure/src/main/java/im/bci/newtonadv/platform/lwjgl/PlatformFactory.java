@@ -31,8 +31,11 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -77,4 +80,9 @@ public class PlatformFactory implements IPlatformFactory {
     public IGameData createGameData(Properties config) {
         return new GameData(config);
     }
+
+	@Override
+	public Sequence createOptionsSequence() {
+		return new OptionsSequence();
+	}
 }

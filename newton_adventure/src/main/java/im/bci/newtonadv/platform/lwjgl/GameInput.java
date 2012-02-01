@@ -160,4 +160,9 @@ public class GameInput implements IGameInput {
     public boolean isKeyCheatGotoNextBonusLevelDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_F10);
     }
+
+	@Override
+	public boolean isKeyShowOptionsDown() {
+		return Keyboard.isKeyDown(Keyboard.KEY_F2);
+	}
 }
