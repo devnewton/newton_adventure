@@ -33,6 +33,7 @@ package im.bci.newtonadv.platform.interfaces;
 
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.game.GameOverSequence;
+import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.MenuSequence.Button;
 import im.bci.newtonadv.game.ScoreSequence;
@@ -162,4 +163,6 @@ public interface IGameView {
     public void drawFadeSequence(float r, float g, float b, float a);
 
     public void drawMovingPlatform(MovingPlatform aThis, ITexture texture);
+
+	void drawMainMenuSequence(MainMenuSequence mainMenuSequence);
 }

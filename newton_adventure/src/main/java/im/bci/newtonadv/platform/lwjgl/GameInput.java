@@ -163,6 +163,6 @@ public class GameInput implements IGameInput {
 
 	@Override
 	public boolean isKeyShowOptionsDown() {
-		return Keyboard.isKeyDown(Keyboard.KEY_F2);
+		return Keyboard.isKeyDown(Keyboard.KEY_F1);
 	}
 }

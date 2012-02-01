@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 
 import android.content.res.AssetManager;
 
-import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
+import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 
@@ -60,7 +60,7 @@ public class AndroidPlatformFactory implements IPlatformFactory {
 	}
 
 	@Override
-	public Sequence createOptionsSequence() {
+	public IOptionsSequence createOptionsSequence() {
 		return null;
 	}
 

@@ -31,8 +31,8 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
-import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 
@@ -48,6 +48,7 @@ import java.util.logging.Logger;
  */
 public class PlatformFactory implements IPlatformFactory {
 
+	private GameView view;
     @Override
     public SoundCache createSoundCache(Properties config) {
         return new SoundCache(config.getProperty("sound.enabled").equals("true"));
@@ -55,7 +56,9 @@ public class PlatformFactory implements IPlatformFactory {
 
     @Override
     public GameView createGameView(Properties config) {
-        return new GameView(config);
+		if (view == null)
+			view = new GameView(config);
+    	return view;
     }
 
     @Override
@@ -82,7 +85,9 @@ public class PlatformFactory implements IPlatformFactory {
     }
 
 	@Override
-	public Sequence createOptionsSequence() {
-		return new OptionsSequence();
+	public IOptionsSequence createOptionsSequence() {
+		if(null == view)
+			throw new RuntimeException("create IGameView before IOptionsSequence");
+		return new OptionsSequence(view);
 	}
 }

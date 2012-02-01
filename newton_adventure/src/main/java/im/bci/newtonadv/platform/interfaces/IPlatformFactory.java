@@ -32,8 +32,6 @@
 
 package im.bci.newtonadv.platform.interfaces;
 
-import im.bci.newtonadv.game.Sequence;
-
 import java.util.Properties;
 
 /**
@@ -51,7 +49,7 @@ public interface IPlatformFactory {
 	void loadConfig(Properties config);
 
 	IGameData createGameData(Properties config);
-	
-	Sequence createOptionsSequence();
+
+	IOptionsSequence createOptionsSequence();
 
 }

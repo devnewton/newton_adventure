@@ -24,6 +24,7 @@ import net.phys2d.raw.shapes.ConvexPolygon;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.GameOverSequence;
+import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.ScoreSequence;
@@ -1216,6 +1217,11 @@ public class AndroidGameView implements IGameView {
 				pts[2].y, pts[3].x, pts[3].y };
 		drawTexturedTriangleFans(texture, vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
+	}
+
+	@Override
+	public void drawMainMenuSequence(MainMenuSequence mainMenuSequence) {
+		drawMenuSequence(mainMenuSequence);		
 	}
 
 }

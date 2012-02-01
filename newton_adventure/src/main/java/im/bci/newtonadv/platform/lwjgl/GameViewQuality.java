@@ -33,7 +33,7 @@ package im.bci.newtonadv.platform.lwjgl;
 
 import org.lwjgl.opengl.GL11;
 
-enum GameViewQuality {
+public enum GameViewQuality {
 
     DEFAULT,
     NICEST,

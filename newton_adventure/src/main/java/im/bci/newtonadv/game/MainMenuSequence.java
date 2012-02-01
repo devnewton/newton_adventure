@@ -49,7 +49,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
 
     @Override
     public void draw() {
-        super.draw();
+    	game.getView().drawMainMenuSequence(this);
         specialOccasionLayer.draw();
     }
     

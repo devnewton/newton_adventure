@@ -36,6 +36,7 @@ import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.GameOverSequence;
+import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.MenuSequence.Button;
 import im.bci.newtonadv.game.QuestMenuSequence;
@@ -100,1147 +101,1319 @@ import net.phys2d.raw.shapes.ConvexPolygon;
 import org.lwjgl.util.glu.GLU;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public strictfp class GameView implements IGameView {
 
-    private TextureCache textureCache;
-    private ITrueTypeFont fpsFont;
-
-    public GameView(Properties config) {
-        initDisplay(config);
-    }
-
-    public void toggleFullscreen() {
-        try {
-            Display.setFullscreen(!Display.isFullscreen());
-        } catch (LWJGLException ex) {
-            Logger.getLogger(GameView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private DisplayMode findGoodDisplayMode(final int targetHeight, final int targetWidth, final int targetBpp) {
-        try {
-            DisplayMode[] modes = Display.getAvailableDisplayModes();
-            java.util.Arrays.sort(modes, new Comparator<DisplayMode>() {
-
-                @Override
-                public int compare(DisplayMode a, DisplayMode b) {
-
-                    //test bpp
-                    if (a.getBitsPerPixel() >= targetBpp && b.getBitsPerPixel() < targetBpp) {
-                        return -1;
-                    }
-                    if (a.getBitsPerPixel() < targetBpp && b.getBitsPerPixel() >= targetBpp) {
-                        return 1;
-                    }
-
-                    //test resolution
-                    if (a.getWidth() == targetWidth && a.getHeight() == targetHeight) {
-                        return -1;
-                    } else if (b.getWidth() == targetWidth && b.getHeight() == targetHeight) {
-                        return 1;
-                    } else {
-                        Point pA = new Point(a.getWidth(), b.getHeight());
-                        Point pB = new Point(b.getWidth(), b.getHeight());
-                        Point pTarget = new Point(targetWidth, targetHeight);
-                        if (pA.distance(pTarget) < pB.distance(pTarget)) {
-                            return -1;
-                        } else if (pA.distance(pTarget) > pB.distance(pTarget)) {
-                            return 1;
-                        }
-                    }
-
-                    //test fullscreen capacity
-                    if (a.isFullscreenCapable() && !b.isFullscreenCapable()) {
-                        return -1;
-                    } else if (!a.isFullscreenCapable() && b.isFullscreenCapable()) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-
-                }
-            });
-
-            if (modes.length > 0) {
-                return modes[0];
-            } else {
-                return Display.getDesktopDisplayMode();
-            }
-        } catch (LWJGLException e) {
-            Sys.alert("Error", "Unable to determine display modes.");
-        }
-        return Display.getDesktopDisplayMode();
-    }
-
-    String getDisplayModeInfos() {
-        try {
-            StringBuilder b = new StringBuilder();
-            b.append("Adapter : ");
-            b.append(Display.getAdapter());
-            b.append('\n');
-            b.append("Version : ");
-            b.append(Display.getVersion());
-            b.append('\n');
-            b.append("Available display modes:");
-            for (DisplayMode m : Display.getAvailableDisplayModes()) {
-                b.append(m);
-                b.append('\n');
-            }
-            return b.toString();
-        } catch (LWJGLException ex) {
-            return "Error cannot determine available display modes (" + ex + ")";
-        }
-    }
-
-    private void initDisplay(Properties config) {
-        int targetWidth = Integer.parseInt(config.getProperty("view.width"));
-        int targetHeight = Integer.parseInt(config.getProperty("view.height"));
-        int targetBpp = Integer.parseInt(config.getProperty("view.bpp", "" + Display.getDesktopDisplayMode().getBitsPerPixel()));
-        boolean startFullscreen = Boolean.parseBoolean(config.getProperty("view.fullscreen", "false"));
-        GameViewQuality quality = GameViewQuality.valueOf(config.getProperty("view.quality"));
-
-        DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth, targetBpp);
-        if (chosenMode == null) {
-            Sys.alert("Error", "Unable to find appropriate display mode. Try to edit data/config.properties.\n" + getDisplayModeInfos());
-            System.exit(0);
-        }
-        try {
-            if (startFullscreen) {
-                Display.setDisplayModeAndFullscreen(chosenMode);
-            } else {
-                Display.setDisplayMode(chosenMode);
-            }
-            Display.setResizable(true);
-            Display.setTitle("Newton adventure");
-            Display.create();
-            Display.setVSyncEnabled(true);
-        } catch (LWJGLException e) {
-            Sys.alert("Error", e + "\nUnable to create display. Try to edit data/config.properties.\n" + getDisplayModeInfos());
-            System.exit(0);
-
-        }
-
-        GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_DITHER);
-        GL11.glDisable(GL11.GL_FOG);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
-        GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, quality.toGL());
-        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-
-        textureCache = new TextureCache();
-        fpsFont = new TrueTypeFont();
-    }
-
-    public void draw(Sequence sequence) {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
-            GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
-        }
-        sequence.draw();
-
-        // now tell the screen to update
-        Display.update();
-        Display.sync(Game.FPS);
-
-        // finally check if the user has requested that the display be 
-        // shutdown
-        if (Display.isCloseRequested()) {
-            close();
-            System.exit(0);
-        }
-    }
-
-    public void drawFPS(int nbFps) {
-        String fps = nbFps + " FPS";
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-        GL11.glTranslatef(Display.getWidth() - fpsFont.getWidth(fps), Display.getHeight() - 64, 0);
-        fpsFont.drawString(fps);
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
-    }
-
-    private void close() {
-        textureCache.clearAll();
-        Display.destroy();
-    }
-
-    public ITextureCache getTextureCache() {
-        return textureCache;
-    }
-
-    @Override
-    public void drawPickableObject(PickableObject pickableObject, ITexture texture, World world) {
-        AABox bounds = pickableObject.getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(pickableObject.getPosition().getX(), pickableObject.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -bounds.getWidth() / 2.0f;
-        final float x2 = bounds.getWidth() / 2.0f;
-        final float y1 = -bounds.getHeight() / 2.0f;
-        final float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
-    }
-
-    public void drawAxe(Axe axe, ITexture texture) {
-        Box box = (Box) axe.getShape();
-        Vector2f[] pts = box.getPoints(axe.getPosition(), axe.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[3].x, pts[3].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-
-    }
-
-    public void drawAxeAnchor(AxeAnchor axeAnchor, float radius, ITexture texture) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(axeAnchor.getPosition().getX(), axeAnchor.getPosition().getY(), 0.0f);
-        final float x1 = -radius;
-        final float x2 = radius;
-        final float y1 = -radius;
-        final float y2 = radius;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 0.18f, u2 = 0.8f;
-        final float v1 = 0.2f, v2 = 0.8f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, v1);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, v1);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, v2);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, v2);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
-    }
-
-    public void drawBat(Bat bat, float scale, ITexture texture, World world) {
-        AABox bounds = bat.getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(bat.getPosition().getX(), bat.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        GL11.glScalef(scale, scale, 1);
-        float x1 = -bounds.getWidth() / 2.0f;
-        float x2 = bounds.getWidth() / 2.0f;
-        float y1 = -bounds.getHeight() / 2.0f;
-        float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 1, u2 = 0;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    public void drawBlocker(Blocker blocker, ITexture texture, float alpha) {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-        drawPlatform(blocker, texture);
-        GL11.glPopAttrib();
-
-    }
-
-    public void drawPlatform(Platform platform, ITexture texture) {
-        Box box = (Box) platform.getShape();
-        Vector2f[] pts = box.getPoints(platform.getPosition(), platform.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[3].x, pts[3].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawMovingPlatform(MovingPlatform platform, ITexture texture) {
-        Box box = (Box) platform.getShape();
-        Vector2f[] pts = box.getPoints(platform.getPosition(), platform.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[3].x, pts[3].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawCloud(Cloud cloud, ITexture texture, float alpha) {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-        drawPlatform(cloud, texture);
-        GL11.glPopAttrib();
-
-    }
-
-    public void drawDoor(Door door, ITexture texture) {
-        Box box = (Box) door.getShape();
-        Vector2f[] pts = box.getPoints(door.getPosition(), door.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[3].x, pts[3].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawDownLeftHalfPlatform(DownLeftHalfPlatform platform, ITexture texture) {
-        ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
-        Vector2f[] pts = polygon.getVertices(platform.getPosition(), platform.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawDownRightHalfPlatform(DownRightHalfPlatform platform, ITexture texture) {
-        ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
-        Vector2f[] pts = polygon.getVertices(platform.getPosition(), platform.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform, ITexture texture) {
-        ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
-        Vector2f[] pts = polygon.getVertices(platform.getPosition(), platform.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.9999f);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawUpRightHalfPlatform(UpRightHalfPlatform platform, ITexture texture) {
-        ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
-        Vector2f[] pts = polygon.getVertices(platform.getPosition(), platform.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawExplosion(Explosion explosion, ITexture texture, World world) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(explosion.getPosition().getX(), explosion.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -explosion.getSize() / 2.0f;
-        final float x2 = explosion.getSize() / 2.0f;
-        final float y1 = -explosion.getSize() / 2.0f;
-        final float y2 = explosion.getSize() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    public void drawFireBall(FireBall fireball, ITexture texture, World world) {
-        GL11.glPushMatrix();
-        ROVector2f pos = fireball.getPosition();
-        GL11.glTranslatef(pos.getX(), pos.getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -fireball.getSize() / 2.0f;
-        final float x2 = fireball.getSize() / 2.0f;
-        final float y1 = -fireball.getSize() / 2.0f;
-        final float y2 = fireball.getSize() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-
-    }
-
-    public void drawHero(Hero hero, ITexture texture, World world, float scale) {
-        AABox bounds = hero.getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(hero.getPosition().getX(), hero.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        GL11.glScalef(scale, scale, 1);
-        float x1 = -bounds.getWidth() / 2.0f;
-        float x2 = bounds.getWidth() / 2.0f;
-        float y1 = -bounds.getHeight() / 2.0f;
-        float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        float u1, u2;
-        if (hero.isLookingLeft()) {
-            u1 = 1.0f;
-            u2 = 0.0f;
-        } else {
-            u1 = 0.0f;
-            u2 = 1.0f;
-        }
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    public void drawKey(Key key, ITexture texture, World world) {
-        AABox bounds = key.getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -bounds.getWidth() / 2.0f;
-        final float x2 = bounds.getWidth() / 2.0f;
-        final float y1 = -bounds.getHeight() / 2.0f;
-        final float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
-
-    }
-
-    public void drawLosedApple(LosedApple apple, World world, ITexture texture, float alpha) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(apple.getPosition().getX(), apple.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -apple.getSize() / 2.0f;
-        final float x2 = apple.getSize() / 2.0f;
-        final float y1 = -apple.getSize() / 2.0f;
-        final float y2 = apple.getSize() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    public void drawMobilePikeAnchor(MobilePikeAnchor anchor, ITexture texture) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(anchor.getPosition().getX(), anchor.getPosition().getY(), 0.0f);
-        final float x1 = -anchor.getRadius();
-        final float x2 = anchor.getRadius();
-        final float y1 = -anchor.getRadius();
-        final float y2 = anchor.getRadius();
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 0.18f, u2 = 0.8f;
-        final float v1 = 0.2f, v2 = 0.8f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, v1);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, v1);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, v2);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, v2);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
-    }
-
-    public void drawMobilePikes(MobilePikes pikes, ITexture texture) {
-        Box box = (Box) pikes.getShape();
-        Vector2f[] pts = box.getPoints(pikes.getPosition(), pikes.getRotation());
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(pts[3].x, pts[3].y);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-    }
-
-    public void drawMummy(Mummy mummy, World world, ITexture texture, float scale) {
-        AABox bounds = mummy.getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(mummy.getPosition().getX(), mummy.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        GL11.glScalef(scale, scale, 1);
-        float x1 = -bounds.getWidth() / 2.0f;
-        float x2 = bounds.getWidth() / 2.0f;
-        float y1 = -bounds.getHeight() / 2.0f;
-        float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        float u1, u2;
-        if (mummy.isLookingLeft()) {
-            u1 = 1.0f;
-            u2 = 0.0f;
-        } else {
-            u1 = 0.0f;
-            u2 = 1.0f;
-        }
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    @Override
-    public void drawPickedUpObject(PickedUpObject pickedUpObject, World world, ITexture texture) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(pickedUpObject.getPosition().getX(), pickedUpObject.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        final float x1 = -pickedUpObject.getSize() / 2.0f;
-        final float x2 = pickedUpObject.getSize() / 2.0f;
-        final float y1 = -pickedUpObject.getSize() / 2.0f;
-        final float y2 = pickedUpObject.getSize() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    public void drawUsedKey(UsedKey key, ITexture texture, World world) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        float x1 = -key.getSize() / 2.0f;
-        final float x2 = key.getSize() / 2.0f;
-        final float y1 = -key.getSize() / 2.0f;
-        final float y2 = key.getSize() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    public void drawEgyptianBoss(EgyptianBoss boss, ITexture texture, boolean isHurtBlinkState) {
-        AABox bounds = boss.getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(boss.getPosition().getX(), boss.getPosition().getY(), 0.0f);
-        float x1 = -bounds.getWidth() / 2.0f;
-        float x2 = bounds.getWidth() / 2.0f;
-        float y1 = -bounds.getHeight() / 2.0f;
-        float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        if (isHurtBlinkState) {
-            GL11.glColor3f(1, 0, 0);
-        }
-        final float u1 = 1, u2 = 0;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        if (isHurtBlinkState) {
-            GL11.glColor3f(1, 1, 1);
-        }
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    public void drawEgyptianBossHand(EgyptianBossHand hand, ITexture texture) {
-        AABox bounds = hand.getShape().getBounds();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(hand.getPosition().getX(), hand.getPosition().getY(), 0.0f);
-        float x1 = -bounds.getWidth() / 2.0f;
-        float x2 = bounds.getWidth() / 2.0f;
-        float y1 = -bounds.getHeight() / 2.0f;
-        float y2 = bounds.getHeight() / 2.0f;
-
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-
-        final float u1 = 1, u2 = 0;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-
-    }
-
-    public void drawStoryBoardSequence(StoryboardSequence sequence, ITrueTypeFont font) {
-        if (Display.isVisible() || Display.wasResized() || Display.isDirty() || sequence.isDirty()) {
-            sequence.setDirty(false);
-
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft, StoryboardSequence.ortho2DRight, StoryboardSequence.ortho2DBottom, StoryboardSequence.ortho2DTop);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache().getTexture(sequence.getTexture()).getId());
-            final float x1 = StoryboardSequence.ortho2DLeft;
-            final float x2 = StoryboardSequence.ortho2DRight;
-            final float y1 = StoryboardSequence.ortho2DBottom;
-            final float y2 = StoryboardSequence.ortho2DTop;
-            final float u1 = 0.0f, u2 = 1.0f;
-            GL11.glBegin(GL11.GL_QUADS);
-            GL11.glTexCoord2f(u1, 0.0f);
-            GL11.glVertex2f(x1, y2);
-            GL11.glTexCoord2f(u2, 0.0f);
-            GL11.glVertex2f(x2, y2);
-            GL11.glTexCoord2f(u2, 1.0f);
-            GL11.glVertex2f(x2, y1);
-            GL11.glTexCoord2f(u1, 1.0f);
-            GL11.glVertex2f(x1, y1);
-            GL11.glEnd();
-            drawContinueText(font);
-            GL11.glPopMatrix();
-        }
-    }
-
-    private void drawContinueText(ITrueTypeFont font) {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-        font.drawString(StoryboardSequence.ortho2DRight, StoryboardSequence.ortho2DBottom - font.getHeight(), "Press enter to continue ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-        GL11.glPopAttrib();
-    }
-
-    private void drawGameOverText(ITrueTypeFont font) {
-        drawContinueText(font);
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-        font.drawString(StoryboardSequence.ortho2DRight, StoryboardSequence.ortho2DBottom - font.getHeight() * 2, "Press up to retry ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-        GL11.glPopAttrib();
-    }
-
-    public void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font, QuestScore questScore, long scorePerCentToShow) {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized() || sequence.isDirty()) {
-            sequence.setDirty(false);
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(ScoreSequence.ortho2DLeft, ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom, ScoreSequence.ortho2DTop);
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-            int i = 1;
-            font.drawString((ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f, i++ * font.getHeight(), "SCORES", 1, -1, ITrueTypeFont.ALIGN_CENTER);
-            font.drawString(0, i++ * font.getHeight(), questScore.getQuestName(), 1, -1, ITrueTypeFont.ALIGN_LEFT);
-            for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
-                String levelScoreStr = levelEntry.getKey() + ": " + (scorePerCentToShow * levelEntry.getValue().computeScore() / 100);
-                font.drawString((ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f, i++ * font.getHeight(), levelScoreStr, 1, -1, ITrueTypeFont.ALIGN_CENTER);
-            }
-            String questScoreStr = "Quest total: " + (scorePerCentToShow * questScore.computeScore() / 100);
-            font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1, ITrueTypeFont.ALIGN_LEFT);
-            font.drawString(ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom - font.getHeight() * 2, "Press enter to send score to server ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-            font.drawString(ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom - font.getHeight(), "Press right to skip ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-            GL11.glPopMatrix();
-            GL11.glPopAttrib();
-        }
-    }
-
-    public void drawGameOverSequence(GameOverSequence sequence, ITrueTypeFont font) {
-        if (Display.isVisible() || Display.wasResized() || Display.isDirty() || sequence.isDirty()) {
-            sequence.setDirty(false);
-
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft, StoryboardSequence.ortho2DRight, StoryboardSequence.ortho2DBottom, StoryboardSequence.ortho2DTop);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache().getTexture(sequence.getTexture()).getId());
-            final float x1 = StoryboardSequence.ortho2DLeft;
-            final float x2 = StoryboardSequence.ortho2DRight;
-            final float y1 = StoryboardSequence.ortho2DBottom;
-            final float y2 = StoryboardSequence.ortho2DTop;
-            final float u1 = 0.0f, u2 = 1.0f;
-            GL11.glBegin(GL11.GL_QUADS);
-            GL11.glTexCoord2f(u1, 0.0f);
-            GL11.glVertex2f(x1, y2);
-            GL11.glTexCoord2f(u2, 0.0f);
-            GL11.glVertex2f(x2, y2);
-            GL11.glTexCoord2f(u2, 1.0f);
-            GL11.glVertex2f(x2, y1);
-            GL11.glTexCoord2f(u1, 1.0f);
-            GL11.glVertex2f(x1, y1);
-            GL11.glEnd();
-            drawGameOverText(font);
-            GL11.glPopMatrix();
-        }
-    }
-
-    public void drawSnowLayer(SnowLayer layer) {
-        GL11.glPushMatrix();
-
-        float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        GLU.gluOrtho2D(SnowLayer.ortho2DLeft * aspectRatio, SnowLayer.ortho2DRight * aspectRatio, SnowLayer.ortho2DBottom, SnowLayer.ortho2DTop);
-        layer.setAspectRatio(aspectRatio);
-
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        GL11.glBegin(GL11.GL_POINTS);
-        for (int i = 0; i < layer.getFlakes().length; ++i) {
-            if (null != layer.getFlakes()[i]) {
-                GL11.glVertex2f(layer.getFlakes()[i].x, layer.getFlakes()[i].y);
-            }
-        }
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
-    }
-
-    public void drawLevelIndicators(String indicators, ITrueTypeFont indicatorsFont) {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-        GL11.glTranslatef(0, Display.getHeight() - indicatorsFont.getHeight(), 0);
-        indicatorsFont.drawString(indicators);
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-    }
-
-    public void drawMenuSequence(MenuSequence sequence) {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized() || sequence.isDirty()) {
-            sequence.setDirty(false);
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight, MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
-
-            if (sequence.getBackgroundImage() != null) {
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache().getTexture(sequence.getBackgroundImage()).getId());
-                final float x1 = MenuSequence.ortho2DLeft;
-                final float x2 = MenuSequence.ortho2DRight;
-                final float y1 = MenuSequence.ortho2DBottom;
-                final float y2 = MenuSequence.ortho2DTop;
-                final float u1 = 0.0F;
-                final float u2 = 1.0F;
-                GL11.glBegin(GL11.GL_QUADS);
-                GL11.glTexCoord2f(u1, 0.0F);
-                GL11.glVertex2f(x1, y2);
-                GL11.glTexCoord2f(u2, 0.0F);
-                GL11.glVertex2f(x2, y2);
-                GL11.glTexCoord2f(u2, 1.0F);
-                GL11.glVertex2f(x2, y1);
-                GL11.glTexCoord2f(u1, 1.0F);
-                GL11.glVertex2f(x1, y1);
-                GL11.glEnd();
-            } else {
-                GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-            }
-
-            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-            GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or transperancy
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F); // sets aplha function
-            for (Button b : sequence.getButtons()) {
-                b.draw();
-            }
-            GL11.glPopAttrib();
-            GL11.glPopMatrix();
-        }
-    }
-
-    public void drawButton(Button button) {
-        if (button.currentTexture != null) {
-            ITexture texture = getTextureCache().getTexture(button.currentTexture);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-            final float x1 = button.x;
-            final float x2 = button.x + (button.w > 0 ? button.w : texture.getWidth());
-            final float y1 = button.y + (button.h > 0 ? button.h : texture.getHeight());
-            final float y2 = button.y;
-            final float u1 = 0.0f, u2 = 1.0f;
-            GL11.glBegin(GL11.GL_QUADS);
-            GL11.glTexCoord2f(u1, 0.0f);
-            GL11.glVertex2f(x1, y2);
-            GL11.glTexCoord2f(u2, 0.0f);
-            GL11.glVertex2f(x2, y2);
-            GL11.glTexCoord2f(u2, 1.0f);
-            GL11.glVertex2f(x2, y1);
-            GL11.glTexCoord2f(u1, 1.0f);
-            GL11.glVertex2f(x1, y1);
-            GL11.glEnd();
-        }
-    }
-
-    public void drawQuestMenuButton(Button button, ITrueTypeFont questNameFont, String questName) {
-        drawButton(button);
-        GL11.glPushMatrix();
-        GL11.glTranslatef(button.x, button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT + questNameFont.getHeight(), 0);
-        GL11.glScalef(1, -1, 1);
-        questNameFont.drawString(questName);
-        GL11.glPopMatrix();
-    }
-
-    public void drawWorld(World world) {
-        GL11.glPushMatrix();
-
-        float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        GLU.gluOrtho2D(World.ortho2DLeft * aspectRatio, World.ortho2DRight * aspectRatio, World.ortho2DBottom, World.ortho2DTop);
-
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-        GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0, 1.0f);
-        drawWorldBackground(world, aspectRatio);
-
-        ROVector2f heroPos = world.getHero().getPosition();
-        GL11.glTranslatef(-heroPos.getX(), -heroPos.getY(), 0.0f);
-
-        final float cameraSize = World.ortho2DBaseSize * 1.5f;
-        final BodyList visibleBodies = world.getVisibleBodies(heroPos.getX() - cameraSize, heroPos.getY() - cameraSize, heroPos.getX() + cameraSize, heroPos.getY() + cameraSize);
-        for (int i = 0; i < visibleBodies.size(); i++) {
-            Body body = visibleBodies.get(i);
-            if (body instanceof Drawable) {
-                ((Drawable) body).draw();
-            }
-        }
-        world.getTopLevelEntities().draw();
-        GL11.glPopMatrix();
-    }
-
-    private void drawWorldBackground(World world, float aspectRatio) {
-        GL11.glPushMatrix();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, world.getBackgroundTexture().getId());
-
-        ROVector2f heroPos = world.getHero().getPosition();
-
-        AbsoluteAABox worldStaticBounds = world.getStaticBounds();
-        AbsoluteAABox staticBounds = new AbsoluteAABox();
-        staticBounds.x1 = World.ortho2DLeft * aspectRatio * 2.0f;
-        staticBounds.x2 = World.ortho2DRight * aspectRatio * 2.0f;
-        staticBounds.y1 = World.ortho2DBottom * aspectRatio * 2.0f;
-        staticBounds.y2 = World.ortho2DTop * aspectRatio * 2.0f;
-        float xt = -heroPos.getX() * (staticBounds.getWidth() / worldStaticBounds.getWidth());
-        float yt = -heroPos.getY() * (staticBounds.getHeight() / worldStaticBounds.getHeight());
-
-        xt = Math.max(xt, -World.ortho2DBaseSize / 2.0f);
-        xt = Math.min(xt, World.ortho2DBaseSize / 2.0f);
-        yt = Math.max(yt, -World.ortho2DBaseSize / 2.0f);
-        yt = Math.min(yt, World.ortho2DBaseSize / 2.0f);
-
-        staticBounds.x1 += xt;
-        staticBounds.x2 += xt;
-        staticBounds.y1 += yt;
-        staticBounds.y2 += yt;
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.0f, 0.0f);
-        GL11.glVertex2f(staticBounds.x1, staticBounds.y2);
-        GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(staticBounds.x2, staticBounds.y2);
-        GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(staticBounds.x2, staticBounds.y1);
-        GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(staticBounds.x1, staticBounds.y1);
-        GL11.glEnd();
-        GL11.glPopMatrix();
-    }
-
-    public ITrueTypeFont createStoryBoardSequenceFont() {
-        return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
-    }
-
-    public ITrueTypeFont createQuestNameFont() {
-        return new TrueTypeFont();
-    }
-
-    public ITrueTypeFont createAppleFont() {
-        return new TrueTypeFont();
-    }
-
-    public ITrueTypeFont createScoreSequenceFont() {
-        return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
-    }
-
-    public Animation loadFromGif(String name) throws FileNotFoundException {
-        GifDecoder d = new GifDecoder();
-        d.read(new FileInputStream(name));
-        Animation animation = new Animation();
-        int n = d.getFrameCount();
-        for (int i = 0; i < n; i++) {
-            BufferedImage frameImage = d.getFrame(i);  // frame i
-            int t = d.getDelay(i);  // display duration of frame in milliseconds
-            animation.addFrame(textureCache.createTexture(name + '#' + i, frameImage), t);
-        }
-        return animation;
-    }
-
-    public void drawFadeSequence(float r, float g, float b, float a) {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, 1, 0, 1, -1, 1);
-        GL11.glColor4f(r, g, b, a);
-        GL11.glRectf(0, 0, 1, 1);
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
-    }
+	private TextureCache textureCache;
+	private ITrueTypeFont fpsFont;
+
+	public GameView(Properties config) {
+		initDisplay(config);
+	}
+
+	public void toggleFullscreen() {
+		try {
+			Display.setFullscreen(!Display.isFullscreen());
+		} catch (LWJGLException ex) {
+			Logger.getLogger(GameView.class.getName()).log(Level.SEVERE, null,
+					ex);
+		}
+	}
+
+	private DisplayMode findGoodDisplayMode(final int targetHeight,
+			final int targetWidth, final int targetBpp) {
+		try {
+			DisplayMode[] modes = Display.getAvailableDisplayModes();
+			java.util.Arrays.sort(modes, new Comparator<DisplayMode>() {
+
+				@Override
+				public int compare(DisplayMode a, DisplayMode b) {
+
+					// test bpp
+					if (a.getBitsPerPixel() >= targetBpp
+							&& b.getBitsPerPixel() < targetBpp) {
+						return -1;
+					}
+					if (a.getBitsPerPixel() < targetBpp
+							&& b.getBitsPerPixel() >= targetBpp) {
+						return 1;
+					}
+
+					// test resolution
+					if (a.getWidth() == targetWidth
+							&& a.getHeight() == targetHeight) {
+						return -1;
+					} else if (b.getWidth() == targetWidth
+							&& b.getHeight() == targetHeight) {
+						return 1;
+					} else {
+						Point pA = new Point(a.getWidth(), b.getHeight());
+						Point pB = new Point(b.getWidth(), b.getHeight());
+						Point pTarget = new Point(targetWidth, targetHeight);
+						if (pA.distance(pTarget) < pB.distance(pTarget)) {
+							return -1;
+						} else if (pA.distance(pTarget) > pB.distance(pTarget)) {
+							return 1;
+						}
+					}
+
+					// test fullscreen capacity
+					if (a.isFullscreenCapable() && !b.isFullscreenCapable()) {
+						return -1;
+					} else if (!a.isFullscreenCapable()
+							&& b.isFullscreenCapable()) {
+						return 1;
+					} else {
+						return 0;
+					}
+
+				}
+			});
+
+			if (modes.length > 0) {
+				return modes[0];
+			} else {
+				return Display.getDesktopDisplayMode();
+			}
+		} catch (LWJGLException e) {
+			Sys.alert("Error", "Unable to determine display modes.");
+		}
+		return Display.getDesktopDisplayMode();
+	}
+
+	String getDisplayModeInfos() {
+		try {
+			StringBuilder b = new StringBuilder();
+			b.append("Adapter : ");
+			b.append(Display.getAdapter());
+			b.append('\n');
+			b.append("Version : ");
+			b.append(Display.getVersion());
+			b.append('\n');
+			b.append("Available display modes:");
+			for (DisplayMode m : Display.getAvailableDisplayModes()) {
+				b.append(m);
+				b.append('\n');
+			}
+			return b.toString();
+		} catch (LWJGLException ex) {
+			return "Error cannot determine available display modes (" + ex
+					+ ")";
+		}
+	}
+
+	private void initDisplay(Properties config) {
+		int targetWidth = Integer.parseInt(config.getProperty("view.width"));
+		int targetHeight = Integer.parseInt(config.getProperty("view.height"));
+		int targetBpp = Integer.parseInt(config.getProperty("view.bpp", ""
+				+ Display.getDesktopDisplayMode().getBitsPerPixel()));
+		boolean startFullscreen = Boolean.parseBoolean(config.getProperty(
+				"view.fullscreen", "false"));
+		GameViewQuality quality = GameViewQuality.valueOf(config
+				.getProperty("view.quality"));
+
+		DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
+				targetBpp);
+		if (chosenMode == null) {
+			Sys.alert(
+					"Error",
+					"Unable to find appropriate display mode. Try to edit data/config.properties.\n"
+							+ getDisplayModeInfos());
+			System.exit(0);
+		}
+		setDisplayMode(startFullscreen, quality, chosenMode);
+	}
+
+	public void setDisplayMode(boolean startFullscreen,
+			GameViewQuality quality, DisplayMode chosenMode) {
+		try {
+			if (startFullscreen) {
+				Display.setDisplayModeAndFullscreen(chosenMode);
+			} else {
+				Display.setDisplayMode(chosenMode);
+			}
+			Display.setResizable(true);
+			Display.setTitle("Newton adventure");
+			if (!Display.isCreated())
+				Display.create();
+			Display.setVSyncEnabled(true);
+		} catch (LWJGLException e) {
+			Sys.alert(
+					"Error",
+					e
+							+ "\nUnable to create display. Try to edit data/config.properties.\n"
+							+ getDisplayModeInfos());
+			System.exit(0);
+		}
+
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_DITHER);
+		GL11.glDisable(GL11.GL_FOG);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
+		GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, quality.toGL());
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glColor4f(1, 1, 1, 1);
+
+		if (null == textureCache) {
+			textureCache = new TextureCache();
+		} else {
+			textureCache.clearAll();
+		}
+		fpsFont = new TrueTypeFont();
+	}
+
+	public void draw(Sequence sequence) {
+		if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
+			GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		}
+		sequence.draw();
+
+		// now tell the screen to update
+		Display.update();
+		Display.sync(Game.FPS);
+
+		// finally check if the user has requested that the display be
+		// shutdown
+		if (Display.isCloseRequested()) {
+			close();
+			System.exit(0);
+		}
+	}
+
+	public void drawFPS(int nbFps) {
+		String fps = nbFps + " FPS";
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
+		GL11.glTranslatef(Display.getWidth() - fpsFont.getWidth(fps),
+				Display.getHeight() - 64, 0);
+		fpsFont.drawString(fps);
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+	}
+
+	private void close() {
+		textureCache.clearAll();
+		Display.destroy();
+	}
+
+	public ITextureCache getTextureCache() {
+		return textureCache;
+	}
+
+	@Override
+	public void drawPickableObject(PickableObject pickableObject,
+			ITexture texture, World world) {
+		AABox bounds = pickableObject.getShape().getBounds();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(pickableObject.getPosition().getX(), pickableObject
+				.getPosition().getY(), 0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float x1 = -bounds.getWidth() / 2.0f;
+		final float x2 = bounds.getWidth() / 2.0f;
+		final float y1 = -bounds.getHeight() / 2.0f;
+		final float y2 = bounds.getHeight() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.0f, u2 = 1.0f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+	}
+
+	public void drawAxe(Axe axe, ITexture texture) {
+		Box box = (Box) axe.getShape();
+		Vector2f[] pts = box.getPoints(axe.getPosition(), axe.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(pts[3].x, pts[3].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+
+	}
+
+	public void drawAxeAnchor(AxeAnchor axeAnchor, float radius,
+			ITexture texture) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(axeAnchor.getPosition().getX(), axeAnchor
+				.getPosition().getY(), 0.0f);
+		final float x1 = -radius;
+		final float x2 = radius;
+		final float y1 = -radius;
+		final float y2 = radius;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
+				| GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.18f, u2 = 0.8f;
+		final float v1 = 0.2f, v2 = 0.8f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, v1);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, v1);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, v2);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, v2);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+	}
+
+	public void drawBat(Bat bat, float scale, ITexture texture, World world) {
+		AABox bounds = bat.getShape().getBounds();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(bat.getPosition().getX(), bat.getPosition().getY(),
+				0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		GL11.glScalef(scale, scale, 1);
+		float x1 = -bounds.getWidth() / 2.0f;
+		float x2 = bounds.getWidth() / 2.0f;
+		float y1 = -bounds.getHeight() / 2.0f;
+		float y2 = bounds.getHeight() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 1, u2 = 0;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	public void drawBlocker(Blocker blocker, ITexture texture, float alpha) {
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
+				| GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+		drawPlatform(blocker, texture);
+		GL11.glPopAttrib();
+
+	}
+
+	public void drawPlatform(Platform platform, ITexture texture) {
+		Box box = (Box) platform.getShape();
+		Vector2f[] pts = box.getPoints(platform.getPosition(),
+				platform.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(pts[3].x, pts[3].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+	}
+
+	public void drawMovingPlatform(MovingPlatform platform, ITexture texture) {
+		Box box = (Box) platform.getShape();
+		Vector2f[] pts = box.getPoints(platform.getPosition(),
+				platform.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(pts[3].x, pts[3].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+	}
+
+	public void drawCloud(Cloud cloud, ITexture texture, float alpha) {
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
+				| GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+		drawPlatform(cloud, texture);
+		GL11.glPopAttrib();
+
+	}
+
+	public void drawDoor(Door door, ITexture texture) {
+		Box box = (Box) door.getShape();
+		Vector2f[] pts = box.getPoints(door.getPosition(), door.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(pts[3].x, pts[3].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+	}
+
+	public void drawDownLeftHalfPlatform(DownLeftHalfPlatform platform,
+			ITexture texture) {
+		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
+		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
+				platform.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_TRIANGLES);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+	}
+
+	public void drawDownRightHalfPlatform(DownRightHalfPlatform platform,
+			ITexture texture) {
+		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
+		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
+				platform.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_TRIANGLES);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+	}
+
+	public void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform,
+			ITexture texture) {
+		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
+		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
+				platform.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.9999f);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_TRIANGLES);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+	}
+
+	public void drawUpRightHalfPlatform(UpRightHalfPlatform platform,
+			ITexture texture) {
+		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
+		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
+				platform.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_TRIANGLES);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+	}
+
+	public void drawExplosion(Explosion explosion, ITexture texture, World world) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(explosion.getPosition().getX(), explosion
+				.getPosition().getY(), 0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float x1 = -explosion.getSize() / 2.0f;
+		final float x2 = explosion.getSize() / 2.0f;
+		final float y1 = -explosion.getSize() / 2.0f;
+		final float y2 = explosion.getSize() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.0f, u2 = 1.0f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	public void drawFireBall(FireBall fireball, ITexture texture, World world) {
+		GL11.glPushMatrix();
+		ROVector2f pos = fireball.getPosition();
+		GL11.glTranslatef(pos.getX(), pos.getY(), 0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float x1 = -fireball.getSize() / 2.0f;
+		final float x2 = fireball.getSize() / 2.0f;
+		final float y1 = -fireball.getSize() / 2.0f;
+		final float y2 = fireball.getSize() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
+				| GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.0f, u2 = 1.0f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+
+	}
+
+	public void drawHero(Hero hero, ITexture texture, World world, float scale) {
+		AABox bounds = hero.getShape().getBounds();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(hero.getPosition().getX(), hero.getPosition().getY(),
+				0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		GL11.glScalef(scale, scale, 1);
+		float x1 = -bounds.getWidth() / 2.0f;
+		float x2 = bounds.getWidth() / 2.0f;
+		float y1 = -bounds.getHeight() / 2.0f;
+		float y2 = bounds.getHeight() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		float u1, u2;
+		if (hero.isLookingLeft()) {
+			u1 = 1.0f;
+			u2 = 0.0f;
+		} else {
+			u1 = 0.0f;
+			u2 = 1.0f;
+		}
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	public void drawKey(Key key, ITexture texture, World world) {
+		AABox bounds = key.getShape().getBounds();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(),
+				0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float x1 = -bounds.getWidth() / 2.0f;
+		final float x2 = bounds.getWidth() / 2.0f;
+		final float y1 = -bounds.getHeight() / 2.0f;
+		final float y2 = bounds.getHeight() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.0f, u2 = 1.0f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+
+	}
+
+	public void drawLosedApple(LosedApple apple, World world, ITexture texture,
+			float alpha) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(apple.getPosition().getX(), apple.getPosition()
+				.getY(), 0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float x1 = -apple.getSize() / 2.0f;
+		final float x2 = apple.getSize() / 2.0f;
+		final float y1 = -apple.getSize() / 2.0f;
+		final float y2 = apple.getSize() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
+				| GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.0f, u2 = 1.0f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	public void drawMobilePikeAnchor(MobilePikeAnchor anchor, ITexture texture) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(anchor.getPosition().getX(), anchor.getPosition()
+				.getY(), 0.0f);
+		final float x1 = -anchor.getRadius();
+		final float x2 = anchor.getRadius();
+		final float y1 = -anchor.getRadius();
+		final float y2 = anchor.getRadius();
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
+				| GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.18f, u2 = 0.8f;
+		final float v1 = 0.2f, v2 = 0.8f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, v1);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, v1);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, v2);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, v2);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+	}
+
+	public void drawMobilePikes(MobilePikes pikes, ITexture texture) {
+		Box box = (Box) pikes.getShape();
+		Vector2f[] pts = box
+				.getPoints(pikes.getPosition(), pikes.getRotation());
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(pts[0].x, pts[0].y);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(pts[1].x, pts[1].y);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(pts[2].x, pts[2].y);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(pts[3].x, pts[3].y);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+	}
+
+	public void drawMummy(Mummy mummy, World world, ITexture texture,
+			float scale) {
+		AABox bounds = mummy.getShape().getBounds();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(mummy.getPosition().getX(), mummy.getPosition()
+				.getY(), 0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		GL11.glScalef(scale, scale, 1);
+		float x1 = -bounds.getWidth() / 2.0f;
+		float x2 = bounds.getWidth() / 2.0f;
+		float y1 = -bounds.getHeight() / 2.0f;
+		float y2 = bounds.getHeight() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		float u1, u2;
+		if (mummy.isLookingLeft()) {
+			u1 = 1.0f;
+			u2 = 0.0f;
+		} else {
+			u1 = 0.0f;
+			u2 = 1.0f;
+		}
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	@Override
+	public void drawPickedUpObject(PickedUpObject pickedUpObject, World world,
+			ITexture texture) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(pickedUpObject.getPosition().getX(), pickedUpObject
+				.getPosition().getY(), 0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float x1 = -pickedUpObject.getSize() / 2.0f;
+		final float x2 = pickedUpObject.getSize() / 2.0f;
+		final float y1 = -pickedUpObject.getSize() / 2.0f;
+		final float y2 = pickedUpObject.getSize() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.0f, u2 = 1.0f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	public void drawUsedKey(UsedKey key, ITexture texture, World world) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(),
+				0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		float x1 = -key.getSize() / 2.0f;
+		final float x2 = key.getSize() / 2.0f;
+		final float y1 = -key.getSize() / 2.0f;
+		final float y2 = key.getSize() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 0.0f, u2 = 1.0f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	public void drawEgyptianBoss(EgyptianBoss boss, ITexture texture,
+			boolean isHurtBlinkState) {
+		AABox bounds = boss.getShape().getBounds();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(boss.getPosition().getX(), boss.getPosition().getY(),
+				0.0f);
+		float x1 = -bounds.getWidth() / 2.0f;
+		float x2 = bounds.getWidth() / 2.0f;
+		float y1 = -bounds.getHeight() / 2.0f;
+		float y2 = bounds.getHeight() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		if (isHurtBlinkState) {
+			GL11.glColor3f(1, 0, 0);
+		}
+		final float u1 = 1, u2 = 0;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		if (isHurtBlinkState) {
+			GL11.glColor3f(1, 1, 1);
+		}
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	public void drawEgyptianBossHand(EgyptianBossHand hand, ITexture texture) {
+		AABox bounds = hand.getShape().getBounds();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(hand.getPosition().getX(), hand.getPosition().getY(),
+				0.0f);
+		float x1 = -bounds.getWidth() / 2.0f;
+		float x2 = bounds.getWidth() / 2.0f;
+		float y1 = -bounds.getHeight() / 2.0f;
+		float y2 = bounds.getHeight() / 2.0f;
+
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+											// transperancy
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
+
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+
+		final float u1 = 1, u2 = 0;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+
+	}
+
+	public void drawStoryBoardSequence(StoryboardSequence sequence,
+			ITrueTypeFont font) {
+		if (Display.isVisible() || Display.wasResized() || Display.isDirty()
+				|| sequence.isDirty()) {
+			sequence.setDirty(false);
+
+			GL11.glPushMatrix();
+			GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft,
+					StoryboardSequence.ortho2DRight,
+					StoryboardSequence.ortho2DBottom,
+					StoryboardSequence.ortho2DTop);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache()
+					.getTexture(sequence.getTexture()).getId());
+			final float x1 = StoryboardSequence.ortho2DLeft;
+			final float x2 = StoryboardSequence.ortho2DRight;
+			final float y1 = StoryboardSequence.ortho2DBottom;
+			final float y2 = StoryboardSequence.ortho2DTop;
+			final float u1 = 0.0f, u2 = 1.0f;
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glTexCoord2f(u1, 0.0f);
+			GL11.glVertex2f(x1, y2);
+			GL11.glTexCoord2f(u2, 0.0f);
+			GL11.glVertex2f(x2, y2);
+			GL11.glTexCoord2f(u2, 1.0f);
+			GL11.glVertex2f(x2, y1);
+			GL11.glTexCoord2f(u1, 1.0f);
+			GL11.glVertex2f(x1, y1);
+			GL11.glEnd();
+			drawContinueText(font);
+			GL11.glPopMatrix();
+		}
+	}
+
+	private void drawContinueText(ITrueTypeFont font) {
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+		font.drawString(StoryboardSequence.ortho2DRight,
+				StoryboardSequence.ortho2DBottom - font.getHeight(),
+				"Press enter to continue ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
+		GL11.glPopAttrib();
+	}
+
+	private void drawGameOverText(ITrueTypeFont font) {
+		drawContinueText(font);
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+		font.drawString(StoryboardSequence.ortho2DRight,
+				StoryboardSequence.ortho2DBottom - font.getHeight() * 2,
+				"Press up to retry ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
+		GL11.glPopAttrib();
+	}
+
+	public void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font,
+			QuestScore questScore, long scorePerCentToShow) {
+		if (Display.isVisible() || Display.isDirty() || Display.wasResized()
+				|| sequence.isDirty()) {
+			sequence.setDirty(false);
+			GL11.glPushMatrix();
+			GLU.gluOrtho2D(ScoreSequence.ortho2DLeft,
+					ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom,
+					ScoreSequence.ortho2DTop);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+			int i = 1;
+			font.drawString(
+					(ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
+					i++ * font.getHeight(), "SCORES", 1, -1,
+					ITrueTypeFont.ALIGN_CENTER);
+			font.drawString(0, i++ * font.getHeight(),
+					questScore.getQuestName(), 1, -1, ITrueTypeFont.ALIGN_LEFT);
+			for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
+				String levelScoreStr = levelEntry.getKey()
+						+ ": "
+						+ (scorePerCentToShow
+								* levelEntry.getValue().computeScore() / 100);
+				font.drawString(
+						(ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
+						i++ * font.getHeight(), levelScoreStr, 1, -1,
+						ITrueTypeFont.ALIGN_CENTER);
+			}
+			String questScoreStr = "Quest total: "
+					+ (scorePerCentToShow * questScore.computeScore() / 100);
+			font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
+					ITrueTypeFont.ALIGN_LEFT);
+			font.drawString(ScoreSequence.ortho2DRight,
+					ScoreSequence.ortho2DBottom - font.getHeight() * 2,
+					"Press enter to send score to server ", 1, -1,
+					ITrueTypeFont.ALIGN_RIGHT);
+			font.drawString(ScoreSequence.ortho2DRight,
+					ScoreSequence.ortho2DBottom - font.getHeight(),
+					"Press right to skip ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
+			GL11.glPopMatrix();
+			GL11.glPopAttrib();
+		}
+	}
+
+	public void drawGameOverSequence(GameOverSequence sequence,
+			ITrueTypeFont font) {
+		if (Display.isVisible() || Display.wasResized() || Display.isDirty()
+				|| sequence.isDirty()) {
+			sequence.setDirty(false);
+
+			GL11.glPushMatrix();
+			GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft,
+					StoryboardSequence.ortho2DRight,
+					StoryboardSequence.ortho2DBottom,
+					StoryboardSequence.ortho2DTop);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache()
+					.getTexture(sequence.getTexture()).getId());
+			final float x1 = StoryboardSequence.ortho2DLeft;
+			final float x2 = StoryboardSequence.ortho2DRight;
+			final float y1 = StoryboardSequence.ortho2DBottom;
+			final float y2 = StoryboardSequence.ortho2DTop;
+			final float u1 = 0.0f, u2 = 1.0f;
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glTexCoord2f(u1, 0.0f);
+			GL11.glVertex2f(x1, y2);
+			GL11.glTexCoord2f(u2, 0.0f);
+			GL11.glVertex2f(x2, y2);
+			GL11.glTexCoord2f(u2, 1.0f);
+			GL11.glVertex2f(x2, y1);
+			GL11.glTexCoord2f(u1, 1.0f);
+			GL11.glVertex2f(x1, y1);
+			GL11.glEnd();
+			drawGameOverText(font);
+			GL11.glPopMatrix();
+		}
+	}
+
+	public void drawSnowLayer(SnowLayer layer) {
+		GL11.glPushMatrix();
+
+		float aspectRatio = (float) Display.getWidth()
+				/ (float) Display.getHeight();
+		GLU.gluOrtho2D(SnowLayer.ortho2DLeft * aspectRatio,
+				SnowLayer.ortho2DRight * aspectRatio, SnowLayer.ortho2DBottom,
+				SnowLayer.ortho2DTop);
+		layer.setAspectRatio(aspectRatio);
+
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		GL11.glBegin(GL11.GL_POINTS);
+		for (int i = 0; i < layer.getFlakes().length; ++i) {
+			if (null != layer.getFlakes()[i]) {
+				GL11.glVertex2f(layer.getFlakes()[i].x, layer.getFlakes()[i].y);
+			}
+		}
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+	}
+
+	public void drawLevelIndicators(String indicators,
+			ITrueTypeFont indicatorsFont) {
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
+		GL11.glTranslatef(0, Display.getHeight() - indicatorsFont.getHeight(),
+				0);
+		indicatorsFont.drawString(indicators);
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+	}
+
+	public void drawMenuSequence(MenuSequence sequence) {
+		if (Display.isVisible() || Display.isDirty() || Display.wasResized()
+				|| sequence.isDirty()) {
+			sequence.setDirty(false);
+			GL11.glPushMatrix();
+			GL11.glLoadIdentity();
+			GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight,
+					MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
+
+			if (sequence.getBackgroundImage() != null) {
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache()
+						.getTexture(sequence.getBackgroundImage()).getId());
+				final float x1 = MenuSequence.ortho2DLeft;
+				final float x2 = MenuSequence.ortho2DRight;
+				final float y1 = MenuSequence.ortho2DBottom;
+				final float y2 = MenuSequence.ortho2DTop;
+				final float u1 = 0.0F;
+				final float u2 = 1.0F;
+				GL11.glBegin(GL11.GL_QUADS);
+				GL11.glTexCoord2f(u1, 0.0F);
+				GL11.glVertex2f(x1, y2);
+				GL11.glTexCoord2f(u2, 0.0F);
+				GL11.glVertex2f(x2, y2);
+				GL11.glTexCoord2f(u2, 1.0F);
+				GL11.glVertex2f(x2, y1);
+				GL11.glTexCoord2f(u1, 1.0F);
+				GL11.glVertex2f(x1, y1);
+				GL11.glEnd();
+			} else {
+				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			}
+
+			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+			GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
+												// transperancy
+			GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F); // sets aplha function
+			for (Button b : sequence.getButtons()) {
+				b.draw();
+			}
+			GL11.glPopAttrib();
+			GL11.glPopMatrix();
+		}
+	}
+
+	public void drawButton(Button button) {
+		if (button.currentTexture != null) {
+			ITexture texture = getTextureCache().getTexture(
+					button.currentTexture);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+			final float x1 = button.x;
+			final float x2 = button.x
+					+ (button.w > 0 ? button.w : texture.getWidth());
+			final float y1 = button.y
+					+ (button.h > 0 ? button.h : texture.getHeight());
+			final float y2 = button.y;
+			final float u1 = 0.0f, u2 = 1.0f;
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glTexCoord2f(u1, 0.0f);
+			GL11.glVertex2f(x1, y2);
+			GL11.glTexCoord2f(u2, 0.0f);
+			GL11.glVertex2f(x2, y2);
+			GL11.glTexCoord2f(u2, 1.0f);
+			GL11.glVertex2f(x2, y1);
+			GL11.glTexCoord2f(u1, 1.0f);
+			GL11.glVertex2f(x1, y1);
+			GL11.glEnd();
+		}
+	}
+
+	public void drawQuestMenuButton(Button button, ITrueTypeFont questNameFont,
+			String questName) {
+		drawButton(button);
+		GL11.glPushMatrix();
+		GL11.glTranslatef(button.x,
+				button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
+						+ questNameFont.getHeight(), 0);
+		GL11.glScalef(1, -1, 1);
+		questNameFont.drawString(questName);
+		GL11.glPopMatrix();
+	}
+
+	public void drawWorld(World world) {
+		GL11.glPushMatrix();
+
+		float aspectRatio = (float) Display.getWidth()
+				/ (float) Display.getHeight();
+		GLU.gluOrtho2D(World.ortho2DLeft * aspectRatio, World.ortho2DRight
+				* aspectRatio, World.ortho2DBottom, World.ortho2DTop);
+
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+		GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
+				1.0f);
+		drawWorldBackground(world, aspectRatio);
+
+		ROVector2f heroPos = world.getHero().getPosition();
+		GL11.glTranslatef(-heroPos.getX(), -heroPos.getY(), 0.0f);
+
+		final float cameraSize = World.ortho2DBaseSize * 1.5f;
+		final BodyList visibleBodies = world.getVisibleBodies(heroPos.getX()
+				- cameraSize, heroPos.getY() - cameraSize, heroPos.getX()
+				+ cameraSize, heroPos.getY() + cameraSize);
+		for (int i = 0; i < visibleBodies.size(); i++) {
+			Body body = visibleBodies.get(i);
+			if (body instanceof Drawable) {
+				((Drawable) body).draw();
+			}
+		}
+		world.getTopLevelEntities().draw();
+		GL11.glPopMatrix();
+	}
+
+	private void drawWorldBackground(World world, float aspectRatio) {
+		GL11.glPushMatrix();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, world.getBackgroundTexture()
+				.getId());
+
+		ROVector2f heroPos = world.getHero().getPosition();
+
+		AbsoluteAABox worldStaticBounds = world.getStaticBounds();
+		AbsoluteAABox staticBounds = new AbsoluteAABox();
+		staticBounds.x1 = World.ortho2DLeft * aspectRatio * 2.0f;
+		staticBounds.x2 = World.ortho2DRight * aspectRatio * 2.0f;
+		staticBounds.y1 = World.ortho2DBottom * aspectRatio * 2.0f;
+		staticBounds.y2 = World.ortho2DTop * aspectRatio * 2.0f;
+		float xt = -heroPos.getX()
+				* (staticBounds.getWidth() / worldStaticBounds.getWidth());
+		float yt = -heroPos.getY()
+				* (staticBounds.getHeight() / worldStaticBounds.getHeight());
+
+		xt = Math.max(xt, -World.ortho2DBaseSize / 2.0f);
+		xt = Math.min(xt, World.ortho2DBaseSize / 2.0f);
+		yt = Math.max(yt, -World.ortho2DBaseSize / 2.0f);
+		yt = Math.min(yt, World.ortho2DBaseSize / 2.0f);
+
+		staticBounds.x1 += xt;
+		staticBounds.x2 += xt;
+		staticBounds.y1 += yt;
+		staticBounds.y2 += yt;
+
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glVertex2f(staticBounds.x1, staticBounds.y2);
+		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glVertex2f(staticBounds.x2, staticBounds.y2);
+		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glVertex2f(staticBounds.x2, staticBounds.y1);
+		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glVertex2f(staticBounds.x1, staticBounds.y1);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+	}
+
+	public ITrueTypeFont createStoryBoardSequenceFont() {
+		return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+	}
+
+	public ITrueTypeFont createQuestNameFont() {
+		return new TrueTypeFont();
+	}
+
+	public ITrueTypeFont createAppleFont() {
+		return new TrueTypeFont();
+	}
+
+	public ITrueTypeFont createScoreSequenceFont() {
+		return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+	}
+
+	public Animation loadFromGif(String name) throws FileNotFoundException {
+		GifDecoder d = new GifDecoder();
+		d.read(new FileInputStream(name));
+		Animation animation = new Animation();
+		int n = d.getFrameCount();
+		for (int i = 0; i < n; i++) {
+			BufferedImage frameImage = d.getFrame(i); // frame i
+			int t = d.getDelay(i); // display duration of frame in milliseconds
+			animation.addFrame(
+					textureCache.createTexture(name + '#' + i, frameImage), t);
+		}
+		return animation;
+	}
+
+	public void drawFadeSequence(float r, float g, float b, float a) {
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
+				| GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, 1, 0, 1, -1, 1);
+		GL11.glColor4f(r, g, b, a);
+		GL11.glRectf(0, 0, 1, 1);
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+	}
+
+	@Override
+	public void drawMainMenuSequence(MainMenuSequence mainMenuSequence) {
+		drawMenuSequence(mainMenuSequence);
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		GLU.gluOrtho2D(MainMenuSequence.ortho2DLeft, MainMenuSequence.ortho2DRight,
+				MainMenuSequence.ortho2DBottom, MainMenuSequence.ortho2DTop);
+		fpsFont.drawString(MainMenuSequence.ortho2DRight,
+				MainMenuSequence.ortho2DBottom - fpsFont.getHeight(),
+				"Press F1 for video and input options ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+	}
 }

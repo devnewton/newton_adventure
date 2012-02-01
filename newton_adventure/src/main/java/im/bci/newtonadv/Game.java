@@ -36,6 +36,7 @@ import im.bci.newtonadv.game.FadeSequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
+import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -72,7 +73,7 @@ public strictfp class Game {
     private Sequence currentSequence;
     private List<BonusSequence> bonusSequences;
     private BonusSequence lastBonusSequence;
-	private Sequence optionsSequence;
+	private IOptionsSequence optionsSequence;
 
     public Properties getConfig() {
         return config;
@@ -152,6 +153,7 @@ public strictfp class Game {
         QuestMenuSequence questMenuSequence = new QuestMenuSequence(this);
         mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence, optionsSequence);
         questMenuSequence.setNextSequence(mainMenuSequence);
+        optionsSequence.setNextSequence(mainMenuSequence);
         loadBonusSequences();
         return mainMenuSequence;
     }

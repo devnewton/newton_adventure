@@ -493,7 +493,7 @@
         <theme name="display" ref="label">
             <param name=""><image>combobox.display.*</image></param>
             <param name="border"><border>3</border></param>
-            <param name="minWidth"><int>50</int></param>
+            <param name="minWidth"><int>200</int></param>
             <param name="textAlignment"><enum type="alignment">left</enum></param>
             <param name="font"><font>combobox</font></param>
         </theme>
