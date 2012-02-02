@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 public class PlatformFactory implements IPlatformFactory {
 
 	private GameView view;
+	private GameInput input;
     @Override
     public SoundCache createSoundCache(Properties config) {
         return new SoundCache(config.getProperty("sound.enabled").equals("true"));
@@ -63,7 +64,9 @@ public class PlatformFactory implements IPlatformFactory {
 
     @Override
     public GameInput createGameInput(Properties config) throws Exception {
-        return new GameInput(config);
+    	if(null == input)
+    		input = new GameInput(config);
+        return input;
     }
 
     @Override
@@ -88,6 +91,8 @@ public class PlatformFactory implements IPlatformFactory {
 	public IOptionsSequence createOptionsSequence() {
 		if(null == view)
 			throw new RuntimeException("create IGameView before IOptionsSequence");
-		return new OptionsSequence(view);
+		if(null == input)
+			throw new RuntimeException("create IGameInput before IOptionsSequence");
+		return new OptionsSequence(view,input);
 	}
 }

@@ -1,13 +1,18 @@
 package im.bci.newtonadv.platform.lwjgl.twl;
 
+import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -26,8 +31,16 @@ public class OptionsGUI extends Widget {
 	ToggleButton fullscreen;
 	ComboBox<DisplayMode> mode;
 	ComboBox<GameViewQuality> quality;
+	ComboBox<String> keyJump;
+	ComboBox<String> keyLeft;
+	ComboBox<String> keyRight;
+	ComboBox<String> keyRotateClockwise;
+	ComboBox<String> keyRotateCounterClockwise;
+	ComboBox<String> keyRotate90Clockwise;
+	ComboBox<String> keyRotate90CounterClockwise;
+	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
 
-	OptionsGUI(GameView gameView) throws LWJGLException {
+	OptionsGUI(GameView gameView, GameInput gameInput) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
 		BoxLayout layout = new BoxLayout(BoxLayout.Direction.VERTICAL);
 		layout.setSize(Display.getWidth(), Display.getHeight());
@@ -37,9 +50,11 @@ public class OptionsGUI extends Widget {
 		mode = new ComboBox<DisplayMode>(
 				new SimpleChangableListModel<DisplayMode>(getDisplayModes()));
 		mode.setSelected(0);
-		EnumListModel<GameViewQuality> gameViewQualityModel = new EnumListModel<GameViewQuality>(GameViewQuality.class);
+		EnumListModel<GameViewQuality> gameViewQualityModel = new EnumListModel<GameViewQuality>(
+				GameViewQuality.class);
 		quality = new ComboBox<GameViewQuality>(gameViewQualityModel);
-		quality.setSelected(gameViewQualityModel.findEntry(gameView.getQuality()));
+		quality.setSelected(gameViewQualityModel.findEntry(gameView
+				.getQuality()));
 		BoxLayout displayModeLayout = new BoxLayout();
 		displayModeLayout.add(new Label("Display mode:"));
 		displayModeLayout.add(fullscreen);
@@ -47,13 +62,27 @@ public class OptionsGUI extends Widget {
 		displayModeLayout.add(quality);
 		layout.add(displayModeLayout);
 
-		
-		Button ok = new Button("OK");		
+		BoxLayout keysLayout = new BoxLayout(BoxLayout.Direction.VERTICAL);
+		keyJump = addKeyCombo(keysLayout, "Jump", gameInput.keyJump);
+		keyLeft = addKeyCombo(keysLayout, "Left", gameInput.keyLeft);
+		keyRight = addKeyCombo(keysLayout, "Right", gameInput.keyRight);
+		keyRotateClockwise = addKeyCombo(keysLayout, "Rotate clockwise",
+				gameInput.keyRotateClockwise);
+		keyRotateCounterClockwise = addKeyCombo(keysLayout,
+				"Rotate counter clockwise", gameInput.keyRotateCounterClockwise);
+		keyRotate90Clockwise = addKeyCombo(keysLayout, "Rotate 90 clockwise",
+				gameInput.keyRotate90Clockwise);
+		keyRotate90CounterClockwise = addKeyCombo(keysLayout,
+				"Rotate 90 counter clockwise",
+				gameInput.keyRotate90CounterClockwise);
+		layout.add(keysLayout);
+
+		Button ok = new Button("OK");
 		Button cancel = new Button("Cancel");
 		BoxLayout okCancelLayout = new BoxLayout();
 		okCancelLayout.add(cancel);
 		okCancelLayout.add(ok);
-		
+
 		layout.add(okCancelLayout);
 		add(layout);
 
@@ -71,6 +100,32 @@ public class OptionsGUI extends Widget {
 				cancelPressed = true;
 			}
 		});
+	}
+
+	private ComboBox<String> addKeyCombo(BoxLayout keysLayout, String label,
+			int key) {
+		ComboBox<String> combo = new ComboBox<String>(keyModel);
+		BoxLayout layout = new BoxLayout();
+		layout.add(new Label(label));
+		layout.add(combo);
+		keysLayout.add(layout);
+		combo.setSelected(keyModel.findElement((Keyboard.getKeyName(key))));
+		return combo;
+	}
+
+	private static SimpleChangableListModel<String> buildKeyListModel() {
+		SimpleChangableListModel<String> model = new SimpleChangableListModel<String>();
+		for (Field field : Keyboard.class.getFields()) {
+			String name = field.getName();
+			if (name.startsWith("KEY_"))
+				try {
+					model.addElement(Keyboard.getKeyName(field.getInt(null)));
+				} catch (Exception e) {
+					Logger.getLogger(OptionsGUI.class.getName()).log(
+							Level.SEVERE, "error retrieving key name", e);
+				}
+		}
+		return model;
 	}
 
 	private Collection<DisplayMode> getDisplayModes() throws LWJGLException {

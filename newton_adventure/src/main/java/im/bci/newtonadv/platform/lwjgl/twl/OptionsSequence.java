@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -14,6 +15,7 @@ import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
+import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 
@@ -23,16 +25,18 @@ public class OptionsSequence implements IOptionsSequence {
 	private OptionsGUI optionsGui;
 	private Sequence nextSequence;
 	private final GameView view;
+	private GameInput input;
 
-	public OptionsSequence(GameView view) {
+	public OptionsSequence(GameView view, GameInput input) {
 		this.view = view;
+		this.input = input;
 	}
 
 	public void start() {
 		LWJGLRenderer renderer;
 		try {
 			renderer = new LWJGLRenderer();
-			optionsGui = new OptionsGUI(view);
+			optionsGui = new OptionsGUI(view,input);
 			gui = new GUI(optionsGui, renderer);
 			File themeFile = new File("twl/simple.xml");
 			ThemeManager themeManager = ThemeManager
@@ -53,6 +57,7 @@ public class OptionsSequence implements IOptionsSequence {
 		GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		gui.update();
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	}
 
@@ -76,7 +81,14 @@ public class OptionsSequence implements IOptionsSequence {
 	}
 
 	private void applyOptions() throws LWJGLException {
-			view.setDisplayMode(optionsGui.fullscreen.isActive(), getSelectedQuality(), getSelectedMode());
+		view.setDisplayMode(optionsGui.fullscreen.isActive(), getSelectedQuality(), getSelectedMode());
+		input.keyJump = Keyboard.getKeyIndex(optionsGui.keyJump.getModel().getEntry(optionsGui.keyJump.getSelected()));
+		input.keyLeft = Keyboard.getKeyIndex(optionsGui.keyLeft.getModel().getEntry(optionsGui.keyLeft.getSelected()));
+		input.keyRight = Keyboard.getKeyIndex(optionsGui.keyRight.getModel().getEntry(optionsGui.keyRight.getSelected()));
+		input.keyRotate90Clockwise = Keyboard.getKeyIndex(optionsGui.keyRotate90Clockwise.getModel().getEntry(optionsGui.keyRotate90Clockwise.getSelected()));
+		input.keyRotate90CounterClockwise = Keyboard.getKeyIndex(optionsGui.keyRotate90CounterClockwise.getModel().getEntry(optionsGui.keyRotate90CounterClockwise.getSelected()));
+		input.keyRotateClockwise = Keyboard.getKeyIndex(optionsGui.keyRotateClockwise.getModel().getEntry(optionsGui.keyRotateClockwise.getSelected()));
+		input.keyRotateCounterClockwise = Keyboard.getKeyIndex(optionsGui.keyRotateCounterClockwise.getModel().getEntry(optionsGui.keyRotateCounterClockwise.getSelected()));
 	}
 	
 	DisplayMode getSelectedMode() {

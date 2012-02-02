@@ -43,16 +43,16 @@ import org.lwjgl.input.Keyboard;
 public class GameInput implements IGameInput {
 
     Properties config;
-    private int keyJump;
-    private int keyLeft;
-    private int keyRight;
-    private int keyRotateClockwise;
-    private int keyRotateCounterClockwise;
-    private int keyRotate90Clockwise;
-    private int keyRotate90CounterClockwise;
-    private int keyToggleFullscreen;
-    private int keyPause;
-    private int keyReturnToMenu;
+    public int keyJump;
+    public int keyLeft;
+    public int keyRight;
+    public int keyRotateClockwise;
+    public int keyRotateCounterClockwise;
+    public int keyRotate90Clockwise;
+    public int keyRotate90CounterClockwise;
+    public int keyToggleFullscreen;
+    public int keyPause;
+    public int keyReturnToMenu;
 
     public GameInput(Properties gameConfig) throws Exception {
         config = new Properties();
