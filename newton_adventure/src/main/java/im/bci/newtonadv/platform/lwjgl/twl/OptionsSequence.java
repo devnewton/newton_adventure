@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
@@ -31,7 +32,7 @@ public class OptionsSequence implements IOptionsSequence {
 		LWJGLRenderer renderer;
 		try {
 			renderer = new LWJGLRenderer();
-			optionsGui = new OptionsGUI();
+			optionsGui = new OptionsGUI(view);
 			gui = new GUI(optionsGui, renderer);
 			File themeFile = new File("twl/simple.xml");
 			ThemeManager themeManager = ThemeManager
@@ -75,12 +76,24 @@ public class OptionsSequence implements IOptionsSequence {
 	}
 
 	private void applyOptions() throws LWJGLException {
-		int selectedIndex = optionsGui.mode.getSelected();
-		if(selectedIndex >= 0 && selectedIndex<optionsGui.mode.getModel().getNumEntries()) {
-			DisplayMode mode = optionsGui.mode.getModel().getEntry(selectedIndex);
-			view.setDisplayMode(optionsGui.fullscreen.isActive(), GameViewQuality.NICEST, mode);
+			view.setDisplayMode(optionsGui.fullscreen.isActive(), getSelectedQuality(), getSelectedMode());
+	}
+	
+	DisplayMode getSelectedMode() {
+		int selectedModeIndex = optionsGui.mode.getSelected();
+		if(selectedModeIndex >= 0 && selectedModeIndex<optionsGui.mode.getModel().getNumEntries()) {
+			return optionsGui.mode.getModel().getEntry(selectedModeIndex);
+		} else {
+			return Display.getDisplayMode();
 		}
-		
+	}
+	
+	GameViewQuality getSelectedQuality() {
+		int selected = optionsGui.quality.getSelected();
+		if(selected>=0 && selected<optionsGui.quality.getModel().getNumEntries())
+			return optionsGui.quality.getModel().getEntry(selected);
+		else
+			return view.getQuality();
 	}
 
 	@Override

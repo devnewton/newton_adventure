@@ -108,6 +108,7 @@ public strictfp class GameView implements IGameView {
 
 	private TextureCache textureCache;
 	private ITrueTypeFont fpsFont;
+	private GameViewQuality quality = GameViewQuality.DEFAULT;
 
 	public GameView(Properties config) {
 		initDisplay(config);
@@ -227,7 +228,14 @@ public strictfp class GameView implements IGameView {
 	}
 
 	public void setDisplayMode(boolean startFullscreen,
-			GameViewQuality quality, DisplayMode chosenMode) {
+			GameViewQuality newQuality, DisplayMode chosenMode) {
+
+		if (Display.isFullscreen() == startFullscreen
+				&& this.quality.equals(newQuality)
+				&& Display.getDisplayMode().equals(chosenMode)) {
+			return;
+		}
+
 		try {
 			if (startFullscreen) {
 				Display.setDisplayModeAndFullscreen(chosenMode);
@@ -255,7 +263,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
-		GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, quality.toGL());
+		GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, newQuality.toGL());
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glColor4f(1, 1, 1, 1);
@@ -266,6 +274,7 @@ public strictfp class GameView implements IGameView {
 			textureCache.clearAll();
 		}
 		fpsFont = new TrueTypeFont();
+		this.quality = newQuality;
 	}
 
 	public void draw(Sequence sequence) {
@@ -1408,12 +1417,18 @@ public strictfp class GameView implements IGameView {
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
-		GLU.gluOrtho2D(MainMenuSequence.ortho2DLeft, MainMenuSequence.ortho2DRight,
-				MainMenuSequence.ortho2DBottom, MainMenuSequence.ortho2DTop);
+		GLU.gluOrtho2D(MainMenuSequence.ortho2DLeft,
+				MainMenuSequence.ortho2DRight, MainMenuSequence.ortho2DBottom,
+				MainMenuSequence.ortho2DTop);
 		fpsFont.drawString(MainMenuSequence.ortho2DRight,
 				MainMenuSequence.ortho2DBottom - fpsFont.getHeight(),
-				"Press F1 for video and input options ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
+				"Press F1 for video and input options ", 1, -1,
+				ITrueTypeFont.ALIGN_RIGHT);
 		GL11.glPopMatrix();
 		GL11.glPopAttrib();
+	}
+
+	public GameViewQuality getQuality() {
+		return quality;
 	}
 }

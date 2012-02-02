@@ -1,5 +1,8 @@
 package im.bci.newtonadv.platform.lwjgl.twl;
 
+import im.bci.newtonadv.platform.lwjgl.GameView;
+import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -14,6 +17,7 @@ import de.matthiasmann.twl.ComboBox;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
+import de.matthiasmann.twl.model.EnumListModel;
 import de.matthiasmann.twl.model.SimpleChangableListModel;
 
 public class OptionsGUI extends Widget {
@@ -21,8 +25,9 @@ public class OptionsGUI extends Widget {
 	boolean okPressed, cancelPressed;
 	ToggleButton fullscreen;
 	ComboBox<DisplayMode> mode;
+	ComboBox<GameViewQuality> quality;
 
-	OptionsGUI() throws LWJGLException {
+	OptionsGUI(GameView gameView) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
 		BoxLayout layout = new BoxLayout(BoxLayout.Direction.VERTICAL);
 		layout.setSize(Display.getWidth(), Display.getHeight());
@@ -31,11 +36,15 @@ public class OptionsGUI extends Widget {
 		fullscreen.setActive(Display.isFullscreen());
 		mode = new ComboBox<DisplayMode>(
 				new SimpleChangableListModel<DisplayMode>(getDisplayModes()));
-		mode.setSelected(0);		
+		mode.setSelected(0);
+		EnumListModel<GameViewQuality> gameViewQualityModel = new EnumListModel<GameViewQuality>(GameViewQuality.class);
+		quality = new ComboBox<GameViewQuality>(gameViewQualityModel);
+		quality.setSelected(gameViewQualityModel.findEntry(gameView.getQuality()));
 		BoxLayout displayModeLayout = new BoxLayout();
 		displayModeLayout.add(new Label("Display mode:"));
 		displayModeLayout.add(fullscreen);
 		displayModeLayout.add(mode);
+		displayModeLayout.add(quality);
 		layout.add(displayModeLayout);
 
 		
