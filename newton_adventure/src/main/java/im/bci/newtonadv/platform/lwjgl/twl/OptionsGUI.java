@@ -16,10 +16,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-import de.matthiasmann.twl.BoxLayout;
 import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.ColumnLayout;
+import de.matthiasmann.twl.ColumnLayout.Row;
 import de.matthiasmann.twl.ComboBox;
-import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.EnumListModel;
@@ -42,7 +42,7 @@ public class OptionsGUI extends Widget {
 
 	OptionsGUI(GameView gameView, GameInput gameInput) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
-		BoxLayout layout = new BoxLayout(BoxLayout.Direction.VERTICAL);
+		ColumnLayout layout = new ColumnLayout();
 		layout.setSize(Display.getWidth(), Display.getHeight());
 
 		fullscreen = new ToggleButton("Fullscreen");
@@ -55,35 +55,30 @@ public class OptionsGUI extends Widget {
 		quality = new ComboBox<GameViewQuality>(gameViewQualityModel);
 		quality.setSelected(gameViewQualityModel.findEntry(gameView
 				.getQuality()));
-		BoxLayout displayModeLayout = new BoxLayout();
-		displayModeLayout.add(new Label("Display mode:"));
-		displayModeLayout.add(fullscreen);
-		displayModeLayout.add(mode);
-		displayModeLayout.add(quality);
-		layout.add(displayModeLayout);
+		layout.addRow("label", "widget").addWithLabel("", fullscreen);
+		layout.addRow("label", "widget").addWithLabel("Video mode", mode);
+		layout.addRow("label", "widget").addWithLabel("Quality", quality);
 
-		BoxLayout keysLayout = new BoxLayout(BoxLayout.Direction.VERTICAL);
-		keyJump = addKeyCombo(keysLayout, "Jump", gameInput.keyJump);
-		keyLeft = addKeyCombo(keysLayout, "Left", gameInput.keyLeft);
-		keyRight = addKeyCombo(keysLayout, "Right", gameInput.keyRight);
-		keyRotateClockwise = addKeyCombo(keysLayout, "Rotate clockwise",
+		keyJump = addKeyCombo(layout, "Jump", gameInput.keyJump);
+		keyLeft = addKeyCombo(layout, "Left", gameInput.keyLeft);
+		keyRight = addKeyCombo(layout, "Right", gameInput.keyRight);
+		keyRotateClockwise = addKeyCombo(layout, "Rotate clockwise",
 				gameInput.keyRotateClockwise);
-		keyRotateCounterClockwise = addKeyCombo(keysLayout,
+		keyRotateCounterClockwise = addKeyCombo(layout,
 				"Rotate counter clockwise", gameInput.keyRotateCounterClockwise);
-		keyRotate90Clockwise = addKeyCombo(keysLayout, "Rotate 90 clockwise",
+		keyRotate90Clockwise = addKeyCombo(layout, "Rotate 90 clockwise",
 				gameInput.keyRotate90Clockwise);
-		keyRotate90CounterClockwise = addKeyCombo(keysLayout,
+		keyRotate90CounterClockwise = addKeyCombo(layout,
 				"Rotate 90 counter clockwise",
 				gameInput.keyRotate90CounterClockwise);
-		layout.add(keysLayout);
 
 		Button ok = new Button("OK");
-		Button cancel = new Button("Cancel");
-		BoxLayout okCancelLayout = new BoxLayout();
-		okCancelLayout.add(cancel);
-		okCancelLayout.add(ok);
-
-		layout.add(okCancelLayout);
+		Button cancel = new Button("Cancel");	
+		Row okCancelRow = layout.addRow("Parameter", "Value");
+		okCancelRow.add(ok);
+		okCancelRow.add(cancel);
+		
+		
 		add(layout);
 
 		ok.addCallback(new Runnable() {
@@ -102,13 +97,11 @@ public class OptionsGUI extends Widget {
 		});
 	}
 
-	private ComboBox<String> addKeyCombo(BoxLayout keysLayout, String label,
+	private ComboBox<String> addKeyCombo(ColumnLayout layout, String label,
 			int key) {
 		ComboBox<String> combo = new ComboBox<String>(keyModel);
-		BoxLayout layout = new BoxLayout();
-		layout.add(new Label(label));
-		layout.add(combo);
-		keysLayout.add(layout);
+		Row rowKeys = layout.addRow("label","key");
+		rowKeys.addWithLabel(label, combo);
 		combo.setSelected(keyModel.findElement((Keyboard.getKeyName(key))));
 		return combo;
 	}
