@@ -126,6 +126,7 @@ public strictfp class Game {
         } catch (TransitionException ex) {
             if (mainMenuSequence.isResumeSequence(ex.getNextSequence())) {
                 mainMenuSequence.stop();
+                mainMenuSequence.setResumeSequence(null);
                 currentSequence = ex.getNextSequence();
             } else {
                 currentSequence.stop();

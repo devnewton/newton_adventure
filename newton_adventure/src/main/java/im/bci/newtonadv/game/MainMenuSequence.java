@@ -148,13 +148,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
             setCurrentButton(resumeButton);
         }
     }
-
-    @Override
-    public void stop() {
-        super.stop();
-        resumeSequence = null;
-    }
-
+    
     public void setResumeSequence(Sequence s) {
         this.resumeSequence = s;
     }
