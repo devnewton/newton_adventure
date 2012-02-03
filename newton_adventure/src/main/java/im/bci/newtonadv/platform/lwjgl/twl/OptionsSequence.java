@@ -38,7 +38,7 @@ public class OptionsSequence implements IOptionsSequence {
 			renderer = new LWJGLRenderer();
 			optionsGui = new OptionsGUI(view,input);
 			gui = new GUI(optionsGui, renderer);
-			File themeFile = new File("twl/simple.xml");
+			File themeFile = new File("twl/theme.xml");
 			ThemeManager themeManager = ThemeManager
 					.createThemeManager(themeFile.toURI().toURL(), renderer);
 			gui.applyTheme(themeManager);
@@ -54,11 +54,8 @@ public class OptionsSequence implements IOptionsSequence {
 
 	@Override
 	public void draw() {
-		GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		gui.update();
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
 	}
 
 	@Override

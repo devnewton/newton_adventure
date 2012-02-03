@@ -350,6 +350,12 @@
         <fontParam if="disabled" color="gray"/>
         <fontParam if="textSelection" color="white"/>
     </fontDef>
+    
+    <fontDef name="label_font" filename="font.fnt" color="#FFFFFF">
+        <fontParam if="error" color="red"/>
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="textSelection" color="white"/>
+    </fontDef>
     <fontDef name="combobox" filename="font.fnt" color="black">
         <fontParam if="comboboxKeyboardFocus" color="white"/>
     </fontDef>
@@ -405,6 +411,7 @@
     </theme>
 
     <theme name="label" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>label_font</font></param>
     </theme>
 
     <theme name="editfield" ref="label" allowWildcard="true">
