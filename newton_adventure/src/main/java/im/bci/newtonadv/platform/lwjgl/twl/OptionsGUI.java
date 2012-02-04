@@ -39,10 +39,11 @@ public class OptionsGUI extends Widget {
 	ComboBox<String> keyRotate90Clockwise;
 	ComboBox<String> keyRotate90CounterClockwise;
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
+        private final ColumnLayout layout;
 
 	OptionsGUI(GameView gameView, GameInput gameInput) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
-		ColumnLayout layout = new ColumnLayout();
+		this.layout = new ColumnLayout();
 		layout.setSize(Display.getWidth(), Display.getHeight());
 
 		fullscreen = new ToggleButton("Fullscreen");
@@ -97,6 +98,11 @@ public class OptionsGUI extends Widget {
 		});
 	}
 
+    @Override
+    protected void layout() {
+        layout.setPosition((getWidth() - layout.getPreferredWidth()) / 2, (getHeight() - layout.getPreferredHeight()) / 2);
+    }
+        
 	private ComboBox<String> addKeyCombo(ColumnLayout layout, String label,
 			int key) {
 		ComboBox<String> combo = new ComboBox<String>(keyModel);
