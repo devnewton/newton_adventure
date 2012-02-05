@@ -36,6 +36,7 @@ import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -48,8 +49,10 @@ import java.util.logging.Logger;
  */
 public class PlatformFactory implements IPlatformFactory {
 
-	private GameView view;
-	private GameInput input;
+    private GameView view;
+    private GameInput input;
+    private Properties config;
+
     @Override
     public SoundCache createSoundCache(Properties config) {
         return new SoundCache(config.getProperty("sound.enabled").equals("true"));
@@ -57,24 +60,27 @@ public class PlatformFactory implements IPlatformFactory {
 
     @Override
     public GameView createGameView(Properties config) {
-		if (view == null)
-			view = new GameView(config);
-    	return view;
+        if (view == null) {
+            view = new GameView(config);
+        }
+        return view;
     }
 
     @Override
     public GameInput createGameInput(Properties config) throws Exception {
-    	if(null == input)
-    		input = new GameInput(config);
+        if (null == input) {
+            input = new GameInput(config);
+        }
         return input;
     }
 
     @Override
     public void loadConfig(Properties config) {
         try {
-            FileInputStream f = new FileInputStream("data/config.properties");
+            FileInputStream f = new FileInputStream(getUserOrDefaultConfigFilePath());
             try {
                 config.load(f);
+                this.config = config;
             } finally {
                 f.close();
             }
@@ -87,12 +93,42 @@ public class PlatformFactory implements IPlatformFactory {
         return new GameData(config);
     }
 
-	@Override
-	public IOptionsSequence createOptionsSequence() {
-		if(null == view)
-			throw new RuntimeException("create IGameView before IOptionsSequence");
-		if(null == input)
-			throw new RuntimeException("create IGameInput before IOptionsSequence");
-		return new OptionsSequence(view,input);
-	}
+    @Override
+    public IOptionsSequence createOptionsSequence() {
+        if (null == view) {
+            throw new RuntimeException("create IGameView before IOptionsSequence");
+        }
+        if (null == input) {
+            throw new RuntimeException("create IGameInput before IOptionsSequence");
+        }
+        if (null == config) {
+            throw new RuntimeException("load config before creating IOptionsSequence");
+        }
+        return new OptionsSequence(view, input, config);
+    }
+
+    public static String getDefaultConfigFilePath() {
+        return (new File("data/config.properties")).getAbsolutePath();
+    }
+
+    public static String getUserConfigDirPath() {
+        String configDirPath = System.getenv("XDG_CONFIG_HOME");
+        if (null == configDirPath) {
+            configDirPath = System.getProperty("user.home") + File.separator + ".config";
+        }
+        return configDirPath + File.separator + "newton_adventure";
+    }
+
+    public static String getUserConfigFilePath() {
+        return getUserConfigDirPath() + File.separator + "config.properties";
+    }
+
+    public static String getUserOrDefaultConfigFilePath() {
+        File f = new File(getUserConfigFilePath());
+        if (f.exists()) {
+            return f.getAbsolutePath();
+        } else {
+            return getDefaultConfigFilePath();
+        }
+    }
 }

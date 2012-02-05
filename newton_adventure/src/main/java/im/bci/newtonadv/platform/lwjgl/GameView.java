@@ -212,7 +212,7 @@ public strictfp class GameView implements IGameView {
 				+ Display.getDesktopDisplayMode().getBitsPerPixel()));
 		boolean startFullscreen = Boolean.parseBoolean(config.getProperty(
 				"view.fullscreen", "false"));
-		GameViewQuality quality = GameViewQuality.valueOf(config
+		GameViewQuality newQuality = GameViewQuality.valueOf(config
 				.getProperty("view.quality"));
 
 		DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
@@ -220,11 +220,11 @@ public strictfp class GameView implements IGameView {
 		if (chosenMode == null) {
 			Sys.alert(
 					"Error",
-					"Unable to find appropriate display mode. Try to edit data/config.properties.\n"
+					"Unable to find appropriate display mode. Try to edit" + PlatformFactory.getUserOrDefaultConfigFilePath() + ".\n"
 							+ getDisplayModeInfos());
 			System.exit(0);
 		}
-		setDisplayMode(startFullscreen, quality, chosenMode);
+		setDisplayMode(startFullscreen, newQuality, chosenMode);
 	}
 
 	public void setDisplayMode(boolean startFullscreen,
@@ -251,7 +251,7 @@ public strictfp class GameView implements IGameView {
 			Sys.alert(
 					"Error",
 					e
-							+ "\nUnable to create display. Try to edit data/config.properties.\n"
+							+ "\nUnable to create display. Try to edit " + PlatformFactory.getUserOrDefaultConfigFilePath() + ".\n"
 							+ getDisplayModeInfos());
 			System.exit(0);
 		}
