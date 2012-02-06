@@ -14,6 +14,7 @@ import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
+import im.bci.newtonadv.score.ScoreServer;
 
 public class AndroidPlatformFactory implements IPlatformFactory {
 
@@ -62,6 +63,11 @@ public class AndroidPlatformFactory implements IPlatformFactory {
 	@Override
 	public IOptionsSequence createOptionsSequence() {
 		return null;
+	}
+
+	@Override
+	public ScoreServer createScoreServer(Properties config) {
+		return new ScoreServer(config);
 	}
 
 }

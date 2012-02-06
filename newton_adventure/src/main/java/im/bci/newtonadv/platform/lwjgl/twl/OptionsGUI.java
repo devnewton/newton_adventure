@@ -3,6 +3,7 @@ package im.bci.newtonadv.platform.lwjgl.twl;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
+import im.bci.newtonadv.score.ScoreServer;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ColumnLayout;
 import de.matthiasmann.twl.ColumnLayout.Row;
 import de.matthiasmann.twl.ComboBox;
+import de.matthiasmann.twl.EditField;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.EnumListModel;
@@ -38,10 +40,12 @@ public class OptionsGUI extends Widget {
 	ComboBox<String> keyRotateCounterClockwise;
 	ComboBox<String> keyRotate90Clockwise;
 	ComboBox<String> keyRotate90CounterClockwise;
+	EditField scoreServerUrl, scorePlayer, scoreSecret;
+	
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
         private final ColumnLayout layout;
 
-	OptionsGUI(GameView gameView, GameInput gameInput) throws LWJGLException {
+	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
 		this.layout = new ColumnLayout();
 		layout.setSize(Display.getWidth(), Display.getHeight());
@@ -72,13 +76,24 @@ public class OptionsGUI extends Widget {
 		keyRotate90CounterClockwise = addKeyCombo(layout,
 				"Rotate 90 counter clockwise",
 				gameInput.keyRotate90CounterClockwise);
+		
+		scoreServerUrl = new EditField();
+		scoreServerUrl.setText(scoreServer.getServerUrl());
+		layout.addRow("label", "widget").addWithLabel("Score server", scoreServerUrl);
+		
+		scorePlayer = new EditField();
+		scorePlayer.setText(scoreServer.getPlayer());
+		layout.addRow("label", "widget").addWithLabel("Player name", scorePlayer);
+		
+		scoreSecret = new EditField();
+		scoreSecret.setText(scoreServer.getSecret());
+		layout.addRow("label", "widget").addWithLabel("Player password", scoreSecret);
 
 		Button ok = new Button("OK");
 		Button cancel = new Button("Cancel");	
 		Row okCancelRow = layout.addRow("Parameter", "Value");
 		okCancelRow.add(ok);
 		okCancelRow.add(cancel);
-		
 		
 		add(layout);
 

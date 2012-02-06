@@ -35,6 +35,7 @@ import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
+import im.bci.newtonadv.score.ScoreServer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,91 +45,114 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public class PlatformFactory implements IPlatformFactory {
 
-    private GameView view;
-    private GameInput input;
-    private Properties config;
+	private GameView view;
+	private GameInput input;
+	private Properties config;
+	private ScoreServer scoreServer;
+	private GameData data;
 
-    @Override
-    public SoundCache createSoundCache(Properties config) {
-        return new SoundCache(config.getProperty("sound.enabled").equals("true"));
-    }
+	@Override
+	public SoundCache createSoundCache(Properties config) {
+		return new SoundCache(config.getProperty("sound.enabled")
+				.equals("true"));
+	}
 
-    @Override
-    public GameView createGameView(Properties config) {
-        if (view == null) {
-            view = new GameView(config);
-        }
-        return view;
-    }
+	@Override
+	public GameView createGameView(Properties config) {
+		if (null == data)
+			throw new RuntimeException("create IGameData before IGameView");
+		if (view == null) {
+			view = new GameView(data, config);
+		}
+		return view;
+	}
 
-    @Override
-    public GameInput createGameInput(Properties config) throws Exception {
-        if (null == input) {
-            input = new GameInput(config);
-        }
-        return input;
-    }
+	@Override
+	public GameInput createGameInput(Properties config) throws Exception {
+		if (null == input) {
+			input = new GameInput(config);
+		}
+		return input;
+	}
 
-    @Override
-    public void loadConfig(Properties config) {
-        try {
-            FileInputStream f = new FileInputStream(getUserOrDefaultConfigFilePath());
-            try {
-                config.load(f);
-                this.config = config;
-            } finally {
-                f.close();
-            }
-        } catch (IOException e) {
-            Logger.getLogger(PlatformFactory.class.getName()).log(Level.SEVERE, null, e);
-        }
-    }
+	@Override
+	public void loadConfig(Properties config) {
+		try {
+			FileInputStream f = new FileInputStream(
+					getUserOrDefaultConfigFilePath());
+			try {
+				config.load(f);
+				this.config = config;
+			} finally {
+				f.close();
+			}
+		} catch (IOException e) {
+			Logger.getLogger(PlatformFactory.class.getName()).log(Level.SEVERE,
+					null, e);
+		}
+	}
 
-    public IGameData createGameData(Properties config) {
-        return new GameData(config);
-    }
+	public IGameData createGameData(Properties config) {
+		if (data == null)
+			data = new GameData(config);
+		return data;
+	}
 
-    @Override
-    public IOptionsSequence createOptionsSequence() {
-        if (null == view) {
-            throw new RuntimeException("create IGameView before IOptionsSequence");
-        }
-        if (null == input) {
-            throw new RuntimeException("create IGameInput before IOptionsSequence");
-        }
-        if (null == config) {
-            throw new RuntimeException("load config before creating IOptionsSequence");
-        }
-        return new OptionsSequence(view, input, config);
-    }
+	@Override
+	public IOptionsSequence createOptionsSequence() {
+		if (null == view) {
+			throw new RuntimeException(
+					"create IGameView before IOptionsSequence");
+		}
+		if (null == input) {
+			throw new RuntimeException(
+					"create IGameInput before IOptionsSequence");
+		}
+		if (null == scoreServer) {
+			throw new RuntimeException(
+					"create ScoreServer before creating IOptionsSequence");
+		}
+		if (null == config) {
+			throw new RuntimeException(
+					"load config before creating IOptionsSequence");
+		}
+		return new OptionsSequence(view, input, scoreServer, config);
+	}
 
-    public static String getDefaultConfigFilePath() {
-        return (new File("data/config.properties")).getAbsolutePath();
-    }
+	public static String getDefaultConfigFilePath() {
+		return (new File("data/config.properties")).getAbsolutePath();
+	}
 
-    public static String getUserConfigDirPath() {
-        String configDirPath = System.getenv("XDG_CONFIG_HOME");
-        if (null == configDirPath) {
-            configDirPath = System.getProperty("user.home") + File.separator + ".config";
-        }
-        return configDirPath + File.separator + "newton_adventure";
-    }
+	public static String getUserConfigDirPath() {
+		String configDirPath = System.getenv("XDG_CONFIG_HOME");
+		if (null == configDirPath) {
+			configDirPath = System.getProperty("user.home") + File.separator
+					+ ".config";
+		}
+		return configDirPath + File.separator + "newton_adventure";
+	}
 
-    public static String getUserConfigFilePath() {
-        return getUserConfigDirPath() + File.separator + "config.properties";
-    }
+	public static String getUserConfigFilePath() {
+		return getUserConfigDirPath() + File.separator + "config.properties";
+	}
 
-    public static String getUserOrDefaultConfigFilePath() {
-        File f = new File(getUserConfigFilePath());
-        if (f.exists()) {
-            return f.getAbsolutePath();
-        } else {
-            return getDefaultConfigFilePath();
-        }
-    }
+	public static String getUserOrDefaultConfigFilePath() {
+		File f = new File(getUserConfigFilePath());
+		if (f.exists()) {
+			return f.getAbsolutePath();
+		} else {
+			return getDefaultConfigFilePath();
+		}
+	}
+
+	@Override
+	public ScoreServer createScoreServer(Properties config) {
+		scoreServer = new ScoreServer(config);
+		return scoreServer;
+	}
 }

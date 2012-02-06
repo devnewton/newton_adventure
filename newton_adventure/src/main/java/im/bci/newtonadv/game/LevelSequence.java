@@ -35,6 +35,7 @@ import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.World;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,7 +68,7 @@ strictfp public class LevelSequence implements Sequence {
         try {
             cheatCodeGotoNextLevel = false;
             cheatCodeGotoNextBonusLevel = false;
-            indicatorsFont = game.getView().createAppleFont();
+            indicatorsFont = game.getView().createAppleFont(questName,levelName);
             world = new World(game, questName, levelName);
             frameTimeInfos = game.getFrameTimeInfos();
             world.loadLevel();

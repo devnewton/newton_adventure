@@ -154,7 +154,7 @@ public interface IGameView {
 
     public ITrueTypeFont createQuestNameFont();
 
-    public ITrueTypeFont createAppleFont();
+    public ITrueTypeFont createAppleFont(String questName, String levelName);
 
     public ITrueTypeFont createScoreSequenceFont();
 

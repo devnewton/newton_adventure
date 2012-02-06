@@ -13,6 +13,7 @@ import java.awt.image.DataBufferInt;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.GraphicsEnvironment;
@@ -56,6 +57,7 @@ public class TrueTypeFont implements ITrueTypeFont {
     /** The font metrics for our Java AWT font */
     private FontMetrics fontMetrics;
     private int correctL = 9, correctR = 8;
+    private final Map<Character, String > specialCharacters;
 
     public void drawString(String msg) {
         drawString(0, 0, msg, 1, 1);
@@ -63,9 +65,9 @@ public class TrueTypeFont implements ITrueTypeFont {
 
     private BufferedImage getCharacterImage(int charwidth, int charheight, char ch) {
 
-        if (ch == '$') {
+        if (specialCharacters.containsKey(ch)) {
             try {
-                return ImageIO.read(new File("data/default_level_data/apple.png"));
+                return ImageIO.read(new File(specialCharacters.get(ch)));
             } catch (Exception e) {
             }
         }
@@ -96,10 +98,11 @@ public class TrueTypeFont implements ITrueTypeFont {
         public int storedY;
     }
 
-    public TrueTypeFont(Font font, boolean antiAlias, char[] additionalChars) {
+    public TrueTypeFont(Font font, boolean antiAlias, char[] additionalChars, Map<Character, String> specialCharacters) {
         this.font = font;
         this.fontSize = font.getSize() + 3;
         this.antiAlias = antiAlias;
+        this.specialCharacters = specialCharacters;
 
         createSet(additionalChars);
 
@@ -109,12 +112,20 @@ public class TrueTypeFont implements ITrueTypeFont {
         }
     }
 
+    public TrueTypeFont(Font font, boolean antiAlias, Map<Character, String> specialCharacters) {
+        this(font, antiAlias, null, specialCharacters);
+    }
+    
     public TrueTypeFont(Font font, boolean antiAlias) {
-        this(font, antiAlias, null);
+        this(font, antiAlias, null, Collections.<Character, String> emptyMap());
     }
 
+    public TrueTypeFont(Map<Character, String> specialCharacters) {
+        this(new Font("monospaced", Font.PLAIN, 24), false, specialCharacters);
+    }
+    
     public TrueTypeFont() {
-        this(new Font("monospaced", Font.PLAIN, 24), false);
+        this(new Font("monospaced", Font.PLAIN, 24), false, Collections.<Character, String> emptyMap());
     }
 
     public void setCorrection(boolean on) {

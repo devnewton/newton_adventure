@@ -71,6 +71,8 @@ import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
 import java.awt.Point;
 import java.util.Comparator;
+import java.util.HashMap;
+
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.score.LevelScore;
@@ -109,8 +111,10 @@ public strictfp class GameView implements IGameView {
 	private TextureCache textureCache;
 	private ITrueTypeFont fpsFont;
 	private GameViewQuality quality = GameViewQuality.DEFAULT;
+	private final GameData data;
 
-	public GameView(Properties config) {
+	public GameView(GameData data, Properties config) {
+		this.data = data;
 		initDisplay(config);
 	}
 
@@ -1372,8 +1376,11 @@ public strictfp class GameView implements IGameView {
 		return new TrueTypeFont();
 	}
 
-	public ITrueTypeFont createAppleFont() {
-		return new TrueTypeFont();
+	@Override
+	public ITrueTypeFont createAppleFont(String questName, String levelName) {
+        HashMap<Character,String> fontSpecialCharacters = new HashMap<Character,String>();
+        fontSpecialCharacters.put('$', data.getLevelFile(questName, levelName, "apple.png"));
+		return new TrueTypeFont(fontSpecialCharacters);
 	}
 
 	public ITrueTypeFont createScoreSequenceFont() {

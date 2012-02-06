@@ -48,6 +48,8 @@ import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.score.GameScore;
+import im.bci.newtonadv.score.ScoreServer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,9 +102,10 @@ public strictfp class Game {
         platform.loadConfig(config);
 
         this.soundCache = platform.createSoundCache(config);
+        this.data = platform.createGameData(config);
         this.view = platform.createGameView(config);
         this.input = platform.createGameInput(config);
-        this.data = platform.createGameData(config);
+        this.scoreServer = platform.createScoreServer(config);
         this.optionsSequence = platform.createOptionsSequence();
     }
 
@@ -167,6 +170,7 @@ public strictfp class Game {
     private boolean bToggleFullscreen = false;
     private boolean bTogglePause = false;
     private boolean bShowMainMenu = false;
+	private ScoreServer scoreServer;
 
     private void processInputs(Sequence currentSequence) throws TransitionException {
         if (input.isKeyReturnToMenuDown()) {
@@ -236,5 +240,9 @@ public strictfp class Game {
 
 	public Sequence getMainMenuSequence() {
 		return mainMenuSequence;
+	}
+
+	public ScoreServer getScoreServer() {
+		return scoreServer;
 	}
 }

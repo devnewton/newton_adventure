@@ -60,7 +60,7 @@ public class ScoreSequence implements Sequence {
     public ScoreSequence(Game game, String questName, Sequence nextSequence) {
         this.questScore = game.getScore().getQuestScore(questName);
         this.nextSequence = nextSequence;
-        this.scoreServer = new ScoreServer(game.getConfig());
+        this.scoreServer = game.getScoreServer();
         this.game = game;
     }
 

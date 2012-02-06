@@ -32,6 +32,8 @@
 
 package im.bci.newtonadv.platform.interfaces;
 
+import im.bci.newtonadv.score.ScoreServer;
+
 import java.util.Properties;
 
 /**
@@ -51,5 +53,7 @@ public interface IPlatformFactory {
 	IGameData createGameData(Properties config);
 
 	IOptionsSequence createOptionsSequence();
+
+	ScoreServer createScoreServer(Properties config);
 
 }

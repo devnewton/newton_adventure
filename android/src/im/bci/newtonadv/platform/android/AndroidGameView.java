@@ -1136,7 +1136,7 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public ITrueTypeFont createAppleFont() {
+	public ITrueTypeFont createAppleFont(String questName, String levelName) {
 		return new AndroidTrueTypeFont();
 	}
 

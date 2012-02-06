@@ -96,7 +96,7 @@ class GameData implements IGameData {
         if ((new File(path)).exists()) {
             return path;
         } else {
-            return "data/default_level_data/" + filename;
+            return dataDir + "default_level_data/" + filename;
         }
     }
 }

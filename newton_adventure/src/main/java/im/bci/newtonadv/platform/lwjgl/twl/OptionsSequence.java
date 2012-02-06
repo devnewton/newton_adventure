@@ -21,6 +21,8 @@ import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 import im.bci.newtonadv.platform.lwjgl.PlatformFactory;
+import im.bci.newtonadv.score.ScoreServer;
+
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.util.Properties;
@@ -31,12 +33,14 @@ public class OptionsSequence implements IOptionsSequence {
     private OptionsGUI optionsGui;
     private Sequence nextSequence;
     private final GameView view;
-    private GameInput input;
+    private final GameInput input;
     private final Properties config;
+	private final ScoreServer scoreServer;
 
-    public OptionsSequence(GameView view, GameInput input, Properties config) {
+    public OptionsSequence(GameView view, GameInput input, ScoreServer scoreServer, Properties config) {
         this.view = view;
         this.input = input;
+        this.scoreServer = scoreServer;
         this.config = config;
     }
 
@@ -44,7 +48,7 @@ public class OptionsSequence implements IOptionsSequence {
         LWJGLRenderer renderer;
         try {
             renderer = new LWJGLRenderer();
-            optionsGui = new OptionsGUI(view, input);
+            optionsGui = new OptionsGUI(view, input, scoreServer);
             gui = new GUI(optionsGui, renderer);
             File themeFile = new File("twl/theme.xml");
             ThemeManager themeManager = ThemeManager.createThemeManager(themeFile.toURI().toURL(), renderer);
@@ -61,8 +65,12 @@ public class OptionsSequence implements IOptionsSequence {
 
     @Override
     public void draw() {
+    	GL11.glPushMatrix();
+    	GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         gui.update();
+        GL11.glPopAttrib();
+        GL11.glPopMatrix();
     }
 
     @Override
@@ -99,6 +107,9 @@ public class OptionsSequence implements IOptionsSequence {
         input.keyRotate90CounterClockwise = Keyboard.getKeyIndex(optionsGui.keyRotate90CounterClockwise.getModel().getEntry(optionsGui.keyRotate90CounterClockwise.getSelected()));
         input.keyRotateClockwise = Keyboard.getKeyIndex(optionsGui.keyRotateClockwise.getModel().getEntry(optionsGui.keyRotateClockwise.getSelected()));
         input.keyRotateCounterClockwise = Keyboard.getKeyIndex(optionsGui.keyRotateCounterClockwise.getModel().getEntry(optionsGui.keyRotateCounterClockwise.getSelected()));
+        scoreServer.setPlayer(optionsGui.scorePlayer.getText());
+        scoreServer.setSecret(optionsGui.scoreSecret.getText());
+        scoreServer.setServerUrl(optionsGui.scoreServerUrl.getText());
     }
 
     DisplayMode getSelectedMode() {
@@ -156,6 +167,10 @@ public class OptionsSequence implements IOptionsSequence {
         config.setProperty("key.rotate_counter_clockwise", getKeyFieldName(input.keyRotateCounterClockwise));
         config.setProperty("key.rotate_90_clockwise", getKeyFieldName(input.keyRotate90Clockwise));
         config.setProperty("key.rotate_90_counter_clockwise", getKeyFieldName(input.keyRotate90CounterClockwise));
+        
+		config.setProperty("scoreserver.url", scoreServer.getServerUrl());
+		config.setProperty("scoreserver.player", scoreServer.getPlayer());
+		config.setProperty("scoreserver.secret", scoreServer.getSecret());
     }
 
     private String getKeyFieldName(int key) {
