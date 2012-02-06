@@ -125,7 +125,7 @@ public class PlatformFactory implements IPlatformFactory {
 	}
 
 	public static String getDefaultConfigFilePath() {
-		return (new File("data/config.properties")).getAbsolutePath();
+		return (new File(getDataDir() + "/config.properties")).getAbsolutePath();
 	}
 
 	public static String getUserConfigDirPath() {
@@ -154,5 +154,10 @@ public class PlatformFactory implements IPlatformFactory {
 	public ScoreServer createScoreServer(Properties config) {
 		scoreServer = new ScoreServer(config);
 		return scoreServer;
+	}
+
+	public static String getDataDir() {
+		File dataDir = new File(System.getProperty("newton_adventure.data.dir", "data"));
+		return dataDir.getAbsolutePath();
 	}
 }

@@ -24,7 +24,7 @@ class GameData implements IGameData {
     private final String dataDir;
 
     public GameData(Properties config) {
-        dataDir = config.getProperty("data.dir", "data/");
+        dataDir = PlatformFactory.getDataDir() + "/";
     }
 
     public List<String> listQuests() {
