@@ -51,20 +51,25 @@ public class QuestSequence implements Sequence {
         loadLevels(questDirectory);
     }
 
-    public void start() {
+    @Override
+	public void start() {
     }
 
-    public void draw() {
+    @Override
+	public void draw() {
     }
 
-    public void stop() {
+    @Override
+	public void stop() {
     }
 
-    public void update() throws TransitionException {
+    @Override
+	public void update() throws TransitionException {
         throw new TransitionException(levels.isEmpty() ? nextSequence : levels.get(0));
     }
 
-    public void processInputs() throws TransitionException {
+    @Override
+	public void processInputs() throws TransitionException {
     }
 
     private void loadLevels(String questName) {

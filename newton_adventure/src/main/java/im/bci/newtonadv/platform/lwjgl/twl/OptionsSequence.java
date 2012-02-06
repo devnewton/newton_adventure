@@ -44,7 +44,8 @@ public class OptionsSequence implements IOptionsSequence {
         this.config = config;
     }
 
-    public void start() {
+    @Override
+	public void start() {
         LWJGLRenderer renderer;
         try {
             renderer = new LWJGLRenderer();
@@ -59,7 +60,8 @@ public class OptionsSequence implements IOptionsSequence {
         }
     }
 
-    public void stop() {
+    @Override
+	public void stop() {
         gui.destroy();
     }
 

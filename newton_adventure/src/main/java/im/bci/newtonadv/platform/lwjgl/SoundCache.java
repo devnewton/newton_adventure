@@ -64,12 +64,14 @@ public class SoundCache implements ISoundCache {
             this.clip = clip;
         }
 
-        public void play() {
+        @Override
+		public void play() {
             clip.setFramePosition(0);
             clip.loop(0);
         }
 
-        public void stop() {
+        @Override
+		public void stop() {
             clip.stop();
         }
     }
@@ -78,7 +80,8 @@ public class SoundCache implements ISoundCache {
         this.enabled = enabled;
     }
 
-    public void stopMusic() {
+    @Override
+	public void stopMusic() {
         currentMusicName = null;
         if (null != currentMusic) {
             currentMusic.stop();
@@ -86,7 +89,8 @@ public class SoundCache implements ISoundCache {
         }
     }
 
-    public void playMusicIfEnabled(String name) {
+    @Override
+	public void playMusicIfEnabled(String name) {
         if (name.equals(currentMusicName)) {
             return;
         }
@@ -115,7 +119,8 @@ public class SoundCache implements ISoundCache {
         return clip;
     }
 
-    public Playable getSoundIfEnabled(String name) {
+    @Override
+	public Playable getSoundIfEnabled(String name) {
         if (!enabled) {
             return null;
         }
@@ -135,7 +140,8 @@ public class SoundCache implements ISoundCache {
         return new PlayableClipWrapper(clip);
     }
 
-    public void clearAll() {
+    @Override
+	public void clearAll() {
         for (ClipWeakReference ref : clips.values()) {
             if (ref.get() != null) {
                 ref.get().close();
@@ -145,7 +151,8 @@ public class SoundCache implements ISoundCache {
         stopMusic();
     }
 
-    public void clearUseless() {
+    @Override
+	public void clearUseless() {
         ClipWeakReference ref;
         while ((ref = (ClipWeakReference) clipReferenceQueue.poll()) != null) {
             if (ref.get() != null) {

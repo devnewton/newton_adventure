@@ -27,12 +27,14 @@ class GameData implements IGameData {
         dataDir = PlatformFactory.getDataDir() + "/";
     }
 
-    public List<String> listQuests() {
+    @Override
+	public List<String> listQuests() {
         File dir = new File(dataDir + "quests");
         File[] files = dir.listFiles();
         java.util.Arrays.sort(files, new Comparator<File>() {
 
-            public int compare(File a, File b) {
+            @Override
+			public int compare(File a, File b) {
                 return a.getName().compareTo(b.getName());
             }
         });
@@ -47,17 +49,20 @@ class GameData implements IGameData {
         return questNames;
     }
 
-    public String getFile(String name) {
+    @Override
+	public String getFile(String name) {
         return dataDir + name;
     }
 
-    public List<String> listQuestLevels(String questName) {
+    @Override
+	public List<String> listQuestLevels(String questName) {
         List<String> levelNames = new ArrayList<String>();
         File dir = new File(dataDir + "quests/" + questName + "/levels");
         File[] files = dir.listFiles();
         java.util.Arrays.sort(files, new Comparator<File>() {
 
-            public int compare(File a, File b) {
+            @Override
+			public int compare(File a, File b) {
                 return a.getName().compareTo(b.getName());
             }
         });
@@ -91,7 +96,8 @@ class GameData implements IGameData {
         return new FileInputStream(tmxFiles[0]);
     }
 
-    public String getLevelFile(String questName, String levelName, String filename) {
+    @Override
+	public String getLevelFile(String questName, String levelName, String filename) {
         String path = dataDir + "quests/" + questName + "/levels/" + levelName + "/" + filename;
         if ((new File(path)).exists()) {
             return path;

@@ -79,11 +79,13 @@ public class ScoreSequence implements Sequence {
         font.destroy();
     }
 
-    public void draw() {
+    @Override
+	public void draw() {
         game.getView().drawScoreSequence(this,font,questScore,scorePerCentToShow);
     }
 
-    public void update() throws TransitionException {
+    @Override
+	public void update() throws TransitionException {
         timeInfos.update();
         long newScorePercentToShow = Math.min(100, timeInfos.currentTime * 100 / (10 * 1000000000));
         if (newScorePercentToShow != scorePerCentToShow) {
@@ -92,7 +94,8 @@ public class ScoreSequence implements Sequence {
         }
     }
 
-    public void processInputs() throws TransitionException {
+    @Override
+	public void processInputs() throws TransitionException {
         if (game.getInput().isKeyReturnDown()) {
             mustSendScoreQuit = true;
         } else if (mustSendScoreQuit) {

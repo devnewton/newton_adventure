@@ -66,11 +66,13 @@ public strictfp class MovingPlatform extends Body implements Drawable, Updatable
         this.setRotatable(false);
     }
 
-    public void draw() {
+    @Override
+	public void draw() {
         world.getView().drawMovingPlatform(this, texture);
     }
 
-    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+    @Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
         if (this.getPosition().distance(destinations.a) < 1f) {
             Vector2f swap = destinations.a;
             destinations.a = destinations.b;

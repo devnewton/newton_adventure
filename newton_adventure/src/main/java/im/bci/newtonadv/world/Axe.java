@@ -91,7 +91,8 @@ public strictfp class Axe extends Body implements Drawable, Updatable {
         world.getView().drawAxe(this, texture);
     }
 
-    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+    @Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
         float v = getAngularVelocity();
         if( v < 1.0f )
             adjustAngularVelocity(1.0f - v);

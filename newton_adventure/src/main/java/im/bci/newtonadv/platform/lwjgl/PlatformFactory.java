@@ -100,6 +100,7 @@ public class PlatformFactory implements IPlatformFactory {
 		}
 	}
 
+	@Override
 	public IGameData createGameData(Properties config) {
 		if (data == null)
 			data = new GameData(config);

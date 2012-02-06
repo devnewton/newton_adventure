@@ -247,6 +247,7 @@ public class OggClip {
 		}
 		
 		player = new Thread() {
+			@Override
 			public void run() {
 				try {
 					playStream(Thread.currentThread());
@@ -278,6 +279,7 @@ public class OggClip {
 		}
 		
 		player = new Thread() {
+			@Override
 			public void run() {
 				while (player == Thread.currentThread()) {
 					try {

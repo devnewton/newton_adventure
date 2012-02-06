@@ -118,6 +118,7 @@ public strictfp class GameView implements IGameView {
 		initDisplay(config);
 	}
 
+	@Override
 	public void toggleFullscreen() {
 		try {
 			Display.setFullscreen(!Display.isFullscreen());
@@ -281,6 +282,7 @@ public strictfp class GameView implements IGameView {
 		this.quality = newQuality;
 	}
 
+	@Override
 	public void draw(Sequence sequence) {
 		if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
 			GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
@@ -299,6 +301,7 @@ public strictfp class GameView implements IGameView {
 		}
 	}
 
+	@Override
 	public void drawFPS(int nbFps) {
 		String fps = nbFps + " FPS";
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
@@ -319,6 +322,7 @@ public strictfp class GameView implements IGameView {
 		Display.destroy();
 	}
 
+	@Override
 	public ITextureCache getTextureCache() {
 		return textureCache;
 	}
@@ -359,6 +363,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawAxe(Axe axe, ITexture texture) {
 		Box box = (Box) axe.getShape();
 		Vector2f[] pts = box.getPoints(axe.getPosition(), axe.getRotation());
@@ -382,6 +387,7 @@ public strictfp class GameView implements IGameView {
 
 	}
 
+	@Override
 	public void drawAxeAnchor(AxeAnchor axeAnchor, float radius,
 			ITexture texture) {
 		GL11.glPushMatrix();
@@ -414,6 +420,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawBat(Bat bat, float scale, ITexture texture, World world) {
 		AABox bounds = bat.getShape().getBounds();
 
@@ -450,6 +457,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawBlocker(Blocker blocker, ITexture texture, float alpha) {
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
 				| GL11.GL_CURRENT_BIT);
@@ -461,6 +469,7 @@ public strictfp class GameView implements IGameView {
 
 	}
 
+	@Override
 	public void drawPlatform(Platform platform, ITexture texture) {
 		Box box = (Box) platform.getShape();
 		Vector2f[] pts = box.getPoints(platform.getPosition(),
@@ -483,6 +492,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawMovingPlatform(MovingPlatform platform, ITexture texture) {
 		Box box = (Box) platform.getShape();
 		Vector2f[] pts = box.getPoints(platform.getPosition(),
@@ -505,6 +515,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawCloud(Cloud cloud, ITexture texture, float alpha) {
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
 				| GL11.GL_CURRENT_BIT);
@@ -516,6 +527,7 @@ public strictfp class GameView implements IGameView {
 
 	}
 
+	@Override
 	public void drawDoor(Door door, ITexture texture) {
 		Box box = (Box) door.getShape();
 		Vector2f[] pts = box.getPoints(door.getPosition(), door.getRotation());
@@ -538,6 +550,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawDownLeftHalfPlatform(DownLeftHalfPlatform platform,
 			ITexture texture) {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
@@ -560,6 +573,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawDownRightHalfPlatform(DownRightHalfPlatform platform,
 			ITexture texture) {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
@@ -582,6 +596,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform,
 			ITexture texture) {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
@@ -605,6 +620,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawUpRightHalfPlatform(UpRightHalfPlatform platform,
 			ITexture texture) {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
@@ -627,6 +643,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawExplosion(Explosion explosion, ITexture texture, World world) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(explosion.getPosition().getX(), explosion
@@ -659,6 +676,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawFireBall(FireBall fireball, ITexture texture, World world) {
 		GL11.glPushMatrix();
 		ROVector2f pos = fireball.getPosition();
@@ -692,6 +710,7 @@ public strictfp class GameView implements IGameView {
 
 	}
 
+	@Override
 	public void drawHero(Hero hero, ITexture texture, World world, float scale) {
 		AABox bounds = hero.getShape().getBounds();
 
@@ -735,6 +754,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawKey(Key key, ITexture texture, World world) {
 		AABox bounds = key.getShape().getBounds();
 
@@ -770,6 +790,7 @@ public strictfp class GameView implements IGameView {
 
 	}
 
+	@Override
 	public void drawLosedApple(LosedApple apple, World world, ITexture texture,
 			float alpha) {
 		GL11.glPushMatrix();
@@ -804,6 +825,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawMobilePikeAnchor(MobilePikeAnchor anchor, ITexture texture) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(anchor.getPosition().getX(), anchor.getPosition()
@@ -835,6 +857,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawMobilePikes(MobilePikes pikes, ITexture texture) {
 		Box box = (Box) pikes.getShape();
 		Vector2f[] pts = box
@@ -858,6 +881,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawMummy(Mummy mummy, World world, ITexture texture,
 			float scale) {
 		AABox bounds = mummy.getShape().getBounds();
@@ -936,6 +960,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawUsedKey(UsedKey key, ITexture texture, World world) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(),
@@ -968,6 +993,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawEgyptianBoss(EgyptianBoss boss, ITexture texture,
 			boolean isHurtBlinkState) {
 		AABox bounds = boss.getShape().getBounds();
@@ -1008,6 +1034,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawEgyptianBossHand(EgyptianBossHand hand, ITexture texture) {
 		AABox bounds = hand.getShape().getBounds();
 
@@ -1042,6 +1069,7 @@ public strictfp class GameView implements IGameView {
 
 	}
 
+	@Override
 	public void drawStoryBoardSequence(StoryboardSequence sequence,
 			ITrueTypeFont font) {
 		if (Display.isVisible() || Display.wasResized() || Display.isDirty()
@@ -1096,6 +1124,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font,
 			QuestScore questScore, long scorePerCentToShow) {
 		if (Display.isVisible() || Display.isDirty() || Display.wasResized()
@@ -1142,6 +1171,7 @@ public strictfp class GameView implements IGameView {
 		}
 	}
 
+	@Override
 	public void drawGameOverSequence(GameOverSequence sequence,
 			ITrueTypeFont font) {
 		if (Display.isVisible() || Display.wasResized() || Display.isDirty()
@@ -1175,6 +1205,7 @@ public strictfp class GameView implements IGameView {
 		}
 	}
 
+	@Override
 	public void drawSnowLayer(SnowLayer layer) {
 		GL11.glPushMatrix();
 
@@ -1199,6 +1230,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopAttrib();
 	}
 
+	@Override
 	public void drawLevelIndicators(String indicators,
 			ITrueTypeFont indicatorsFont) {
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
@@ -1214,6 +1246,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawMenuSequence(MenuSequence sequence) {
 		if (Display.isVisible() || Display.isDirty() || Display.wasResized()
 				|| sequence.isDirty()) {
@@ -1258,6 +1291,7 @@ public strictfp class GameView implements IGameView {
 		}
 	}
 
+	@Override
 	public void drawButton(Button button) {
 		if (button.currentTexture != null) {
 			ITexture texture = getTextureCache().getTexture(
@@ -1283,6 +1317,7 @@ public strictfp class GameView implements IGameView {
 		}
 	}
 
+	@Override
 	public void drawQuestMenuButton(Button button, ITrueTypeFont questNameFont,
 			String questName) {
 		drawButton(button);
@@ -1295,6 +1330,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public void drawWorld(World world) {
 		GL11.glPushMatrix();
 
@@ -1368,10 +1404,12 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 	}
 
+	@Override
 	public ITrueTypeFont createStoryBoardSequenceFont() {
 		return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
 	}
 
+	@Override
 	public ITrueTypeFont createQuestNameFont() {
 		return new TrueTypeFont();
 	}
@@ -1383,10 +1421,12 @@ public strictfp class GameView implements IGameView {
 		return new TrueTypeFont(fontSpecialCharacters);
 	}
 
+	@Override
 	public ITrueTypeFont createScoreSequenceFont() {
 		return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
 	}
 
+	@Override
 	public Animation loadFromGif(String name) throws FileNotFoundException {
 		GifDecoder d = new GifDecoder();
 		d.read(new FileInputStream(name));
@@ -1401,6 +1441,7 @@ public strictfp class GameView implements IGameView {
 		return animation;
 	}
 
+	@Override
 	public void drawFadeSequence(float r, float g, float b, float a) {
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
 				| GL11.GL_CURRENT_BIT);
@@ -1424,11 +1465,11 @@ public strictfp class GameView implements IGameView {
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
-		GLU.gluOrtho2D(MainMenuSequence.ortho2DLeft,
-				MainMenuSequence.ortho2DRight, MainMenuSequence.ortho2DBottom,
-				MainMenuSequence.ortho2DTop);
-		fpsFont.drawString(MainMenuSequence.ortho2DRight,
-				MainMenuSequence.ortho2DBottom - fpsFont.getHeight(),
+		GLU.gluOrtho2D(MenuSequence.ortho2DLeft,
+				MenuSequence.ortho2DRight, MenuSequence.ortho2DBottom,
+				MenuSequence.ortho2DTop);
+		fpsFont.drawString(MenuSequence.ortho2DRight,
+				MenuSequence.ortho2DBottom - fpsFont.getHeight(),
 				"Press F1 for video and input options ", 1, -1,
 				ITrueTypeFont.ALIGN_RIGHT);
 		GL11.glPopMatrix();

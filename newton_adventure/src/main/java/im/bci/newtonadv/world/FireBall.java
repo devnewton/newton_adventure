@@ -63,7 +63,8 @@ public strictfp class FireBall extends Body  implements Drawable {
         world.addTopLevelEntities(new Explosion(world, this.getPosition()));
     }
     
-    public void draw() {
+    @Override
+	public void draw() {
         world.getView().drawFireBall(this,texture,world);
     }
 

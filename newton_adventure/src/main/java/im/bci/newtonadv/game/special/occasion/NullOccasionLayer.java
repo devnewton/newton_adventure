@@ -40,10 +40,12 @@ class NullOccasionLayer implements SpecialOccasionLayer {
     public NullOccasionLayer() {
     }
 
-    public void update() {
+    @Override
+	public void update() {
     }
 
-    public void draw() {
+    @Override
+	public void draw() {
     }
 
 }

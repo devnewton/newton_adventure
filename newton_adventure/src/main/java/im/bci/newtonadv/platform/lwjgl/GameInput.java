@@ -97,67 +97,83 @@ public class GameInput implements IGameInput {
         keyReturnToMenu = getKeyCode("key.return_to_menu");
     }
 
-    public boolean isKeyReturnToMenuDown() {
+    @Override
+	public boolean isKeyReturnToMenuDown() {
         return Keyboard.isKeyDown(keyReturnToMenu);
     }
 
-    public boolean isKeyToggleFullscreenDown() {
+    @Override
+	public boolean isKeyToggleFullscreenDown() {
         return Keyboard.isKeyDown(keyToggleFullscreen);
     }
 
-    public boolean isKeyPauseDown() {
+    @Override
+	public boolean isKeyPauseDown() {
         return Keyboard.isKeyDown(keyPause);
     }
 
-    public boolean isKeyRotateClockwiseDown() {
+    @Override
+	public boolean isKeyRotateClockwiseDown() {
         return Keyboard.isKeyDown(keyRotateClockwise);
     }
 
-    public boolean isKeyRotateCounterClockwiseDown() {
+    @Override
+	public boolean isKeyRotateCounterClockwiseDown() {
         return Keyboard.isKeyDown(keyRotateCounterClockwise);
     }
 
-    public boolean isKeyRotate90ClockwiseDown() {
+    @Override
+	public boolean isKeyRotate90ClockwiseDown() {
         return Keyboard.isKeyDown(keyRotate90Clockwise);
     }
 
-    public boolean isKeyRotate90CounterClockwiseDown() {
+    @Override
+	public boolean isKeyRotate90CounterClockwiseDown() {
         return Keyboard.isKeyDown(keyRotate90CounterClockwise);
     }
 
-    public boolean isKeyRightDown() {
+    @Override
+	public boolean isKeyRightDown() {
         return Keyboard.isKeyDown(keyRight);
     }
 
-    public boolean isKeyLeftDown() {
+    @Override
+	public boolean isKeyLeftDown() {
         return Keyboard.isKeyDown(keyLeft);
     }
 
-    public boolean isKeyJumpDown() {
+    @Override
+	public boolean isKeyJumpDown() {
         return Keyboard.isKeyDown(keyJump);
     }
 
-    public boolean isKeyCheatActivateAllDown() {
+    @Override
+	public boolean isKeyCheatActivateAllDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_F11);
     }
 
-    public boolean isKeyCheatGotoNextLevelDown() {
+    @Override
+	public boolean isKeyCheatGotoNextLevelDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_F12);
     }
 
-    public boolean isKeyUpDown() {
+    @Override
+	public boolean isKeyUpDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_UP);
     }
 
-    public boolean isKeyDownDown() {
+    @Override
+	public boolean isKeyDownDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_DOWN);
     }
 
-    public boolean isKeyReturnDown() {
+    @Override
+	public boolean isKeyReturnDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_RETURN);
     }
 
-    public boolean isKeyCheatGotoNextBonusLevelDown() {
+    @Override
+	public boolean isKeyCheatGotoNextBonusLevelDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_F10);
     }
 

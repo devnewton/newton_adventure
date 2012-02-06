@@ -59,7 +59,8 @@ public class TrueTypeFont implements ITrueTypeFont {
     private int correctL = 9, correctR = 8;
     private final Map<Character, String > specialCharacters;
 
-    public void drawString(String msg) {
+    @Override
+	public void drawString(String msg) {
         drawString(0, 0, msg, 1, 1);
     }
 
@@ -262,7 +263,8 @@ public class TrueTypeFont implements ITrueTypeFont {
         GL11.glVertex2f(drawX + DrawWidth, drawY);
     }
 
-    public int getWidth(String whatchars) {
+    @Override
+	public int getWidth(String whatchars) {
         int totalwidth = 0;
         IntObject intObject = null;
         int currentChar = 0;
@@ -281,29 +283,35 @@ public class TrueTypeFont implements ITrueTypeFont {
         return totalwidth;
     }
 
-    public int getHeight() {
+    @Override
+	public int getHeight() {
         return fontHeight;
     }
 
-    public int getHeight(String HeightString) {
+    @Override
+	public int getHeight(String HeightString) {
         return fontHeight;
     }
 
-    public int getLineHeight() {
+    @Override
+	public int getLineHeight() {
         return fontHeight;
     }
 
-    public void drawString(float x, float y,
+    @Override
+	public void drawString(float x, float y,
             String whatchars, float scaleX, float scaleY) {
         drawString(x, y, whatchars, 0, whatchars.length() - 1, scaleX, scaleY, ALIGN_LEFT);
     }
 
-    public void drawString(float x, float y,
+    @Override
+	public void drawString(float x, float y,
             String whatchars, float scaleX, float scaleY, int format) {
         drawString(x, y, whatchars, 0, whatchars.length() - 1, scaleX, scaleY, format);
     }
 
-    public void drawString(float x, float y,
+    @Override
+	public void drawString(float x, float y,
             String whatchars, int startIndex, int endIndex,
             float scaleX, float scaleY,
             int format) {
@@ -493,7 +501,8 @@ public class TrueTypeFont implements ITrueTypeFont {
                     (byte) value};
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
         IntBuffer scratch = BufferUtils.createIntBuffer(1);
         scratch.put(0, fontTextureID);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);

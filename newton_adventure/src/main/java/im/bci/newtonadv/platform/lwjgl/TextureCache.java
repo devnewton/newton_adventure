@@ -83,14 +83,16 @@ public class TextureCache implements ITextureCache {
     TextureCache() {
     }
 
-    public void clearAll() {
+    @Override
+	public void clearAll() {
         for (TextureWeakReference ref : textures.values()) {
             deleteTexture(ref.textureId);
         }
         textures.clear();
     }
 
-    public void clearUseless() {
+    @Override
+	public void clearUseless() {
         TextureWeakReference ref;
         while ((ref = (TextureWeakReference) referenceQueue.poll()) != null) {
             deleteTexture(ref.textureId);
@@ -103,7 +105,8 @@ public class TextureCache implements ITextureCache {
         return texture;
     }
 
-    public ITexture getTexture(String questName, String levelName, tiled.core.Map map, tiled.core.Tile tile) {
+    @Override
+	public ITexture getTexture(String questName, String levelName, tiled.core.Map map, tiled.core.Tile tile) {
         String name = questName + "#" + levelName + "#tiled_" + tile.getGid();
         TextureWeakReference textureRef = textures.get(name);
         if (textureRef != null) {
@@ -121,7 +124,8 @@ public class TextureCache implements ITextureCache {
             return texture;
     }
 
-    public ITexture getTexture(String name) {
+    @Override
+	public ITexture getTexture(String name) {
         return getTexture(name, false);
     }
 

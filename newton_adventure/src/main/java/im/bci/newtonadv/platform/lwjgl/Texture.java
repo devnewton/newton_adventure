@@ -56,15 +56,18 @@ public class Texture implements ITexture {
         this.height = height;
     }
 
-    public int getId() {
+    @Override
+	public int getId() {
         return id;
     }
 
-    public int getHeight() {
+    @Override
+	public int getHeight() {
         return height;
     }
 
-    public int getWidth() {
+    @Override
+	public int getWidth() {
         return width;
     }
 }

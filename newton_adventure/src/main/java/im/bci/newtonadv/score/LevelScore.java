@@ -47,7 +47,8 @@ public class LevelScore {
     
     static final Comparator<LevelScore> comparator = new Comparator<LevelScore>() {
 
-        public int compare(LevelScore o1, LevelScore o2) {
+        @Override
+		public int compare(LevelScore o1, LevelScore o2) {
             int c1 = o1.computeScore();
             int c2 = o2.computeScore();
             if(c1<c2)

@@ -55,25 +55,30 @@ public class FadeSequence implements Sequence {
         this.duration = duration;
     }
 
-    public void start() {
+    @Override
+	public void start() {
         endTime = game.getFrameTimeInfos().currentTime + duration;
     }
 
-    public void draw() {
+    @Override
+	public void draw() {
         game.getView().drawFadeSequence(r,g,b,a);
     }
 
-    public void stop() {
+    @Override
+	public void stop() {
     }
 
-    public void update() throws TransitionException {
+    @Override
+	public void update() throws TransitionException {
         long remaining = endTime - game.getFrameTimeInfos().currentTime;
         if(remaining <= 0)
             throw new TransitionException(nextSequence);
         a = 1.0f - (float)remaining / (float)duration;
     }
 
-    public void processInputs() throws TransitionException {
+    @Override
+	public void processInputs() throws TransitionException {
     }
 
 }

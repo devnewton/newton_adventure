@@ -74,7 +74,8 @@ public class StoryboardSequence implements Sequence {
         }
     }
 
-    public void start() {
+    @Override
+	public void start() {
         if (music != null) {
             game.getSoundCache().playMusicIfEnabled(music);
         }
@@ -83,7 +84,8 @@ public class StoryboardSequence implements Sequence {
         font = game.getView().createStoryBoardSequenceFont();
     }
 
-    public void stop() {
+    @Override
+	public void stop() {
         font.destroy();
     }
 
