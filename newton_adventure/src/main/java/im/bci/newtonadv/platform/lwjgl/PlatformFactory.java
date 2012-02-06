@@ -83,8 +83,11 @@ public class PlatformFactory implements IPlatformFactory {
 	@Override
 	public void loadConfig(Properties config) {
 		try {
-			FileInputStream f = new FileInputStream(
-					getUserOrDefaultConfigFilePath());
+			String configFilePath = getUserOrDefaultConfigFilePath();
+			Logger.getLogger(PlatformFactory.class.getName()).log(Level.INFO,
+					"Load config from file {0}", configFilePath);
+
+			FileInputStream f = new FileInputStream(configFilePath);
 			try {
 				config.load(f);
 				this.config = config;
