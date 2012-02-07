@@ -62,7 +62,7 @@ public class AndroidGameData implements IGameData {
 	}
 
 	@Override
-	public String getLevelFile(String questName, String levelName,
+	public String getLevelFilePath(String questName, String levelName,
 			String filename) {
 		String path = "quests/" + questName + "/levels/" + levelName + "/"
 				+ filename;
@@ -73,5 +73,10 @@ public class AndroidGameData implements IGameData {
 		} catch (IOException e) {
 		}
 		return "default_level_data/" + filename;
+	}
+
+	@Override
+	public InputStream openFile(String path) throws IOException {
+		return assets.open(path);
 	}
 }

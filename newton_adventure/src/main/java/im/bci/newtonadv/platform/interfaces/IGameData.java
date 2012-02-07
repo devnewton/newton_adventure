@@ -1,6 +1,6 @@
 package im.bci.newtonadv.platform.interfaces;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface IGameData {
 
 	String getLevelFilePath(String questName, String levelName, String filename);
 
-	InputStream openFile(String path) throws FileNotFoundException;
+	InputStream openFile(String path) throws IOException;
 }
