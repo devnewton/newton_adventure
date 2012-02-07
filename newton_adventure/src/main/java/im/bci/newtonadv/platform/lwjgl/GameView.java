@@ -89,7 +89,6 @@ import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.world.World;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -274,11 +273,11 @@ public strictfp class GameView implements IGameView {
 		GL11.glColor4f(1, 1, 1, 1);
 
 		if (null == textureCache) {
-			textureCache = new TextureCache();
+			textureCache = new TextureCache(this.data);
 		} else {
 			textureCache.clearAll();
 		}
-		fpsFont = new TrueTypeFont();
+		fpsFont = new TrueTypeFont(this.data);
 		this.quality = newQuality;
 	}
 
@@ -1406,30 +1405,30 @@ public strictfp class GameView implements IGameView {
 
 	@Override
 	public ITrueTypeFont createStoryBoardSequenceFont() {
-		return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+		return new TrueTypeFont(this.data, new Font("monospaced", Font.BOLD, 32), false);
 	}
 
 	@Override
 	public ITrueTypeFont createQuestNameFont() {
-		return new TrueTypeFont();
+		return new TrueTypeFont(this.data);
 	}
 
 	@Override
 	public ITrueTypeFont createAppleFont(String questName, String levelName) {
         HashMap<Character,String> fontSpecialCharacters = new HashMap<Character,String>();
-        fontSpecialCharacters.put('$', data.getLevelFile(questName, levelName, "apple.png"));
-		return new TrueTypeFont(fontSpecialCharacters);
+        fontSpecialCharacters.put('$', data.getLevelFilePath(questName, levelName, "apple.png"));
+		return new TrueTypeFont(this.data, fontSpecialCharacters);
 	}
 
 	@Override
 	public ITrueTypeFont createScoreSequenceFont() {
-		return new TrueTypeFont(new Font("monospaced", Font.BOLD, 32), false);
+		return new TrueTypeFont(this.data, new Font("monospaced", Font.BOLD, 32), false);
 	}
 
 	@Override
 	public Animation loadFromGif(String name) throws FileNotFoundException {
 		GifDecoder d = new GifDecoder();
-		d.read(new FileInputStream(name));
+		d.read(data.openFile(name));
 		Animation animation = new Animation();
 		int n = d.getFrameCount();
 		for (int i = 0; i < n; i++) {

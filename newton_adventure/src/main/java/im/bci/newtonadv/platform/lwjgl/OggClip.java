@@ -19,8 +19,6 @@ import com.jcraft.jorbis.Block;
 import com.jcraft.jorbis.Comment;
 import com.jcraft.jorbis.DspState;
 import com.jcraft.jorbis.Info;
-import java.io.File;
-import java.io.FileInputStream;
 
 /**
  * Simple Clip like player for OGG's. Code is mostly taken from the example provided with 
@@ -52,20 +50,6 @@ public class OggClip {
 	private float gain = -1;
 	private boolean paused;
 	private float oldGain;
-	
-	/**
-	 * Create a new clip based on a reference into the class path
-	 * 
-	 * @param ref The reference into the class path which the ogg can be read from
-	 * @throws IOException Indicated a failure to find the resource
-	 */
-	public OggClip(String ref) throws IOException {
-		try {
-			init(Thread.currentThread().getContextClassLoader().getResourceAsStream(ref));
-		} catch (IOException e) {
-			throw new IOException("Couldn't find: "+ref);
-		}
-	}
 
 	/**
 	 * Create a new clip based on a reference into the class path
@@ -75,17 +59,6 @@ public class OggClip {
 	 */
 	public OggClip(InputStream in) throws IOException {
 		init(in);
-	}
-
-        	/**
-	 * Create a new clip based on a reference into the class path
-	 *
-	 * @param in The stream from which the ogg can be read from
-	 * @throws IOException Indicated a failure to read from the stream
-	 */
-	public OggClip(File f) throws IOException {
-            FileInputStream in = new FileInputStream(f);
-            init(in);
 	}
 
 	/**

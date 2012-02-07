@@ -29,6 +29,11 @@
 	<version>1.1-SNAPSHOT</version>
 	<name>newton_adventure</name>
 	<build>
+		<resources>
+			<resource>
+				<directory>data</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -55,7 +60,8 @@
 							<mode>development</mode>
 							<url>${pom.url}</url>
 							<Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar
-								lib/jinput.jar lib/phys2d.jar lib/libtiled.jar lib/jorbis.jar</Class-Path>
+								lib/jinput.jar lib/phys2d.jar lib/libtiled.jar lib/jorbis.jar
+								lib/TWL.jar lib/xpp3-1.1.4c.jar</Class-Path>
 						</manifestEntries>
 					</archive>
 				</configuration>

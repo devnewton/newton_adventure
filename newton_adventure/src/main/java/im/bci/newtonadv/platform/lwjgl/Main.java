@@ -36,46 +36,78 @@ import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public class Main {
 
-    static void setupLibraryPath() {
-        String libraryPath = System.getProperty("java.library.path");
-        if(libraryPath != null && libraryPath.contains("native"))
-            return;
+	static void setupLibraryPath() {
+		if (System.getProperty("javawebstart.version") != null) {
+	        return;
+		}
+		
+		String libraryPath = System.getProperty("java.library.path");
+		if (libraryPath != null && libraryPath.contains("native"))
+			return;
 
-        String osName = System.getProperty("os.name");
-        String osDir;
+		String osName = System.getProperty("os.name");
+		String osDir;
 
-        if (osName.startsWith("Windows")) {
-            osDir = "windows";
-        } else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
-            osDir = "linux";
-        } else if (osName.startsWith("Mac OS X")) {
-            osDir = "macosx";
-        } else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
-            osDir = "solaris";
-        } else {
-            System.err.println("Unknown platform: " + osName);
-            return;
-        }
-        System.setProperty("org.lwjgl.librarypath", (new File( "native" + File.separator + osDir )).getAbsolutePath() );
-    }
+		if (osName.startsWith("Windows")) {
+			osDir = "windows";
+		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
+			osDir = "linux";
+		} else if (osName.startsWith("Mac OS X")) {
+			osDir = "macosx";
+		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
+			osDir = "solaris";
+		} else {
+			Logger.getLogger(Main.class.getName()).log(Level.WARNING,
+					"Unknown platform: {0}", osName);
+			return;
+		}
+		try {
+			File nativeDir = new File(getApplicationDir() + File.separator
+					+ "native" + File.separator + osDir);
+			if (!nativeDir.exists())
+				nativeDir = new File("native" + File.separator + osDir);
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, Exception {
+			System.setProperty("org.lwjgl.librarypath", nativeDir.getCanonicalPath());
+		} catch (IOException e) {
+			Logger.getLogger(Main.class.getName())
+					.log(Level.WARNING,
+							"Cannot find 'native' library folder, try system libraries",
+							e);
+		}
+	}
 
-        setupLibraryPath();
-        
-        final IPlatformFactory platform = new PlatformFactory();
-        final Game game = new Game(platform);
-        game.start();
-        while (game.isRunning()) {
-            game.tick();
-        }
-        System.exit(0);
-    }
+	private static String getApplicationDir() throws IOException {
+		try {
+			return new File(Main.class.getProtectionDomain().getCodeSource()
+					.getLocation().toURI()).getParent();
+		} catch (URISyntaxException uriEx) {
+			Logger.getLogger(Main.class.getName()).log(Level.WARNING,
+					"Cannot find application directory, try current", uriEx);
+			return new File(".").getCanonicalPath();
+		}
+	}
+
+	public static void main(String[] args) throws IOException,
+			ClassNotFoundException, Exception {
+
+		setupLibraryPath();
+
+		final IPlatformFactory platform = new PlatformFactory();
+		final Game game = new Game(platform);
+		game.start();
+		while (game.isRunning()) {
+			game.tick();
+		}
+		System.exit(0);
+	}
 }

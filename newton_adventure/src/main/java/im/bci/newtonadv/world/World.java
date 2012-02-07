@@ -243,7 +243,7 @@ public strictfp class World extends net.phys2d.raw.World {
                 throw new RuntimeException("error in tmx map file, cannot find property " + filePropertyName);
             }
         }
-        return game.getData().getLevelFile(questName, levelName, filename);
+        return game.getData().getLevelFilePath(questName, levelName, filename);
     }
 
     public void loadLevel() throws IOException, Exception {

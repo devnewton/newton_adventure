@@ -1,6 +1,5 @@
 package im.bci.newtonadv.platform.lwjgl;
 
-import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.awt.*;
@@ -312,32 +311,6 @@ public class GifDecoder {
 			is.close();
 		} catch (IOException e) {
 		}
-		return status;
-	}
-
-	/**
-	 * Reads GIF file from specified file/URL source  
-	 * (URL assumed if name contains ":/" or "file:")
-	 *
-	 * @param name String containing source
-	 * @return read status code (0 = no errors)
-	 */
-	public int read(String name) {
-		status = STATUS_OK;
-		try {
-			name = name.trim().toLowerCase();
-			if ((name.indexOf("file:") >= 0) ||
-				(name.indexOf(":/") > 0)) {
-				URL url = new URL(name);
-				in = new BufferedInputStream(url.openStream());
-			} else {
-				in = new BufferedInputStream(new FileInputStream(name));
-			}
-			status = read(in);
-		} catch (IOException e) {
-			status = STATUS_OPEN_ERROR;
-		}
-
 		return status;
 	}
 

@@ -5,104 +5,94 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
 /**
- *
+ * 
  * @author Borome
  */
 class GameData implements IGameData {
 
-    private final String dataDir;
+	private static final String dataDir = "";
+	private static final List<String> quests;
+	private static final HashMap<String, List<String>> questLevels;
 
-    public GameData(Properties config) {
-        dataDir = PlatformFactory.getDataDir() + "/";
-    }
+	static {
+		quests = Arrays.asList("jungle", "vatican", "arctic", "egypt");
+		questLevels = new HashMap<String, List<String>>();
+		questLevels.put("jungle", Arrays.asList("jungle_level0",
+				"jungle_level1", "jungle_level2", "jungle_level3",
+				"jungle_level4"));
+		questLevels.put("vatican", Arrays.asList("vatican_level0",
+				"vatican_level1", "vatican_level2", "vatican_level3",
+				"vatican_level4"));
+		questLevels.put("arctic", Arrays.asList("artic_level0", "artic_level1",
+				"artic_level2", "artic_level3", "artic_level4"));
+		questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
+				"level3", "level4", "level5"));
+		questLevels
+				.put("bonus", Arrays.asList("bonus_level0", "bonus_level1",
+						"bonus_level2", "bonus_level3", "bonus_level4",
+						"bonus_level5"));
+	}
 
-    @Override
+	public GameData(Properties config) {
+	}
+
+	@Override
 	public List<String> listQuests() {
-        File dir = new File(dataDir + "quests");
-        File[] files = dir.listFiles();
-        java.util.Arrays.sort(files, new Comparator<File>() {
+		return quests;
+	}
 
-            @Override
-			public int compare(File a, File b) {
-                return a.getName().compareTo(b.getName());
-            }
-        });
-        ArrayList<String> questNames = new ArrayList<String>();
-        for (int i = 0; i < files.length; ++i) {
-            File f = files[i];
-            if (f.isDirectory()) {
-                questNames.add(f.getName());
-            }
-        }
-        questNames.remove("bonus");
-        return questNames;
-    }
-
-    @Override
+	@Override
 	public String getFile(String name) {
-        return dataDir + name;
-    }
+		return dataDir + name;
+	}
 
-    @Override
+	@Override
 	public List<String> listQuestLevels(String questName) {
-        List<String> levelNames = new ArrayList<String>();
-        File dir = new File(dataDir + "quests/" + questName + "/levels");
-        File[] files = dir.listFiles();
-        java.util.Arrays.sort(files, new Comparator<File>() {
+		return questLevels.get(questName);
+	}
 
-            @Override
-			public int compare(File a, File b) {
-                return a.getName().compareTo(b.getName());
-            }
-        });
-        for (File f : files) {
-            if (f.isDirectory()) {
-                levelNames.add(f.getName());
-            }
-        }
-        return levelNames;
-    }
+	@Override
+	public String getQuestFile(String questName, String file) {
+		return dataDir + "quests/" + questName + "/" + file;
+	}
 
-    @Override
-    public String getQuestFile(String questName, String file) {
-        return dataDir + "quests/" + questName + "/" + file;
-    }
+	@Override
+	public InputStream openLevelTmx(String questName, String levelName)
+			throws FileNotFoundException {
+		String path = dataDir + "quests/" + questName + "/levels/" + levelName
+				+ "/" + levelName + ".tmx";
+		return openFile(path);
+	}
 
-    @Override
-    public InputStream openLevelTmx(String questName, String levelName) throws FileNotFoundException {
-        String path = dataDir + "quests/" + questName + "/levels/" + levelName;
-        File levelDir = new File(path);
-        File[] tmxFiles = levelDir.listFiles(new FilenameFilter() {
+	@Override
+	public InputStream openFile(String path) throws FileNotFoundException {
+		return getClass().getClassLoader().getResourceAsStream(path);
+	}
 
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".tmx");
-            }
-        });
-        if (tmxFiles.length == 0) {
-            throw new FileNotFoundException("cannot find *.tmx file in level path: " + path);
-        }
-        return new FileInputStream(tmxFiles[0]);
-    }
-
-    @Override
-	public String getLevelFile(String questName, String levelName, String filename) {
-        String path = dataDir + "quests/" + questName + "/levels/" + levelName + "/" + filename;
-        if ((new File(path)).exists()) {
-            return path;
-        } else {
-            return dataDir + "default_level_data/" + filename;
-        }
-    }
+	@Override
+	public String getLevelFilePath(String questName, String levelName,
+			String filename) {
+		String path = dataDir + "quests/" + questName + "/levels/" + levelName
+				+ "/" + filename;
+		try {
+			InputStream s = openFile(path);
+			if (s != null) {
+				s.close();
+				return path;
+			}
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
+		return dataDir + "default_level_data/" + filename;
+	}
 }

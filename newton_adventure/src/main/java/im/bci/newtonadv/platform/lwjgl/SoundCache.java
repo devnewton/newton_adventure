@@ -32,7 +32,6 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
-import java.io.File;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -55,6 +54,7 @@ public class SoundCache implements ISoundCache {
     private String currentMusicName;
     private OggClip currentMusic;
     private boolean enabled;
+    private final GameData data;
 
     public static final class PlayableClipWrapper implements Playable {
 
@@ -76,7 +76,8 @@ public class SoundCache implements ISoundCache {
         }
     }
 
-    public SoundCache(boolean enabled) {
+    public SoundCache(GameData data, boolean enabled) {
+    	this.data = data;
         this.enabled = enabled;
     }
 
@@ -163,9 +164,7 @@ public class SoundCache implements ISoundCache {
 
     private Clip loadClip(String filename) {
         try {
-
-            final File file = new File(filename);
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(data.openFile(filename));
             AudioFormat format = audioInputStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, format);
             Clip clip = (Clip) AudioSystem.getLine(info);
@@ -180,7 +179,7 @@ public class SoundCache implements ISoundCache {
 
     private OggClip loadOggClip(String filename) {
         try {
-            OggClip clip = new OggClip(new File(filename));
+            OggClip clip = new OggClip(data.openFile(filename));
             return clip;
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Impossible de charger la musique " + filename, e);

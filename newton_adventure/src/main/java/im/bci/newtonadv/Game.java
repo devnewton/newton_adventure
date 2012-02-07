@@ -101,8 +101,8 @@ public strictfp class Game {
 
         platform.loadConfig(config);
 
-        this.soundCache = platform.createSoundCache(config);
         this.data = platform.createGameData(config);
+        this.soundCache = platform.createSoundCache(config);
         this.view = platform.createGameView(config);
         this.input = platform.createGameInput(config);
         this.scoreServer = platform.createScoreServer(config);
