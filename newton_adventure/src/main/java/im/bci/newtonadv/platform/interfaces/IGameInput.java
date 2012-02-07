@@ -70,6 +70,4 @@ public interface IGameInput {
 
     boolean isKeyCheatGotoNextBonusLevelDown();
 
-	boolean isKeyShowOptionsDown();
-
 }

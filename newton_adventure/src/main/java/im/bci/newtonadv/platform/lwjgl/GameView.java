@@ -1459,20 +1459,6 @@ public strictfp class GameView implements IGameView {
 	@Override
 	public void drawMainMenuSequence(MainMenuSequence mainMenuSequence) {
 		drawMenuSequence(mainMenuSequence);
-		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
-		GLU.gluOrtho2D(MenuSequence.ortho2DLeft,
-				MenuSequence.ortho2DRight, MenuSequence.ortho2DBottom,
-				MenuSequence.ortho2DTop);
-		fpsFont.drawString(MenuSequence.ortho2DRight,
-				MenuSequence.ortho2DBottom - fpsFont.getHeight(),
-				"Press F1 for video and input options ", 1, -1,
-				ITrueTypeFont.ALIGN_RIGHT);
-		GL11.glPopMatrix();
-		GL11.glPopAttrib();
 	}
 
 	public GameViewQuality getQuality() {

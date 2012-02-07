@@ -52,19 +52,6 @@ public strictfp class MainMenuSequence extends MenuSequence {
     	game.getView().drawMainMenuSequence(this);
         specialOccasionLayer.draw();
     }
-    
-    
-
-    @Override
-	public void processInputs() throws TransitionException {
-		super.processInputs();
-		
-		if(game.getInput().isKeyShowOptionsDown()) {
-			throw new TransitionException(optionsSequence);
-		}
-	}
-
-
 
 	@Override
     public void update() throws TransitionException {
@@ -72,13 +59,14 @@ public strictfp class MainMenuSequence extends MenuSequence {
         specialOccasionLayer.update();
     }
 
-    public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq, Sequence optionsSequence) {
+    public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq, Sequence optSequence) {
         super(game);
         
         specialOccasionLayer = SpecialOccasionFactory.createSpecialOccasionLayer(game.getView());
 
         this.playSequence = playSeq;
         this.quitSequence = quitSeq;
+        this.optionsSequence = optSequence;
         this.helpSequence = new StoryboardSequence(game, game.getData().getFile("help.jpg"), null, this);
 
         setBackgroundImage(game.getData().getFile("main_menu/home.png"));
@@ -92,7 +80,10 @@ public strictfp class MainMenuSequence extends MenuSequence {
         };
         playButton.offTexture = game.getData().getFile("main_menu/bt-play-off.png");
         playButton.currentTexture = playButton.onTexture = game.getData().getFile("main_menu/bt-play-on.png");
-        playButton.y = 318;
+        playButton.x = 480;
+        playButton.y = 267;
+        playButton.w = 312;
+        playButton.h = 90;
         addButton(playButton);
 
         resumeButton = new Button() {
@@ -106,8 +97,26 @@ public strictfp class MainMenuSequence extends MenuSequence {
         };
         resumeButton.currentTexture = resumeButton.offTexture = game.getData().getFile("main_menu/bt-resume-off.png");
         resumeButton.onTexture = game.getData().getFile("main_menu/bt-resume-on.png");
-        resumeButton.y = 441;
+        resumeButton.x = 480;
+        resumeButton.y = 371;
+        resumeButton.w = 312;
+        resumeButton.h = 90;
         addButton(resumeButton);
+       
+        Button optionsButton = new Button() {
+
+            @Override
+            void activate() throws TransitionException {
+                throw new Sequence.TransitionException(optionsSequence);
+            }
+        };
+        optionsButton.currentTexture = optionsButton.offTexture = game.getData().getFile("main_menu/bt-options-off.png");
+        optionsButton.onTexture = game.getData().getFile("main_menu/bt-options-on.png");
+        optionsButton.x = 480;
+        optionsButton.y = 475;
+        optionsButton.w = 312;
+        optionsButton.h = 90;
+        addButton(optionsButton);
 
         Button helpButton = new Button() {
 
@@ -120,9 +129,12 @@ public strictfp class MainMenuSequence extends MenuSequence {
         };
         helpButton.currentTexture = helpButton.offTexture = game.getData().getFile("main_menu/bt-help-off.png");
         helpButton.onTexture = game.getData().getFile("main_menu/bt-help-on.png");
-        helpButton.y = 558;
+        helpButton.x = 480;
+        helpButton.y = 579;
+        helpButton.w = 312;
+        helpButton.h = 90;
         addButton(helpButton);
-
+        
         Button quitButton = new Button() {
 
             @Override
@@ -132,10 +144,11 @@ public strictfp class MainMenuSequence extends MenuSequence {
         };
         quitButton.currentTexture = quitButton.offTexture = game.getData().getFile("main_menu/bt-quit-off.png");
         quitButton.onTexture = game.getData().getFile("main_menu/bt-quit-on.png");
-        quitButton.y = 675;
+        quitButton.x = 480;
+        quitButton.y = 683;
+        quitButton.w = 312;
+        quitButton.h = 90;
         addButton(quitButton);
-     
-        this.optionsSequence = optionsSequence;
     }
 
     @Override
