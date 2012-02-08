@@ -1,4 +1,4 @@
-<jnlp spec="1.0+" codebase="." href="newton_adventure.jnlp">
+<jnlp spec="1.0+" codebase="http://bci.im/devnewton/webstart" href="newton_adventure.jnlp">
   <information>
     <title>Newton Adventure</title>
     <vendor>devnewton</vendor>
