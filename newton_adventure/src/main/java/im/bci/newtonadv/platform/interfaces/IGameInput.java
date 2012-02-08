@@ -32,6 +32,8 @@
 
 package im.bci.newtonadv.platform.interfaces;
 
+import net.phys2d.math.ROVector2f;
+
 /**
  *
  * @author devnewton
@@ -69,5 +71,9 @@ public interface IGameInput {
     boolean isKeyUpDown();
 
     boolean isKeyCheatGotoNextBonusLevelDown();
+
+	ROVector2f getMousePos();
+
+	boolean isMouseButtonDown();
 
 }

@@ -165,4 +165,8 @@ public interface IGameView {
     public void drawMovingPlatform(MovingPlatform aThis, ITexture texture);
 
 	void drawMainMenuSequence(MainMenuSequence mainMenuSequence);
+
+	float getWidth();
+
+	float getHeight();
 }

@@ -1464,4 +1464,14 @@ public strictfp class GameView implements IGameView {
 	public GameViewQuality getQuality() {
 		return quality;
 	}
+
+	@Override
+	public float getWidth() {
+		return Display.getWidth();
+	}
+
+	@Override
+	public float getHeight() {
+		return Display.getHeight();
+	}
 }

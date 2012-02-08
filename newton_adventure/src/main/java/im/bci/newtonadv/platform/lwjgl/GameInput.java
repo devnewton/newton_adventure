@@ -33,147 +33,163 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.IGameInput;
+
 import java.util.Properties;
+
+import net.phys2d.math.ROVector2f;
+import net.phys2d.math.Vector2f;
+
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public class GameInput implements IGameInput {
 
-    Properties config;
-    public int keyJump;
-    public int keyLeft;
-    public int keyRight;
-    public int keyRotateClockwise;
-    public int keyRotateCounterClockwise;
-    public int keyRotate90Clockwise;
-    public int keyRotate90CounterClockwise;
-    public int keyToggleFullscreen;
-    public int keyPause;
-    public int keyReturnToMenu;
+	Properties config;
+	public int keyJump;
+	public int keyLeft;
+	public int keyRight;
+	public int keyRotateClockwise;
+	public int keyRotateCounterClockwise;
+	public int keyRotate90Clockwise;
+	public int keyRotate90CounterClockwise;
+	public int keyToggleFullscreen;
+	public int keyPause;
+	public int keyReturnToMenu;
 
-    public GameInput(Properties gameConfig) throws Exception {
-        config = new Properties();
-        config.setProperty("key.jump", "KEY_UP");
-        config.setProperty("key.left", "KEY_LEFT");
-        config.setProperty("key.right", "KEY_RIGHT");
-        config.setProperty("key.rotate_clockwise", "KEY_C");
-        config.setProperty("key.rotate_counter_clockwise", "KEY_X");
-        config.setProperty("key.rotate_90_clockwise", "KEY_S");
-        config.setProperty("key.rotate_90_counter_clockwise", "KEY_D");
-        config.setProperty("key.toggle_fullscreen", "KEY_F");
-        config.setProperty("key.pause", "KEY_PAUSE");
-        config.setProperty("key.return_to_menu", "KEY_ESCAPE");
+	public GameInput(Properties gameConfig) throws Exception {
+		config = new Properties();
+		config.setProperty("key.jump", "KEY_UP");
+		config.setProperty("key.left", "KEY_LEFT");
+		config.setProperty("key.right", "KEY_RIGHT");
+		config.setProperty("key.rotate_clockwise", "KEY_C");
+		config.setProperty("key.rotate_counter_clockwise", "KEY_X");
+		config.setProperty("key.rotate_90_clockwise", "KEY_S");
+		config.setProperty("key.rotate_90_counter_clockwise", "KEY_D");
+		config.setProperty("key.toggle_fullscreen", "KEY_F");
+		config.setProperty("key.pause", "KEY_PAUSE");
+		config.setProperty("key.return_to_menu", "KEY_ESCAPE");
 
-        config.putAll(gameConfig);
-        setupKeys();
-    }
+		config.putAll(gameConfig);
+		setupKeys();
+	}
 
-    int getKeyCode(String propertyName) throws Exception {
-        String lwjglName = config.getProperty(propertyName);
-        int code = Keyboard.getKeyIndex(lwjglName);
-        if (Keyboard.KEY_NONE == code) {
-            try {
-                code = Keyboard.class.getDeclaredField(lwjglName).getInt(null);
-            } catch (NoSuchFieldException e) {
-                throw new RuntimeException("Unknow key : " + propertyName);
-            }
-        }
-        return code;
-    }
+	int getKeyCode(String propertyName) throws Exception {
+		String lwjglName = config.getProperty(propertyName);
+		int code = Keyboard.getKeyIndex(lwjglName);
+		if (Keyboard.KEY_NONE == code) {
+			try {
+				code = Keyboard.class.getDeclaredField(lwjglName).getInt(null);
+			} catch (NoSuchFieldException e) {
+				throw new RuntimeException("Unknow key : " + propertyName);
+			}
+		}
+		return code;
+	}
 
-    private void setupKeys() throws Exception {
-        keyJump = getKeyCode("key.jump");
-        keyLeft = getKeyCode("key.left");
-        keyRight = getKeyCode("key.right");
-        keyRotateClockwise = getKeyCode("key.rotate_clockwise");
-        keyRotateCounterClockwise = getKeyCode("key.rotate_counter_clockwise");
-        keyRotate90Clockwise = getKeyCode("key.rotate_90_clockwise");
-        keyRotate90CounterClockwise = getKeyCode("key.rotate_90_counter_clockwise");
-        keyToggleFullscreen = getKeyCode("key.toggle_fullscreen");
-        keyPause = getKeyCode("key.pause");
-        keyReturnToMenu = getKeyCode("key.return_to_menu");
-    }
+	private void setupKeys() throws Exception {
+		keyJump = getKeyCode("key.jump");
+		keyLeft = getKeyCode("key.left");
+		keyRight = getKeyCode("key.right");
+		keyRotateClockwise = getKeyCode("key.rotate_clockwise");
+		keyRotateCounterClockwise = getKeyCode("key.rotate_counter_clockwise");
+		keyRotate90Clockwise = getKeyCode("key.rotate_90_clockwise");
+		keyRotate90CounterClockwise = getKeyCode("key.rotate_90_counter_clockwise");
+		keyToggleFullscreen = getKeyCode("key.toggle_fullscreen");
+		keyPause = getKeyCode("key.pause");
+		keyReturnToMenu = getKeyCode("key.return_to_menu");
+	}
 
-    @Override
+	@Override
 	public boolean isKeyReturnToMenuDown() {
-        return Keyboard.isKeyDown(keyReturnToMenu);
-    }
+		return Keyboard.isKeyDown(keyReturnToMenu);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyToggleFullscreenDown() {
-        return Keyboard.isKeyDown(keyToggleFullscreen);
-    }
+		return Keyboard.isKeyDown(keyToggleFullscreen);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyPauseDown() {
-        return Keyboard.isKeyDown(keyPause);
-    }
+		return Keyboard.isKeyDown(keyPause);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyRotateClockwiseDown() {
-        return Keyboard.isKeyDown(keyRotateClockwise);
-    }
+		return Keyboard.isKeyDown(keyRotateClockwise);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyRotateCounterClockwiseDown() {
-        return Keyboard.isKeyDown(keyRotateCounterClockwise);
-    }
+		return Keyboard.isKeyDown(keyRotateCounterClockwise);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyRotate90ClockwiseDown() {
-        return Keyboard.isKeyDown(keyRotate90Clockwise);
-    }
+		return Keyboard.isKeyDown(keyRotate90Clockwise);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyRotate90CounterClockwiseDown() {
-        return Keyboard.isKeyDown(keyRotate90CounterClockwise);
-    }
+		return Keyboard.isKeyDown(keyRotate90CounterClockwise);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyRightDown() {
-        return Keyboard.isKeyDown(keyRight);
-    }
+		return Keyboard.isKeyDown(keyRight);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyLeftDown() {
-        return Keyboard.isKeyDown(keyLeft);
-    }
+		return Keyboard.isKeyDown(keyLeft);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyJumpDown() {
-        return Keyboard.isKeyDown(keyJump);
-    }
+		return Keyboard.isKeyDown(keyJump);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyCheatActivateAllDown() {
-        return Keyboard.isKeyDown(Keyboard.KEY_F11);
-    }
+		return Keyboard.isKeyDown(Keyboard.KEY_F11);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyCheatGotoNextLevelDown() {
-        return Keyboard.isKeyDown(Keyboard.KEY_F12);
-    }
+		return Keyboard.isKeyDown(Keyboard.KEY_F12);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyUpDown() {
-        return Keyboard.isKeyDown(Keyboard.KEY_UP);
-    }
+		return Keyboard.isKeyDown(Keyboard.KEY_UP);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyDownDown() {
-        return Keyboard.isKeyDown(Keyboard.KEY_DOWN);
-    }
+		return Keyboard.isKeyDown(Keyboard.KEY_DOWN);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyReturnDown() {
-        return Keyboard.isKeyDown(Keyboard.KEY_RETURN);
-    }
+		return Keyboard.isKeyDown(Keyboard.KEY_RETURN);
+	}
 
-    @Override
+	@Override
 	public boolean isKeyCheatGotoNextBonusLevelDown() {
-        return Keyboard.isKeyDown(Keyboard.KEY_F10);
-    }
+		return Keyboard.isKeyDown(Keyboard.KEY_F10);
+	}
+
+	@Override
+	public ROVector2f getMousePos() {
+		return new Vector2f(Mouse.getX(),Mouse.getY());
+	}
+
+	@Override
+	public boolean isMouseButtonDown() {
+		return Mouse.isButtonDown(0);
+	}
 }

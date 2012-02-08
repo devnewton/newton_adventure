@@ -35,168 +35,200 @@ import java.util.ArrayList;
 import im.bci.newtonadv.Game;
 import java.util.List;
 
+import net.phys2d.math.ROVector2f;
+
 /**
- *
+ * 
  * @author devnewton
  */
 public abstract class MenuSequence implements Sequence {
 
-    public static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
-    public static final float ortho2DLeft = 0;
-    public static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
-    public static final float ortho2DTop = 0;
-    private ArrayList<Button> buttons = new ArrayList<Button>();
-    private int currentButtonIndex;
-    private boolean redraw;
-    private boolean horizontalSelectNextButton = false, horizontalSelectPreviousButton = false;
-    private boolean verticalSelectNextButton = false, verticalSelectPreviousButton = false;
-    private boolean activateCurrentButton = false;
-    protected int horizontalIncrement = 1;
-    protected int verticalIncrement = 1;
-    protected Game game;
-    private String backgroundImage;
+	public static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
+	public static final float ortho2DLeft = 0;
+	public static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
+	public static final float ortho2DTop = 0;
+	private ArrayList<Button> buttons = new ArrayList<Button>();
+	private int currentButtonIndex;
+	private boolean redraw;
+	private boolean horizontalSelectNextButton = false,
+			horizontalSelectPreviousButton = false;
+	private boolean verticalSelectNextButton = false,
+			verticalSelectPreviousButton = false;
+	private boolean activateCurrentButton = false;
+	protected int horizontalIncrement = 1;
+	protected int verticalIncrement = 1;
+	protected Game game;
+	private String backgroundImage;
+	private boolean mouseActivateCurrentButton = false;
 
-    public MenuSequence(Game game) {
-        this.game = game;
-    }
+	public MenuSequence(Game game) {
+		this.game = game;
+	}
 
-    public void setBackgroundImage(String backgroundImage) {
-        this.backgroundImage = backgroundImage;
-    }
-    
-    public List<Button> getButtons()
-    {
-    return buttons;
-    }
+	public void setBackgroundImage(String backgroundImage) {
+		this.backgroundImage = backgroundImage;
+	}
 
-    @Override
-    public void draw() {
-        game.getView().drawMenuSequence(this);
-    }
+	public List<Button> getButtons() {
+		return buttons;
+	}
 
-    @Override
-    public void processInputs() throws TransitionException {
-        if (game.getInput().isKeyRightDown()) {
-            horizontalSelectNextButton = true;
-        } else if (horizontalSelectNextButton) {
-            horizontalSelectNextButton = false;
-            buttons.get(currentButtonIndex).setOff();
-            currentButtonIndex += horizontalIncrement;
-            if (currentButtonIndex >= buttons.size()) {
-                currentButtonIndex = 0;
-            }
-            buttons.get(currentButtonIndex).setOn();
-            redraw = true;
-        }
-        if (game.getInput().isKeyLeftDown()) {
-            horizontalSelectPreviousButton = true;
-        } else if (horizontalSelectPreviousButton) {
-            horizontalSelectPreviousButton = false;
-            buttons.get(currentButtonIndex).setOff();
-            currentButtonIndex -= horizontalIncrement;
-            if (currentButtonIndex < 0) {
-                currentButtonIndex = buttons.size() - 1;
-            }
-            buttons.get(currentButtonIndex).setOn();
-            redraw = true;
-        }
-        if (game.getInput().isKeyDownDown()) {
-            verticalSelectNextButton = true;
-        } else if (verticalSelectNextButton) {
-            verticalSelectNextButton = false;
-            buttons.get(currentButtonIndex).setOff();
-            currentButtonIndex += verticalIncrement;
-            if (currentButtonIndex >= buttons.size()) {
-                currentButtonIndex = 0;
-            }
-            buttons.get(currentButtonIndex).setOn();
-            redraw = true;
-        }
-        if (game.getInput().isKeyUpDown()) {
-            verticalSelectPreviousButton = true;
-        } else if (verticalSelectPreviousButton) {
-            verticalSelectPreviousButton = false;
-            buttons.get(currentButtonIndex).setOff();
-            currentButtonIndex -= verticalIncrement;
-            if (currentButtonIndex < 0) {
-                currentButtonIndex = buttons.size() - 1;
-            }
-            buttons.get(currentButtonIndex).setOn();
-            redraw = true;
-        }
-        if (game.getInput().isKeyReturnDown()) {
-            activateCurrentButton = true;
-        } else if (activateCurrentButton) {
-            activateCurrentButton = false;
-            buttons.get(currentButtonIndex).activate();
-        }
-    }
+	@Override
+	public void draw() {
+		game.getView().drawMenuSequence(this);
+	}
 
-    @Override
-    public void start() {
-        currentButtonIndex = 0;
-        redraw = true;
-        setCurrentButton(buttons.isEmpty() ? null : buttons.get(0));
-    }
+	@Override
+	public void processInputs() throws TransitionException {
+		if (game.getInput().isKeyRightDown()) {
+			horizontalSelectNextButton = true;
+		} else if (horizontalSelectNextButton) {
+			horizontalSelectNextButton = false;
+			buttons.get(currentButtonIndex).setOff();
+			currentButtonIndex += horizontalIncrement;
+			if (currentButtonIndex >= buttons.size()) {
+				currentButtonIndex = 0;
+			}
+			buttons.get(currentButtonIndex).setOn();
+			redraw = true;
+		}
+		if (game.getInput().isKeyLeftDown()) {
+			horizontalSelectPreviousButton = true;
+		} else if (horizontalSelectPreviousButton) {
+			horizontalSelectPreviousButton = false;
+			buttons.get(currentButtonIndex).setOff();
+			currentButtonIndex -= horizontalIncrement;
+			if (currentButtonIndex < 0) {
+				currentButtonIndex = buttons.size() - 1;
+			}
+			buttons.get(currentButtonIndex).setOn();
+			redraw = true;
+		}
+		if (game.getInput().isKeyDownDown()) {
+			verticalSelectNextButton = true;
+		} else if (verticalSelectNextButton) {
+			verticalSelectNextButton = false;
+			buttons.get(currentButtonIndex).setOff();
+			currentButtonIndex += verticalIncrement;
+			if (currentButtonIndex >= buttons.size()) {
+				currentButtonIndex = 0;
+			}
+			buttons.get(currentButtonIndex).setOn();
+			redraw = true;
+		}
+		if (game.getInput().isKeyUpDown()) {
+			verticalSelectPreviousButton = true;
+		} else if (verticalSelectPreviousButton) {
+			verticalSelectPreviousButton = false;
+			buttons.get(currentButtonIndex).setOff();
+			currentButtonIndex -= verticalIncrement;
+			if (currentButtonIndex < 0) {
+				currentButtonIndex = buttons.size() - 1;
+			}
+			buttons.get(currentButtonIndex).setOn();
+			redraw = true;
+		}
+		if (game.getInput().isKeyReturnDown()) {
+			activateCurrentButton = true;
+		} else if (activateCurrentButton) {
+			activateCurrentButton = false;
+			buttons.get(currentButtonIndex).activate();
+		}
 
-    @Override
-    public void stop() {
-    }
+		ROVector2f mousePos = game.getInput().getMousePos();
+		if (mousePos != null) {
+			float viewWidth = game.getView().getWidth();
+			float viewHeight = game.getView().getHeight();
+			if (viewWidth != 0.0f && viewHeight != 0.0f) {
+				float mouseX = mousePos.getX() * ortho2DRight / viewWidth;
+				float mouseY = ortho2DBottom
+						- (mousePos.getY() * ortho2DBottom / viewHeight);
+				for (Button button : buttons) {
+					System.out.println(mouseX + "," + mouseY);
+					if (mouseX > button.x && mouseX < (button.x + button.w)
+							&& mouseY > button.y
+							&& mouseY < (button.y + button.h)) {
+						buttons.get(currentButtonIndex).setOff();
+						currentButtonIndex = buttons.indexOf(button);
+						button.setOn();
+						if(game.getInput().isMouseButtonDown()) {
+							mouseActivateCurrentButton = true;
+						} else if(mouseActivateCurrentButton) {
+							mouseActivateCurrentButton = false;
+							button.activate();
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
 
-    @Override
-    public void update() throws TransitionException {
-        //NOTHING
-    }
+	@Override
+	public void start() {
+		currentButtonIndex = 0;
+		redraw = true;
+		setCurrentButton(buttons.isEmpty() ? null : buttons.get(0));
+	}
 
-    protected void addButton(Button b) {
-        buttons.add(b);
-    }
+	@Override
+	public void stop() {
+	}
 
-    protected void setCurrentButton(Button button) {
-        for (int i = 0; i < buttons.size(); ++i) {
-            Button b = buttons.get(i);
-            if (b == button) {
-                currentButtonIndex = i;
-                b.setOn();
-            } else {
-                b.setOff();
-            }
+	@Override
+	public void update() throws TransitionException {
+		// NOTHING
+	}
 
-        }
-        redraw = true;
-    }
+	protected void addButton(Button b) {
+		buttons.add(b);
+	}
 
-    public boolean isDirty() {
-        return redraw;
-    }
+	protected void setCurrentButton(Button button) {
+		for (int i = 0; i < buttons.size(); ++i) {
+			Button b = buttons.get(i);
+			if (b == button) {
+				currentButtonIndex = i;
+				b.setOn();
+			} else {
+				b.setOff();
+			}
 
-    public void setDirty(boolean b) {
-        redraw = b;
-    }
+		}
+		redraw = true;
+	}
 
-    public String getBackgroundImage() {
-        return backgroundImage;
-    }
+	public boolean isDirty() {
+		return redraw;
+	}
 
-    public abstract class Button {
+	public void setDirty(boolean b) {
+		redraw = b;
+	}
 
-        public String onTexture, offTexture, currentTexture = null;
-        public float x = 273, y;
-        public float w = -1.0f;
-        public float h = -1.0f;
+	public String getBackgroundImage() {
+		return backgroundImage;
+	}
 
-        public void draw() {
-            game.getView().drawButton(this);
-        }
+	public abstract class Button {
 
-        void setOn() {
-            currentTexture = onTexture;
-        }
+		public String onTexture, offTexture, currentTexture = null;
+		public float x = 273, y;
+		public float w = -1.0f;
+		public float h = -1.0f;
 
-        void setOff() {
-            currentTexture = offTexture;
-        }
+		public void draw() {
+			game.getView().drawButton(this);
+		}
 
-        abstract void activate() throws Sequence.TransitionException;
-    }
+		void setOn() {
+			currentTexture = onTexture;
+		}
+
+		void setOff() {
+			currentTexture = offTexture;
+		}
+
+		abstract void activate() throws Sequence.TransitionException;
+	}
 }
