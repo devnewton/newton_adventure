@@ -56,7 +56,7 @@ public class OptionsGUI extends Widget {
 		soundEnabled = new ToggleButton("Effect enabled");
 		soundEnabled.setActive(soundCache.isSoundEnabled());
 		musicEnabled = new ToggleButton("Music enabled");
-		musicEnabled.setActive(soundCache.isSoundEnabled());
+		musicEnabled.setActive(soundCache.isMusicEnabled());
 		Row soundRow = layout.addRow("label", "effect", "music");
 		soundRow.addLabel("Sound");
 		soundRow.add(soundEnabled);

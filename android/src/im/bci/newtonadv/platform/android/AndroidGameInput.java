@@ -2,6 +2,8 @@ package im.bci.newtonadv.platform.android;
 
 import java.util.Properties;
 
+import net.phys2d.math.ROVector2f;
+
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 
 public class AndroidGameInput implements IGameInput {
@@ -111,5 +113,17 @@ public class AndroidGameInput implements IGameInput {
 	@Override
 	public boolean isKeyCheatGotoNextBonusLevelDown() {
 		return keyCheatGotoNextBonusLevelDown;
+	}
+
+	@Override
+	public ROVector2f getMousePos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isMouseButtonDown() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

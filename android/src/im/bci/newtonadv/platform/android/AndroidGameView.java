@@ -1224,4 +1224,14 @@ public class AndroidGameView implements IGameView {
 		drawMenuSequence(mainMenuSequence);		
 	}
 
+	@Override
+	public float getWidth() {
+		return viewPortWidth;
+	}
+
+	@Override
+	public float getHeight() {
+		return viewPortHeight;
+	}
+
 }
