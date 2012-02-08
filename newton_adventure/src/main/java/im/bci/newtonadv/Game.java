@@ -97,7 +97,8 @@ public strictfp class Game {
         config.setProperty("view.width", Integer.toString(DEFAULT_SCREEN_WIDTH));
         config.setProperty("view.height", Integer.toString(DEFAULT_SCREEN_HEIGHT));
         config.setProperty("view.quality", "NICEST");
-        config.setProperty("sound.enabled", "true");
+        config.setProperty("sound.enabled", "false");
+        config.setProperty("music.enabled", "true");
 
         platform.loadConfig(config);
 

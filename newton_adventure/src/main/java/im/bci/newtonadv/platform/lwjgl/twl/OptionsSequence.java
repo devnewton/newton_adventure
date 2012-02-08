@@ -137,6 +137,7 @@ public class OptionsSequence implements IOptionsSequence {
 		scoreServer.setSecret(optionsGui.scoreSecret.getText());
 		scoreServer.setServerUrl(optionsGui.scoreServerUrl.getText());
 		soundCache.setSoundEnabled(optionsGui.soundEnabled.isActive());
+		soundCache.setMusicEnabled(optionsGui.musicEnabled.isActive());
 	}
 
 	DisplayMode getSelectedMode() {
@@ -211,6 +212,7 @@ public class OptionsSequence implements IOptionsSequence {
 		config.setProperty("scoreserver.player", scoreServer.getPlayer());
 		config.setProperty("scoreserver.secret", scoreServer.getSecret());
 		config.setProperty("sound.enabled", "" + soundCache.isSoundEnabled());
+		config.setProperty("music.enabled", "" + soundCache.isMusicEnabled());
 	}
 
 	private String getKeyFieldName(int key) {

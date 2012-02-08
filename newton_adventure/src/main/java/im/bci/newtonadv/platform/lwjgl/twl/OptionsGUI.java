@@ -43,18 +43,24 @@ public class OptionsGUI extends Widget {
 	ComboBox<String> keyRotate90Clockwise;
 	ComboBox<String> keyRotate90CounterClockwise;
 	EditField scoreServerUrl, scorePlayer, scoreSecret;
-	
+	ToggleButton musicEnabled;
+	private final ColumnLayout layout;
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
-        private final ColumnLayout layout;
 
-	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer, SoundCache soundCache) throws LWJGLException {
+	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
+			SoundCache soundCache) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
 		this.layout = new ColumnLayout();
 		layout.setSize(Display.getWidth(), Display.getHeight());
-		
-		soundEnabled = new ToggleButton("Sound enabled");
+
+		soundEnabled = new ToggleButton("Effect enabled");
 		soundEnabled.setActive(soundCache.isSoundEnabled());
-		layout.addRow("label", "widget").addWithLabel("", soundEnabled);		
+		musicEnabled = new ToggleButton("Music enabled");
+		musicEnabled.setActive(soundCache.isSoundEnabled());
+		Row soundRow = layout.addRow("label", "effect", "music");
+		soundRow.addLabel("Sound");
+		soundRow.add(soundEnabled);
+		soundRow.add(musicEnabled);
 
 		fullscreen = new ToggleButton("Fullscreen");
 		fullscreen.setActive(Display.isFullscreen());
@@ -82,25 +88,28 @@ public class OptionsGUI extends Widget {
 		keyRotate90CounterClockwise = addKeyCombo(layout,
 				"Rotate 90 counter clockwise",
 				gameInput.keyRotate90CounterClockwise);
-		
+
 		scoreServerUrl = new EditField();
 		scoreServerUrl.setText(scoreServer.getServerUrl());
-		layout.addRow("label", "widget").addWithLabel("Score server", scoreServerUrl);
-		
+		layout.addRow("label", "widget").addWithLabel("Score server",
+				scoreServerUrl);
+
 		scorePlayer = new EditField();
 		scorePlayer.setText(scoreServer.getPlayer());
-		layout.addRow("label", "widget").addWithLabel("Player name", scorePlayer);
-		
+		layout.addRow("label", "widget").addWithLabel("Player name",
+				scorePlayer);
+
 		scoreSecret = new EditField();
 		scoreSecret.setText(scoreServer.getSecret());
-		layout.addRow("label", "widget").addWithLabel("Player password", scoreSecret);
+		layout.addRow("label", "widget").addWithLabel("Player password",
+				scoreSecret);
 
 		Button ok = new Button("OK");
-		Button cancel = new Button("Cancel");	
+		Button cancel = new Button("Cancel");
 		Row okCancelRow = layout.addRow("Parameter", "Value");
 		okCancelRow.add(ok);
 		okCancelRow.add(cancel);
-		
+
 		add(layout);
 
 		ok.addCallback(new Runnable() {
@@ -119,15 +128,16 @@ public class OptionsGUI extends Widget {
 		});
 	}
 
-    @Override
-    protected void layout() {
-        layout.setPosition((getWidth() - layout.getPreferredWidth()) / 2, (getHeight() - layout.getPreferredHeight()) / 2);
-    }
-        
+	@Override
+	protected void layout() {
+		layout.setPosition((getWidth() - layout.getPreferredWidth()) / 2,
+				(getHeight() - layout.getPreferredHeight()) / 2);
+	}
+
 	private ComboBox<String> addKeyCombo(ColumnLayout layout, String label,
 			int key) {
 		ComboBox<String> combo = new ComboBox<String>(keyModel);
-		Row rowKeys = layout.addRow("label","key");
+		Row rowKeys = layout.addRow("label", "key");
 		rowKeys.addWithLabel(label, combo);
 		combo.setSelected(keyModel.findElement((Keyboard.getKeyName(key))));
 		return combo;

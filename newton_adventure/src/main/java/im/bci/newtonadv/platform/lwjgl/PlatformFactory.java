@@ -64,8 +64,7 @@ public class PlatformFactory implements IPlatformFactory {
 		if (null == data)
 			throw new RuntimeException("create IGameData before  SoundCache");
 		if (null == soundCache)
-			soundCache = new SoundCache(data, config.getProperty(
-					"sound.enabled").equals("true"));
+			soundCache = new SoundCache(data, config);
 		return soundCache;
 	}
 

@@ -32,9 +32,12 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
+
+import java.io.BufferedInputStream;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
@@ -53,8 +56,10 @@ public class SoundCache implements ISoundCache {
 	private ReferenceQueue<Clip> clipReferenceQueue = new ReferenceQueue<Clip>();
 	private String currentMusicName;
 	private OggClip currentMusic;
-	private boolean enabled;
+	private boolean soundEnabled;
+	private boolean musicEnabled;
 	private final GameData data;
+
 
 	public static final class PlayableClipWrapper implements Playable {
 
@@ -75,10 +80,23 @@ public class SoundCache implements ISoundCache {
 			clip.stop();
 		}
 	}
+	
+	public static final class NullPlayable implements Playable {
 
-	public SoundCache(GameData data, boolean enabled) {
+		@Override
+		public void play() {
+		}
+
+		@Override
+		public void stop() {
+		}
+		
+	}
+
+	public SoundCache(GameData data, Properties config) {
 		this.data = data;
-		this.enabled = enabled;
+		this.soundEnabled = config.getProperty("sound.enabled").equals("true");
+		this.musicEnabled = config.getProperty("music.enabled").equals("true");
 	}
 
 	@Override
@@ -114,16 +132,15 @@ public class SoundCache implements ISoundCache {
 	}
 
 	private OggClip getMusicIfEnabled(String name) {
-		if (!enabled) {
+		if (!musicEnabled) {
 			return null;
 		}
-		OggClip clip = loadOggClip(name);
-		return clip;
+		return loadOggClip(name);
 	}
 
 	@Override
 	public Playable getSoundIfEnabled(String name) {
-		if (!enabled) {
+		if (!soundEnabled) {
 			return null;
 		}
 		ClipWeakReference clipRef = clips.get(name);
@@ -138,8 +155,11 @@ public class SoundCache implements ISoundCache {
 		final Clip clip = loadClip(name);
 		if (clip != null) {
 			clips.put(name, new ClipWeakReference(clip, clipReferenceQueue));
+			return new PlayableClipWrapper(clip);
+		} else {
+			return new NullPlayable();
 		}
-		return new PlayableClipWrapper(clip);
+		
 	}
 
 	@Override
@@ -165,8 +185,9 @@ public class SoundCache implements ISoundCache {
 
 	private Clip loadClip(String filename) {
 		try {
+			BufferedInputStream stream = new BufferedInputStream(data.openFile(filename), 32 * 1024);
 			AudioInputStream audioInputStream = AudioSystem
-					.getAudioInputStream(data.openFile(filename));
+					.getAudioInputStream(stream);
 			AudioFormat format = audioInputStream.getFormat();
 			DataLine.Info info = new DataLine.Info(Clip.class, format);
 			Clip clip = (Clip) AudioSystem.getLine(info);
@@ -175,7 +196,6 @@ public class SoundCache implements ISoundCache {
 		} catch (Exception e) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
 					"Impossible de charger le son " + filename, e);
-			System.exit(0);
 			return null;
 		}
 	}
@@ -187,7 +207,6 @@ public class SoundCache implements ISoundCache {
 		} catch (Exception e) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
 					"Impossible de charger la musique " + filename, e);
-			System.exit(0);
 			return null;
 		}
 	}
@@ -200,11 +219,19 @@ public class SoundCache implements ISoundCache {
 	}
 
 	public boolean isSoundEnabled() {
-		return enabled;
+		return soundEnabled;
 	}
 
 	public void setSoundEnabled(boolean enabled) {
-		this.enabled = enabled;
+		this.soundEnabled = enabled;
+	}
+	
+	public boolean isMusicEnabled() {
+		return musicEnabled;
+	}
+
+	public void setMusicEnabled(boolean enabled) {
+		this.musicEnabled = enabled;
 		if (!enabled)
 			stopMusic();
 	}
