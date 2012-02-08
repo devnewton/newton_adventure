@@ -157,7 +157,8 @@ public strictfp class Game {
         QuestMenuSequence questMenuSequence = new QuestMenuSequence(this);
         mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence, optionsSequence);
         questMenuSequence.setNextSequence(mainMenuSequence);
-        optionsSequence.setNextSequence(mainMenuSequence);
+        if(null != optionsSequence)
+        	optionsSequence.setNextSequence(mainMenuSequence);
         loadBonusSequences();
         return mainMenuSequence;
     }

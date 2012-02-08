@@ -31,9 +31,6 @@
  */
 package im.bci.newtonadv.platform.android;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import im.bci.newtonadv.Game;
 import android.app.Activity;
 import android.os.Bundle;
@@ -59,7 +56,7 @@ public class AndroidActivity extends Activity {
 	        setContentView(mGLView);
 			mGLView.setGame(game);
 		} catch (Exception e) {
-			Logger.getLogger(AndroidPlatformFactory.class.getName()).log(Level.SEVERE, null, e);
+			throw new RuntimeException(e);
 		}
     }
     
