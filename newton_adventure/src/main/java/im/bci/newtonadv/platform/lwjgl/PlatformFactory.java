@@ -57,13 +57,16 @@ public class PlatformFactory implements IPlatformFactory {
 	private Properties config;
 	private ScoreServer scoreServer;
 	private GameData data;
+	private SoundCache soundCache;
 
 	@Override
 	public SoundCache createSoundCache(Properties config) {
 		if (null == data)
 			throw new RuntimeException("create IGameData before  SoundCache");
-		return new SoundCache(data, config.getProperty("sound.enabled").equals(
-				"true"));
+		if (null == soundCache)
+			soundCache = new SoundCache(data, config.getProperty(
+					"sound.enabled").equals("true"));
+		return soundCache;
 	}
 
 	@Override
@@ -129,7 +132,7 @@ public class PlatformFactory implements IPlatformFactory {
 			throw new RuntimeException(
 					"load config before creating IOptionsSequence");
 		}
-		return new OptionsSequence(view, input, scoreServer, config);
+		return new OptionsSequence(view, input, scoreServer, soundCache, config);
 	}
 
 	public static URL getDefaultConfigFilePath() {

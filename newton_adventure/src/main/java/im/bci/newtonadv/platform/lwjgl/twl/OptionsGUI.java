@@ -3,6 +3,7 @@ package im.bci.newtonadv.platform.lwjgl.twl;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
+import im.bci.newtonadv.platform.lwjgl.SoundCache;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.lang.reflect.Field;
@@ -30,6 +31,7 @@ import de.matthiasmann.twl.model.SimpleChangableListModel;
 public class OptionsGUI extends Widget {
 
 	boolean okPressed, cancelPressed;
+	ToggleButton soundEnabled;
 	ToggleButton fullscreen;
 	ComboBox<DisplayMode> mode;
 	ComboBox<GameViewQuality> quality;
@@ -45,10 +47,14 @@ public class OptionsGUI extends Widget {
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
         private final ColumnLayout layout;
 
-	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer) throws LWJGLException {
+	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer, SoundCache soundCache) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
 		this.layout = new ColumnLayout();
 		layout.setSize(Display.getWidth(), Display.getHeight());
+		
+		soundEnabled = new ToggleButton("Sound enabled");
+		soundEnabled.setActive(soundCache.isSoundEnabled());
+		layout.addRow("label", "widget").addWithLabel("", soundEnabled);		
 
 		fullscreen = new ToggleButton("Fullscreen");
 		fullscreen.setActive(Display.isFullscreen());

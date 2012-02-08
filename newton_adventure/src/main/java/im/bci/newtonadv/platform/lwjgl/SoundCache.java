@@ -44,154 +44,168 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
 /**
- *
+ * 
  * @author bci
  */
 public class SoundCache implements ISoundCache {
 
-    private HashMap<String/*name*/, ClipWeakReference> clips = new HashMap<String, ClipWeakReference>();
-    private ReferenceQueue<Clip> clipReferenceQueue = new ReferenceQueue<Clip>();
-    private String currentMusicName;
-    private OggClip currentMusic;
-    private boolean enabled;
-    private final GameData data;
+	private HashMap<String/* name */, ClipWeakReference> clips = new HashMap<String, ClipWeakReference>();
+	private ReferenceQueue<Clip> clipReferenceQueue = new ReferenceQueue<Clip>();
+	private String currentMusicName;
+	private OggClip currentMusic;
+	private boolean enabled;
+	private final GameData data;
 
-    public static final class PlayableClipWrapper implements Playable {
+	public static final class PlayableClipWrapper implements Playable {
 
-        private final Clip clip;
+		private final Clip clip;
 
-        PlayableClipWrapper(Clip clip) {
-            this.clip = clip;
-        }
+		PlayableClipWrapper(Clip clip) {
+			this.clip = clip;
+		}
 
-        @Override
+		@Override
 		public void play() {
-            clip.setFramePosition(0);
-            clip.loop(0);
-        }
+			clip.setFramePosition(0);
+			clip.loop(0);
+		}
 
-        @Override
+		@Override
 		public void stop() {
-            clip.stop();
-        }
-    }
+			clip.stop();
+		}
+	}
 
-    public SoundCache(GameData data, boolean enabled) {
-    	this.data = data;
-        this.enabled = enabled;
-    }
+	public SoundCache(GameData data, boolean enabled) {
+		this.data = data;
+		this.enabled = enabled;
+	}
 
-    @Override
+	@Override
 	public void stopMusic() {
-        currentMusicName = null;
-        if (null != currentMusic) {
-            currentMusic.stop();
-            currentMusic.close();
-        }
-    }
+		currentMusicName = null;
+		if (null != currentMusic) {
+			currentMusic.stop();
+			currentMusic.close();
+		}
+	}
 
-    @Override
+	@Override
 	public void playMusicIfEnabled(String name) {
-        if (name.equals(currentMusicName)) {
-            return;
-        }
+		if (name.equals(currentMusicName)) {
+			return;
+		}
 
-        if (null != currentMusic) {
-            currentMusic.stop();
-            currentMusic.close();
-        }
+		if (null != currentMusic) {
+			currentMusic.stop();
+			currentMusic.close();
+		}
 
-        try {
-            currentMusic = getMusicIfEnabled(name);
-            if (null != currentMusic) {
-                currentMusic.loop();
-                currentMusicName = name;
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(SoundCache.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		try {
+			currentMusic = getMusicIfEnabled(name);
+			if (null != currentMusic) {
+				currentMusic.loop();
+				currentMusicName = name;
+			}
+		} catch (Exception ex) {
+			Logger.getLogger(SoundCache.class.getName()).log(Level.SEVERE,
+					null, ex);
+		}
+	}
 
-    private OggClip getMusicIfEnabled(String name) {
-        if (!enabled) {
-            return null;
-        }
-        OggClip clip = loadOggClip(name);
-        return clip;
-    }
+	private OggClip getMusicIfEnabled(String name) {
+		if (!enabled) {
+			return null;
+		}
+		OggClip clip = loadOggClip(name);
+		return clip;
+	}
 
-    @Override
+	@Override
 	public Playable getSoundIfEnabled(String name) {
-        if (!enabled) {
-            return null;
-        }
-        ClipWeakReference clipRef = clips.get(name);
-        if (clipRef != null) {
-            Clip clip = clipRef.get();
-            if (clip != null) {
-                return new PlayableClipWrapper(clip);
-            } else {
-                clips.remove(name);
-            }
-        }
-        final Clip clip = loadClip(name);
-        if (clip != null) {
-            clips.put(name, new ClipWeakReference(clip, clipReferenceQueue));
-        }
-        return new PlayableClipWrapper(clip);
-    }
+		if (!enabled) {
+			return null;
+		}
+		ClipWeakReference clipRef = clips.get(name);
+		if (clipRef != null) {
+			Clip clip = clipRef.get();
+			if (clip != null) {
+				return new PlayableClipWrapper(clip);
+			} else {
+				clips.remove(name);
+			}
+		}
+		final Clip clip = loadClip(name);
+		if (clip != null) {
+			clips.put(name, new ClipWeakReference(clip, clipReferenceQueue));
+		}
+		return new PlayableClipWrapper(clip);
+	}
 
-    @Override
+	@Override
 	public void clearAll() {
-        for (ClipWeakReference ref : clips.values()) {
-            if (ref.get() != null) {
-                ref.get().close();
-            }
-        }
-        clips.clear();
-        stopMusic();
-    }
+		for (ClipWeakReference ref : clips.values()) {
+			if (ref.get() != null) {
+				ref.get().close();
+			}
+		}
+		clips.clear();
+		stopMusic();
+	}
 
-    @Override
+	@Override
 	public void clearUseless() {
-        ClipWeakReference ref;
-        while ((ref = (ClipWeakReference) clipReferenceQueue.poll()) != null) {
-            if (ref.get() != null) {
-                ref.get().close();
-            }
-        }
-    }
+		ClipWeakReference ref;
+		while ((ref = (ClipWeakReference) clipReferenceQueue.poll()) != null) {
+			if (ref.get() != null) {
+				ref.get().close();
+			}
+		}
+	}
 
-    private Clip loadClip(String filename) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(data.openFile(filename));
-            AudioFormat format = audioInputStream.getFormat();
-            DataLine.Info info = new DataLine.Info(Clip.class, format);
-            Clip clip = (Clip) AudioSystem.getLine(info);
-            clip.open(audioInputStream);
-            return clip;
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Impossible de charger le son " + filename, e);
-            System.exit(0);
-            return null;
-        }
-    }
+	private Clip loadClip(String filename) {
+		try {
+			AudioInputStream audioInputStream = AudioSystem
+					.getAudioInputStream(data.openFile(filename));
+			AudioFormat format = audioInputStream.getFormat();
+			DataLine.Info info = new DataLine.Info(Clip.class, format);
+			Clip clip = (Clip) AudioSystem.getLine(info);
+			clip.open(audioInputStream);
+			return clip;
+		} catch (Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+					"Impossible de charger le son " + filename, e);
+			System.exit(0);
+			return null;
+		}
+	}
 
-    private OggClip loadOggClip(String filename) {
-        try {
-            OggClip clip = new OggClip(data.openFile(filename));
-            return clip;
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Impossible de charger la musique " + filename, e);
-            System.exit(0);
-            return null;
-        }
-    }
+	private OggClip loadOggClip(String filename) {
+		try {
+			OggClip clip = new OggClip(data.openFile(filename));
+			return clip;
+		} catch (Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+					"Impossible de charger la musique " + filename, e);
+			System.exit(0);
+			return null;
+		}
+	}
 
-    private static final class ClipWeakReference extends WeakReference<Clip> {
+	private static final class ClipWeakReference extends WeakReference<Clip> {
 
-        ClipWeakReference(Clip clip, ReferenceQueue<Clip> queue) {
-            super(clip, queue);
-        }
-    }
+		ClipWeakReference(Clip clip, ReferenceQueue<Clip> queue) {
+			super(clip, queue);
+		}
+	}
+
+	public boolean isSoundEnabled() {
+		return enabled;
+	}
+
+	public void setSoundEnabled(boolean enabled) {
+		this.enabled = enabled;
+		if (!enabled)
+			stopMusic();
+	}
 }

@@ -21,6 +21,7 @@ import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 import im.bci.newtonadv.platform.lwjgl.PlatformFactory;
+import im.bci.newtonadv.platform.lwjgl.SoundCache;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.io.FileOutputStream;
@@ -36,12 +37,14 @@ public class OptionsSequence implements IOptionsSequence {
 	private final GameInput input;
 	private final Properties config;
 	private final ScoreServer scoreServer;
+	private final SoundCache soundCache;
 
 	public OptionsSequence(GameView view, GameInput input,
-			ScoreServer scoreServer, Properties config) {
+			ScoreServer scoreServer, SoundCache soundCache, Properties config) {
 		this.view = view;
 		this.input = input;
 		this.scoreServer = scoreServer;
+		this.soundCache = soundCache;
 		this.config = config;
 	}
 
@@ -50,7 +53,7 @@ public class OptionsSequence implements IOptionsSequence {
 		LWJGLRenderer renderer;
 		try {
 			renderer = new LWJGLRenderer();
-			optionsGui = new OptionsGUI(view, input, scoreServer);
+			optionsGui = new OptionsGUI(view, input, scoreServer, soundCache);
 			gui = new GUI(optionsGui, renderer);
 			ThemeManager themeManager = ThemeManager.createThemeManager(
 					getClass().getClassLoader().getResource("twl/theme.xml"),
@@ -133,6 +136,7 @@ public class OptionsSequence implements IOptionsSequence {
 		scoreServer.setPlayer(optionsGui.scorePlayer.getText());
 		scoreServer.setSecret(optionsGui.scoreSecret.getText());
 		scoreServer.setServerUrl(optionsGui.scoreServerUrl.getText());
+		soundCache.setSoundEnabled(optionsGui.soundEnabled.isActive());
 	}
 
 	DisplayMode getSelectedMode() {
@@ -206,6 +210,7 @@ public class OptionsSequence implements IOptionsSequence {
 		config.setProperty("scoreserver.url", scoreServer.getServerUrl());
 		config.setProperty("scoreserver.player", scoreServer.getPlayer());
 		config.setProperty("scoreserver.secret", scoreServer.getSecret());
+		config.setProperty("sound.enabled", "" + soundCache.isSoundEnabled());
 	}
 
 	private String getKeyFieldName(int key) {
