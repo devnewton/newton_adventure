@@ -154,11 +154,11 @@ public strictfp class MainMenuSequence extends MenuSequence {
     @Override
     public void start() {
         super.start();
-        if (resumeSequence == null) {
+        if (resumeSequence instanceof LevelSequence ) {
+        	setCurrentButton(resumeButton);
+        } else {
             setCurrentButton(playButton);
             game.getSoundCache().playMusicIfEnabled(game.getData().getFile("lovelace_0.ogg"));
-        } else {
-            setCurrentButton(resumeButton);
         }
     }
     
