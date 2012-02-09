@@ -144,7 +144,6 @@ public abstract class MenuSequence implements Sequence {
 				float mouseY = ortho2DBottom
 						- (mousePos.getY() * ortho2DBottom / viewHeight);
 				for (Button button : buttons) {
-					System.out.println(mouseX + "," + mouseY);
 					if (mouseX > button.x && mouseX < (button.x + button.w)
 							&& mouseY > button.y
 							&& mouseY < (button.y + button.h)) {
