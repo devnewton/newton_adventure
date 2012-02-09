@@ -13,7 +13,7 @@ Newton Adventure is a free and open source 2D platform game. You play Newton, a 
 
 <h1>Téléchargement</h1>
 
-<p><a href="downloads/newton_adventure_1.2.zip">Download version 1.2</a></p>
+<p><a href="downloads/newton_adventure_1.2.zip">Version 1.2</a></p>
 <p><a href="downloads/newton_adventure_1.1.zip">Version 1.1</a></p>
 <p><a href="downloads/newton_adventure_1.0.zip">Version 1.0</a></p>
 
