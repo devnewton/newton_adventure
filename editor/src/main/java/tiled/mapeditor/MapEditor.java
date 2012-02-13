@@ -97,6 +97,7 @@ import tiled.mapeditor.actions.DeleteLayerAction;
 import tiled.mapeditor.actions.ExitAction;
 import tiled.mapeditor.actions.MergeAllLayersAction;
 import tiled.mapeditor.actions.MergeLayerDownAction;
+import tiled.mapeditor.actions.MinimapAction;
 import tiled.mapeditor.actions.MoveLayerDownAction;
 import tiled.mapeditor.actions.MoveLayerUpAction;
 import tiled.mapeditor.actions.NewMapAction;
@@ -235,6 +236,7 @@ public class MapEditor implements ActionListener, MouseListener,
     private final Action moveLayerDownAction, moveLayerUpAction;
     private final Action mergeLayerDownAction, mergeAllLayersAction;
     private final Action addObjectGroupAction;
+    private final Action minimapAction;
 
     private static final String IMPORT_ERROR_MSG = Resources.getString("dialog.newtileset.import.error.message");
 
@@ -307,6 +309,7 @@ public class MapEditor implements ActionListener, MouseListener,
         mergeLayerDownAction = new MergeLayerDownAction(this);
         mergeAllLayersAction = new MergeAllLayersAction(this);
         addObjectGroupAction = new AddObjectGroupAction(this);
+        minimapAction = new MinimapAction(this);
 
         // Create our frame
         appFrame = new JFrame(Resources.getString("dialog.main.title"));
@@ -590,6 +593,9 @@ public class MapEditor implements ActionListener, MouseListener,
         mapEventAdapter.addListener(selectMenu);
         mapEventAdapter.addListener(viewMenu);
 
+        JMenu toolsMenu = new JMenu(Resources.getString("menu.tools"));
+        toolsMenu.add(new TMenuItem(minimapAction));
+        
         JMenu helpMenu = new JMenu(Resources.getString("menu.help"));
         helpMenu.add(createMenuItem(Resources.getString("menu.help.plugins"), null,
                 Resources.getString("menu.help.plugins.tooltip")));
@@ -603,6 +609,7 @@ public class MapEditor implements ActionListener, MouseListener,
         menuBar.add(mapMenu);
         menuBar.add(layerMenu);
         menuBar.add(tilesetMenu);
+        menuBar.add(toolsMenu);
         //menuBar.add(objectMenu);
         menuBar.add(helpMenu);
     }
@@ -2317,6 +2324,7 @@ public class MapEditor implements ActionListener, MouseListener,
         zoomOutAction.setEnabled(mapLoaded);
         zoomNormalAction.setEnabled(mapLoaded && mapView.getZoomLevel() !=
                 MapView.ZOOM_NORMALSIZE);
+        minimapAction.setEnabled(mapLoaded);
 
         /*
         if (miniMap != null && currentMap != null) {
