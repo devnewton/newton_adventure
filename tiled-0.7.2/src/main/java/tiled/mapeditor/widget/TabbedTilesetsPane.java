@@ -17,12 +17,18 @@ package tiled.mapeditor.widget;
 
 import java.awt.Component;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.ScrollPaneConstants;
 
-import tiled.core.*;
+import tiled.core.Map;
+import tiled.core.MapChangeListener;
+import tiled.core.MapChangedEvent;
+import tiled.core.TileSet;
+import tiled.core.TilesetChangeListener;
+import tiled.core.TilesetChangedEvent;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.brush.CustomBrush;
 import tiled.mapeditor.util.TileRegionSelectionEvent;
@@ -37,6 +43,10 @@ import tiled.mapeditor.util.TileSelectionListener;
 public class TabbedTilesetsPane extends JTabbedPane implements TileSelectionListener
 {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1190594964935357694L;
+	/**
      * Map of tile sets to tile palette panels
      */
     private final HashMap<TileSet, TilePalettePanel> tilePanels =
@@ -110,8 +120,8 @@ public class TabbedTilesetsPane extends JTabbedPane implements TileSelectionList
         tilePanel.setTileset(tileset);
         tilePanel.addTileSelectionListener(this);
         JScrollPane paletteScrollPane = new JScrollPane(tilePanel,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         addTab(tileset.getName(), paletteScrollPane);
         tilePanels.put(tileset, tilePanel);
     }

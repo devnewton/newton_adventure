@@ -13,6 +13,7 @@
 package tiled.mapeditor.widget;
 
 import java.awt.Insets;
+
 import javax.swing.Action;
 import javax.swing.JButton;
 
@@ -24,7 +25,11 @@ import javax.swing.JButton;
  */
 public class TButton extends JButton
 {
-    private boolean showText;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7112923964353517673L;
+	private boolean showText;
 
     public TButton() {
         setMargin(new Insets(0, 0, 0, 0));
@@ -48,7 +53,8 @@ public class TButton extends JButton
         this.showText = showText;
     }
 
-    public void setText(String text) {
+    @Override
+	public void setText(String text) {
         if (showText) {
             super.setText(text);
         }

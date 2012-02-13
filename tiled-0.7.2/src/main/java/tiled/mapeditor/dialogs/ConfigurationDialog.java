@@ -12,24 +12,41 @@
 
 package tiled.mapeditor.dialogs;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.prefs.Preferences;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
-import javax.swing.*;
+import java.io.FileOutputStream;
+import java.util.prefs.Preferences;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import tiled.mapeditor.Resources;
+import tiled.mapeditor.util.ConfirmableFileFilter;
+import tiled.mapeditor.util.ConfirmingFileChooser;
 import tiled.mapeditor.widget.IntegerSpinner;
 import tiled.mapeditor.widget.VerticalStaticJPanel;
-import tiled.mapeditor.Resources;
-import tiled.mapeditor.util.ConfirmingFileChooser;
-import tiled.mapeditor.util.ConfirmableFileFilter;
 import tiled.util.TiledConfiguration;
 
 /**
@@ -37,7 +54,11 @@ import tiled.util.TiledConfiguration;
  */
 public class ConfigurationDialog extends JDialog
 {
-    private IntegerSpinner undoDepth;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3857193312949102971L;
+	private IntegerSpinner undoDepth;
     private JSlider gridOpacitySlider;
     private JCheckBox cbBinaryEncode;
     private JCheckBox cbCompressLayerData;
@@ -79,13 +100,16 @@ public class ConfigurationDialog extends JDialog
 
     private static final ConfirmableFileFilter xmlFileFilter =
             new ConfirmableFileFilter() {
-                public String getDefaultExtension() {
+                @Override
+				public String getDefaultExtension() {
                     return "xml";
                 }
-                public boolean accept(File file) {
+                @Override
+				public boolean accept(File file) {
                     return file.isDirectory() || file.getPath().endsWith(".xml");
                 }
-                public String getDescription() {
+                @Override
+				public String getDescription() {
                     return "XML files (*.xml)";
                 }
             };

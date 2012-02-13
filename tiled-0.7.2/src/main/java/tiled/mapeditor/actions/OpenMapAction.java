@@ -29,7 +29,11 @@ import tiled.util.TiledConfiguration;
  */
 public class OpenMapAction extends AbstractFileAction
 {
-    private static final String OPEN_ERROR_TITLE = Resources.getString("dialog.saveas.error.title");
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 803317391121557341L;
+	private static final String OPEN_ERROR_TITLE = Resources.getString("dialog.saveas.error.title");
 
     public OpenMapAction(MapEditor editor, SaveAction saveAction) {
         super(editor, saveAction,
@@ -39,7 +43,8 @@ public class OpenMapAction extends AbstractFileAction
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control O"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         // Start at the location of the most recently loaded map file
         String startLocation = TiledConfiguration.fileDialogStartLocation();
 

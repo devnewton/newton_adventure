@@ -14,17 +14,24 @@ package tiled.mapeditor.util;
 
 import java.awt.Component;
 import java.awt.Image;
+
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
-import javax.swing.DefaultListCellRenderer;
 
 public class ImageCellRenderer extends DefaultListCellRenderer
 {
-    public ImageCellRenderer() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8131656400219422438L;
+
+	public ImageCellRenderer() {
         setOpaque(true);
     }
 
-    public Component getListCellRendererComponent(JList list, Object value,
+    @Override
+	public Component getListCellRendererComponent(JList list, Object value,
             int index,  boolean isSelected, boolean cellHasFocus) {
         super.getListCellRendererComponent(
                 list, value, index, isSelected, cellHasFocus);

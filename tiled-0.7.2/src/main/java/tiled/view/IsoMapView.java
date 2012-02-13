@@ -12,9 +12,16 @@
 
 package tiled.view;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
+
 import javax.swing.SwingConstants;
 
 import tiled.core.Map;
@@ -29,6 +36,11 @@ import tiled.mapeditor.selection.SelectionLayer;
 public class IsoMapView extends MapView
 {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8959474077533636985L;
+
+	/**
      * Creates a new isometric map view that displays the specified map.
      *
      * @param map the map to be displayed by this map view
@@ -37,7 +49,8 @@ public class IsoMapView extends MapView
         super(map);
     }
 
-    public int getScrollableBlockIncrement(Rectangle visibleRect,
+    @Override
+	public int getScrollableBlockIncrement(Rectangle visibleRect,
             int orientation, int direction) {
         Dimension tsize = getTileSize();
         if (orientation == SwingConstants.VERTICAL) {
@@ -47,7 +60,8 @@ public class IsoMapView extends MapView
         }
     }
 
-    public int getScrollableUnitIncrement(Rectangle visibleRect,
+    @Override
+	public int getScrollableUnitIncrement(Rectangle visibleRect,
             int orientation, int direction) {
         Dimension tsize = getTileSize();
         if (orientation == SwingConstants.VERTICAL) {
@@ -57,7 +71,8 @@ public class IsoMapView extends MapView
         }
     }
 
-    protected void paintLayer(Graphics2D g2d, TileLayer layer) {
+    @Override
+	protected void paintLayer(Graphics2D g2d, TileLayer layer) {
         // Turn anti alias on for selection drawing
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -117,11 +132,13 @@ public class IsoMapView extends MapView
         }
     }
 
-    protected void paintObjectGroup(Graphics2D g2d, ObjectGroup og) {
+    @Override
+	protected void paintObjectGroup(Graphics2D g2d, ObjectGroup og) {
         // TODO: Implement objectgroup painting for IsoMapView
     }
 
-    protected void paintGrid(Graphics2D g2d) {
+    @Override
+	protected void paintGrid(Graphics2D g2d) {
         Dimension tileSize = getTileSize();
         Rectangle clipRect = g2d.getClipBounds();
 
@@ -150,7 +167,8 @@ public class IsoMapView extends MapView
         }
     }
 
-    protected void paintCoordinates(Graphics2D g2d) {
+    @Override
+	protected void paintCoordinates(Graphics2D g2d) {
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
@@ -206,11 +224,13 @@ public class IsoMapView extends MapView
         }
     }
 
-    protected void paintPropertyFlags(Graphics2D g2d, TileLayer layer) {
+    @Override
+	protected void paintPropertyFlags(Graphics2D g2d, TileLayer layer) {
         throw new RuntimeException("Not yet implemented");    // todo
     }
 
-    public void repaintRegion(Rectangle region) {
+    @Override
+	public void repaintRegion(Rectangle region) {
         Dimension tileSize = getTileSize();
         int maxExtraHeight =
             (int)(map.getTileHeightMax() * zoom) - tileSize.height;
@@ -228,7 +248,8 @@ public class IsoMapView extends MapView
         repaint(new Rectangle(x1, y1, x2 - x1, y2 - y1));
     }
 
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         Dimension tileSize = getTileSize();
         int border = showGrid ? 1 : 0;
         int mapSides = map.getHeight() + map.getWidth();
@@ -241,7 +262,8 @@ public class IsoMapView extends MapView
     /**
      * Returns the coordinates of the tile at the given screen coordinates.
      */
-    public Point screenToTileCoords(int x, int y) {
+    @Override
+	public Point screenToTileCoords(int x, int y) {
         Dimension tileSize = getTileSize();
         double r = getTileRatio();
 
@@ -257,12 +279,14 @@ public class IsoMapView extends MapView
                 (my < 0 ? my - tileSize.height : my) / tileSize.height);
     }
 
-    public Point screenToPixelCoords(int x, int y) {
+    @Override
+	public Point screenToPixelCoords(int x, int y) {
         // TODO: add proper implementation
         return new Point();
     }
 
-    protected Polygon createGridPolygon(int tx, int ty, int border) {
+    @Override
+	protected Polygon createGridPolygon(int tx, int ty, int border) {
         Dimension tileSize = getTileSize();
         tileSize.width -= border * 2;
         tileSize.height -= border * 2;
@@ -289,7 +313,8 @@ public class IsoMapView extends MapView
     /**
      * Returns the location on the screen of the top corner of a tile.
      */
-    public Point tileToScreenCoords(int x, int y) {
+    @Override
+	public Point tileToScreenCoords(int x, int y) {
         Dimension tileSize = getTileSize();
         int originX = (map.getHeight() * tileSize.width) / 2;
         return new Point(

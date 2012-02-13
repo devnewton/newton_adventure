@@ -16,7 +16,16 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 import tiled.mapeditor.Resources;
@@ -28,7 +37,11 @@ import tiled.mapeditor.widget.VerticalStaticJPanel;
  */
 public class PropertiesDialog extends JDialog
 {
-    protected JTable propertiesTable;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1144711976611870235L;
+	protected JTable propertiesTable;
     protected final Properties properties;
     protected final PropertiesTableModel tableModel = new PropertiesTableModel();
     protected JPanel mainPanel;

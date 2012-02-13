@@ -21,7 +21,12 @@ import java.util.EventObject;
  */
 public class TilesetChangedEvent extends EventObject
 {
-    public TilesetChangedEvent(TileSet set) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4807756663046819179L;
+
+	public TilesetChangedEvent(TileSet set) {
         super(set);
     }
 

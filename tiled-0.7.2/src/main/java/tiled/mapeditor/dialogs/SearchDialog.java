@@ -12,25 +12,47 @@
 
 package tiled.mapeditor.dialogs;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
-import java.util.Vector;
-import javax.swing.*;
 
-import tiled.core.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import tiled.core.Map;
+import tiled.core.MapLayer;
+import tiled.core.Tile;
+import tiled.core.TileLayer;
+import tiled.core.TileSet;
+import tiled.mapeditor.Resources;
 import tiled.mapeditor.selection.SelectionLayer;
 import tiled.mapeditor.util.MultisetListRenderer;
 import tiled.mapeditor.widget.VerticalStaticJPanel;
-import tiled.mapeditor.Resources;
 
 /**
  * @version $Id$
  */
 public class SearchDialog extends JDialog implements ActionListener
 {
-    private final Map map;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5303917982684454539L;
+	private final Map map;
     private JComboBox searchCBox, replaceCBox;
     private Point currentMatch;
     private SelectionLayer sl;
@@ -140,9 +162,9 @@ public class SearchDialog extends JDialog implements ActionListener
         for (TileSet set : map.getTilesets()) {
             b.addItem(set);
 
-            final Iterator tileIterator = set.iterator();
+            final Iterator<Tile> tileIterator = set.iterator();
             while (tileIterator.hasNext()) {
-                Tile tile = (Tile) tileIterator.next();
+                Tile tile = tileIterator.next();
                 b.addItem(tile);
             }
         }

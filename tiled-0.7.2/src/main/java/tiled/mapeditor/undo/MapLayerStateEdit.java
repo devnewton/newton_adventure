@@ -13,6 +13,7 @@
 package tiled.mapeditor.undo;
 
 import java.util.Vector;
+
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -26,7 +27,11 @@ import tiled.core.MapLayer;
  */
 public class MapLayerStateEdit extends AbstractUndoableEdit
 {
-    private final Map map;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2414928475993341984L;
+	private final Map map;
     private final Vector<MapLayer> layersBefore;
     private final Vector<MapLayer> layersAfter;
     private final String name;
@@ -41,17 +46,20 @@ public class MapLayerStateEdit extends AbstractUndoableEdit
         this.name = name;
     }
 
-    public void undo() throws CannotUndoException {
+    @Override
+	public void undo() throws CannotUndoException {
         super.undo();
         map.setLayerVector(layersBefore);
     }
 
-    public void redo() throws CannotRedoException {
+    @Override
+	public void redo() throws CannotRedoException {
         super.redo();
         map.setLayerVector(layersAfter);
     }
 
-    public String getPresentationName() {
+    @Override
+	public String getPresentationName() {
         return name;
     }
 }

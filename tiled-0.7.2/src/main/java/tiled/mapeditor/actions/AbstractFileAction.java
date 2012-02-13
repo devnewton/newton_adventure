@@ -13,6 +13,7 @@
 package tiled.mapeditor.actions;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
@@ -28,7 +29,11 @@ import tiled.mapeditor.Resources;
  */
 public abstract class AbstractFileAction extends AbstractAction
 {
-    protected final MapEditor editor;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5457368905850472700L;
+	protected final MapEditor editor;
     private final SaveAsAction saveAction;
 
     private static final String SAVE_CHANGES_TEXT = Resources.getString("action.map.save.changes.text");

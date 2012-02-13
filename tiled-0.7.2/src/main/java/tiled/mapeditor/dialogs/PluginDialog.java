@@ -17,15 +17,25 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import tiled.io.MapReader;
 import tiled.io.MapWriter;
+import tiled.mapeditor.Resources;
 import tiled.mapeditor.plugin.PluginClassLoader;
 import tiled.mapeditor.widget.VerticalStaticJPanel;
-import tiled.mapeditor.Resources;
 
 /**
  * @version $Id$
@@ -33,7 +43,11 @@ import tiled.mapeditor.Resources;
 public class PluginDialog extends JDialog implements ActionListener,
        ListSelectionListener
 {
-    private final PluginClassLoader pluginLoader;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4786390809593419563L;
+	private final PluginClassLoader pluginLoader;
     private JList pluginList;
     private JButton closeButton, infoButton, removeButton;
 
@@ -106,7 +120,7 @@ public class PluginDialog extends JDialog implements ActionListener,
 
         setContentPane(mainPanel);
         getRootPane().setDefaultButton(closeButton);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         updateButtons();
     }
 

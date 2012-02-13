@@ -12,7 +12,13 @@
 
 package tiled.view;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+
 import javax.swing.SwingConstants;
 
 import tiled.core.Map;
@@ -24,7 +30,11 @@ import tiled.core.TileLayer;
  */
 public class ShiftedMapView extends MapView
 {
-    private int horSide;       // Length of horizontal sides
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3771129188793090040L;
+	private int horSide;       // Length of horizontal sides
     private int verSide;       // Length of vertical sides
 
     /**
@@ -39,7 +49,8 @@ public class ShiftedMapView extends MapView
         verSide = 0;
     }
 
-    public int getScrollableBlockIncrement(Rectangle visibleRect,
+    @Override
+	public int getScrollableBlockIncrement(Rectangle visibleRect,
             int orientation, int direction) {
         int unit =
             getScrollableUnitIncrement(visibleRect, orientation, direction);
@@ -51,7 +62,8 @@ public class ShiftedMapView extends MapView
         }
     }
 
-    public int getScrollableUnitIncrement(Rectangle visibleRect,
+    @Override
+	public int getScrollableUnitIncrement(Rectangle visibleRect,
             int orientation, int direction) {
         Dimension tsize = getTileSize();
         if (orientation == SwingConstants.VERTICAL) {
@@ -61,7 +73,8 @@ public class ShiftedMapView extends MapView
         }
     }
 
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         Dimension tsize = getTileSize();
         int border = showGrid ? 1 : 0;
         int onceX = (tsize.width - (int)(horSide * zoom)) / 2;
@@ -74,13 +87,16 @@ public class ShiftedMapView extends MapView
                 map.getHeight() * repeatY + onceY + border);
     }
 
-    protected void paintLayer(Graphics2D g2d, TileLayer layer) {
+    @Override
+	protected void paintLayer(Graphics2D g2d, TileLayer layer) {
     }
 
-    protected void paintObjectGroup(Graphics2D g2d, ObjectGroup og) {
+    @Override
+	protected void paintObjectGroup(Graphics2D g2d, ObjectGroup og) {
     }
 
-    protected void paintGrid(Graphics2D g2d) {
+    @Override
+	protected void paintGrid(Graphics2D g2d) {
         // Determine tile size
         Dimension tsize = getTileSize();
         if (tsize.width <= 0 || tsize.height <= 0) return;
@@ -115,21 +131,26 @@ public class ShiftedMapView extends MapView
         g2d.setColor(prevColor);
     }
 
-    protected void paintCoordinates(Graphics2D g2d) {
+    @Override
+	protected void paintCoordinates(Graphics2D g2d) {
     }
 
-    protected void paintPropertyFlags(Graphics2D g2d, TileLayer layer) {
+    @Override
+	protected void paintPropertyFlags(Graphics2D g2d, TileLayer layer) {
         throw new RuntimeException("Not yet implemented");    // todo
     }
 
-    public void repaintRegion(Rectangle region) {
+    @Override
+	public void repaintRegion(Rectangle region) {
     }
 
-    public Point screenToTileCoords(int x, int y) {
+    @Override
+	public Point screenToTileCoords(int x, int y) {
         return new Point(0, 0);
     }
 
-    public Point screenToPixelCoords(int x, int y) {
+    @Override
+	public Point screenToPixelCoords(int x, int y) {
         // TODO: add proper implementation
         return new Point();
     }
@@ -140,11 +161,13 @@ public class ShiftedMapView extends MapView
                 (int)(map.getTileHeight() * zoom));
     }
 
-    protected Polygon createGridPolygon(int tx, int ty, int border) {
+    @Override
+	protected Polygon createGridPolygon(int tx, int ty, int border) {
         return new Polygon();
     }
 
-    public Point tileToScreenCoords(int x, int y) {
+    @Override
+	public Point tileToScreenCoords(int x, int y) {
         return new Point(0, 0);
     }
 }

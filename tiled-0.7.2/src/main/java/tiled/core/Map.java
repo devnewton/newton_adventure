@@ -12,7 +12,11 @@
 
 package tiled.core;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Vector;
 
 import tiled.mapeditor.Resources;
 
@@ -40,7 +44,7 @@ public class Map extends MultilayerPlane
 
     private int tileWidth, tileHeight;
     private int orientation = MDO_ORTHO;
-    private final List mapChangeListeners = new LinkedList();
+    private final List<MapChangeListener> mapChangeListeners = new LinkedList<MapChangeListener>();
     private Properties properties;
     private String filename;
 
@@ -80,12 +84,12 @@ public class Map extends MultilayerPlane
      * Notifies all registered map change listeners about a change.
      */
     protected void fireMapChanged() {
-        Iterator iterator = mapChangeListeners.iterator();
+        Iterator<MapChangeListener> iterator = mapChangeListeners.iterator();
         MapChangedEvent event = null;
 
         while (iterator.hasNext()) {
             if (event == null) event = new MapChangedEvent(this);
-            ((MapChangeListener) iterator.next()).mapChanged(event);
+            iterator.next().mapChanged(event);
         }
     }
 
@@ -97,12 +101,12 @@ public class Map extends MultilayerPlane
      * @param index the index of the removed tileset
      */
     protected void fireTilesetRemoved(int index) {
-        Iterator iterator = mapChangeListeners.iterator();
+        Iterator<MapChangeListener> iterator = mapChangeListeners.iterator();
         MapChangedEvent event = null;
 
         while (iterator.hasNext()) {
             if (event == null) event = new MapChangedEvent(this);
-            ((MapChangeListener) iterator.next()).tilesetRemoved(event, index);
+            iterator.next().tilesetRemoved(event, index);
         }
     }
 
@@ -113,12 +117,12 @@ public class Map extends MultilayerPlane
      * @param tileset the new tileset
      */
     protected void fireTilesetAdded(TileSet tileset) {
-        Iterator iterator = mapChangeListeners.iterator();
+        Iterator<MapChangeListener> iterator = mapChangeListeners.iterator();
         MapChangedEvent event = null;
 
         while (iterator.hasNext()) {
             if (event == null) event = new MapChangedEvent(this);
-            ((MapChangeListener) iterator.next()).tilesetAdded(event, tileset);
+            iterator.next().tilesetAdded(event, tileset);
         }
     }
 
@@ -127,12 +131,12 @@ public class Map extends MultilayerPlane
      * tilesets.
      */
     protected void fireTilesetsSwapped(int index0, int index1) {
-        Iterator iterator = mapChangeListeners.iterator();
+        Iterator<MapChangeListener> iterator = mapChangeListeners.iterator();
         MapChangedEvent event = null;
 
         while (iterator.hasNext()) {
             if (event == null) event = new MapChangedEvent(this);
-            ((MapChangeListener) iterator.next()).tilesetsSwapped(event, index0, index1);
+            iterator.next().tilesetsSwapped(event, index0, index1);
         }
     }
 
@@ -149,7 +153,8 @@ public class Map extends MultilayerPlane
         fireMapChanged();
     }
 
-    public MapLayer addLayer(MapLayer layer) {
+    @Override
+	public MapLayer addLayer(MapLayer layer) {
         layer.setMap(this);
         super.addLayer(layer);
         fireMapChanged();
@@ -171,7 +176,8 @@ public class Map extends MultilayerPlane
         return layer;
     }
 
-    public void setLayer(int index, MapLayer layer) {
+    @Override
+	public void setLayer(int index, MapLayer layer) {
         layer.setMap(this);
         super.setLayer(index, layer);
         fireMapChanged();
@@ -236,12 +242,12 @@ public class Map extends MultilayerPlane
             return;
 
         // Go through the map and remove any instances of the tiles in the set
-        Iterator tileIterator = tileset.iterator();
+        Iterator<Tile> tileIterator = tileset.iterator();
         while (tileIterator.hasNext()) {
-            Tile tile = (Tile)tileIterator.next();
-            Iterator layerIterator = getLayers();
+            Tile tile = tileIterator.next();
+            Iterator<MapLayer> layerIterator = getLayers();
             while (layerIterator.hasNext()) {
-                MapLayer ml = (MapLayer) layerIterator.next();
+                MapLayer ml = layerIterator.next();
                 if (ml instanceof TileLayer) {
                     ((TileLayer) ml).removeTile(tile);
                 }
@@ -276,7 +282,8 @@ public class Map extends MultilayerPlane
      *
      * @see MultilayerPlane#removeLayer(int)
      */
-    public MapLayer removeLayer(int index) {
+    @Override
+	public MapLayer removeLayer(int index) {
         MapLayer layer = super.removeLayer(index);
         fireMapChanged();
         return layer;
@@ -298,7 +305,8 @@ public class Map extends MultilayerPlane
      *
      * @see MultilayerPlane#removeAllLayers
      */
-    public void removeAllLayers() {
+    @Override
+	public void removeAllLayers() {
         super.removeAllLayers();
         fireMapChanged();
     }
@@ -308,7 +316,8 @@ public class Map extends MultilayerPlane
      *
      * @see MultilayerPlane#setLayerVector
      */
-    public void setLayerVector(Vector<MapLayer> layers) {
+    @Override
+	public void setLayerVector(Vector<MapLayer> layers) {
         super.setLayerVector(layers);
         fireMapChanged();
     }
@@ -318,7 +327,8 @@ public class Map extends MultilayerPlane
      *
      * @see MultilayerPlane#swapLayerUp
      */
-    public void swapLayerUp(int index) {
+    @Override
+	public void swapLayerUp(int index) {
         super.swapLayerUp(index);
         fireMapChanged();
     }
@@ -328,7 +338,8 @@ public class Map extends MultilayerPlane
      *
      * @see MultilayerPlane#swapLayerDown
      */
-    public void swapLayerDown(int index) {
+    @Override
+	public void swapLayerDown(int index) {
         super.swapLayerDown(index);
         fireMapChanged();
     }
@@ -338,7 +349,8 @@ public class Map extends MultilayerPlane
      *
      * @see MultilayerPlane#mergeLayerDown
      */
-    public void mergeLayerDown(int index) {
+    @Override
+	public void mergeLayerDown(int index) {
         super.mergeLayerDown(index);
         fireMapChanged();
     }
@@ -372,7 +384,8 @@ public class Map extends MultilayerPlane
      *
      * @see MultilayerPlane#resize
      */
-    public void resize(int width, int height, int dx, int dy) {
+    @Override
+	public void resize(int width, int height, int dx, int dy) {
         super.resize(width, height, dx, dy);
         fireMapChanged();
     }
@@ -386,7 +399,7 @@ public class Map extends MultilayerPlane
         return filename;
     }
 
-    public Iterator getLayersSpecial() {
+    public Iterator<MapLayer> getLayersSpecial() {
         return specialLayers.iterator();
     }
 
@@ -540,7 +553,8 @@ public class Map extends MultilayerPlane
      *
      * @return string describing map
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "Map[" + bounds.width + "x" + bounds.height + "x" +
             getTotalLayers() + "][" + tileWidth + "x" +
             tileHeight + "]";

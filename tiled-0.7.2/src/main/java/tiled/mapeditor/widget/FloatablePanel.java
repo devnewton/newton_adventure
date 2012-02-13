@@ -12,12 +12,24 @@
 
 package tiled.mapeditor.widget;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.prefs.Preferences;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
 
 import tiled.util.TiledConfiguration;
@@ -33,7 +45,11 @@ import tiled.util.TiledConfiguration;
  */
 public class FloatablePanel extends JPanel
 {
-    private final JLabel titleLabel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5919167759758549835L;
+	private final JLabel titleLabel;
     private JDialog frame;
     private final JComponent child;
     private final Frame parent;
@@ -59,7 +75,12 @@ public class FloatablePanel extends JPanel
 
         final JButton floatButton = new JButton("Float");
         floatButton.setAction(new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -8816527727997693543L;
+
+			public void actionPerformed(ActionEvent e) {
                 setFloating(true);
             }
         });
@@ -119,7 +140,8 @@ public class FloatablePanel extends JPanel
             frame = new JDialog(parent, titleLabel.getText());
             frame.getContentPane().add(child);
             frame.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {
+                @Override
+				public void windowClosing(WindowEvent e) {
                     setFloating(false);
                 }
             });
@@ -194,12 +216,18 @@ public class FloatablePanel extends JPanel
      */
     private class HeaderPanel extends JPanel
     {
-        public HeaderPanel(BorderLayout borderLayout) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -5026843945529334230L;
+
+		public HeaderPanel(BorderLayout borderLayout) {
             super(borderLayout);
             setBorder(BorderFactory.createEmptyBorder(1, 4, 2, 1));
         }
 
-        protected void paintComponent(Graphics g) {
+        @Override
+		protected void paintComponent(Graphics g) {
             Color backgroundColor = new Color(200, 200, 240);
             g.setColor(backgroundColor);
             ((Graphics2D) g).fill(g.getClip());

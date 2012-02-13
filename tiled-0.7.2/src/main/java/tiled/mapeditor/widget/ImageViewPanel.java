@@ -12,19 +12,26 @@
 
 package tiled.mapeditor.widget;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.swing.JPanel;
 
 public class ImageViewPanel extends JPanel
 {
-    private final Image image;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6416557646940620431L;
+	private final Image image;
 
     public ImageViewPanel(Image image) {
         this.image = image;
     }
 
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         return new Dimension(150, 150);
     }
 
@@ -40,7 +47,8 @@ public class ImageViewPanel extends JPanel
         return false;
     }
 
-    public void paint(Graphics g) {
+    @Override
+	public void paint(Graphics g) {
         g.drawImage(image, 0, 0, null);
     }
 }

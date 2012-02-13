@@ -24,7 +24,11 @@ import javax.swing.JMenuItem;
  */
 public class TMenuItem extends JMenuItem
 {
-    private boolean showIcon;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3200746848563495701L;
+	private boolean showIcon;
 
     public TMenuItem(boolean showIcon) {
         this.showIcon = showIcon;
@@ -43,7 +47,8 @@ public class TMenuItem extends JMenuItem
         this.showIcon = showIcon;
     }
 
-    public void setIcon(Icon icon) {
+    @Override
+	public void setIcon(Icon icon) {
         if (showIcon) {
             super.setIcon(icon);
         }

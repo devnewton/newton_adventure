@@ -48,7 +48,11 @@ import java.util.Random;
    @author Takuji Nishimura
 */
 public class MersenneTwister extends Random {
-    public static final int N = 624;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -9060493042777279295L;
+	public static final int N = 624;
     public static final int M = 397;
     public static final int MATRIX_A = 0x9908b0df;   /* constant vector a */
     public static final int UPPER_MASK = 0x80000000; /* most significant w-r bits */
@@ -149,7 +153,8 @@ public class MersenneTwister extends Random {
         return y;
     }
 
-    synchronized protected int next(int bits) {
+    @Override
+	synchronized protected int next(int bits) {
         return (int)genrand();
     }
 }

@@ -13,6 +13,7 @@
 package tiled.mapeditor.undo;
 
 import java.awt.Point;
+
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -25,7 +26,11 @@ import tiled.mapeditor.Resources;
  */
 public class MoveLayerEdit extends AbstractUndoableEdit
 {
-    private final MapLayer layer;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -9092129831782552424L;
+	private final MapLayer layer;
     private final Point moveDist;
 
     public MoveLayerEdit(MapLayer layer, Point moveDist) {
@@ -33,17 +38,20 @@ public class MoveLayerEdit extends AbstractUndoableEdit
         this.moveDist = moveDist;
     }
 
-    public void undo() throws CannotUndoException {
+    @Override
+	public void undo() throws CannotUndoException {
         super.undo();
         layer.translate(-moveDist.x, -moveDist.y);
     }
 
-    public void redo() throws CannotRedoException {
+    @Override
+	public void redo() throws CannotRedoException {
         super.redo();
         layer.translate(moveDist.x, moveDist.y);
     }
 
-    public String getPresentationName() {
+    @Override
+	public String getPresentationName() {
         return Resources.getString("action.layer.move.name");
     }
 }

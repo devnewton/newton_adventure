@@ -14,7 +14,11 @@ package tiled.io.xml;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 import java.util.zip.GZIPInputStream;
+
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,7 +38,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import tiled.core.*;
+
+import tiled.core.AnimatedTile;
+import tiled.core.Map;
+import tiled.core.MapLayer;
+import tiled.core.MapObject;
+import tiled.core.ObjectGroup;
+import tiled.core.Tile;
+import tiled.core.TileLayer;
+import tiled.core.TileSet;
 import tiled.io.ImageHelper;
 import tiled.io.MapReader;
 import tiled.io.PluginLogger;
@@ -66,7 +79,7 @@ public class XMLMapTransformer implements MapReader
         return url;
     }
 
-    private static int reflectFindMethodByName(Class c, String methodName) {
+    private static int reflectFindMethodByName(Class<?> c, String methodName) {
         Method[] methods = c.getMethods();
         for (int i = 0; i < methods.length; i++) {
             if (methods[i].getName().equalsIgnoreCase(methodName)) {
@@ -79,7 +92,7 @@ public class XMLMapTransformer implements MapReader
     private void reflectInvokeMethod(Object invokeVictim, Method method,
             String[] args) throws Exception
     {
-        Class[] parameterTypes = method.getParameterTypes();
+        Class<?>[] parameterTypes = method.getParameterTypes();
         Object[] conformingArguments = new Object[parameterTypes.length];
 
         if (args.length < parameterTypes.length) {
@@ -141,19 +154,19 @@ public class XMLMapTransformer implements MapReader
         }
     }
 
-    private Object unmarshalClass(Class reflector, Node node)
+    private Object unmarshalClass(Class<?> reflector, Node node)
         throws InstantiationException, IllegalAccessException,
                InvocationTargetException {
-        Constructor cons = null;
+        Constructor<?> cons = null;
         try {
-            cons = reflector.getConstructor(null);
+            cons = reflector.getConstructor();
         } catch (SecurityException e1) {
             e1.printStackTrace();
         } catch (NoSuchMethodException e1) {
             e1.printStackTrace();
             return null;
         }
-        Object o = cons.newInstance(null);
+        Object o = cons.newInstance();
         Node n;
 
         Method[] methods = reflector.getMethods();

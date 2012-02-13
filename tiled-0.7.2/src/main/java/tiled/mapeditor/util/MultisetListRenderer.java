@@ -12,9 +12,13 @@
 
 package tiled.mapeditor.util;
 
-import java.awt.*;
+import java.awt.Component;
 import java.util.HashMap;
-import javax.swing.*;
+
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JList;
 
 import tiled.core.Tile;
 import tiled.core.TileSet;
@@ -31,7 +35,12 @@ import tiled.mapeditor.Resources;
  */
 public class MultisetListRenderer extends DefaultListCellRenderer
 {
-    /** The icon to show for tilesets. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8309314759410651181L;
+
+	/** The icon to show for tilesets. */
     private final Icon setIcon = Resources.getIcon("source.png");
 
     /** The hash map used to match indexes to icons. */
@@ -52,7 +61,8 @@ public class MultisetListRenderer extends DefaultListCellRenderer
     /**
      * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
      */
-    public Component getListCellRendererComponent(JList list, Object value,
+    @Override
+	public Component getListCellRendererComponent(JList list, Object value,
                                                   int index, boolean isSelected,
                                                   boolean cellHasFocus) {
         // Let the default list cell renderer do most of the work

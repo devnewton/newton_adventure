@@ -23,7 +23,11 @@ import tiled.core.TileLayer;
  */
 public class TileRegionSelectionEvent extends EventObject
 {
-    private final TileLayer tileLayer;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1678919945977787374L;
+	private final TileLayer tileLayer;
 
     public TileRegionSelectionEvent(Object source, TileLayer tileLayer) {
         super(source);

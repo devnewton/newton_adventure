@@ -24,15 +24,15 @@ import java.util.Vector;
  *
  * @author rainerd
  */
-public class NumberedSet
+public class NumberedSet<T>
 {
-    private Vector data;
+    private Vector<T> data;
 
     /**
      * Constructs a new empty NumberedSet.
      */
     public NumberedSet() {
-        data = new Vector();
+        data = new Vector<T>();
     }
 
     /**
@@ -42,7 +42,7 @@ public class NumberedSet
      * @param id
      * @return Object
      */
-    public Object get(int id) {
+    public T get(int id) {
         try {
             return data.get(id);
         } catch (ArrayIndexOutOfBoundsException e) {}
@@ -70,7 +70,7 @@ public class NumberedSet
      * @return int
      * @throws IllegalArgumentException
      */
-    public int put(int id, Object o) throws IllegalArgumentException {
+    public int put(int id, T o) throws IllegalArgumentException {
         if (id < 0) throw new IllegalArgumentException();
 
         // Make sure there is sufficient space to overlay
@@ -117,7 +117,7 @@ public class NumberedSet
      *
      * @return NumberedSetIterator
      */
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return data.iterator();
     }
 
@@ -127,7 +127,7 @@ public class NumberedSet
      * @param o
      * @return int
      */
-    public int add(Object o) {
+    public int add(T o) {
         int id = getMaxId() + 1;
         put(id, o);
         return id;
@@ -139,7 +139,7 @@ public class NumberedSet
      *
      * @param o
      */
-    public int indexOf(Object o) {
+    public int indexOf(T o) {
         return data.indexOf(o);
     }
 
@@ -147,7 +147,7 @@ public class NumberedSet
      * Returns true if at least one element of the NumberedSet is equal to the
      * given object.
      */
-    public boolean contains(Object o) {
+    public boolean contains(T o) {
         return data.contains(o);
     }
 
@@ -156,7 +156,7 @@ public class NumberedSet
      * return its id.  Otherwise insert the given object into the NumberedSet
      * and return its id.
      */
-    public int findOrAdd(Object o) {
+    public int findOrAdd(T o) {
         int id = indexOf(o);
         if (id != -1) return id;
         return add(o);

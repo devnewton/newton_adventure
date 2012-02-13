@@ -16,13 +16,16 @@ import tiled.core.Map;
 
 public class CorridorBuilder extends Builder
 {
-    public void iterate() {
+    @Override
+	public void iterate() {
     }
 
-    public Builder spawn() {
+    @Override
+	public Builder spawn() {
         return null;
     }
 
-    public void store(Map m) {
+    @Override
+	public void store(Map m) {
     }
 }

@@ -17,6 +17,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ListIterator;
 
+import tiled.core.MapLayer;
 import tiled.core.MultilayerPlane;
 import tiled.core.TileLayer;
 import tiled.view.MapView;
@@ -33,14 +34,17 @@ public class CustomBrush extends AbstractBrush
         fitBoundsToLayers();
     }
 
-    public void setAffectedLayers(int num) {
+    @Override
+	public void setAffectedLayers(int num) {
     }
 
-    public int getAffectedLayers() {
+    @Override
+	public int getAffectedLayers() {
         return getTotalLayers();
     }
 
-    public Shape getShape() {
+    @Override
+	public Shape getShape() {
         return getBounds();
     }
 
@@ -57,7 +61,8 @@ public class CustomBrush extends AbstractBrush
         return false;
     }
 
-    public void startPaint(MultilayerPlane mp, int x, int y, int button, int layer) {
+    @Override
+	public void startPaint(MultilayerPlane mp, int x, int y, int button, int layer) {
         super.startPaint(mp, x, y, button, layer);
     }
 
@@ -69,7 +74,8 @@ public class CustomBrush extends AbstractBrush
      * @see tiled.mapeditor.brush.Brush#doPaint(int, int)
      * @throws Exception
      */
-    public Rectangle doPaint(int x, int y) throws Exception
+    @Override
+	public Rectangle doPaint(int x, int y) throws Exception
     {
         int layer = initLayer;
         int centerx = x - bounds.width / 2;
@@ -77,9 +83,9 @@ public class CustomBrush extends AbstractBrush
 
         super.doPaint(x, y);
 
-        ListIterator itr = getLayers();
+        ListIterator<MapLayer> itr = getLayers();
         while (itr.hasNext()) {
-            TileLayer tl = (TileLayer)itr.next();
+            MapLayer tl = itr.next();
             TileLayer tm = (TileLayer)affectedMp.getLayer(layer++);
             if (tm != null && tm.isVisible()) {
                 tl.setOffset(centerx, centery);

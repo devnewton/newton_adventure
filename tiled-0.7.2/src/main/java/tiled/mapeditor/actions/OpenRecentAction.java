@@ -24,7 +24,11 @@ import tiled.mapeditor.Resources;
  */
 public class OpenRecentAction extends AbstractFileAction
 {
-    private final String path;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1628467827271284426L;
+	private final String path;
 
     public OpenRecentAction(MapEditor editor, SaveAction saveAction, String path) {
         super(editor, saveAction,
@@ -34,7 +38,8 @@ public class OpenRecentAction extends AbstractFileAction
         this.path = path;
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         editor.loadMap(path);
     }
 }

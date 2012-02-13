@@ -12,7 +12,7 @@
 
 package tiled.mapeditor.util;
 
-import java.awt.*;
+import java.awt.Component;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -21,10 +21,10 @@ public class MapEventAdapter
     public static final int ME_MAPACTIVE   = 1;
     public static final int ME_MAPINACTIVE = 2;
 
-    private LinkedList listeners;
+    private LinkedList<Component> listeners;
 
     public MapEventAdapter() {
-        listeners = new LinkedList();
+        listeners = new LinkedList<Component>();
     }
 
     /**
@@ -70,18 +70,18 @@ public class MapEventAdapter
 
     private void enableEvent() {
         Component c;
-        ListIterator li = listeners.listIterator();
+        ListIterator<Component> li = listeners.listIterator();
         while (li.hasNext()) {
-            c = (Component) li.next();
+            c = li.next();
             c.setEnabled(true);
         }
     }
 
     private void disableEvent(){
         Component c;
-        ListIterator li = listeners.listIterator();
+        ListIterator<Component> li = listeners.listIterator();
         while (li.hasNext()) {
-            c = (Component) li.next();
+            c = li.next();
             c.setEnabled(false);
         }
     }

@@ -12,19 +12,32 @@
 
 package tiled.mapeditor.dialogs;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import tiled.core.Map;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.Resources;
-import tiled.mapeditor.widget.*;
+import tiled.mapeditor.widget.IntegerSpinner;
+import tiled.mapeditor.widget.ResizePanel;
+import tiled.mapeditor.widget.VerticalStaticJPanel;
 
 /**
  * @version $Id$
@@ -32,7 +45,11 @@ import tiled.mapeditor.widget.*;
 public class ResizeDialog extends JDialog implements ActionListener,
        PropertyChangeListener, ChangeListener
 {
-    private final Map currentMap;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6122458032318486097L;
+	private final Map currentMap;
     private IntegerSpinner width, height, offsetX, offsetY;
     private JButton bOk, bCancel;
     private ResizePanel orient;

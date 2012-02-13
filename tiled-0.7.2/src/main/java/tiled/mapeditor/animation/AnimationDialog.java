@@ -12,14 +12,30 @@
 
 package tiled.mapeditor.animation;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
-import javax.swing.*;
 
-import tiled.core.Sprite;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 import tiled.core.MapObject;
+import tiled.core.Sprite;
 import tiled.mapeditor.Resources;
 
 /**
@@ -31,7 +47,11 @@ import tiled.mapeditor.Resources;
  */
 public class AnimationDialog extends JDialog implements ActionListener
 {
-    private static final int PLAYING = 1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -199439045172651269L;
+	private static final int PLAYING = 1;
     private static final int STOPPED = 0;
 
     private Sprite currentSprite;
@@ -183,9 +203,9 @@ public class AnimationDialog extends JDialog implements ActionListener
         if (currentSprite != null) {
             keyframe.removeAllItems();
             try {
-                Iterator itr = currentSprite.getKeys();
+                Iterator<Sprite.KeyFrame> itr = currentSprite.getKeys();
                 while (itr.hasNext()) {
-                    keyframe.addItem(((Sprite.KeyFrame) itr.next()).getName());
+                    keyframe.addItem(itr.next().getName());
                 }
             }
             catch (Exception e) {
@@ -309,7 +329,11 @@ public class AnimationDialog extends JDialog implements ActionListener
 
 class SpriteCanvas extends JPanel
 {
-    private AnimationDialog owner;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1623115324527132738L;
+	private AnimationDialog owner;
     private Image buffer;
     private Dimension osd;
 
@@ -344,7 +368,8 @@ class SpriteCanvas extends JPanel
         }
     }
 
-    public void paint(Graphics g) {
+    @Override
+	public void paint(Graphics g) {
         if (owner != null) {
             Dimension d = getSize();
             if (buffer == null) {

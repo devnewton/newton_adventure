@@ -13,7 +13,10 @@
 package tiled.core;
 
 import java.awt.Rectangle;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.Vector;
 
 /**
  * MultilayerPlane makes up the core functionality of both Maps and Brushes.
@@ -258,9 +261,9 @@ public class MultilayerPlane implements Iterable<MapLayer>
      * @param dy     The shift in y direction in tiles.
      */
     public void resize(int width, int height, int dx, int dy) {
-        ListIterator itr = getLayers();
+        ListIterator<MapLayer> itr = getLayers();
         while (itr.hasNext()) {
-            MapLayer layer = (MapLayer)itr.next();
+            MapLayer layer = itr.next();
             if (layer.bounds.equals(bounds)) {
                 layer.resize(width, height, dx, dy);
             } else {

@@ -23,14 +23,20 @@ import tiled.mapeditor.Resources;
  */
 public class AddObjectGroupAction extends AbstractLayerAction
 {
-    public AddObjectGroupAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7875391442365841995L;
+
+	public AddObjectGroupAction(MapEditor editor) {
         super(editor,
               Resources.getString("action.objectgroup.add.name"),
               Resources.getString("action.objectgroup.add.tooltip"),
               Resources.getIcon("gnome-new.png"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         Map currentMap = editor.getCurrentMap();
         currentMap.addObjectGroup();
         editor.setCurrentLayer(currentMap.getTotalLayers() - 1);

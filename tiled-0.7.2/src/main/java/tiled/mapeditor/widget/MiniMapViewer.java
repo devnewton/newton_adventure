@@ -13,7 +13,11 @@
 
 package tiled.mapeditor.widget;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -24,7 +28,12 @@ import tiled.view.MapView;
 
 public class MiniMapViewer extends JPanel
 {
-    public static final int MAX_HEIGHT = 150;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1243207988158851225L;
+
+	public static final int MAX_HEIGHT = 150;
 
     private MapView myView;
     private JScrollPane mainPanel;
@@ -51,7 +60,8 @@ public class MiniMapViewer extends JPanel
         myView.paint(g);
     }
 
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         if(myView != null) {
             return myView.getPreferredSize();
         }
@@ -75,7 +85,8 @@ public class MiniMapViewer extends JPanel
         }
     }
 
-    public void paint(Graphics g) {
+    @Override
+	public void paint(Graphics g) {
         /*if (myView != null) {
             myView.paint(g);
         }*/

@@ -17,7 +17,12 @@ package tiled.io.xml;
  */
 public class XMLWriterException extends RuntimeException
 {
-    public XMLWriterException(String error) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1629373837269498797L;
+
+	public XMLWriterException(String error) {
         super(error);
     }
 }

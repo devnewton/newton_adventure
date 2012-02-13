@@ -28,7 +28,21 @@
 package tiled.util;  // Added 10May04 by Adam Turk for distribution as part
                      // of the Tiled codebase
 
-import java.io.*;       // needed only for main() method.
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 
 
 /**
@@ -59,15 +73,15 @@ static public char[] encode(byte[] data)
         boolean quad = false;
         boolean trip = false;
 
-        int val = (0xFF & (int) data[i]);
+        int val = (0xFF & data[i]);
         val <<= 8;
         if ((i+1) < data.length) {
-            val |= (0xFF & (int) data[i+1]);
+            val |= (0xFF & data[i+1]);
             trip = true;
         }
         val <<= 8;
         if ((i+2) < data.length) {
-            val |= (0xFF & (int) data[i+2]);
+            val |= (0xFF & data[i+2]);
             quad = true;
         }
         out[index+3] = alphabet[(quad? (val & 0x3F): 64)];

@@ -14,9 +14,9 @@ package tiled.mapeditor.actions;
 
 import javax.swing.KeyStroke;
 
+import tiled.core.Map;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.Resources;
-import tiled.core.Map;
 
 /**
  * Merges the current layer with the one below and selects the merged layer.
@@ -25,7 +25,12 @@ import tiled.core.Map;
  */
 public class MergeLayerDownAction extends AbstractLayerAction
 {
-    public MergeLayerDownAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5164472078080071398L;
+
+	public MergeLayerDownAction(MapEditor editor) {
         super(editor,
               Resources.getString("action.layer.mergedown.name"),
               Resources.getString("action.layer.mergedown.tooltip"));
@@ -33,7 +38,8 @@ public class MergeLayerDownAction extends AbstractLayerAction
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("shift control M"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         Map map = editor.getCurrentMap();
         int layerIndex = editor.getCurrentLayerIndex();
 

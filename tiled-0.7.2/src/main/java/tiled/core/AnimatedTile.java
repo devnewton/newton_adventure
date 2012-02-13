@@ -72,12 +72,13 @@ public class AnimatedTile extends Tile {
      *
      * @see tiled.core.Tile#getScaledImage(double)
      */
-    public Image getScaledImage(double zoom) {
+    @Override
+	public Image getScaledImage(double zoom) {
         try {
-            Iterator itr = sprite.getKeys();
+            Iterator<Sprite.KeyFrame> itr = sprite.getKeys();
 
             while (itr.hasNext()) {
-                Sprite.KeyFrame key = (Sprite.KeyFrame) itr.next();
+                Sprite.KeyFrame key = itr.next();
                 for (int i = 0;i < key.getTotalFrames(); i++) {
                     key.getFrame(i).getScaledImage(zoom);
                 }
@@ -92,7 +93,8 @@ public class AnimatedTile extends Tile {
      *
      * @see tiled.core.Tile#draw(Graphics, int, int, double)
      */
-    public void draw(Graphics g, int x, int y, double zoom) {
+    @Override
+	public void draw(Graphics g, int x, int y, double zoom) {
         sprite.getCurrentFrame().draw(g, x, y, zoom);
         sprite.iterateFrame();
     }

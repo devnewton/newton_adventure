@@ -12,7 +12,12 @@
 
 package tiled.mapeditor.dialogs;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -20,7 +25,24 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.prefs.Preferences;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -31,7 +53,11 @@ import tiled.io.MapHelper;
 import tiled.io.MapReader;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.Resources;
-import tiled.mapeditor.brush.*;
+import tiled.mapeditor.brush.AbstractBrush;
+import tiled.mapeditor.brush.Brush;
+import tiled.mapeditor.brush.CustomBrush;
+import tiled.mapeditor.brush.RandomBrush;
+import tiled.mapeditor.brush.ShapeBrush;
 import tiled.mapeditor.plugin.PluginClassLoader;
 import tiled.mapeditor.util.LayerTableModel;
 import tiled.mapeditor.util.TiledFileFilter;
@@ -45,7 +71,11 @@ public class BrushDialog extends JDialog implements ActionListener,
        ItemListener, ChangeListener, PropertyChangeListener,
        ListSelectionListener
 {
-    private AbstractBrush myBrush;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6660894004923093431L;
+	private AbstractBrush myBrush;
     private final MapEditor editor;
 
     private JCheckBox cbRandomBrush;
@@ -195,7 +225,7 @@ public class BrushDialog extends JDialog implements ActionListener,
     }
 
     private void init() {
-        JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
+        JTabbedPane tabs = new JTabbedPane(SwingConstants.TOP);
         tabs.addTab(SHAPE_TAB, createShapePanel());
         tabs.addTab(CUSTOM_TAB, createCustomPanel());
         tabs.setEnabledAt(1, false);

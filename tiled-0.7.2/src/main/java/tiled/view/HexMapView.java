@@ -14,13 +14,22 @@ package tiled.view;
 
 // for console logging
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.util.Iterator;
 
 import javax.swing.SwingConstants;
 
-import tiled.core.*;
-//import tiled.io.TiledLogger;
+import tiled.core.Map;
+import tiled.core.MapObject;
+import tiled.core.ObjectGroup;
+import tiled.core.Tile;
+import tiled.core.TileLayer;
 import tiled.mapeditor.selection.SelectionLayer;
 
 /**
@@ -62,12 +71,14 @@ import tiled.mapeditor.selection.SelectionLayer;
  */
 public class HexMapView extends MapView
 {
-    public static final int ALIGN_TOP = 1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2437727391529641811L;
+	public static final int ALIGN_TOP = 1;
     public static final int ALIGN_BOTTOM = 2;
     public static final int ALIGN_RIGHT = 3;
     public static final int ALIGN_LEFT = 4;
-
-    private static final double HEX_SLOPE = Math.tan(Math.toRadians(60));
 
     private int mapAlignment;
     /* hexEdgesToTheLeft:
@@ -79,7 +90,6 @@ public class HexMapView extends MapView
      *                         \/
      */
     private boolean hexEdgesToTheLeft;
-    private boolean alignedToBottomOrRight;
 
     /**
      * Creates a new hexagonal map view that displays the specified map.
@@ -96,11 +106,6 @@ public class HexMapView extends MapView
             || mapAlignment == ALIGN_BOTTOM ) {
             hexEdgesToTheLeft = true;
         }
-        alignedToBottomOrRight = false;
-        if ( mapAlignment == ALIGN_BOTTOM
-            || mapAlignment == ALIGN_RIGHT ) {
-            alignedToBottomOrRight = true;
-        }
 
         //TiledLogger.getLogger().info("HexMapView created");
     }
@@ -116,7 +121,8 @@ public class HexMapView extends MapView
      *
      * @return Scroll amount in pixels.
      */
-    public int getScrollableBlockIncrement(Rectangle visibleRect,
+    @Override
+	public int getScrollableBlockIncrement(Rectangle visibleRect,
             int orientation, int direction) {
         Dimension tsize = getEffectiveTileSize();
         int border = showGrid ? 1 : 0;
@@ -168,7 +174,8 @@ public class HexMapView extends MapView
      *
      * @return Scroll amount in pixels.
      */
-    public int getScrollableUnitIncrement(Rectangle visibleRect,
+    @Override
+	public int getScrollableUnitIncrement(Rectangle visibleRect,
             int orientation, int direction) {
         //TiledLogger.getLogger().info(
         //    "ScrollUnit " + orientation + "/" + direction);
@@ -196,7 +203,8 @@ public class HexMapView extends MapView
      *
      * @return Width and Height as Dimension.
      */
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         Dimension tsize = getEffectiveTileSize();
         int w;
         int h;
@@ -231,7 +239,8 @@ public class HexMapView extends MapView
      * @param layer The layer to paint. Can be a special layer
      *        like the selection layer.
      */
-    protected void paintLayer(Graphics2D g2d, TileLayer layer) {
+    @Override
+	protected void paintLayer(Graphics2D g2d, TileLayer layer) {
         // Determine area to draw from clipping rectangle
         Dimension tsize = getEffectiveTileSize();
         // int toffset = showGrid ? 1 : 0;
@@ -364,7 +373,8 @@ public class HexMapView extends MapView
      *
      * @param g2d The graphics context, i.e. where to paint.
      */
-    protected void paintGrid(Graphics2D g2d) {
+    @Override
+	protected void paintGrid(Graphics2D g2d) {
         g2d.setColor(Color.black);
         Dimension tileSize = getEffectiveTileSize();
 
@@ -401,8 +411,6 @@ public class HexMapView extends MapView
         //TiledLogger.getLogger().info("  tile " + startX + "," + startY
         //    + "-" + endX + "," + endY);
 
-        int dy = 0;
-        int dx = 0;
         Polygon grid;
 
         if ( hexEdgesToTheLeft ) {
@@ -431,7 +439,8 @@ public class HexMapView extends MapView
      *
      * @param g2d The graphics context, i.e. where to paint.
      */
-    protected void paintCoordinates(Graphics2D g2d) {
+    @Override
+	protected void paintCoordinates(Graphics2D g2d) {
         // TODO: Implement paintCoordinates for HexMapView
         //TiledLogger.getLogger().info("NOT IMPLEMENTED");
     }
@@ -447,7 +456,8 @@ public class HexMapView extends MapView
      *
      * @return The corresponding tile coords as Point.
      */
-    public Point screenToTileCoords(int screenX, int screenY) {
+    @Override
+	public Point screenToTileCoords(int screenX, int screenY) {
         //TiledLogger.getLogger().info(
           //  "screen coords " + screenX + "," + screenY);
 
@@ -540,7 +550,8 @@ public class HexMapView extends MapView
      *
      * @param region The rectangle of the viewport to be repainted.
      */
-    public void repaintRegion(Rectangle region) {
+    @Override
+	public void repaintRegion(Rectangle region) {
         super.repaintRegion(region);
 
         //TiledLogger.getLogger().info(
@@ -574,7 +585,8 @@ public class HexMapView extends MapView
      *
      * @return A hexagon structure as Polygon.
      */
-    protected Polygon createGridPolygon(int tx, int ty, int border) {
+    @Override
+	protected Polygon createGridPolygon(int tx, int ty, int border) {
         Dimension tileSize = getEffectiveTileSize();
         Polygon poly = new Polygon();
         Point p = getTopLeftCornerOfTile(tx, ty);
@@ -667,7 +679,8 @@ public class HexMapView extends MapView
      *
      * @return The point at the centre of the Hex as Point.
      */
-    public Point tileToScreenCoords(int x, int y) {
+    @Override
+	public Point tileToScreenCoords(int x, int y) {
         Point p = getTopLeftCornerOfTile(x, y);
         Dimension tileSize = getEffectiveTileSize();
         return new Point(
@@ -675,21 +688,24 @@ public class HexMapView extends MapView
             (int)(p.getY()) + (int)(tileSize.height / 2 + 0.49));
     }
 
-    public Point screenToPixelCoords(int x, int y) {
+    @Override
+	public Point screenToPixelCoords(int x, int y) {
         return new Point(
                 (int) (x / zoom), (int) (y / zoom));
     }
 
-    protected void paintPropertyFlags(Graphics2D g2d, TileLayer layer) {
+    @Override
+	protected void paintPropertyFlags(Graphics2D g2d, TileLayer layer) {
         // TODO: Implement property flags painting for HexMapView
     }
 
-    protected void paintObjectGroup(Graphics2D g, ObjectGroup og) {
+    @Override
+	protected void paintObjectGroup(Graphics2D g, ObjectGroup og) {
         // NOTE: Direct copy from OrthoMapView (candidate for generalization)
-        Iterator itr = og.getObjects();
+        Iterator<MapObject> itr = og.getObjects();
 
         while (itr.hasNext()) {
-            MapObject mo = (MapObject) itr.next();
+            MapObject mo = itr.next();
             double ox = mo.getX() * zoom;
             double oy = mo.getY() * zoom;
 

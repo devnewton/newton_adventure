@@ -12,19 +12,19 @@
 
 package tiled.util;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.awt.GraphicsEnvironment;
-import java.awt.GraphicsConfiguration;
-import java.awt.Image;
 import java.awt.Graphics;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.util.Iterator;
+import java.util.Vector;
 
 import tiled.core.Map;
-import tiled.core.TileSet;
-import tiled.core.TileLayer;
-import tiled.core.Tile;
 import tiled.core.MapLayer;
+import tiled.core.Tile;
+import tiled.core.TileLayer;
+import tiled.core.TileSet;
 
 /**
  * This class facilitates physically merging tiles.
@@ -37,7 +37,7 @@ public class TileMergeHelper
 
     public TileMergeHelper(Map map) {
         myMap = map;
-        cells = new Vector();
+        cells = new Vector<Cell>();
         myTs = new TileSet();
         myTs.setName("Merged Set");
     }

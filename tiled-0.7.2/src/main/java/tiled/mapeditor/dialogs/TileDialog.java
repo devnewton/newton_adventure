@@ -13,7 +13,11 @@
 
 package tiled.mapeditor.dialogs;
 
-import java.awt.*;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -24,8 +28,24 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
+
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellEditor;
@@ -45,7 +65,11 @@ import tiled.mapeditor.widget.VerticalStaticJPanel;
 public class TileDialog extends JDialog
     implements ActionListener, ListSelectionListener
 {
-    private Tile currentTile;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7788958054744303779L;
+	private Tile currentTile;
     private TileSet tileset;
     private Map map;
     private JList tileList;
@@ -70,12 +94,9 @@ public class TileDialog extends JDialog
     private static final String ADD_IMAGES_BUTTON = Resources.getString("dialog.tile.button.addimages");
     private static final String CREATE_BUTTON = Resources.getString("dialog.tile.button.createtile");
     private static final String DUPLICATE_BUTTON = Resources.getString("dialog.tile.button.duptile");
-    private static final String ANIMATION_BUTTON = Resources.getString("dialog.tile.button.animation");
-    private static final String PREVIEW_TAB = Resources.getString("dialog.tile.tab.view");
     private static final String TILES_TAB = Resources.getString("general.tile.tiles");
     private static final String IMAGES_TAB = "Images";
     private static final String NAME_LABEL = Resources.getString("dialog.newtileset.name.label");
-    private static final String ERROR_LOADING_IMAGE = Resources.getString("dialog.tile.image.load.error");
     private static final String TILES_CREATED_MESSAGE = Resources.getString("action.tile.create.done.message");
     private static final String TILES_CREATED_TITLE = Resources.getString("action.tile.create.done.title");
 
@@ -197,7 +218,7 @@ public class TileDialog extends JDialog
         namePanel.add(Box.createRigidArea(new Dimension(5, 5)));
         namePanel.add(tilesetNameEntry);
 
-        tabs = new JTabbedPane(JTabbedPane.TOP);
+        tabs = new JTabbedPane(SwingConstants.TOP);
         tabs.addTab(TILES_TAB, createTilePanel());
         tabs.addTab(IMAGES_TAB, createImagePanel());
 
@@ -299,10 +320,10 @@ public class TileDialog extends JDialog
 
         if (tileset != null && tileset.size() > 0) {
             listData = new Vector<Tile>();
-            Iterator tileIterator = tileset.iterator();
+            Iterator<Tile> tileIterator = tileset.iterator();
 
             while (tileIterator.hasNext()) {
-                Tile tile = (Tile) tileIterator.next();
+                Tile tile = tileIterator.next();
                 listData.add(tile);
             }
 

@@ -23,7 +23,11 @@ import tiled.core.Tile;
  */
 public class TileSelectionEvent extends EventObject
 {
-    private Tile tile;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4689788849006324950L;
+	private Tile tile;
 
     public TileSelectionEvent(Object source, Tile tile) {
         super(source);

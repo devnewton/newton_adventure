@@ -13,6 +13,7 @@
 package tiled.mapeditor.undo;
 
 import java.util.Properties;
+
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -25,7 +26,12 @@ import tiled.mapeditor.Resources;
  */
 public class ChangeObjectEdit extends AbstractUndoableEdit
 {
-    private final MapObject mapObject;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6205634999680558615L;
+
+	private final MapObject mapObject;
 
     private final String prevName;
     private final String prevType;
@@ -53,7 +59,8 @@ public class ChangeObjectEdit extends AbstractUndoableEdit
         prevProperties.putAll(mapObject.getProperties());
     }
 
-    public void undo() throws CannotUndoException {
+    @Override
+	public void undo() throws CannotUndoException {
         super.undo();
 
         // Store the current state so we can redo changes
@@ -74,7 +81,8 @@ public class ChangeObjectEdit extends AbstractUndoableEdit
         mapObject.getProperties().putAll(prevProperties);
     }
 
-    public void redo() throws CannotRedoException {
+    @Override
+	public void redo() throws CannotRedoException {
         super.redo();
 
         mapObject.setName(newName);
@@ -86,7 +94,8 @@ public class ChangeObjectEdit extends AbstractUndoableEdit
         mapObject.getProperties().putAll(newProperties);
     }
 
-    public String getPresentationName() {
+    @Override
+	public String getPresentationName() {
         return Resources.getString("action.object.change.name");
     }
 }

@@ -23,7 +23,11 @@ import tiled.mapeditor.Resources;
  */
 public class LayerTableModel extends AbstractTableModel
 {
-    private MultilayerPlane map;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6142061310309121834L;
+	private MultilayerPlane map;
     private static final String[] columnNames = {
             Resources.getString("dialog.main.locked.column"),
             Resources.getString("dialog.main.show.column"),
@@ -42,7 +46,8 @@ public class LayerTableModel extends AbstractTableModel
         fireTableDataChanged();
     }
 
-    public String getColumnName(int col) {
+    @Override
+	public String getColumnName(int col) {
         return columnNames[col];
     }
 
@@ -69,7 +74,8 @@ public class LayerTableModel extends AbstractTableModel
         return columnNames.length;
     }
 
-    public Class getColumnClass(int col) {
+    @Override
+	public Class<?> getColumnClass(int col) {
         switch (col) {
             case 0: return Boolean.class;
             case 1: return Boolean.class;
@@ -96,13 +102,15 @@ public class LayerTableModel extends AbstractTableModel
         }
     }
 
-    public boolean isCellEditable(int row, int col) {
+    @Override
+	public boolean isCellEditable(int row, int col) {
         MapLayer layer = map.getLayer(getRowCount() - row - 1);
 
         return !(col == 0 && layer != null && !layer.isVisible());
     }
 
-    public void setValueAt(Object value, int row, int col) {
+    @Override
+	public void setValueAt(Object value, int row, int col) {
         MapLayer layer = map.getLayer(getRowCount() - row - 1);
         if (layer != null) {
             if (col == 0) {

@@ -16,10 +16,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.KeyStroke;
 
+import tiled.core.Map;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.Resources;
 import tiled.mapeditor.util.TiledFileFilter;
-import tiled.core.Map;
 
 /**
  * Tries to save the file if a filepath is already set in the main app,
@@ -29,14 +29,20 @@ import tiled.core.Map;
  */
 public class SaveAction extends SaveAsAction
 {
-    public SaveAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7399040251486673328L;
+
+	public SaveAction(MapEditor editor) {
         super(editor);
         putValue(NAME, Resources.getString("action.map.save.name"));
         putValue(SHORT_DESCRIPTION, Resources.getString("action.map.save.tooltip"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
     }
 
-    public void actionPerformed (ActionEvent e)
+    @Override
+	public void actionPerformed (ActionEvent e)
     {
         Map currentMap = editor.getCurrentMap();
         String filePath = currentMap.getFilename();

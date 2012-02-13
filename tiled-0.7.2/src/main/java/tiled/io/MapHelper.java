@@ -14,6 +14,7 @@ package tiled.io;
 
 import java.io.IOException;
 import java.util.prefs.Preferences;
+
 import javax.swing.JOptionPane;
 
 import tiled.core.Map;
@@ -21,7 +22,6 @@ import tiled.core.TileSet;
 import tiled.io.xml.XMLMapTransformer;
 import tiled.io.xml.XMLMapWriter;
 import tiled.mapeditor.Resources;
-import tiled.mapeditor.dialogs.PluginLogDialog;
 import tiled.mapeditor.plugin.PluginClassLoader;
 import tiled.util.TiledConfiguration;
 
@@ -242,7 +242,7 @@ public class MapHelper {
         Preferences prefs = TiledConfiguration.node("io");
 
         if (prefs.getBoolean("reportWarnings", false)) {
-            PluginLogDialog pld = new PluginLogDialog();
+            //PluginLogDialog pld = new PluginLogDialog();
             /*if (!s.isEmpty()) {
                 Iterator itr = s.iterator();
                 StringBuffer warnings = new StringBuffer();

@@ -13,6 +13,7 @@
 package tiled.mapeditor.actions;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -22,8 +23,8 @@ import tiled.io.MapHelper;
 import tiled.io.MapWriter;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.Resources;
-import tiled.mapeditor.util.TiledFileFilter;
 import tiled.mapeditor.util.ConfirmingFileChooser;
+import tiled.mapeditor.util.TiledFileFilter;
 import tiled.util.TiledConfiguration;
 
 /**
@@ -33,7 +34,11 @@ import tiled.util.TiledConfiguration;
  */
 public class SaveAsAction extends AbstractAction
 {
-    protected MapEditor editor;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7289014717535721608L;
+	protected MapEditor editor;
     private boolean savingCancelled;
 
     private static final String ACTION_NAME = Resources.getString("action.map.saveas.name");

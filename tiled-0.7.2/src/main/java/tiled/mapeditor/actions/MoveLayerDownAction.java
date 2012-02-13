@@ -14,9 +14,9 @@ package tiled.mapeditor.actions;
 
 import javax.swing.KeyStroke;
 
+import tiled.core.Map;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.Resources;
-import tiled.core.Map;
 
 /**
  * Swaps the currently selected layer with the layer below.
@@ -25,7 +25,12 @@ import tiled.core.Map;
  */
 public class MoveLayerDownAction extends AbstractLayerAction
 {
-    public MoveLayerDownAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7452075422247809462L;
+
+	public MoveLayerDownAction(MapEditor editor) {
         super(editor,
               Resources.getString("action.layer.movedown.name"),
               Resources.getString("action.layer.movedown.tooltip"),
@@ -34,7 +39,8 @@ public class MoveLayerDownAction extends AbstractLayerAction
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("shift PAGE_DOWN"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         Map map = editor.getCurrentMap();
         int layerIndex = editor.getCurrentLayerIndex();
 

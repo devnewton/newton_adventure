@@ -28,13 +28,19 @@ import tiled.util.TileMergeHelper;
  */
 public class MergeAllLayersAction extends AbstractLayerAction
 {
-    public MergeAllLayersAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5042381838824217716L;
+
+	public MergeAllLayersAction(MapEditor editor) {
         super(editor,
               Resources.getString("action.layer.mergeall.name"),
               Resources.getString("action.layer.mergeall.tooltip"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         Map map = editor.getCurrentMap();
 
         int ret = JOptionPane.showConfirmDialog(editor.getAppFrame(),

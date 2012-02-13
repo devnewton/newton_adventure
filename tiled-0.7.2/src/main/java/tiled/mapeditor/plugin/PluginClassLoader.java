@@ -22,6 +22,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
 import javax.swing.JFrame;
 import javax.swing.ProgressMonitor;
 
@@ -36,19 +37,17 @@ import tiled.util.TiledConfiguration;
  */
 public final class PluginClassLoader extends URLClassLoader
 {
-    private final Vector plugins;
-    private final Vector readers, writers;
+    private final Vector<PluggableMapIO> readers, writers;
     private final Hashtable<String, String> readerFormats;
     private final Hashtable<String, String> writerFormats;
     private static PluginClassLoader instance;
 
     private PluginClassLoader() {
         super(new URL[0]);
-        plugins = new Vector();
-        readers = new Vector();
-        writers = new Vector();
-        readerFormats = new Hashtable();
-        writerFormats = new Hashtable();
+        readers = new Vector<PluggableMapIO>();
+        writers = new Vector<PluggableMapIO>();
+        readerFormats = new Hashtable<String, String>();
+        writerFormats = new Hashtable<String, String>();
     }
 
     public static synchronized PluginClassLoader getInstance() {
@@ -117,8 +116,8 @@ public final class PluginClassLoader extends URLClassLoader
                     jf.getManifest().getMainAttributes().getValue(
                             "Writer-Class");
 
-                Class readerClass = null;
-                Class writerClass = null;
+                Class<?> readerClass = null;
+                Class<?> writerClass = null;
 
                 // Verify that the jar has the necessary files to be a
                 // plugin
@@ -170,11 +169,11 @@ public final class PluginClassLoader extends URLClassLoader
     }
 
     public MapReader[] getReaders() {
-        return (MapReader[]) readers.toArray(new MapReader[readers.size()]);
+        return readers.toArray(new MapReader[readers.size()]);
     }
 
     public MapWriter[] getWriters() {
-        return (MapWriter[]) writers.toArray(new MapWriter[writers.size()]);
+        return writers.toArray(new MapWriter[writers.size()]);
     }
 
     public Object getReaderFor(String file) throws Exception {
@@ -199,7 +198,7 @@ public final class PluginClassLoader extends URLClassLoader
                 "No writer plugin exists for this file type.");
     }
 
-    public Class loadFromJar(JarFile jf, JarEntry je, String className)
+    public Class<?> loadFromJar(JarFile jf, JarEntry je, String className)
         throws IOException
     {
         byte[] buffer = new byte[(int)je.getSize()];
@@ -221,15 +220,15 @@ public final class PluginClassLoader extends URLClassLoader
         return defineClass(className, buffer, 0, buffer.length);
     }
 
-    private static boolean doesImplement(Class klass, String interfaceName)
+    private static boolean doesImplement(Class<?> klass, String interfaceName)
         throws Exception
     {
         if (klass == null) {
             return false;
         }
 
-        Class[] interfaces = klass.getInterfaces();
-        for (Class anInterface : interfaces) {
+        Class<?>[] interfaces = klass.getInterfaces();
+        for (Class<?> anInterface : interfaces) {
             String name = anInterface.toString();
             if (name.substring(name.indexOf(' ') + 1).equals(interfaceName)) {
                 return true;
@@ -238,15 +237,15 @@ public final class PluginClassLoader extends URLClassLoader
         return false;
     }
 
-    private static boolean isReader(Class klass) throws Exception {
+    private static boolean isReader(Class<?> klass) throws Exception {
         return doesImplement(klass, "tiled.io.MapReader");
     }
 
-    private static boolean isWriter(Class writerClass) throws Exception {
+    private static boolean isWriter(Class<?> writerClass) throws Exception {
         return doesImplement(writerClass, "tiled.io.MapWriter");
     }
 
-    private void _add(Class klass) throws Exception{
+    private void _add(Class<?> klass) throws Exception{
         try {
             PluggableMapIO p = (PluggableMapIO) klass.newInstance();
             String clname = klass.toString();

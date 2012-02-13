@@ -13,17 +13,25 @@
 package tiled.mapeditor.dialogs;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Properties;
-import javax.swing.*;
-import javax.swing.table.TableCellEditor;
-import javax.swing.event.TableModelListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableCellEditor;
 
 import tiled.core.MapLayer;
 import tiled.core.Tile;
@@ -40,7 +48,11 @@ import tiled.mapeditor.widget.VerticalStaticJPanel;
 public class TileInstancePropertiesDialog extends JDialog
     implements TableModelListener
 {
-    private JTable propertiesTable;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 264196004161783265L;
+	private JTable propertiesTable;
     private PropertiesTableModel tableModel = new PropertiesTableModel();
 
     private static final String DIALOG_TITLE = "Tile Properties"; // todo: Resource this
@@ -170,7 +182,7 @@ public class TileInstancePropertiesDialog extends JDialog
                         p = tl.getTileInstancePropertiesAt(point.x, point.y);
 
                         if (p != null) {
-                            for (Enumeration e = mergedProperties.keys(); e.hasMoreElements();) {
+                            for (Enumeration<?> e = mergedProperties.keys(); e.hasMoreElements();) {
                                 // We only care for properties that are already "known"...
                                 String key = (String) e.nextElement();
                                 String val = mergedProperties.getProperty(key);
@@ -240,7 +252,7 @@ public class TileInstancePropertiesDialog extends JDialog
         for (Point point : propertiesCoordinates) {
             Properties tp = getPropertiesAt(point);
             if (tp != null) {
-                for (Enumeration e = mergedProperties.keys();
+                for (Enumeration<?> e = mergedProperties.keys();
                      e.hasMoreElements();) {
 
                     String key = (String) e.nextElement();
@@ -263,7 +275,7 @@ public class TileInstancePropertiesDialog extends JDialog
                 setPropertiesAt(point, tp);
             }
 
-            for (Enumeration e = properties.keys(); e.hasMoreElements();) {
+            for (Enumeration<?> e = properties.keys(); e.hasMoreElements();) {
                 String key = (String) e.nextElement();
                 String val = properties.getProperty(key);
                 if (!"?".equals(val)) {

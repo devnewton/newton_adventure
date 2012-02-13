@@ -12,9 +12,9 @@
 
 package tiled.mapeditor.actions;
 
-import tiled.mapeditor.Resources;
-import tiled.mapeditor.MapEditor;
 import tiled.core.Map;
+import tiled.mapeditor.MapEditor;
+import tiled.mapeditor.Resources;
 
 /**
  * Adds a layer to the current map and selects it.
@@ -23,14 +23,20 @@ import tiled.core.Map;
  */
 public class AddLayerAction extends AbstractLayerAction
 {
-    public AddLayerAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3064956396648035297L;
+
+	public AddLayerAction(MapEditor editor) {
         super(editor,
               Resources.getString("action.layer.add.name"),
               Resources.getString("action.layer.add.tooltip"),
               Resources.getIcon("gnome-new.png"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         Map currentMap = editor.getCurrentMap();
         currentMap.addLayer();
         editor.setCurrentLayer(currentMap.getTotalLayers() - 1);

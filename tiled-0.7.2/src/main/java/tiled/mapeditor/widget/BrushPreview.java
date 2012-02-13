@@ -12,17 +12,24 @@
 
 package tiled.mapeditor.widget;
 
-import tiled.mapeditor.brush.AbstractBrush;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+
+import tiled.mapeditor.brush.AbstractBrush;
 
 /**
  * @version $Id$
  */
 public class BrushPreview extends JPanel
 {
-    private AbstractBrush brush;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6667383124825063542L;
+	private AbstractBrush brush;
 
     public BrushPreview() {
         setPreferredSize(new Dimension(22, 22));
@@ -32,7 +39,8 @@ public class BrushPreview extends JPanel
         this.brush = brush;
     }
 
-    public void paint(Graphics graphics) {
+    @Override
+	public void paint(Graphics graphics) {
         if (brush != null) {
             brush.drawPreview((Graphics2D) graphics, getSize(), null);
         }

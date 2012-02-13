@@ -12,9 +12,10 @@
 
 package tiled.mapeditor;
 
-import java.util.ResourceBundle;
 import java.awt.Image;
 import java.io.IOException;
+import java.util.ResourceBundle;
+
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;

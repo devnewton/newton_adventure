@@ -13,18 +13,36 @@
 
 package tiled.mapeditor.dialogs;
 
-import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Vector;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import tiled.core.*;
+import tiled.core.LayerLockedException;
+import tiled.core.Map;
+import tiled.core.MapLayer;
+import tiled.core.Tile;
+import tiled.core.TileLayer;
+import tiled.core.TileSet;
 import tiled.io.MapHelper;
 import tiled.io.MapWriter;
 import tiled.mapeditor.Resources;
@@ -39,7 +57,12 @@ import tiled.mapeditor.util.TilesetTableModel;
 public class TilesetManager extends JDialog implements ActionListener,
        ListSelectionListener
 {
-    private final Map map;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2797045316098174997L;
+
+	private final Map map;
 
     private JButton saveButton, saveAsButton, embedButton, removeButton, editButton;
     private JButton moveUpButton, moveDownButton, closeButton;
@@ -156,7 +179,7 @@ public class TilesetManager extends JDialog implements ActionListener,
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
         int selectedRow = tilesetTable.getSelectedRow();
-        Vector tilesets = map.getTilesets();
+        Vector<TileSet> tilesets = map.getTilesets();
         TileSet set = null;
         try {
             set = (TileSet)tilesets.get(selectedRow);
@@ -247,14 +270,14 @@ public class TilesetManager extends JDialog implements ActionListener,
 
     private int checkSetUsage(TileSet tileset) {
         int used = 0;
-        Iterator tileIterator = tileset.iterator();
+        Iterator<Tile> tileIterator = tileset.iterator();
 
         while (tileIterator.hasNext()) {
-            Tile tile = (Tile) tileIterator.next();
-            Iterator layerIterator = map.getLayers();
+            Tile tile = tileIterator.next();
+            Iterator<MapLayer> layerIterator = map.getLayers();
 
             while (layerIterator.hasNext()) {
-                MapLayer ml = (MapLayer) layerIterator.next();
+                MapLayer ml = layerIterator.next();
                 if (ml instanceof TileLayer) {
                     if (((TileLayer) ml).isUsed(tile)) {
                         used++;
@@ -278,7 +301,7 @@ public class TilesetManager extends JDialog implements ActionListener,
 
         moveDownButton.setEnabled(selectedRow > -1 && selectedRow < tilesetTable.getRowCount() - 1);
 
-        Vector tilesets = map.getTilesets();
+        Vector<TileSet> tilesets = map.getTilesets();
         TileSet set = null;
         try {
             set = (TileSet)tilesets.get(selectedRow);
@@ -292,7 +315,8 @@ public class TilesetManager extends JDialog implements ActionListener,
         embedButton.setEnabled(set != null && set.getSource() != null);
     }
 
-    public void setVisible(boolean visible) {
+    @Override
+	public void setVisible(boolean visible) {
         super.setVisible(visible);
         tilesetTableModel.clearListeners();
     }

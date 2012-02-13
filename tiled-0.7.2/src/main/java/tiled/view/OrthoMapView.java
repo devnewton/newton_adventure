@@ -12,14 +12,28 @@
 
 package tiled.view;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.Properties;
+
 import javax.swing.SwingConstants;
 
-import tiled.core.*;
+import tiled.core.Map;
+import tiled.core.MapObject;
+import tiled.core.ObjectGroup;
+import tiled.core.Tile;
+import tiled.core.TileLayer;
 import tiled.mapeditor.selection.SelectionLayer;
 
 /**
@@ -27,7 +41,11 @@ import tiled.mapeditor.selection.SelectionLayer;
  */
 public class OrthoMapView extends MapView
 {
-    private Polygon propPoly;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6790119198322296494L;
+	private Polygon propPoly;
 
     /**
      * Creates a new orthographic map view that displays the specified map.
@@ -43,7 +61,8 @@ public class OrthoMapView extends MapView
         propPoly.addPoint(12, 12);
     }
 
-    public int getScrollableBlockIncrement(Rectangle visibleRect,
+    @Override
+	public int getScrollableBlockIncrement(Rectangle visibleRect,
             int orientation, int direction) {
         Dimension tsize = getTileSize();
 
@@ -55,7 +74,8 @@ public class OrthoMapView extends MapView
         }
     }
 
-    public int getScrollableUnitIncrement(Rectangle visibleRect,
+    @Override
+	public int getScrollableUnitIncrement(Rectangle visibleRect,
             int orientation, int direction) {
         Dimension tsize = getTileSize();
         if (orientation == SwingConstants.VERTICAL) {
@@ -66,7 +86,8 @@ public class OrthoMapView extends MapView
         }
     }
 
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         Dimension tsize = getTileSize();
 
         return new Dimension(
@@ -74,7 +95,8 @@ public class OrthoMapView extends MapView
                 map.getHeight() * tsize.height);
     }
 
-    protected void paintLayer(Graphics2D g2d, TileLayer layer) {
+    @Override
+	protected void paintLayer(Graphics2D g2d, TileLayer layer) {
         // Determine tile size and offset
         Dimension tsize = getTileSize();
         if (tsize.width <= 0 || tsize.height <= 0) {
@@ -112,7 +134,8 @@ public class OrthoMapView extends MapView
         }
     }
 
-    protected void paintObjectGroup(Graphics2D g2d, ObjectGroup og) {
+    @Override
+	protected void paintObjectGroup(Graphics2D g2d, ObjectGroup og) {
         final Dimension tsize = getTileSize();
         final Rectangle bounds = og.getBounds();
         Iterator<MapObject> itr = og.getObjects();
@@ -167,7 +190,8 @@ public class OrthoMapView extends MapView
                 -bounds.y * tsize.height);
     }
 
-    protected void paintGrid(Graphics2D g2d) {
+    @Override
+	protected void paintGrid(Graphics2D g2d) {
         // Determine tile size
         Dimension tsize = getTileSize();
         if (tsize.width <= 0 || tsize.height <= 0) {
@@ -189,7 +213,8 @@ public class OrthoMapView extends MapView
         }
     }
 
-    protected void paintCoordinates(Graphics2D g2d) {
+    @Override
+	protected void paintCoordinates(Graphics2D g2d) {
         Dimension tsize = getTileSize();
         if (tsize.width <= 0 || tsize.height <= 0) {
             return;
@@ -229,7 +254,8 @@ public class OrthoMapView extends MapView
     }
 
 
-    protected void paintPropertyFlags(Graphics2D g2d, TileLayer layer) {
+    @Override
+	protected void paintPropertyFlags(Graphics2D g2d, TileLayer layer) {
         Dimension tsize = getTileSize();
         if (tsize.width <= 0 || tsize.height <= 0) {
             return;
@@ -280,7 +306,8 @@ public class OrthoMapView extends MapView
         }
     }
 
-    public void repaintRegion(Rectangle region) {
+    @Override
+	public void repaintRegion(Rectangle region) {
         Dimension tsize = getTileSize();
         if (tsize.width <= 0 || tsize.height <= 0) {
             return;
@@ -300,12 +327,14 @@ public class OrthoMapView extends MapView
         repaint(dirty);
     }
 
-    public Point screenToTileCoords(int x, int y) {
+    @Override
+	public Point screenToTileCoords(int x, int y) {
         Dimension tsize = getTileSize();
         return new Point(x / tsize.width, y / tsize.height);
     }
 
-    public Point screenToPixelCoords(int x, int y) {
+    @Override
+	public Point screenToPixelCoords(int x, int y) {
         return new Point(
                 (int) (x / zoom), (int) (y / zoom));
     }
@@ -316,7 +345,8 @@ public class OrthoMapView extends MapView
                 (int) (map.getTileHeight() * zoom));
     }
 
-    protected Polygon createGridPolygon(int tx, int ty, int border) {
+    @Override
+	protected Polygon createGridPolygon(int tx, int ty, int border) {
         Dimension tsize = getTileSize();
 
         Polygon poly = new Polygon();
@@ -328,7 +358,8 @@ public class OrthoMapView extends MapView
         return poly;
     }
 
-    public Point tileToScreenCoords(int x, int y) {
+    @Override
+	public Point tileToScreenCoords(int x, int y) {
         Dimension tsize = getTileSize();
         return new Point(x * tsize.width, y * tsize.height);
     }

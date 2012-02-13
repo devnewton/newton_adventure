@@ -13,13 +13,26 @@
 
 package tiled.mapeditor.dialogs;
 
-import java.awt.*;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
-import java.util.Arrays;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -34,7 +47,11 @@ import tiled.mapeditor.widget.VerticalStaticJPanel;
  */
 public class TileImageDialog extends JDialog implements ListSelectionListener
 {
-    private JList imageList;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -606134368592148744L;
+	private JList imageList;
     private JButton okButton, cancelButton;
     private int imageId;
     private final TileSet tileset;
@@ -117,7 +134,7 @@ public class TileImageDialog extends JDialog implements ListSelectionListener
     }
 
     public void queryImages() {
-        Vector listData = new Vector();
+        Vector<Image> listData = new Vector<Image>();
         int initialIndex = 0;
 
         Enumeration<String> ids = tileset.getImageIds();

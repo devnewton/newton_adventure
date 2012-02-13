@@ -24,7 +24,12 @@ import tiled.mapeditor.Resources;
  */
 public class CloseMapAction extends AbstractFileAction
 {
-    public CloseMapAction(MapEditor editor, SaveAction saveAction) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 233103057050890143L;
+
+	public CloseMapAction(MapEditor editor, SaveAction saveAction) {
         super(editor, saveAction,
               Resources.getString("action.map.close.name"),
               Resources.getString("action.map.close.tooltip"));
@@ -32,7 +37,8 @@ public class CloseMapAction extends AbstractFileAction
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control W"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         editor.setCurrentMap(null);
     }
 }

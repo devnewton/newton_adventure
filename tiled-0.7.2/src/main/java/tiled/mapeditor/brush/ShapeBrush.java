@@ -12,12 +12,18 @@
 
 package tiled.mapeditor.brush;
 
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 
+import tiled.core.MultilayerPlane;
 import tiled.core.Tile;
 import tiled.core.TileLayer;
-import tiled.core.MultilayerPlane;
 import tiled.view.MapView;
 
 /**
@@ -84,15 +90,18 @@ public class ShapeBrush extends AbstractBrush
         return paintTile;
     }
 
-    public Rectangle getBounds() {
+    @Override
+	public Rectangle getBounds() {
         return shape.getBounds();
     }
 
-    public Shape getShape() {
+    @Override
+	public Shape getShape() {
         return shape;
     }
 
-    public void drawPreview(Graphics2D g2d, Dimension dimension, MapView mv) {
+    @Override
+	public void drawPreview(Graphics2D g2d, Dimension dimension, MapView mv) {
         g2d.fill(shape);
     }
 
@@ -104,7 +113,8 @@ public class ShapeBrush extends AbstractBrush
                 ((ShapeBrush) brush).shape.equals(shape);
     }
 
-    public void startPaint(MultilayerPlane mp, int x, int y, int button, int layer) {
+    @Override
+	public void startPaint(MultilayerPlane mp, int x, int y, int button, int layer) {
         super.startPaint(mp, x, y, button, layer);
     }
 
@@ -115,7 +125,8 @@ public class ShapeBrush extends AbstractBrush
      *
      * @see tiled.mapeditor.brush.Brush#doPaint(int, int)
      */
-    public Rectangle doPaint(int x, int y) throws Exception
+    @Override
+	public Rectangle doPaint(int x, int y) throws Exception
     {
         Rectangle shapeBounds = shape.getBounds();
         int centerx = x - shapeBounds.width / 2;

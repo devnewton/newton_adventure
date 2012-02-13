@@ -17,9 +17,19 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.PixelGrabber;
-import javax.swing.*;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import tiled.mapeditor.Resources;
 import tiled.mapeditor.widget.ImageViewPanel;
@@ -28,7 +38,11 @@ import tiled.mapeditor.widget.VerticalStaticJPanel;
 public class ImageColorDialog extends JDialog implements MouseListener,
        MouseMotionListener
 {
-    private Image image;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6892001145189535342L;
+	private Image image;
     private JButton cancelButton;
     private Color color;
     private JPanel colorPanel;

@@ -12,8 +12,11 @@
 
 package tiled.core;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
 import java.util.Properties;
 
 /**
@@ -88,7 +91,8 @@ public class Tile
      * @deprecated
      * @param orientation
      */
-    public void setImageOrientation(int orientation) {
+    @Deprecated
+	public void setImageOrientation(int orientation) {
         tileOrientation = orientation;
     }
 
@@ -213,7 +217,8 @@ public class Tile
      * @deprecated
      * @return int
      */
-    public int getImageOrientation() {
+    @Deprecated
+	public int getImageOrientation() {
         return tileOrientation;
     }
 
@@ -251,7 +256,7 @@ public class Tile
             {
                 scaledImage = img.getScaledInstance(
                         (int)(getWidth() * zoom), (int)(getHeight() * zoom),
-                        BufferedImage.SCALE_SMOOTH);
+                        Image.SCALE_SMOOTH);
 
                 MediaTracker mediaTracker = new MediaTracker(new Canvas());
                 mediaTracker.addImage(scaledImage, 0);
@@ -273,7 +278,8 @@ public class Tile
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "Tile " + id + " (" + getWidth() + "x" + getHeight() + ")";
     }
 }

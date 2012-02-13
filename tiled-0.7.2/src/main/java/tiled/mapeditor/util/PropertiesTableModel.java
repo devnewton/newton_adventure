@@ -15,6 +15,7 @@ package tiled.mapeditor.util;
 import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import javax.swing.table.AbstractTableModel;
 
 import tiled.mapeditor.Resources;
@@ -24,7 +25,12 @@ import tiled.mapeditor.Resources;
  */
 public class PropertiesTableModel extends AbstractTableModel
 {
-    private SortedMap properties;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7347691514627620508L;
+
+	private SortedMap<Object,Object> properties;
 
     private static final String[] columnNames = {
             Resources.getString("dialog.properties.column.name"),
@@ -32,14 +38,15 @@ public class PropertiesTableModel extends AbstractTableModel
     };
 
     public PropertiesTableModel() {
-        properties = new TreeMap();
+        properties = new TreeMap<Object,Object>();
     }
 
     public int getRowCount() {
         return properties.size() + 1;
     }
 
-    public String getColumnName(int col) {
+    @Override
+	public String getColumnName(int col) {
         return columnNames[col];
     }
 
@@ -51,7 +58,8 @@ public class PropertiesTableModel extends AbstractTableModel
      * Returns wether the given position in the table is editable. Values can
      * only be edited when they have a name.
      */
-    public boolean isCellEditable(int row, int col) {
+    @Override
+	public boolean isCellEditable(int row, int col) {
         return col == 0 || col == 1 && getValueAt(row, 0) != null;
     }
 
@@ -67,7 +75,8 @@ public class PropertiesTableModel extends AbstractTableModel
         return null;
     }
 
-    public void setValueAt(Object value, int row, int col) {
+    @Override
+	public void setValueAt(Object value, int row, int col) {
         if (row >= properties.size() && col == 0) {
             if (((String) value).length() > 0) {
                 properties.put(value, "");

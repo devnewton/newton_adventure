@@ -14,8 +14,9 @@ package tiled.mapeditor.widget;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 
 
@@ -26,7 +27,12 @@ import javax.swing.JButton;
  */
 public class ColorButton extends JButton implements ActionListener
 {
-    public ColorButton(Color initialColor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1198213306097865907L;
+
+	public ColorButton(Color initialColor) {
         setBackground(initialColor);
         addActionListener(this);
     }
@@ -35,7 +41,8 @@ public class ColorButton extends JButton implements ActionListener
         this(Color.white);
     }
 
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         return new Dimension(40, 15);
     }
 

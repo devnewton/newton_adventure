@@ -12,10 +12,12 @@
 
 package tiled.core;
 
-import java.awt.*;
-import java.util.Properties;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
+
 import javax.imageio.ImageIO;
 
 /**
@@ -36,7 +38,8 @@ public class MapObject implements Cloneable
         bounds = new Rectangle(x, y, width, height);
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    @Override
+	public Object clone() throws CloneNotSupportedException {
         MapObject clone = (MapObject) super.clone();
         clone.bounds = new Rectangle(bounds);
         clone.properties = (Properties) properties.clone();
@@ -176,7 +179,8 @@ public class MapObject implements Cloneable
         properties = p;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return type + " (" + getX() + "," + getY() + ")";
     }
 }

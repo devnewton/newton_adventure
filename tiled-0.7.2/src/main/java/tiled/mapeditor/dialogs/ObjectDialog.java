@@ -15,9 +15,16 @@ package tiled.mapeditor.dialogs;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.undo.UndoableEditSupport;
 
 import tiled.core.MapObject;
@@ -34,7 +41,11 @@ import tiled.util.TiledConfiguration;
  */
 public class ObjectDialog extends PropertiesDialog
 {
-    private JTextField objectName, objectType;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8985325225116184971L;
+	private JTextField objectName, objectType;
     private JTextField objectImageSource;
     private IntegerSpinner objectWidth, objectHeight;
     private final MapObject object;
@@ -61,7 +72,8 @@ public class ObjectDialog extends PropertiesDialog
         setLocationRelativeTo(parent);
     }
 
-    public void init() {
+    @Override
+	public void init() {
         super.init();
         JLabel nameLabel = new JLabel(NAME_LABEL);
         JLabel typeLabel = new JLabel(TYPE_LABEL);
@@ -143,7 +155,8 @@ public class ObjectDialog extends PropertiesDialog
         mainPanel.add(miscPropPanel, 0);
     }
 
-    public void updateInfo() {
+    @Override
+	public void updateInfo() {
         super.updateInfo();
         objectName.setText(object.getName());
         objectType.setText(object.getType());
@@ -152,7 +165,8 @@ public class ObjectDialog extends PropertiesDialog
         objectHeight.setValue(object.getHeight());
     }
 
-    protected void buildPropertiesAndDispose() {
+    @Override
+	protected void buildPropertiesAndDispose() {
         // Make sure the changes to the object can be undone
         undoSupport.postEdit(new ChangeObjectEdit(object));
 

@@ -27,7 +27,11 @@ import tiled.mapeditor.Resources;
  */
 public class RemoveObjectEdit extends AbstractUndoableEdit
 {
-    private final ObjectGroup objectGroup;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1919752212842494821L;
+	private final ObjectGroup objectGroup;
     private final MapObject mapObject;
 
     public RemoveObjectEdit(ObjectGroup objectGroup, MapObject mapObject) {
@@ -35,17 +39,20 @@ public class RemoveObjectEdit extends AbstractUndoableEdit
         this.mapObject = mapObject;
     }
 
-    public void undo() throws CannotUndoException {
+    @Override
+	public void undo() throws CannotUndoException {
         super.undo();
         objectGroup.addObject(mapObject);
     }
 
-    public void redo() throws CannotRedoException {
+    @Override
+	public void redo() throws CannotRedoException {
         super.redo();
         objectGroup.removeObject(mapObject);
     }
 
-    public String getPresentationName() {
+    @Override
+	public String getPresentationName() {
         return Resources.getString("action.object.remove.name");
     }
 }

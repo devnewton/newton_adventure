@@ -12,8 +12,26 @@
 
 package tiled.mapeditor;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Area;
 import java.io.File;
 import java.io.IOException;
@@ -24,27 +42,101 @@ import java.util.Vector;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.JViewport;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.undo.UndoableEditSupport;
 
-import tiled.core.*;
+import tiled.core.Map;
+import tiled.core.MapChangeListener;
+import tiled.core.MapChangedEvent;
+import tiled.core.MapLayer;
+import tiled.core.MapObject;
+import tiled.core.ObjectGroup;
+import tiled.core.Tile;
+import tiled.core.TileLayer;
+import tiled.core.TileSet;
 import tiled.io.MapHelper;
 import tiled.io.MapReader;
-import tiled.mapeditor.actions.*;
+import tiled.mapeditor.actions.AddLayerAction;
+import tiled.mapeditor.actions.AddObjectGroupAction;
+import tiled.mapeditor.actions.CloneLayerAction;
+import tiled.mapeditor.actions.CloseMapAction;
+import tiled.mapeditor.actions.DeleteLayerAction;
+import tiled.mapeditor.actions.ExitAction;
+import tiled.mapeditor.actions.MergeAllLayersAction;
+import tiled.mapeditor.actions.MergeLayerDownAction;
+import tiled.mapeditor.actions.MoveLayerDownAction;
+import tiled.mapeditor.actions.MoveLayerUpAction;
+import tiled.mapeditor.actions.NewMapAction;
+import tiled.mapeditor.actions.OpenMapAction;
+import tiled.mapeditor.actions.OpenRecentAction;
+import tiled.mapeditor.actions.SaveAction;
+import tiled.mapeditor.actions.SaveAsAction;
+import tiled.mapeditor.actions.SaveAsImageAction;
 import tiled.mapeditor.brush.AbstractBrush;
-import tiled.mapeditor.brush.Brush;
 import tiled.mapeditor.brush.CustomBrush;
 import tiled.mapeditor.brush.ShapeBrush;
-import tiled.mapeditor.dialogs.*;
+import tiled.mapeditor.dialogs.AboutDialog;
+import tiled.mapeditor.dialogs.BrushDialog;
+import tiled.mapeditor.dialogs.ConfigurationDialog;
+import tiled.mapeditor.dialogs.NewTilesetDialog;
+import tiled.mapeditor.dialogs.ObjectDialog;
+import tiled.mapeditor.dialogs.PluginDialog;
+import tiled.mapeditor.dialogs.PropertiesDialog;
+import tiled.mapeditor.dialogs.ResizeDialog;
+import tiled.mapeditor.dialogs.SearchDialog;
+import tiled.mapeditor.dialogs.TilesetManager;
 import tiled.mapeditor.plugin.PluginClassLoader;
 import tiled.mapeditor.selection.SelectionLayer;
-import tiled.mapeditor.undo.*;
-import tiled.mapeditor.util.*;
-import tiled.mapeditor.widget.*;
+import tiled.mapeditor.undo.AddObjectEdit;
+import tiled.mapeditor.undo.MapLayerEdit;
+import tiled.mapeditor.undo.MapLayerStateEdit;
+import tiled.mapeditor.undo.MoveLayerEdit;
+import tiled.mapeditor.undo.MoveObjectEdit;
+import tiled.mapeditor.undo.RemoveObjectEdit;
+import tiled.mapeditor.undo.UndoHandler;
+import tiled.mapeditor.util.LayerTableModel;
+import tiled.mapeditor.util.MapEventAdapter;
+import tiled.mapeditor.util.TiledFileFilter;
+import tiled.mapeditor.widget.BrushPreview;
+import tiled.mapeditor.widget.FloatablePanel;
+import tiled.mapeditor.widget.MiniMapViewer;
+import tiled.mapeditor.widget.TButton;
+import tiled.mapeditor.widget.TMenuItem;
+import tiled.mapeditor.widget.TabbedTilesetsPane;
+import tiled.mapeditor.widget.TilePalettePanel;
 import tiled.util.TiledConfiguration;
 import tiled.view.MapView;
 
@@ -129,13 +221,6 @@ public class MapEditor implements ActionListener, MouseListener,
 
     private FloatablePanel layersPanel;
     private FloatablePanel tilesetsPanel;
-
-    //private TileInstancePropertiesDialog tileInstancePropertiesDialog;
-    //private JButton tileInstancePropertiesButton;
-
-    /** Available brushes */
-    private Vector brushes = new Vector();
-    private Brush eraserBrush;
 
     // Actions
     private final SaveAction saveAction;
@@ -225,9 +310,10 @@ public class MapEditor implements ActionListener, MouseListener,
 
         // Create our frame
         appFrame = new JFrame(Resources.getString("dialog.main.title"));
-        appFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        appFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         appFrame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent event) {
+            @Override
+			public void windowClosing(WindowEvent event) {
                 exitAction.actionPerformed(null);
             }
         });
@@ -299,8 +385,8 @@ public class MapEditor implements ActionListener, MouseListener,
 
     private JPanel createContentPane() {
         mapScrollPane = new JScrollPane(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         mapScrollPane.setBorder(null);
 
         createData();
@@ -555,7 +641,7 @@ public class MapEditor implements ActionListener, MouseListener,
         mapEventAdapter.addListener(marqueeButton);
         mapEventAdapter.addListener(objectMoveButton);
 
-        JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
+        JToolBar toolBar = new JToolBar(SwingConstants.VERTICAL);
         toolBar.setFloatable(true);
         toolBar.add(moveButton);
         toolBar.add(paintButton);
@@ -910,7 +996,7 @@ public class MapEditor implements ActionListener, MouseListener,
             }
         } else if (mouseButton == MouseEvent.BUTTON2 ||
                 (mouseButton == MouseEvent.BUTTON1 &&
-                 (event.getModifiersEx() & MouseEvent.ALT_DOWN_MASK ) != 0)) {
+                 (event.getModifiersEx() & InputEvent.ALT_DOWN_MASK ) != 0)) {
             // Scroll with middle mouse button
             int dx = event.getX() - mouseInitialScreenLocation.x;
             int dy = event.getY() - mouseInitialScreenLocation.y;
@@ -1099,7 +1185,7 @@ public class MapEditor implements ActionListener, MouseListener,
 
         if (mouseButton == MouseEvent.BUTTON2 ||
                 (mouseButton == MouseEvent.BUTTON1 &&
-                        (e.getModifiersEx() & MouseEvent.ALT_DOWN_MASK) != 0)) {
+                        (e.getModifiersEx() & InputEvent.ALT_DOWN_MASK) != 0)) {
             // Remember screen location for scrolling with middle mouse button
             mouseInitialScreenLocation = new Point(e.getX(), e.getY());
         }
@@ -1592,7 +1678,11 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class LayerTransformAction extends AbstractAction {
-        private final int transform;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1047556754094317210L;
+		private final int transform;
         public LayerTransformAction(int transform) {
             this.transform = transform;
             switch (transform) {
@@ -1683,7 +1773,12 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class CancelSelectionAction extends AbstractAction {
-        public CancelSelectionAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -6217788914300686640L;
+
+		public CancelSelectionAction() {
             super(Resources.getString("action.select.none.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control shift A"));
@@ -1703,7 +1798,12 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class SelectAllAction extends AbstractAction {
-        public SelectAllAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -1980981542520629392L;
+
+		public SelectAllAction() {
             super(Resources.getString("action.select.all.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control A"));
@@ -1725,7 +1825,12 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class InverseSelectionAction extends AbstractAction {
-        public InverseSelectionAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -3030827051213056224L;
+
+		public InverseSelectionAction() {
             super(Resources.getString("action.select.invert.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control I"));
@@ -1742,7 +1847,11 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class ZoomInAction extends AbstractAction {
-        public ZoomInAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -5253002744432344462L;
+		public ZoomInAction() {
             super(Resources.getString("action.zoom.in.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control EQUALS"));
@@ -1763,7 +1872,11 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class ZoomOutAction extends AbstractAction {
-        public ZoomOutAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 4963537857700059134L;
+		public ZoomOutAction() {
             super(Resources.getString("action.zoom.out.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control MINUS"));
@@ -1784,7 +1897,11 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class ZoomNormalAction extends AbstractAction {
-        public ZoomNormalAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 4808296576226530709L;
+		public ZoomNormalAction() {
             super(Resources.getString("action.zoom.normal.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control 0"));
@@ -1802,7 +1919,11 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class CopyAction extends AbstractAction {
-        public CopyAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -7093838522430390018L;
+		public CopyAction() {
             super(Resources.getString("action.copy.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control C"));
@@ -1826,7 +1947,11 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class CopyAllAction extends AbstractAction {
-        public CopyAllAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 6636539963576518593L;
+		public CopyAllAction() {
             super(Resources.getString("action.copyall.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("shift control C"));
@@ -1838,9 +1963,9 @@ public class MapEditor implements ActionListener, MouseListener,
             if (currentMap != null && marqueeSelection != null) {
                 clipboardLayer = new TileLayer(
                         marqueeSelection.getSelectedAreaBounds());
-                ListIterator itr = currentMap.getLayers();
+                ListIterator<MapLayer> itr = currentMap.getLayers();
                 while(itr.hasNext()) {
-                    MapLayer layer = (MapLayer) itr.next();
+                    MapLayer layer = itr.next();
                     if (layer instanceof TileLayer) {
                         clipboardLayer.maskedMergeOnto(
                                 layer,
@@ -1852,7 +1977,11 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class CutAction extends AbstractAction {
-        public CutAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -244183316986816427L;
+		public CutAction() {
             super(Resources.getString("action.cut.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control X"));
@@ -1891,7 +2020,11 @@ public class MapEditor implements ActionListener, MouseListener,
     }
 
     private class PasteAction extends AbstractAction {
-        public PasteAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -9094834729794547379L;
+		public PasteAction() {
             super(Resources.getString("action.paste.name"));
             putValue(ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke("control V"));

@@ -12,9 +12,8 @@
 
 package tiled.io.xml;
 
-import java.lang.String;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Stack;
 
 /**
@@ -30,13 +29,13 @@ public class XMLWriter
     private String newLine = "\n";
     private final Writer w;
 
-    private final Stack openElements;
+    private final Stack<String> openElements;
     private boolean bStartTagOpen;
     private boolean bDocumentOpen;
 
 
     public XMLWriter(Writer writer) {
-        openElements = new Stack();
+        openElements = new Stack<String>();
         w = writer;
     }
 
@@ -114,7 +113,7 @@ public class XMLWriter
     }
 
     public void endElement() throws IOException {
-        String name = (String)openElements.pop();
+        String name = openElements.pop();
 
         // If start tag still open, end with />, else with </name>.
         if (bStartTagOpen) {

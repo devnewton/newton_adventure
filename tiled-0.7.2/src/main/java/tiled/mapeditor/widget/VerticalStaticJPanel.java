@@ -14,6 +14,7 @@ package tiled.mapeditor.widget;
 
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+
 import javax.swing.JPanel;
 
 
@@ -23,19 +24,26 @@ import javax.swing.JPanel;
  */
 public class VerticalStaticJPanel extends JPanel
 {
-    public VerticalStaticJPanel() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2917490165486964087L;
+
+	public VerticalStaticJPanel() {
     }
 
     public VerticalStaticJPanel(LayoutManager manager) {
         super(manager);
     }
 
-    public Dimension getMaximumSize() {
+    @Override
+	public Dimension getMaximumSize() {
         return new Dimension(super.getMaximumSize().width,
                 getPreferredSize().height);
     }
 
-    public Dimension getMinimumSize() {
+    @Override
+	public Dimension getMinimumSize() {
         return new Dimension(super.getMinimumSize().width,
                 getPreferredSize().height);
     }

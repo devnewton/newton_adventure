@@ -19,7 +19,12 @@ package tiled.core;
  * @version $Id$
  */
 public class LayerLockedException extends Throwable {
-    public LayerLockedException(String s) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5229452556019200169L;
+
+	public LayerLockedException(String s) {
         super(s);
     }
 }

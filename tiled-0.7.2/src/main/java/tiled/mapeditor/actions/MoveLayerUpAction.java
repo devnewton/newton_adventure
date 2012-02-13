@@ -14,9 +14,9 @@ package tiled.mapeditor.actions;
 
 import javax.swing.KeyStroke;
 
+import tiled.core.Map;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.Resources;
-import tiled.core.Map;
 
 /**
  * Swaps the currently selected layer with the layer above.
@@ -25,7 +25,12 @@ import tiled.core.Map;
  */
 public class MoveLayerUpAction extends AbstractLayerAction
 {
-    public MoveLayerUpAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2012577686942427023L;
+
+	public MoveLayerUpAction(MapEditor editor) {
         super(editor,
               Resources.getString("action.layer.moveup.name"),
               Resources.getString("action.layer.moveup.tooltip"),
@@ -34,7 +39,8 @@ public class MoveLayerUpAction extends AbstractLayerAction
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("shift PAGE_UP"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         Map map = editor.getCurrentMap();
         int layerIndex = editor.getCurrentLayerIndex();
         int totalLayers = map.getTotalLayers();

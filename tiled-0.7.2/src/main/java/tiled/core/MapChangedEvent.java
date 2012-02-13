@@ -19,7 +19,12 @@ import java.util.EventObject;
  */
 public class MapChangedEvent extends EventObject
 {
-    public MapChangedEvent(Map map) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3970842724212795453L;
+
+	public MapChangedEvent(Map map) {
         super(map);
     }
 

@@ -15,7 +15,6 @@ package tiled.mapeditor.brush;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
 
-import tiled.core.MultilayerPlane;
 import tiled.core.TileLayer;
 import tiled.util.MersenneTwister;
 
@@ -59,7 +58,8 @@ public class RandomBrush extends ShapeBrush
      * @param x  The x-coordinate where the click occurred.
      * @param y  The y-coordinate where the click occurred.
      */
-    public Rectangle doPaint(int x, int y)
+    @Override
+	public Rectangle doPaint(int x, int y)
     {
         Rectangle shapeBounds = shape.getBounds();
         int centerx = x - shapeBounds.width / 2;

@@ -12,16 +12,27 @@
 
 package tiled.mapeditor.widget;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 import javax.swing.event.MouseInputAdapter;
 
-import tiled.core.*;
+import tiled.core.Tile;
+import tiled.core.TileLayer;
+import tiled.core.TileSet;
+import tiled.core.TilesetChangeListener;
+import tiled.core.TilesetChangedEvent;
 import tiled.mapeditor.util.TileRegionSelectionEvent;
 import tiled.mapeditor.util.TileSelectionEvent;
 import tiled.mapeditor.util.TileSelectionListener;
@@ -33,7 +44,8 @@ import tiled.mapeditor.util.TileSelectionListener;
 public class TilePalettePanel extends JPanel implements Scrollable,
        TilesetChangeListener
 {
-    private static final int TILES_PER_ROW = 4;
+	private static final long serialVersionUID = -8883109737032799388L;
+	private static final int TILES_PER_ROW = 4;
     private TileSet tileset;
     private List<TileSelectionListener> tileSelectionListeners;
     private Vector<Tile> tilesetMap;
@@ -43,12 +55,13 @@ public class TilePalettePanel extends JPanel implements Scrollable,
      * Constructs an empty tile palette panel.
      */
     public TilePalettePanel() {
-        tileSelectionListeners = new LinkedList();
+        tileSelectionListeners = new LinkedList<TileSelectionListener>();
 
         MouseInputAdapter mouseInputAdapter = new MouseInputAdapter() {
             private Point origin;
 
-            public void mousePressed(MouseEvent e) {
+            @Override
+			public void mousePressed(MouseEvent e) {
                 origin = getTileCoordinates(e.getX(), e.getY());
                 setSelection(new Rectangle(origin.x, origin.y, 0, 0));
                 scrollTileToVisible(origin);
@@ -58,7 +71,8 @@ public class TilePalettePanel extends JPanel implements Scrollable,
                 }
             }
 
-            public void mouseDragged(MouseEvent e) {
+            @Override
+			public void mouseDragged(MouseEvent e) {
                 Point point = getTileCoordinates(e.getX(), e.getY());
                 Rectangle select = new Rectangle(origin.x, origin.y, 0, 0);
                 select.add(point);
@@ -253,7 +267,8 @@ public class TilePalettePanel extends JPanel implements Scrollable,
                 twidth + 1, theight + 1));
     }
 
-    public void paint(Graphics g) {
+    @Override
+	public void paint(Graphics g) {
         Rectangle clip = g.getClipBounds();
 
         paintBackground(g);
@@ -334,7 +349,8 @@ public class TilePalettePanel extends JPanel implements Scrollable,
         }
     }
 
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         if (tileset == null) {
             return new Dimension(0, 0);
         }

@@ -15,6 +15,7 @@ package tiled.mapeditor.util;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.io.File;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -37,7 +38,11 @@ import tiled.mapeditor.Resources;
  */
 public final class ConfirmingFileChooser extends JFileChooser
 {
-    private static final String UNKNOWN_TYPE_MESSAGE = Resources.getString("dialog.saveas.unknown-type.message");
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2357564573322872373L;
+	private static final String UNKNOWN_TYPE_MESSAGE = Resources.getString("dialog.saveas.unknown-type.message");
     private static final String CONFIRM_MISMATCH = Resources.getString("dialog.saveas.confirm.mismatch");
     private static final String CONFIRM_MISMATCH_TITLE = Resources.getString("dialog.saveas.confirm.mismatch.title");
     private static final String FILE_EXISTS_MESSAGE = Resources.getString("general.file.exists.message");
@@ -47,7 +52,8 @@ public final class ConfirmingFileChooser extends JFileChooser
         super(currentDirectoryPath);
     }
 
-    public int showSaveDialog(Component component) throws HeadlessException {
+    @Override
+	public int showSaveDialog(Component component) throws HeadlessException {
         setDialogTitle(Resources.getString("dialog.saveas.title"));
         return super.showSaveDialog(component);
     }
@@ -56,7 +62,8 @@ public final class ConfirmingFileChooser extends JFileChooser
         this(null);
     }
 
-    public void approveSelection ()
+    @Override
+	public void approveSelection ()
     {
         // When it's an open dialog, we don't need the extension or overwrite
         // checks. Probably you should just be using JFileChooser.

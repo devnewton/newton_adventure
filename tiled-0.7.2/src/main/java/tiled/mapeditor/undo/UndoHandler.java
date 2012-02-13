@@ -12,24 +12,32 @@
 
 package tiled.mapeditor.undo;
 
-import java.util.Iterator;
 import java.awt.event.ActionEvent;
+import java.util.Iterator;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.KeyStroke;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.*;
-import javax.swing.event.UndoableEditEvent;
 
-import tiled.util.TiledConfiguration;
 import tiled.mapeditor.MapEditor;
+import tiled.util.TiledConfiguration;
 
 /**
  * @version $Id$
  */
 public class UndoHandler extends UndoManager
 {
-    UndoableEdit savedAt;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6225822937347591856L;
+
+	UndoableEdit savedAt;
 
     private final Action undoAction = new UndoAction();
     private final Action redoAction = new RedoAction();
@@ -45,7 +53,8 @@ public class UndoHandler extends UndoManager
      * Overridden to update the undo/redo actions.
      * @see UndoManager#discardAllEdits()
      */
-    public synchronized void discardAllEdits()
+    @Override
+	public synchronized void discardAllEdits()
     {
         super.discardAllEdits();
         updateActions();
@@ -56,7 +65,8 @@ public class UndoHandler extends UndoManager
      * @see UndoManager#undo()
      * @throws CannotUndoException
      */
-    public synchronized void undo() throws CannotUndoException {
+    @Override
+	public synchronized void undo() throws CannotUndoException {
         super.undo();
         updateActions();
         editor.updateTitle();
@@ -71,14 +81,16 @@ public class UndoHandler extends UndoManager
      * @see UndoManager#redo()
      * @throws CannotRedoException
      */
-    public synchronized void redo() throws CannotRedoException {
+    @Override
+	public synchronized void redo() throws CannotRedoException {
         super.redo();
         updateActions();
         editor.updateTitle();
         editor.getMapView().repaint();
     }
 
-    public void undoableEditHappened(UndoableEditEvent e) {
+    @Override
+	public void undoableEditHappened(UndoableEditEvent e) {
         super.undoableEditHappened(e);
         updateActions();
         editor.updateTitle();
@@ -129,7 +141,11 @@ public class UndoHandler extends UndoManager
     }
 
     private class UndoAction extends AbstractAction {
-        public UndoAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -4072912036798139575L;
+		public UndoAction() {
             super(getUndoPresentationName());
             putValue(SHORT_DESCRIPTION, "Undo one action");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control Z"));
@@ -140,7 +156,11 @@ public class UndoHandler extends UndoManager
     }
 
     private class RedoAction extends AbstractAction {
-        public RedoAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -8771028902507353877L;
+		public RedoAction() {
             super(getRedoPresentationName());
             putValue(SHORT_DESCRIPTION, "Redo one action");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control Y"));

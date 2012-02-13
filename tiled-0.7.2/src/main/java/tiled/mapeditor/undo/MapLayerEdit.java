@@ -24,7 +24,11 @@ import tiled.core.MapLayer;
  */
 public class MapLayerEdit extends AbstractUndoableEdit
 {
-    private final MapLayer editedLayer;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3492616195184646597L;
+	private final MapLayer editedLayer;
     private MapLayer layerUndo, layerRedo;
     private String name;
     private boolean inProgress;
@@ -63,35 +67,41 @@ public class MapLayerEdit extends AbstractUndoableEdit
     }
 
     /* inherited methods */
-    public void undo() throws CannotUndoException {
+    @Override
+	public void undo() throws CannotUndoException {
         if (editedLayer == null) {
             throw new CannotUndoException();
         }
         layerUndo.copyTo(editedLayer);
     }
 
-    public boolean canUndo() {
+    @Override
+	public boolean canUndo() {
         return layerUndo != null && editedLayer != null;
     }
 
-    public void redo() throws CannotRedoException {
+    @Override
+	public void redo() throws CannotRedoException {
         if (editedLayer == null) {
             throw new CannotRedoException();
         }
         layerRedo.copyTo(editedLayer);
     }
 
-    public boolean canRedo() {
+    @Override
+	public boolean canRedo() {
         return layerRedo != null && editedLayer != null;
     }
 
-    public void die() {
+    @Override
+	public void die() {
         layerUndo = null;
         layerRedo = null;
         inProgress = false;
     }
 
-    public boolean addEdit(UndoableEdit anEdit) {
+    @Override
+	public boolean addEdit(UndoableEdit anEdit) {
         if (inProgress && anEdit.getClass() == getClass()) {
             //TODO: absorb the edit
             //return true;
@@ -103,7 +113,8 @@ public class MapLayerEdit extends AbstractUndoableEdit
         name = s;
     }
 
-    public String getPresentationName() {
+    @Override
+	public String getPresentationName() {
         return name;
     }
 }

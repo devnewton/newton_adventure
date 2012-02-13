@@ -106,7 +106,8 @@ public class TiledFileFilter extends ConfirmableFileFilter
         return pmio;
     }
 
-    public String getDefaultExtension() {
+    @Override
+	public String getDefaultExtension() {
         if (!exts.isEmpty()) {
             return exts.getFirst();
         }
@@ -119,7 +120,8 @@ public class TiledFileFilter extends ConfirmableFileFilter
         return type;
     }
 
-    public boolean accept(File file) {
+    @Override
+	public boolean accept(File file) {
         // todo: Verify that the "!file.exists()" check is rather weird.
         if (type != FILTER_EXT && (file.isFile() || !file.exists())) {
             String fileName = file.getPath().toLowerCase();
@@ -134,14 +136,15 @@ public class TiledFileFilter extends ConfirmableFileFilter
         return true;
     }
 
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         StringBuffer filter = new StringBuffer();
 
         if (!exts.isEmpty()) {
             filter.append(" (");
-            Iterator itr = exts.iterator();
+            Iterator<String> itr = exts.iterator();
             while (itr.hasNext()) {
-                filter.append("*.").append((String) itr.next());
+                filter.append("*.").append(itr.next());
                 if (itr.hasNext()) {
                     filter.append(",");
                 }

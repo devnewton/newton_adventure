@@ -12,9 +12,9 @@
 
 package tiled.mapeditor.actions;
 
+import tiled.core.Map;
 import tiled.mapeditor.MapEditor;
 import tiled.mapeditor.Resources;
-import tiled.core.Map;
 
 /**
  * Deletes the selected layer and selects the layer that takes the same index.
@@ -23,14 +23,20 @@ import tiled.core.Map;
  */
 public class DeleteLayerAction extends AbstractLayerAction
 {
-    public DeleteLayerAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1096085678180900670L;
+
+	public DeleteLayerAction(MapEditor editor) {
         super(editor,
               Resources.getString("action.layer.delete.name"),
               Resources.getString("action.layer.delete.tooltip"),
               Resources.getIcon("gnome-delete.png"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         Map map = editor.getCurrentMap();
         int layerIndex = editor.getCurrentLayerIndex();
         int totalLayers = map.getTotalLayers();

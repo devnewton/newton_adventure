@@ -12,14 +12,28 @@
 
 package tiled.mapeditor.dialogs;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.event.MouseInputAdapter;
 
 import tiled.mapeditor.MapEditor;
@@ -32,7 +46,11 @@ import tiled.mapeditor.Resources;
  */
 public class AboutDialog extends JDialog
 {
-    private final JFrame parent;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5430409996593296942L;
+	private final JFrame parent;
     private JProgressBar memoryBar;
 
     public AboutDialog(JFrame parent) {
@@ -45,7 +63,7 @@ public class AboutDialog extends JDialog
 
         setContentPane(createMainPanel());
         setResizable(false);
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         pack();
     }
 
@@ -54,7 +72,8 @@ public class AboutDialog extends JDialog
         logo.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         logo.setAlignmentX(Component.LEFT_ALIGNMENT);
         logo.addMouseListener(new MouseInputAdapter() {
-            public void mouseClicked(MouseEvent mouseEvent) {
+            @Override
+			public void mouseClicked(MouseEvent mouseEvent) {
                 setVisible(false);
             }
         });
@@ -98,7 +117,8 @@ public class AboutDialog extends JDialog
         memoryBar.setString(used / 1024 + " KB / " + total / 1024 + " KB");
     }
 
-    public void setVisible(boolean visible) {
+    @Override
+	public void setVisible(boolean visible) {
         if (visible) {
             updateMemoryBar();
             setLocationRelativeTo(parent);
@@ -111,7 +131,8 @@ public class AboutDialog extends JDialog
      */
     private class UpdateTimerTask extends TimerTask
     {
-        public void run() {
+        @Override
+		public void run() {
             if (isVisible()) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
@@ -127,7 +148,12 @@ public class AboutDialog extends JDialog
      */
     private class GarbageCollectAction extends AbstractAction
     {
-        public GarbageCollectAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 6366040881453010771L;
+
+		public GarbageCollectAction() {
             putValue(Action.SMALL_ICON, Resources.getIcon("gnome-delete.png"));
         }
 

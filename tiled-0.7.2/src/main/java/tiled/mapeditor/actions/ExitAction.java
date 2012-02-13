@@ -24,7 +24,12 @@ import tiled.mapeditor.Resources;
  */
 public class ExitAction extends AbstractFileAction
 {
-    public ExitAction(MapEditor editor, SaveAction saveAction) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4273011947055250784L;
+
+	public ExitAction(MapEditor editor, SaveAction saveAction) {
         super(editor, saveAction,
               Resources.getString("action.main.exit.name"),
               Resources.getString("action.main.exit.tooltip"));
@@ -32,7 +37,8 @@ public class ExitAction extends AbstractFileAction
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control Q"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         editor.shutdown();
         System.exit(0);
     }

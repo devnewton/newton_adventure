@@ -14,10 +14,10 @@ package tiled.mapeditor.actions;
 
 import java.text.MessageFormat;
 
-import tiled.mapeditor.MapEditor;
-import tiled.mapeditor.Resources;
 import tiled.core.Map;
 import tiled.core.MapLayer;
+import tiled.mapeditor.MapEditor;
+import tiled.mapeditor.Resources;
 
 /**
  * Clones the current layer, adds the clone to the map at the top of the layer
@@ -27,14 +27,20 @@ import tiled.core.MapLayer;
  */
 public class CloneLayerAction extends AbstractLayerAction
 {
-    public CloneLayerAction(MapEditor editor) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8405138583279504912L;
+
+	public CloneLayerAction(MapEditor editor) {
         super(editor,
               Resources.getString("action.layer.duplicate.name"),
               Resources.getString("action.layer.duplicate.tooltip"),
               Resources.getIcon("gimp-duplicate-16.png"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         MapLayer currentLayer = editor.getCurrentLayer();
         Map currentMap = editor.getCurrentMap();
 

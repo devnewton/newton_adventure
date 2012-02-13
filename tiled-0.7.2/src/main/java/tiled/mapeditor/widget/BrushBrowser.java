@@ -12,10 +12,16 @@
 
 package tiled.mapeditor.widget;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.LinkedList;
+
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
@@ -27,7 +33,11 @@ import tiled.mapeditor.brush.ShapeBrush;
  */
 public class BrushBrowser extends JPanel
 {
-    private int maxWidth = 25;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1629041906183983517L;
+	private int maxWidth = 25;
     private Brush selectedBrush;
     private final LinkedList<Brush> brushes;
 
@@ -36,7 +46,8 @@ public class BrushBrowser extends JPanel
         initPresets();
 
         MouseInputAdapter listener = new MouseInputAdapter() {
-            public void mousePressed(MouseEvent e) {
+            @Override
+			public void mousePressed(MouseEvent e) {
                 int perLine = getWidth() / maxWidth;
                 int x = e.getX() / maxWidth;
                 int y = e.getY() / maxWidth;
@@ -51,7 +62,8 @@ public class BrushBrowser extends JPanel
                 }
             }
 
-            public void mouseDragged(MouseEvent e) {
+            @Override
+			public void mouseDragged(MouseEvent e) {
                 mousePressed(e);
             }
         };
@@ -60,7 +72,8 @@ public class BrushBrowser extends JPanel
         addMouseMotionListener(listener);
     }
 
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         int perLine = getWidth() / maxWidth;
         if (perLine > 0) {
             int lines = (brushes.size() + (perLine - 1)) / perLine;
@@ -86,7 +99,8 @@ public class BrushBrowser extends JPanel
         }
     }
 
-    public void paint(Graphics g) {
+    @Override
+	public void paint(Graphics g) {
         Rectangle clipRect = g.getClipBounds();
         g.setColor(Color.white);
         g.fillRect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);

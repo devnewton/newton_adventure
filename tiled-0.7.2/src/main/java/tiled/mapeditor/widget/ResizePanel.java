@@ -15,6 +15,7 @@ package tiled.mapeditor.widget;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
@@ -31,9 +32,13 @@ import tiled.view.MapView;
  */
 public class ResizePanel extends JPanel
 {
-    private MapView inner;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2649862371635220441L;
+	private MapView inner;
     private Map currentMap;
-    private Dimension oldDim, newDim;
+    private Dimension oldDim;
     private int offsetX, offsetY;
     private Point startPress;
     private double zoom;
@@ -65,7 +70,6 @@ public class ResizePanel extends JPanel
     public ResizePanel(Dimension size, Map map) {
         this(map);
         oldDim = size;
-        newDim = size;
         setSize(size);
     }
 
@@ -76,12 +80,8 @@ public class ResizePanel extends JPanel
                 (int)(y * (currentMap.getTileHeight() * zoom)));
     }
 
-    public void setNewDimensions(Dimension n) {
-        newDim = n;
-        // TODO: recalc the map size...
-    }
-
-    public Dimension getPreferredSize() {
+    @Override
+	public Dimension getPreferredSize() {
         return oldDim;
     }
 
@@ -90,15 +90,18 @@ public class ResizePanel extends JPanel
     }
 
     private class DragHandler extends MouseInputAdapter {
-        public void mousePressed(MouseEvent e) {
+        @Override
+		public void mousePressed(MouseEvent e) {
             startPress = e.getPoint();
         }
 
-        public void mouseReleased(MouseEvent e) {
+        @Override
+		public void mouseReleased(MouseEvent e) {
             startPress = null;
         }
 
-        public void mouseDragged(MouseEvent e) {
+        @Override
+		public void mouseDragged(MouseEvent e) {
             int newOffsetX = offsetX + (e.getX() - startPress.x);
             int newOffsetY = offsetY + (e.getY() - startPress.y);
 

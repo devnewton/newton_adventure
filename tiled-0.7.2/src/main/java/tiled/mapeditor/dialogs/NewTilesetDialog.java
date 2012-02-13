@@ -12,31 +12,54 @@
 
 package tiled.mapeditor.dialogs;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import tiled.core.*;
+import tiled.core.Map;
+import tiled.core.TileSet;
+import tiled.mapeditor.Resources;
 import tiled.mapeditor.util.cutter.BasicTileCutter;
 import tiled.mapeditor.util.cutter.BorderTileCutter;
 import tiled.mapeditor.util.cutter.TileCutter;
-import tiled.mapeditor.widget.IntegerSpinner;
 import tiled.mapeditor.widget.ColorButton;
+import tiled.mapeditor.widget.IntegerSpinner;
 import tiled.mapeditor.widget.VerticalStaticJPanel;
-import tiled.mapeditor.Resources;
 
 /**
  * A dialog for creating a new tileset.
  */
 public class NewTilesetDialog extends JDialog implements ChangeListener
 {
-    private final Map map;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2309100773802694470L;
+	private final Map map;
     private TileSet newTileset;
     private IntegerSpinner tileWidth, tileHeight;
     private IntegerSpinner tileSpacing;

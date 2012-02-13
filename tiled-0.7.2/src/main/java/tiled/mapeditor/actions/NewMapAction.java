@@ -25,7 +25,12 @@ import tiled.mapeditor.dialogs.NewMapDialog;
  */
 public class NewMapAction extends AbstractFileAction
 {
-    public NewMapAction(MapEditor editor, SaveAction saveAction) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8772693044250467912L;
+
+	public NewMapAction(MapEditor editor, SaveAction saveAction) {
         super(editor, saveAction,
               Resources.getString("action.map.new.name"),
               Resources.getString("action.map.new.tooltip"));
@@ -33,7 +38,8 @@ public class NewMapAction extends AbstractFileAction
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("control N"));
     }
 
-    protected void doPerformAction() {
+    @Override
+	protected void doPerformAction() {
         NewMapDialog nmd = new NewMapDialog((JFrame)editor.getAppFrame());
         Map newMap = nmd.create();
         if (newMap != null) {

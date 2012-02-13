@@ -67,9 +67,9 @@ public final class TiledConfiguration
         List<String> recent = getRecentFiles();
 
         // Remove all existing occurences of the file
-        Iterator iterator = recent.iterator();
+        Iterator<String> iterator = recent.iterator();
         while (iterator.hasNext()) {
-            String filename = (String) iterator.next();
+            String filename = iterator.next();
             if (filename.equals(mapFile)) {
                 iterator.remove();
             }

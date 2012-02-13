@@ -19,17 +19,30 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.prefs.Preferences;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import tiled.core.Map;
+import tiled.mapeditor.Resources;
 import tiled.mapeditor.widget.IntegerSpinner;
 import tiled.mapeditor.widget.VerticalStaticJPanel;
-import tiled.mapeditor.Resources;
 import tiled.util.TiledConfiguration;
 
 public class NewMapDialog extends JDialog implements ActionListener
 {
-    private Map newMap;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4248863132072217838L;
+	private Map newMap;
     private IntegerSpinner mapWidth, mapHeight;
     private IntegerSpinner tileWidth, tileHeight;
     private JComboBox mapTypeChooser;

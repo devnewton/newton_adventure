@@ -12,12 +12,21 @@
 
 package tiled.core;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Properties;
+import java.util.Vector;
+
 import javax.imageio.ImageIO;
 
 import tiled.mapeditor.util.TransparentImageFilter;
@@ -38,7 +47,8 @@ import tiled.util.NumberedSet;
 public class TileSet
 {
     private String base;
-    private NumberedSet tiles, images;
+    private NumberedSet<Tile> tiles;
+    private NumberedSet<Image> images;
     private int firstGid;
     private long tilebmpFileLastModified;
     private TileCutter tileCutter;
@@ -58,11 +68,11 @@ public class TileSet
      * Default constructor
      */
     public TileSet() {
-        tiles = new NumberedSet();
-        images = new NumberedSet();
+        tiles = new NumberedSet<Tile>();
+        images = new NumberedSet<Image>();
         tileDimensions = new Rectangle();
         defaultTileProperties = new Properties();
-        tilesetChangeListeners = new LinkedList();
+        tilesetChangeListeners = new LinkedList<TilesetChangeListener>();
     }
 
     /**
@@ -356,7 +366,7 @@ public class TileSet
      *
      * @return an iterator over the tiles in this tileset.
      */
-    public Iterator iterator() {
+    public Iterator<Tile> iterator() {
         return tiles.iterator();
     }
 
@@ -435,7 +445,7 @@ public class TileSet
      */
     public Tile getTile(int i) {
         try {
-            return (Tile) tiles.get(i);
+            return tiles.get(i);
         } catch (ArrayIndexOutOfBoundsException a) {}
         return null;
     }
@@ -521,7 +531,8 @@ public class TileSet
     /**
      * @return the name of the tileset, and the total tiles
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return getName() + " [" + size() + "]";
     }
 
@@ -539,7 +550,7 @@ public class TileSet
      * @return an Enumeration of the image ids
      */
     public Enumeration<String> getImageIds() {
-        Vector<String> v = new Vector();
+        Vector<String> v = new Vector<String>();
         for (int id = 0; id <= images.getMaxId(); ++id) {
             if (images.containsId(id)) {
                 v.add(Integer.toString(id));
@@ -568,7 +579,7 @@ public class TileSet
      *         there is no such image
      */
     public Image getImageById(int id) {
-        return (Image) images.get(id);
+        return images.get(id);
     }
 
     /**
@@ -591,8 +602,9 @@ public class TileSet
      * @param id the image id
      * @return dimensions of image with referenced by given key
      */
-    public Dimension getImageDimensions(int id) {
-        Image img = (Image) images.get(id);
+    @Deprecated
+	public Dimension getImageDimensions(int id) {
+        Image img = images.get(id);
         if (img != null) {
             return new Dimension(img.getWidth(null), img.getHeight(null));
         } else {
@@ -636,8 +648,9 @@ public class TileSet
      * @return <code>true</code> if each image is associated with one and only
      *         one tile, <code>false</code> otherwise.
      */
-    public boolean isOneForOne() {
-        Iterator itr = iterator();
+    @Deprecated
+	public boolean isOneForOne() {
+        Iterator<Tile> itr = iterator();
 
         //[ATURK] I don't think that this check makes complete sense...
         /*
@@ -655,7 +668,7 @@ public class TileSet
             itr = iterator();
 
             while (itr.hasNext()) {
-                Tile t = (Tile) itr.next();
+                Tile t = itr.next();
                 // todo: move the null check back into the iterator?
                 if (t != null && t.getImageId() == id) {
                     relations++;

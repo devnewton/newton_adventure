@@ -13,6 +13,7 @@
 package tiled.mapeditor.widget;
 
 import java.awt.Dimension;
+
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
@@ -25,7 +26,12 @@ import javax.swing.SpinnerNumberModel;
  */
 public class IntegerSpinner extends JSpinner
 {
-    public IntegerSpinner() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7573491785003536682L;
+
+	public IntegerSpinner() {
         super(new SpinnerNumberModel());
         setPreferredSize(new Dimension(60, getPreferredSize().height));
     }

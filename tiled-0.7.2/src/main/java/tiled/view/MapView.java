@@ -12,12 +12,27 @@
 
 package tiled.view;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.util.Iterator;
+
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
-import tiled.core.*;
+import tiled.core.Map;
+import tiled.core.MapLayer;
+import tiled.core.MultilayerPlane;
+import tiled.core.ObjectGroup;
+import tiled.core.TileLayer;
 import tiled.mapeditor.Resources;
 import tiled.mapeditor.brush.Brush;
 import tiled.mapeditor.selection.SelectionLayer;
@@ -30,7 +45,11 @@ import tiled.mapeditor.selection.SelectionLayer;
  */
 public abstract class MapView extends JPanel implements Scrollable
 {
-    public static final int PF_BOUNDARYMODE = 0x02;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4006490742854425648L;
+	public static final int PF_BOUNDARYMODE = 0x02;
     public static final int PF_COORDINATES  = 0x04;
     public static final int PF_NOSPECIAL    = 0x08;
 
@@ -179,7 +198,8 @@ public abstract class MapView extends JPanel implements Scrollable
 
     // Scrolling
 
-    public abstract Dimension getPreferredSize();
+    @Override
+	public abstract Dimension getPreferredSize();
 
     public Dimension getPreferredScrollableViewportSize() {
         return getPreferredSize();
@@ -240,7 +260,8 @@ public abstract class MapView extends JPanel implements Scrollable
      * @see MapLayer
      * @see SelectionLayer
      */
-    public void paintComponent(Graphics g) {
+    @Override
+	public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
 
         MapLayer layer;
@@ -261,10 +282,10 @@ public abstract class MapView extends JPanel implements Scrollable
         paintSubMap(map, g2d, 1.0f);
 
         if (!getMode(PF_NOSPECIAL)) {
-            Iterator li = map.getLayersSpecial();
+            Iterator<MapLayer> li = map.getLayersSpecial();
 
             while (li.hasNext()) {
-                layer = (MapLayer) li.next();
+                layer = li.next();
                 if (layer.isVisible()) {
                     if (layer instanceof SelectionLayer) {
                         g2d.setComposite(AlphaComposite.getInstance(
@@ -290,7 +311,7 @@ public abstract class MapView extends JPanel implements Scrollable
             if (gridOpacity < 255) {
                 g2d.setComposite(AlphaComposite.getInstance(
                         AlphaComposite.SRC_ATOP,
-                        (float) gridOpacity / 255.0f));
+                        gridOpacity / 255.0f));
             }
             else {
                 g2d.setComposite(AlphaComposite.SrcOver);
@@ -327,11 +348,11 @@ public abstract class MapView extends JPanel implements Scrollable
 
     public void paintSubMap(MultilayerPlane m, Graphics2D g2d,
                             float mapOpacity) {
-        Iterator li = m.getLayers();
+        Iterator<MapLayer> li = m.getLayers();
         MapLayer layer;
 
         while (li.hasNext()) {
-            layer = (MapLayer) li.next();
+            layer = li.next();
             if (layer != null) {
                 float opacity = layer.getOpacity() * mapOpacity;
                 if (layer.isVisible() && opacity > 0.0f) {

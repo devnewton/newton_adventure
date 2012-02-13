@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
@@ -41,7 +42,11 @@ import tiled.view.MapView;
  */
 public class SaveAsImageAction extends AbstractAction
 {
-    private final MapEditor editor;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5506540823984206073L;
+	private final MapEditor editor;
     private final Frame appFrame;
 
     private static final String ACTION_NAME = Resources.getString("action.map.saveasimage.name");
@@ -145,16 +150,19 @@ public class SaveAsImageAction extends AbstractAction
             this.extension = extension;
         }
 
-        public String getDefaultExtension() {
+        @Override
+		public String getDefaultExtension() {
             return extension;
         }
 
-        public boolean accept(File file) {
+        @Override
+		public boolean accept(File file) {
             String fileName = file.getPath().toLowerCase();
             return file.isDirectory() || fileName.endsWith("." + extension);
         }
 
-        public String getDescription() {
+        @Override
+		public String getDescription() {
             return description + " (*."+ extension +")";
         }
     }
