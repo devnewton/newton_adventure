@@ -1,15 +1,12 @@
-------------------------
- TILED MAP EDITOR 0.7.x
-------------------------
+-------------------------
+ NEWTON ADVENTURE EDITOR
+-------------------------
 
-This is Tiled, a general purpose tiled map editor. Although this release is
-pretty capable and flexible, we don't expect it to be able to do enough for
-most people at the moment. We need your feedback!
+This software is a level editor for Newton Adventure, based on
+TILED MAP EDITOR 0.7.2, a general purpose tiled map editor.
 
-
-Website:     http://mapeditor.org/
-Bugtracker:  http://bugs.mapeditor.org/
-Mercurial:   http://hg.mapeditor.org/
+Website:       http://bci.im
+Tiled website: http://mapeditor.org/
 
 -----------------
  CURRENT FEATURES
@@ -33,6 +30,7 @@ Mercurial:   http://hg.mapeditor.org/
 
 - Adam Turk       <aturk@biggeruniverse.com>
 - Bjorn Lindeijer <bjorn@lindeijer.nl>
+- devnewton       <devnewton@bci.im>
 
 -----------
 TRANSLATORS
