@@ -169,4 +169,6 @@ public interface IGameView {
 	float getWidth();
 
 	float getHeight();
+
+	void drawMinimap(World world, ITexture minimapTexture);
 }

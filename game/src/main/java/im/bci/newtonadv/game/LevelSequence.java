@@ -32,6 +32,7 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.World;
@@ -40,30 +41,31 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 
  * @author devnewton
  */
 strictfp public class LevelSequence implements Sequence {
 
-    static final int nbWorldStepByFrame = 1;
-    static final int maxWorldStepByFrame = 5;
-    private FrameTimeInfos frameTimeInfos;
-    protected World world;
-    public long stepTime = 0;
-    protected ITrueTypeFont indicatorsFont;
-    protected Sequence nextSequence;
-    protected Game game;
-    protected String questName, levelName;
-    private boolean cheatCodeGotoNextLevel = false;
-    private boolean cheatCodeGotoNextBonusLevel = false;
+	static final int nbWorldStepByFrame = 1;
+	static final int maxWorldStepByFrame = 5;
+	private FrameTimeInfos frameTimeInfos;
+	protected World world;
+	public long stepTime = 0;
+	protected ITrueTypeFont indicatorsFont;
+	protected Sequence nextSequence;
+	protected Game game;
+	protected String questName, levelName;
+	private boolean cheatCodeGotoNextLevel = false;
+	private boolean cheatCodeGotoNextBonusLevel = false;
+	private ITexture minimapTexture;
 
-    public LevelSequence(Game game, String questName, String levelName) {
-        this.game = game;
-        this.questName = questName;
-        this.levelName = levelName;
-    }
+	public LevelSequence(Game game, String questName, String levelName) {
+		this.game = game;
+		this.questName = questName;
+		this.levelName = levelName;
+	}
 
-    @Override
+	@Override
     public void start() {
         try {
             cheatCodeGotoNextLevel = false;
@@ -72,123 +74,141 @@ strictfp public class LevelSequence implements Sequence {
             world = new World(game, questName, levelName);
             frameTimeInfos = game.getFrameTimeInfos();
             world.loadLevel();
+            
+            String minimapPath = game.getData().getLevelFilePath(questName, levelName, "minimap.png");
+            if(game.getData().fileExists(minimapPath))
+            	minimapTexture = game.getView().getTextureCache().getTexture(minimapPath);
+            else
+            	minimapTexture = null;
         } catch (Exception ex) {
             Logger.getLogger(LevelSequence.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-1);
         }
     }
 
-    @Override
-    public void stop() {
-        indicatorsFont.destroy();
-        indicatorsFont = null;
-        world = null;
-    }
+	@Override
+	public void stop() {
+		indicatorsFont.destroy();
+		indicatorsFont = null;
+		world = null;
+	}
 
-    @Override
-    public void update() throws TransitionException {
-        try {
-            if (world.getHero().isDead()) {
-                world.getHero().update(frameTimeInfos);
-                return;
-            }
+	@Override
+	public void update() throws TransitionException {
+		try {
+			if (world.getHero().isDead()) {
+				world.getHero().update(frameTimeInfos);
+				return;
+			}
 
-            stepTime += frameTimeInfos.elapsedTime;
-            if (stepTime >= 1000000000 / Game.FPS) {
-                stepTime -= 1000000000 / Game.FPS;
-                final int step = 5;
-                for (int i = 0; i < step; ++i) {
-                    world.step();
-                }
-            }
-            world.update();
-            if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
-                game.getScore().setLevelScore(questName, levelName, world.getLevelScore());
-                throw new TransitionException(new FadeSequence(game, nextSequence, 0, 0, 0, 1000000000L));
-            }
-            if (cheatCodeGotoNextBonusLevel) {
-                game.goToNextBonusLevel(questName);
-            }
-        } catch (GameOverException ex) {
-            throw new TransitionException(new GameOverSequence(game, this));
-        }
-    }
+			stepTime += frameTimeInfos.elapsedTime;
+			if (stepTime >= 1000000000 / Game.FPS) {
+				stepTime -= 1000000000 / Game.FPS;
+				final int step = 5;
+				for (int i = 0; i < step; ++i) {
+					world.step();
+				}
+			}
+			world.update();
+			if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
+				game.getScore().setLevelScore(questName, levelName,
+						world.getLevelScore());
+				throw new TransitionException(new FadeSequence(game,
+						nextSequence, 0, 0, 0, 1000000000L));
+			}
+			if (cheatCodeGotoNextBonusLevel) {
+				game.goToNextBonusLevel(questName);
+			}
+		} catch (GameOverException ex) {
+			throw new TransitionException(new GameOverSequence(game, this));
+		}
+	}
 
-    @Override
-    public void processInputs() {
-        if (world.getHero().isDead()) {
-            return;
-        }
-        processRotateInputs();
-        processMovingInput();
-        processCheatInput();
-    }
+	@Override
+	public void processInputs() {
+		if (world.getHero().isDead()) {
+			return;
+		}
+		processRotateInputs();
+		processMovingInput();
+		processCheatInput();
+	}
 
-    protected void processCheatInput() {
-        if (game.getInput().isKeyCheatActivateAllDown()) {
-            world.cheatActivateAll();
-        }
-        if (game.getInput().isKeyCheatGotoNextLevelDown()) {
-            cheatCodeGotoNextLevel = true;
-        }
-        if (game.getInput().isKeyCheatGotoNextBonusLevelDown()) {
-            cheatCodeGotoNextBonusLevel = true;
-        }
-    }
+	protected void processCheatInput() {
+		if (game.getInput().isKeyCheatActivateAllDown()) {
+			world.cheatActivateAll();
+		}
+		if (game.getInput().isKeyCheatGotoNextLevelDown()) {
+			cheatCodeGotoNextLevel = true;
+		}
+		if (game.getInput().isKeyCheatGotoNextBonusLevelDown()) {
+			cheatCodeGotoNextBonusLevel = true;
+		}
+	}
 
-    protected void processMovingInput() {
-        final float stepRate = 1.0f;//frameTimeInfos.elapsedTime / (1000000000.0f / Game.FPSf);
-        boolean heroIsMoving = false;
-        if (game.getInput().isKeyLeftDown()) {
-            world.getHero().moveLeft(stepRate);
-            heroIsMoving = true;
-        }
-        if (game.getInput().isKeyRightDown()) {
-            world.getHero().moveRight(stepRate);
-            heroIsMoving = true;
-        }
+	protected void processMovingInput() {
+		final float stepRate = 1.0f;// frameTimeInfos.elapsedTime /
+									// (1000000000.0f / Game.FPSf);
+		boolean heroIsMoving = false;
+		if (game.getInput().isKeyLeftDown()) {
+			world.getHero().moveLeft(stepRate);
+			heroIsMoving = true;
+		}
+		if (game.getInput().isKeyRightDown()) {
+			world.getHero().moveRight(stepRate);
+			heroIsMoving = true;
+		}
 
-        if (game.getInput().isKeyJumpDown()) {
-            world.getHero().jump(stepRate);
-            heroIsMoving = true;
-        }
-        if (!heroIsMoving) {
-            world.getHero().dontMove();
-        }
-    }
+		if (game.getInput().isKeyJumpDown()) {
+			world.getHero().jump(stepRate);
+			heroIsMoving = true;
+		}
+		if (!heroIsMoving) {
+			world.getHero().dontMove();
+		}
+	}
 
-    protected void processRotateInputs() {
-        final float stepRate = 1.0f;//frameTimeInfos.elapsedTime / (1000000000.0f / Game.FPSf);
-        if (game.getInput().isKeyRotateClockwiseDown()) {
-            world.progressiveRotateGravity(0.05f * stepRate);
-        }
-        if (game.getInput().isKeyRotateCounterClockwiseDown()) {
-            world.progressiveRotateGravity(-0.05f * stepRate);
-        }
-        if (game.getInput().isKeyRotate90ClockwiseDown()) {
-            world.rotateGravity((float) (Math.PI / 4.0));
-        }
-        if (game.getInput().isKeyRotate90CounterClockwiseDown()) {
-            world.rotateGravity((float) (-Math.PI / 4.0));
-        }
-    }
+	protected void processRotateInputs() {
+		final float stepRate = 1.0f;// frameTimeInfos.elapsedTime /
+									// (1000000000.0f / Game.FPSf);
+		if (game.getInput().isKeyRotateClockwiseDown()) {
+			world.progressiveRotateGravity(0.05f * stepRate);
+		}
+		if (game.getInput().isKeyRotateCounterClockwiseDown()) {
+			world.progressiveRotateGravity(-0.05f * stepRate);
+		}
+		if (game.getInput().isKeyRotate90ClockwiseDown()) {
+			world.rotateGravity((float) (Math.PI / 4.0));
+		}
+		if (game.getInput().isKeyRotate90CounterClockwiseDown()) {
+			world.rotateGravity((float) (-Math.PI / 4.0));
+		}
+	}
 
-    public World getWorld() {
-        return world;
-    }
+	public World getWorld() {
+		return world;
+	}
 
-    @Override
-    public void draw() {
-        world.draw();
-        game.getView().drawFPS(game.getFrameTimeInfos().fps);
-        drawIndicators();
-    }
+	@Override
+	public void draw() {
+		world.draw();
+		game.getView().drawFPS(game.getFrameTimeInfos().fps);
+		drawIndicators();
+		drawMinimap();
+	}
 
-    protected void drawIndicators() {
-        game.getView().drawLevelIndicators(world.getHero().getNbApple() + "$", indicatorsFont);
-    }
+	private void drawMinimap() {
+		if (null != minimapTexture) {
+			game.getView().drawMinimap(world, minimapTexture);
+		}
+	}
 
-    public void setNextSequence(Sequence nextSequence) {
-        this.nextSequence = nextSequence;
-    }
+	protected void drawIndicators() {
+		game.getView().drawLevelIndicators(world.getHero().getNbApple() + "$",
+				indicatorsFont);
+	}
+
+	public void setNextSequence(Sequence nextSequence) {
+		this.nextSequence = nextSequence;
+	}
 }

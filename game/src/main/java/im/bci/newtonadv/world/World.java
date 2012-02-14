@@ -106,6 +106,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private final String levelName;
     private int nbCollectableApple;
     private boolean gotoBonusWorld;
+    private ArrayList<Key> keys = new ArrayList<Key>();
 
     public boolean areObjectivesCompleted() {
         return objectivesCompleted;
@@ -385,6 +386,7 @@ public strictfp class World extends net.phys2d.raw.World {
             key.setPosition(x * Platform.size, y * Platform.size);
             key.setTexture(keyTexture);
             add(key);
+            keys.add(key);
         } else if (c.equals("door")) {
             Door door = new Door(this);
             door.setPosition(x * Platform.size/* + Door.width / 2.0f*/, y * Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
@@ -631,4 +633,8 @@ public strictfp class World extends net.phys2d.raw.World {
             }
         }
     }
+
+	public List<Key> getKeys() {
+		return keys;
+	}
 }

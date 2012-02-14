@@ -13,21 +13,21 @@ import tiled.core.TileLayer;
 
 public class MinimapGenerator {
 
-	BufferedImage image;
+	final BufferedImage image;
+	final int tileSize;
 
-	public MinimapGenerator(int w, int h) {
-		image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	public MinimapGenerator(int imageWidth, int imageHeight, int tileSize) {
+		image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+		this.tileSize = tileSize;
 	}
 
 	public void addLayer(TileLayer layer) {
 		Graphics g = image.getGraphics();
-		int rx = image.getWidth() / layer.getWidth();
-		int ry = image.getHeight() / layer.getHeight();
 		try {
 			for (int x = 0; x < layer.getWidth(); ++x)
 				for (int y = 0; y < layer.getHeight(); ++y) {
 					g.setColor(getColor(layer.getTileAt(x, y)));
-					g.fillRect(x * rx, y * ry, rx, ry);
+					g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
 				}
 		} finally {
 			g.dispose();

@@ -119,4 +119,9 @@ public class Animation {
             ++currentFrameIndex;
         }
     }
+
+	public ITexture getFirstTexture() {
+		assert !frames.isEmpty();
+        return frames.get(0).getImage();
+	}
 }

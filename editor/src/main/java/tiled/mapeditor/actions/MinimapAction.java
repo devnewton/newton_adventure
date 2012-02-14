@@ -46,7 +46,7 @@ public class MinimapAction extends AbstractAction {
 	private void generateMinimap(Map map, String selectedFile) {
 		int w = Math.max(256, MathUtils.getPowerOfTwoBiggerThan(map.getWidth()));
 		int h = Math.max(256, MathUtils.getPowerOfTwoBiggerThan(map.getHeight()));
-		MinimapGenerator minimap = new MinimapGenerator(w,h);
+		MinimapGenerator minimap = new MinimapGenerator(w,h, 4/*harcoded that's bad!*/);
 		for(MapLayer layer: map.getLayerVector()) {
 			if(layer instanceof TileLayer) {
 				TileLayer tileLayer = (TileLayer)layer;

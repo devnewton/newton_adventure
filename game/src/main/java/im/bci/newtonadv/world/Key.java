@@ -69,4 +69,8 @@ public strictfp class Key extends Body implements Drawable {
             world.addTopLevelEntities(new UsedKey(world, texture, getPosition()));
         }
     }
+
+	public ITexture getTexture() {
+		return texture;
+	}
 }

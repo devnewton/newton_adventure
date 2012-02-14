@@ -1474,4 +1474,75 @@ public strictfp class GameView implements IGameView {
 	public float getHeight() {
 		return Display.getHeight();
 	}
+	
+	static final float minimapSize = 32;
+
+	@Override
+	public void drawMinimap(World world, ITexture minimapTexture) {
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, 100, 0, 100, -1, 1);
+		GL11.glTranslatef(100 - minimapSize / 1.5f, minimapSize / 1.5f, 0);
+		
+		GL11.glPushMatrix();
+		GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
+				1.0f);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, minimapTexture.getId());
+		final float x1 = -minimapSize / 2.0f;
+		final float x2 = minimapSize / 2.0f;
+		final float y1 = -minimapSize / 2.0f;
+		final float y2 = minimapSize / 2.0f;
+		final float u1 = 0.0f, u2 = 1.0f;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		
+		drawMinimapIcon(world, world.getHero().getPosition(),world.getHero().getAnimation().getFirstTexture());
+		for(Key key : world.getKeys())
+			drawMinimapIcon(world, key.getPosition(),key.getTexture());
+		
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+	}
+
+	public void drawMinimapIcon(World world, ROVector2f worldPos, ITexture texture) {
+		float iconW =  World.distanceUnit * 8.0f;
+		float iconH =  World.distanceUnit * 8.0f;
+		
+		final float icon_x1 = -iconW / 2.0f;
+		final float icon_x2 = iconW / 2.0f;
+		final float icon_y1 = -iconH / 2.0f;
+		final float icon_y2 = iconH / 2.0f;
+		float icon_u1 = 0.0f, icon_u2 = 1.0f;
+		GL11.glPushMatrix();
+		GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float miniMapPlatformSize = minimapSize * 4.0f / 256.0f;//harcoded, that's bad!
+		GL11.glScalef(miniMapPlatformSize / (World.distanceUnit * 2.0f), miniMapPlatformSize / (World.distanceUnit * 2.0f), 1);
+		GL11.glTranslatef(worldPos.getX(), worldPos.getY(), 0);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(icon_u1, 0.0f);
+		GL11.glVertex2f(icon_x1, icon_y2);
+		GL11.glTexCoord2f(icon_u2, 0.0f);
+		GL11.glVertex2f(icon_x2, icon_y2);
+		GL11.glTexCoord2f(icon_u2, 1.0f);
+		GL11.glVertex2f(icon_x2, icon_y1);
+		GL11.glTexCoord2f(icon_u1, 1.0f);
+		GL11.glVertex2f(icon_x1, icon_y1);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+	}
 }

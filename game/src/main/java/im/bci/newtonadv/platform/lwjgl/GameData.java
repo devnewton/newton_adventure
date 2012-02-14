@@ -37,10 +37,8 @@ class GameData implements IGameData {
 				"artic_level2", "artic_level3", "artic_level4"));
 		questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
 				"level3", "level4", "level5"));
-		questLevels
-				.put("bonus", Arrays.asList("bonus_level1",
-						"bonus_level2", "bonus_level3", "bonus_level4",
-						"bonus_level5"));
+		questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
+				"bonus_level3", "bonus_level4", "bonus_level5"));
 	}
 
 	public GameData(Properties config) {
@@ -94,5 +92,19 @@ class GameData implements IGameData {
 		} catch (IOException e) {
 		}
 		return dataDir + "default_level_data/" + filename;
+	}
+
+	@Override
+	public boolean fileExists(String path) {
+		try {
+			InputStream s = openFile(path);
+			if (s != null) {
+				s.close();
+				return true;
+			}
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
+		return false;
 	}
 }
