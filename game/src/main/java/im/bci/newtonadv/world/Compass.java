@@ -29,55 +29,15 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package im.bci.newtonadv.platform.interfaces;
-
-import net.phys2d.math.ROVector2f;
+package im.bci.newtonadv.world;
 
 /**
  *
  * @author devnewton
  */
-public interface IGameInput {
-
-    boolean isKeyCheatActivateAllDown();
-
-    boolean isKeyCheatGotoNextLevelDown();
-
-    boolean isKeyDownDown();
-
-    boolean isKeyJumpDown();
-
-    boolean isKeyLeftDown();
-
-    boolean isKeyPauseDown();
-
-    boolean isKeyReturnDown();
-
-    boolean isKeyReturnToMenuDown();
-
-    boolean isKeyRightDown();
-
-    boolean isKeyRotate90ClockwiseDown();
-
-    boolean isKeyRotate90CounterClockwiseDown();
-
-    boolean isKeyRotateClockwiseDown();
-
-    boolean isKeyRotateCounterClockwiseDown();
-
-    boolean isKeyToggleFullscreenDown();
-
-    boolean isKeyUpDown();
-
-    boolean isKeyCheatGotoNextBonusLevelDown();
-
-	ROVector2f getMousePos();
-
-	boolean isMouseButtonDown();
-
-	boolean isKeyCheatGetWorldMapDown();
-
-	boolean isKeyCheatGetCompassDown();
-
+public strictfp class Compass extends PickableObject {
+    
+    Compass(World world) {
+        super(world);
+    } 
 }

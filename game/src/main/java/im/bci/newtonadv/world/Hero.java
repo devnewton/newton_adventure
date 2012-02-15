@@ -45,302 +45,331 @@ import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.Circle;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public strictfp class Hero extends Body implements Drawable, Updatable {
 
-    private ISoundCache.Playable jumpSound;
-    private Animation animation;
-    private int nbApple = 10;
-    private static final float jumpForce = 180.0f;
-    private static final float weight = 1.0f;
-    private static final float horizontalSpeed = 4.0f;
-    private static final int nbStepToWaitBetweenJump = 1;
-    private int nbStepSinceLastJump;
-    private static final long invincibleAfterHurtDuration = 3000000000L;
-    private long endOfInvincibilityDuration = -1;
-    private boolean isHurt = false;
-    private boolean isHurtBlinkState = false;
-    private boolean isDead = false;
-    private static final long dyingDuration = 2000000000L;
-    private long beginOfDyingDuration = -1;
-    private float scale = 1;
-    private LevelScore levelScore = new LevelScore();
+	private ISoundCache.Playable jumpSound;
+	private Animation animation;
+	private int nbApple = 10;
+	private static final float jumpForce = 180.0f;
+	private static final float weight = 1.0f;
+	private static final float horizontalSpeed = 4.0f;
+	private static final int nbStepToWaitBetweenJump = 1;
+	private int nbStepSinceLastJump;
+	private static final long invincibleAfterHurtDuration = 3000000000L;
+	private long endOfInvincibilityDuration = -1;
+	private boolean isHurt = false;
+	private boolean isHurtBlinkState = false;
+	private boolean isDead = false;
+	private static final long dyingDuration = 2000000000L;
+	private long beginOfDyingDuration = -1;
+	private float scale = 1;
+	private LevelScore levelScore = new LevelScore();
 
-    public void setJumpSound(ISoundCache.Playable jumpSound) {
-        this.jumpSound = jumpSound;
-    }
+	public void setJumpSound(ISoundCache.Playable jumpSound) {
+		this.jumpSound = jumpSound;
+	}
 
+	public Movement getCurrentMovement() {
+		return currentMovement;
+	}
 
-    public Movement getCurrentMovement() {
-        return currentMovement;
-    }
+	public int getNbApple() {
+		return nbApple;
+	}
 
-    public int getNbApple() {
-        return nbApple;
-    }
+	public boolean isDead() {
+		return isDead;
+	}
 
-    public boolean isDead() {
-        return isDead;
-    }
+	boolean isInvincible() {
+		return isHurt;
+	}
 
-    boolean isInvincible() {
-        return isHurt;
-    }
+	private void hurt(int nbAppleLose) {
+		if (nbApple == 0) {
+			this.isDead = true;
+		}
 
-    private void hurt(int nbAppleLose) {
-        if (nbApple == 0) {
-            this.isDead = true;
-        }
+		if (nbAppleLose > nbApple) {
+			nbAppleLose = nbApple;
+		}
 
-        if (nbAppleLose > nbApple) {
-            nbAppleLose = nbApple;
-        }
+		this.nbApple -= nbAppleLose;
+		levelScore.addLosedApple(nbAppleLose);
+		for (int i = 0; i < nbAppleLose; ++i) {
+			world.addTopLevelEntities(new LosedApple(world, this.getPosition()));
+		}
 
-        this.nbApple -= nbAppleLose;
-        levelScore.addLosedApple(nbAppleLose);
-        for (int i = 0; i < nbAppleLose; ++i) {
-            world.addTopLevelEntities(new LosedApple(world, this.getPosition()));
-        }
+		this.isHurt = true;
+		this.endOfInvincibilityDuration = -1;
+	}
 
-        this.isHurt = true;
-        this.endOfInvincibilityDuration = -1;
-    }
+	private void setCurrentMovement(Movement currentMovement) {
+		if (this.currentMovement != currentMovement) {
+			this.previousMovement = this.currentMovement;
+			this.currentMovement = currentMovement;
+			if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
+				getAnimation().stop();
+			} else {
+				getAnimation().start();
+			}
+		}
+	}
 
-    private void setCurrentMovement(Movement currentMovement) {
-        if (this.currentMovement != currentMovement) {
-            this.previousMovement = this.currentMovement;
-            this.currentMovement = currentMovement;
-            if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
-                getAnimation().stop();
-            } else {
-                getAnimation().start();
-            }
-        }
-    }
+	void killedMummy() {
+		levelScore.addKilledMummy();
+	}
 
-    void killedMummy() {
-        levelScore.addKilledMummy();
-    }
+	void killedBat() {
+		levelScore.addKilledBat();
+	}
 
-    void killedBat() {
-        levelScore.addKilledBat();
-    }
+	void killedEgyptianBoss() {
+		levelScore.addKilledEgyptianBoss();
+	}
 
-    void killedEgyptianBoss() {
-        levelScore.addKilledEgyptianBoss();
-    }
+	LevelScore getLevelScore() {
+		return levelScore;
+	}
 
-    LevelScore getLevelScore() {
-        return levelScore;
-    }
+	public enum Movement {
 
-    public enum Movement {
+		GOING_LEFT, GOING_RIGHT, NOT_GOING_ANYWHERE
+	}
 
-        GOING_LEFT,
-        GOING_RIGHT,
-        NOT_GOING_ANYWHERE
-    }
-    boolean isOnPlatform = false;
-    private Movement currentMovement = Movement.NOT_GOING_ANYWHERE;
-    Movement previousMovement = Movement.NOT_GOING_ANYWHERE;
-    private World world;
+	boolean isOnPlatform = false;
+	private Movement currentMovement = Movement.NOT_GOING_ANYWHERE;
+	Movement previousMovement = Movement.NOT_GOING_ANYWHERE;
+	private World world;
+	private boolean hasMap;
+	private boolean hasCompass;
 
-    public Hero(World world) {
-        super(new Circle(World.distanceUnit), weight);
-        this.world = world;
-        setRotatable(false);
-        levelScore.addApple(this.nbApple);
-    }
+	public Hero(World world) {
+		super(new Circle(World.distanceUnit), weight);
+		this.world = world;
+		setRotatable(false);
+		levelScore.addApple(this.nbApple);
+	}
 
-    @Override
-    public strictfp void collided(Body body) {
-        if (body instanceof Apple) {
-            ++nbApple;
-            levelScore.addApple(1);
-        } else if( body instanceof Coin) {
-            levelScore.addCoin(1);
-        }
-    }
+	@Override
+	public strictfp void collided(Body body) {
+		if (body instanceof Apple) {
+			++nbApple;
+			levelScore.addApple(1);
+		} else if (body instanceof Coin) {
+			levelScore.addCoin(1);
+		} else if (body instanceof WorldMap) {
+			hasMap = true;
+		} else if (body instanceof Compass) {
+			hasCompass = true;
+		}
+	}
 
-    public boolean isLookingLeft() {
-        return isMovingLeft() || (isNotGoingAnywhere() && previousMovement == Movement.GOING_LEFT);
-    }
+	public boolean hasMap() {
+		return hasMap;
+	}
 
-    public boolean isMovingLeft() {
-        return getCurrentMovement() == Movement.GOING_LEFT;
-    }
+	public boolean hasCompass() {
+		return hasCompass;
+	}
 
-    public boolean isNotGoingAnywhere() {
-        return getCurrentMovement() == Movement.NOT_GOING_ANYWHERE;
-    }
+	public boolean isLookingLeft() {
+		return isMovingLeft()
+				|| (isNotGoingAnywhere() && previousMovement == Movement.GOING_LEFT);
+	}
 
-    public void step() {
-        isOnPlatform = false;
-        if (isResting()) {
-            setCurrentMovement(Movement.NOT_GOING_ANYWHERE);
-        }
-    }
+	public boolean isMovingLeft() {
+		return getCurrentMovement() == Movement.GOING_LEFT;
+	}
 
-    public Animation getAnimation() {
-        return animation;
-    }
+	public boolean isNotGoingAnywhere() {
+		return getCurrentMovement() == Movement.NOT_GOING_ANYWHERE;
+	}
 
-    public void setAnimation(Animation heroAnimation) {
-        this.animation = heroAnimation;
-    }
+	public void step() {
+		isOnPlatform = false;
+		if (isResting()) {
+			setCurrentMovement(Movement.NOT_GOING_ANYWHERE);
+		}
+	}
 
-    @Override
-    public void draw() {
-        if (isHurt) {
-            isHurtBlinkState = !isHurtBlinkState;
-            if (isHurtBlinkState) {
-                return;
-            }
-        }
-        world.getView().drawHero(this, getAnimation().getCurrentTexture(), world, scale);
-    }
+	public Animation getAnimation() {
+		return animation;
+	}
 
-    @Override
-    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-        getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
-        if (isHurt) {
-            if (endOfInvincibilityDuration < 0) {
-                endOfInvincibilityDuration = frameTimeInfos.currentTime + invincibleAfterHurtDuration;
-            } else if (frameTimeInfos.currentTime > endOfInvincibilityDuration) {
-                isHurt = false;
-            }
-        }
-        if (isDead) {
-            if (beginOfDyingDuration < 0) {
-                beginOfDyingDuration = frameTimeInfos.currentTime;
-            } else {
-                scale = 1.0f - (frameTimeInfos.currentTime - beginOfDyingDuration) / (float) dyingDuration;
-                if (scale <= 0) {
-                    throw new GameOverException("Newton is dead");
-                }
-            }
-        }
-    }
+	public void setAnimation(Animation heroAnimation) {
+		this.animation = heroAnimation;
+	}
 
-    private boolean canJump() {
+	@Override
+	public void draw() {
+		if (isHurt) {
+			isHurtBlinkState = !isHurtBlinkState;
+			if (isHurtBlinkState) {
+				return;
+			}
+		}
+		world.getView().drawHero(this, getAnimation().getCurrentTexture(),
+				world, scale);
+	}
 
-        if (nbStepSinceLastJump++ < nbStepToWaitBetweenJump) {
-            return false;
-        }
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
+		if (isHurt) {
+			if (endOfInvincibilityDuration < 0) {
+				endOfInvincibilityDuration = frameTimeInfos.currentTime
+						+ invincibleAfterHurtDuration;
+			} else if (frameTimeInfos.currentTime > endOfInvincibilityDuration) {
+				isHurt = false;
+			}
+		}
+		if (isDead) {
+			if (beginOfDyingDuration < 0) {
+				beginOfDyingDuration = frameTimeInfos.currentTime;
+			} else {
+				scale = 1.0f
+						- (frameTimeInfos.currentTime - beginOfDyingDuration)
+						/ (float) dyingDuration;
+				if (scale <= 0) {
+					throw new GameOverException("Newton is dead");
+				}
+			}
+		}
+	}
 
-        nbStepSinceLastJump = 0;
+	private boolean canJump() {
 
-        CollisionEvent[] events = world.getContacts(this);
-        //return events.length > 0;
+		if (nbStepSinceLastJump++ < nbStepToWaitBetweenJump) {
+			return false;
+		}
 
-        for (int i = 0; i < events.length; i++) {
-            float angle = im.bci.newtonadv.util.Vector.angle(world.getGravityVector(), events[i].getNormal());
-            if (angle > Math.PI / 1.35 && events[i].getBodyB() == this) {
-                return true;
-            }
-            if (angle < Math.PI / 1.35 && events[i].getBodyA() == this) {
-                return true;
-            }
-        }
-        return false;
-        /*                                if (events[i].getNormal().getY() > 0) {
-        if (events[i].getBodyB() == hero) {
-        return true;
-        }
-        }
-        if (events[i].getNormal().getY() < 0) {
-        if (events[i].getBodyA() == hero) {
-        return true;
-        }
-        }*/
-        // }
+		nbStepSinceLastJump = 0;
 
-        /*        BodyList connected = hero.getTouching();
-        for (int i = 0; i < connected.size(); ++i) {
-        Body body = connected.get(i);
-        if (body instanceof Platform) {
-        Vector2f normal = new Vector2f(hero.getPosition());
-        normal.sub(body.getPosition());
-        float angle = im.bci.newtonadv.util.Vector.angle(gravityVector, normal);
-        if (angle >= Math.PI / 1.35) {
-        return true;
-        }
-        }
-        }*/
-        //return false;
-    }
+		CollisionEvent[] events = world.getContacts(this);
+		// return events.length > 0;
 
-    public void jump(float step) {
-        if (/*hero.isOnPlatform*/canJump()) {
-            Matrix2f rot = new Matrix2f(world.getGravityAngle());
-            Vector2f jump = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0.0f, /*stepRate **/ world.getGravityForce() * jumpForce));
-            addForce(jump);
+		for (int i = 0; i < events.length; i++) {
+			float angle = im.bci.newtonadv.util.Vector.angle(
+					world.getGravityVector(), events[i].getNormal());
+			if (angle > Math.PI / 1.35 && events[i].getBodyB() == this) {
+				return true;
+			}
+			if (angle < Math.PI / 1.35 && events[i].getBodyA() == this) {
+				return true;
+			}
+		}
+		return false;
+		/*
+		 * if (events[i].getNormal().getY() > 0) { if (events[i].getBodyB() ==
+		 * hero) { return true; } } if (events[i].getNormal().getY() < 0) { if
+		 * (events[i].getBodyA() == hero) { return true; } }
+		 */
+		// }
 
-            if(jumpSound!=null) {
-                jumpSound.play();
-            }
+		/*
+		 * BodyList connected = hero.getTouching(); for (int i = 0; i <
+		 * connected.size(); ++i) { Body body = connected.get(i); if (body
+		 * instanceof Platform) { Vector2f normal = new
+		 * Vector2f(hero.getPosition()); normal.sub(body.getPosition()); float
+		 * angle = im.bci.newtonadv.util.Vector.angle(gravityVector, normal); if
+		 * (angle >= Math.PI / 1.35) { return true; } } }
+		 */
+		// return false;
+	}
 
-//            Vector2f jump = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0, /*stepRate **/ world.getGravityForce() * 1.0f));
-//            adjustVelocity(jump);
-        }
-    }
+	public void jump(float step) {
+		if (/* hero.isOnPlatform */canJump()) {
+			Matrix2f rot = new Matrix2f(world.getGravityAngle());
+			Vector2f jump = net.phys2d.math.MathUtil.mul(rot, new Vector2f(
+					0.0f, /* stepRate * */world.getGravityForce() * jumpForce));
+			addForce(jump);
 
-    public void moveLeft(float step) {
-        Matrix2f rot = new Matrix2f(world.getGravityAngle() /*+ (float) Math.PI / 4.0f*/);
-        Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step * -world.getGravityForce() * horizontalSpeed, 0.0f));
-        adjustBiasedVelocity(velocity);
-        setCurrentMovement(Hero.Movement.GOING_LEFT);
-    }
+			if (jumpSound != null) {
+				jumpSound.play();
+			}
 
-    public void moveRight(float step) {
-        Matrix2f rot = new Matrix2f(world.getGravityAngle() /*+ (float) Math.PI / 4.0f*/);
-        Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step * world.getGravityForce() * horizontalSpeed, 0.0f));
-        adjustBiasedVelocity(velocity);
-        setCurrentMovement(Hero.Movement.GOING_RIGHT);
-    }
+			// Vector2f jump = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0,
+			// /*stepRate **/ world.getGravityForce() * 1.0f));
+			// adjustVelocity(jump);
+		}
+	}
 
-    public void dontMove() {
-        setCurrentMovement(Movement.NOT_GOING_ANYWHERE);
-    }
+	public void moveLeft(float step) {
+		Matrix2f rot = new Matrix2f(world.getGravityAngle() /*
+															 * + (float) Math.PI
+															 * / 4.0f
+															 */);
+		Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step
+				* -world.getGravityForce() * horizontalSpeed, 0.0f));
+		adjustBiasedVelocity(velocity);
+		setCurrentMovement(Hero.Movement.GOING_LEFT);
+	}
 
-    public void hurtByFireBall() {
-        if (!isHurt) {
-            hurt(2);
-        }
-    }
+	public void moveRight(float step) {
+		Matrix2f rot = new Matrix2f(world.getGravityAngle() /*
+															 * + (float) Math.PI
+															 * / 4.0f
+															 */);
+		Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step
+				* world.getGravityForce() * horizontalSpeed, 0.0f));
+		adjustBiasedVelocity(velocity);
+		setCurrentMovement(Hero.Movement.GOING_RIGHT);
+	}
 
-    public void hurtByEgyptianBoss() {
-        if (!isHurt) {
-            hurt(1);
-        }
-    }
+	public void dontMove() {
+		setCurrentMovement(Movement.NOT_GOING_ANYWHERE);
+	}
 
-    public void hurtByMummy() {
-        if (!isHurt) {
-            hurt(1);
-        }
-    }
+	public void hurtByFireBall() {
+		if (!isHurt) {
+			hurt(2);
+		}
+	}
 
-    public void hurtByBat() {
-        if (!isHurt) {
-            hurt(1);
-        }
-    }
+	public void hurtByEgyptianBoss() {
+		if (!isHurt) {
+			hurt(1);
+		}
+	}
 
-    public void hurtByPike(ROVector2f normal) {
-        if (!isHurt) {
-            hurt(5);
-            float reactionForce = world.getGravityForce() * jumpForce * 0.8f;
-            Vector2f force = new Vector2f(normal.getX() * reactionForce, normal.getY() * reactionForce);
-            addForce(force);
-        }
-    }
+	public void hurtByMummy() {
+		if (!isHurt) {
+			hurt(1);
+		}
+	}
 
-    public void collisionWithBouncePlatform(Vector2f normal) {
-        float reactionForce = world.getGravityForce() * jumpForce * 1.1f;
-        Vector2f force = new Vector2f(normal.getX() * reactionForce, normal.getY() * reactionForce);
-        addForce(force);
-    }
+	public void hurtByBat() {
+		if (!isHurt) {
+			hurt(1);
+		}
+	}
+
+	public void hurtByPike(ROVector2f normal) {
+		if (!isHurt) {
+			hurt(5);
+			float reactionForce = world.getGravityForce() * jumpForce * 0.8f;
+			Vector2f force = new Vector2f(normal.getX() * reactionForce,
+					normal.getY() * reactionForce);
+			addForce(force);
+		}
+	}
+
+	public void collisionWithBouncePlatform(Vector2f normal) {
+		float reactionForce = world.getGravityForce() * jumpForce * 1.1f;
+		Vector2f force = new Vector2f(normal.getX() * reactionForce,
+				normal.getY() * reactionForce);
+		addForce(force);
+	}
+
+	public void setHasMap(boolean b) {
+		hasMap = b;
+	}
+
+	public void setHasCompass(boolean b) {
+		hasCompass = b;
+	}
 }

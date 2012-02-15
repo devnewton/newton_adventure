@@ -99,6 +99,10 @@ License: CC-BY 3.0
 Author: Sauer2 (http://opengameart.org/content/starfield-background)
 License: CC0
 
+* map.png compass.png
+
+Author: DItzyDM (http://opengameart.org/content/rpg-icons)
+License: CC-BY-SA
 
 * Other files
 

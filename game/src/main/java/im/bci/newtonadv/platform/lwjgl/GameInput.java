@@ -154,16 +154,6 @@ public class GameInput implements IGameInput {
 	}
 
 	@Override
-	public boolean isKeyCheatActivateAllDown() {
-		return Keyboard.isKeyDown(Keyboard.KEY_F11);
-	}
-
-	@Override
-	public boolean isKeyCheatGotoNextLevelDown() {
-		return Keyboard.isKeyDown(Keyboard.KEY_F12);
-	}
-
-	@Override
 	public boolean isKeyUpDown() {
 		return Keyboard.isKeyDown(Keyboard.KEY_UP);
 	}
@@ -177,10 +167,30 @@ public class GameInput implements IGameInput {
 	public boolean isKeyReturnDown() {
 		return Keyboard.isKeyDown(Keyboard.KEY_RETURN);
 	}
+	
+	@Override
+	public boolean isKeyCheatGotoNextLevelDown() {
+		return Keyboard.isKeyDown(Keyboard.KEY_F12);
+	}
+	
+	@Override
+	public boolean isKeyCheatActivateAllDown() {
+		return Keyboard.isKeyDown(Keyboard.KEY_F11);
+	}
 
 	@Override
 	public boolean isKeyCheatGotoNextBonusLevelDown() {
 		return Keyboard.isKeyDown(Keyboard.KEY_F10);
+	}
+	
+	@Override
+	public boolean isKeyCheatGetWorldMapDown() {
+		return Keyboard.isKeyDown(Keyboard.KEY_F9);
+	}
+
+	@Override
+	public boolean isKeyCheatGetCompassDown() {
+		return Keyboard.isKeyDown(Keyboard.KEY_F8);
 	}
 
 	@Override

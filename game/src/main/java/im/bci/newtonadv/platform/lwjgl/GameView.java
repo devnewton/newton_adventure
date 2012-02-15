@@ -222,10 +222,10 @@ public strictfp class GameView implements IGameView {
 		DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
 				targetBpp);
 		if (chosenMode == null) {
-			Sys.alert(
-					"Error",
-					"Unable to find appropriate display mode. Try to edit" + PlatformFactory.getUserOrDefaultConfigFilePath() + ".\n"
-							+ getDisplayModeInfos());
+			Sys.alert("Error",
+					"Unable to find appropriate display mode. Try to edit"
+							+ PlatformFactory.getUserOrDefaultConfigFilePath()
+							+ ".\n" + getDisplayModeInfos());
 			System.exit(0);
 		}
 		setDisplayMode(startFullscreen, newQuality, chosenMode);
@@ -252,11 +252,9 @@ public strictfp class GameView implements IGameView {
 				Display.create();
 			Display.setVSyncEnabled(true);
 		} catch (LWJGLException e) {
-			Sys.alert(
-					"Error",
-					e
-							+ "\nUnable to create display. Try to edit " + PlatformFactory.getUserOrDefaultConfigFilePath() + ".\n"
-							+ getDisplayModeInfos());
+			Sys.alert("Error", e + "\nUnable to create display. Try to edit "
+					+ PlatformFactory.getUserOrDefaultConfigFilePath() + ".\n"
+					+ getDisplayModeInfos());
 			System.exit(0);
 		}
 
@@ -1405,7 +1403,8 @@ public strictfp class GameView implements IGameView {
 
 	@Override
 	public ITrueTypeFont createStoryBoardSequenceFont() {
-		return new TrueTypeFont(this.data, new Font("monospaced", Font.BOLD, 32), false);
+		return new TrueTypeFont(this.data,
+				new Font("monospaced", Font.BOLD, 32), false);
 	}
 
 	@Override
@@ -1415,14 +1414,16 @@ public strictfp class GameView implements IGameView {
 
 	@Override
 	public ITrueTypeFont createAppleFont(String questName, String levelName) {
-        HashMap<Character,String> fontSpecialCharacters = new HashMap<Character,String>();
-        fontSpecialCharacters.put('$', data.getLevelFilePath(questName, levelName, "apple.png"));
+		HashMap<Character, String> fontSpecialCharacters = new HashMap<Character, String>();
+		fontSpecialCharacters.put('$',
+				data.getLevelFilePath(questName, levelName, "apple.png"));
 		return new TrueTypeFont(this.data, fontSpecialCharacters);
 	}
 
 	@Override
 	public ITrueTypeFont createScoreSequenceFont() {
-		return new TrueTypeFont(this.data, new Font("monospaced", Font.BOLD, 32), false);
+		return new TrueTypeFont(this.data,
+				new Font("monospaced", Font.BOLD, 32), false);
 	}
 
 	@Override
@@ -1474,11 +1475,14 @@ public strictfp class GameView implements IGameView {
 	public float getHeight() {
 		return Display.getHeight();
 	}
-	
+
 	static final float minimapSize = 32;
 
 	@Override
 	public void drawMinimap(World world, ITexture minimapTexture) {
+		if (!world.getHero().hasMap() && !world.getHero().hasCompass()) {
+			return;
+		}
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -1486,11 +1490,17 @@ public strictfp class GameView implements IGameView {
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, 100, 0, 100, -1, 1);
 		GL11.glTranslatef(100 - minimapSize / 1.5f, minimapSize / 1.5f, 0);
-		
+
 		GL11.glPushMatrix();
 		GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
 				1.0f);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, minimapTexture.getId());
+		if (world.getHero().hasMap()) {
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, minimapTexture.getId());
+		} else {
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+		}
 		final float x1 = -minimapSize / 2.0f;
 		final float x2 = minimapSize / 2.0f;
 		final float y1 = -minimapSize / 2.0f;
@@ -1507,19 +1517,23 @@ public strictfp class GameView implements IGameView {
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
 		GL11.glPopMatrix();
-		
-		drawMinimapIcon(world, world.getHero().getPosition(),world.getHero().getAnimation().getFirstTexture());
-		for(Key key : world.getKeys())
-			drawMinimapIcon(world, key.getPosition(),key.getTexture());
-		
+
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		if (world.getHero().hasCompass()) {
+			drawMinimapIcon(world, world.getHero().getPosition(), world
+					.getHero().getAnimation().getFirstTexture());
+			for (Key key : world.getKeys())
+				drawMinimapIcon(world, key.getPosition(), key.getTexture());
+		}
 		GL11.glPopMatrix();
 		GL11.glPopAttrib();
 	}
 
-	public void drawMinimapIcon(World world, ROVector2f worldPos, ITexture texture) {
-		float iconW =  World.distanceUnit * 8.0f;
-		float iconH =  World.distanceUnit * 8.0f;
-		
+	public void drawMinimapIcon(World world, ROVector2f worldPos,
+			ITexture texture) {
+		float iconW = World.distanceUnit * 8.0f;
+		float iconH = World.distanceUnit * 8.0f;
+
 		final float icon_x1 = -iconW / 2.0f;
 		final float icon_x2 = iconW / 2.0f;
 		final float icon_y1 = -iconH / 2.0f;
@@ -1528,10 +1542,14 @@ public strictfp class GameView implements IGameView {
 		GL11.glPushMatrix();
 		GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
 				1.0f);
-		final float miniMapPlatformSize = minimapSize * 4.0f / 256.0f;//harcoded, that's bad!
-		GL11.glScalef(miniMapPlatformSize / (World.distanceUnit * 2.0f), miniMapPlatformSize / (World.distanceUnit * 2.0f), 1);
+		final float miniMapPlatformSize = minimapSize * 4.0f / 256.0f;// harcoded,
+																		// that's
+																		// bad!
+		GL11.glScalef(miniMapPlatformSize / (World.distanceUnit * 2.0f),
+				miniMapPlatformSize / (World.distanceUnit * 2.0f), 1);
 		GL11.glTranslatef(worldPos.getX(), worldPos.getY(), 0);
-		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(icon_u1, 0.0f);

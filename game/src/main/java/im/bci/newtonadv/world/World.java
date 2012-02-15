@@ -80,6 +80,8 @@ public strictfp class World extends net.phys2d.raw.World {
     protected EntityList topLevelEntities = new EntityList();
     private ITexture appleIconTexture;
     private ITexture coinTexture;
+    private ITexture worldMapTexture;
+    private ITexture compassTexture;
     private ITexture fireBallTexture;
     private boolean objectivesCompleted = false;
     private float nonProgressiveGravityRotationStep;
@@ -224,6 +226,8 @@ public strictfp class World extends net.phys2d.raw.World {
         defaultMapProperties.put("newton_adventure.hero", "hero.gif");
         defaultMapProperties.put("newton_adventure.apple", "apple.png");
         defaultMapProperties.put("newton_adventure.coin", "coin.png");
+        defaultMapProperties.put("newton_adventure.world_map", "map.png");
+        defaultMapProperties.put("newton_adventure.compass", "compass.png");
         defaultMapProperties.put("newton_adventure.activator1.on", "actived1.png");
         defaultMapProperties.put("newton_adventure.activator2.on", "actived2.png");
         defaultMapProperties.put("newton_adventure.activator3.on", "actived3.png");
@@ -265,6 +269,8 @@ public strictfp class World extends net.phys2d.raw.World {
         batAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.bat"));
         appleIconTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.apple"));
         coinTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.coin"));
+        worldMapTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.world_map"));
+        compassTexture= textureCache.getTexture(getFileFromMap(map, "newton_adventure.compass"));
         fireBallTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.fireball"));
         keyTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.key"));
         closedDoorTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door"));
@@ -377,10 +383,20 @@ public strictfp class World extends net.phys2d.raw.World {
             apple.setTexture(appleIconTexture);
             add(apple);
         } else if (c.equals("coin")) {
-            Coin apple = new Coin(this);
-            apple.setPosition(x * Platform.size, y * Platform.size);
-            apple.setTexture(coinTexture);
-            add(apple);
+            Coin coin = new Coin(this);
+            coin.setPosition(x * Platform.size, y * Platform.size);
+            coin.setTexture(coinTexture);
+            add(coin);
+        } else if (c.equals("world_map")) {
+            WorldMap worldMap = new WorldMap(this);
+            worldMap.setPosition(x * Platform.size, y * Platform.size);
+            worldMap.setTexture(worldMapTexture);
+            add(worldMap);
+        } else if (c.equals("compass")) {
+            Compass compass = new Compass(this);
+            compass.setPosition(x * Platform.size, y * Platform.size);
+            compass.setTexture(compassTexture);
+            add(compass);
         } else if (c.equals("key")) {
             Key key = new Key(this);
             key.setPosition(x * Platform.size, y * Platform.size);

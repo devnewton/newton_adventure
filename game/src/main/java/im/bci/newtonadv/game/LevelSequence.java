@@ -144,6 +144,12 @@ strictfp public class LevelSequence implements Sequence {
 		if (game.getInput().isKeyCheatGotoNextBonusLevelDown()) {
 			cheatCodeGotoNextBonusLevel = true;
 		}
+		if (game.getInput().isKeyCheatGetWorldMapDown()) {
+			world.getHero().setHasMap(true);
+		}
+		if (game.getInput().isKeyCheatGetCompassDown()) {
+			world.getHero().setHasCompass(true);
+		}
 	}
 
 	protected void processMovingInput() {
