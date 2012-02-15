@@ -4,13 +4,12 @@
  <properties>
   <property name="newton_adventure.background" value="sky_background.jpg"/>
   <property name="newton_adventure.mummy" value="toad.gif"/>
-  <property name="newton_adventure.music" value="jump_and_run_tropics.ogg"/>  
+  <property name="newton_adventure.music" value="jump_and_run_tropics.ogg"/>
  </properties>
  <tileset name="newton_adventure_jungle" firstgid="1">
   <tile id="0">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -61,7 +60,6 @@
   <tile id="5">
    <properties>
     <property name="newton_adventure.type" value="cloud"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -72,7 +70,6 @@
   <tile id="6">
    <properties>
     <property name="newton_adventure.type" value="pikes_up"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -83,7 +80,6 @@
   <tile id="7">
    <properties>
     <property name="newton_adventure.type" value="pikes_down"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -94,7 +90,6 @@
   <tile id="8">
    <properties>
     <property name="newton_adventure.type" value="pikes_left"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -105,7 +100,6 @@
   <tile id="9">
    <properties>
     <property name="newton_adventure.type" value="pikes_right"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -116,7 +110,6 @@
   <tile id="10">
    <properties>
     <property name="newton_adventure.type" value="mobile_pike_anchor"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -127,7 +120,6 @@
   <tile id="11">
    <properties>
     <property name="newton_adventure.type" value="axe_anchor"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -138,7 +130,6 @@
   <tile id="12">
    <properties>
     <property name="newton_adventure.type" value="cannon_up"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -149,7 +140,6 @@
   <tile id="13">
    <properties>
     <property name="newton_adventure.type" value="cannon_right"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -160,7 +150,6 @@
   <tile id="14">
    <properties>
     <property name="newton_adventure.type" value="cannon_down"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -171,7 +160,6 @@
   <tile id="15">
    <properties>
     <property name="newton_adventure.type" value="cannon_left"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -182,7 +170,6 @@
   <tile id="16">
    <properties>
     <property name="newton_adventure.type" value="down_right_half_platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -193,7 +180,6 @@
   <tile id="17">
    <properties>
     <property name="newton_adventure.type" value="down_left_half_platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -204,7 +190,6 @@
   <tile id="18">
    <properties>
     <property name="newton_adventure.type" value="up_left_half_platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -215,7 +200,6 @@
   <tile id="19">
    <properties>
     <property name="newton_adventure.type" value="up_right_half_platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -246,7 +230,6 @@
   <tile id="22">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -257,7 +240,6 @@
   <tile id="23">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -268,7 +250,6 @@
   <tile id="24">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -279,7 +260,6 @@
   <tile id="25">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -290,7 +270,6 @@
   <tile id="26">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -301,7 +280,6 @@
   <tile id="27">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -312,7 +290,6 @@
   <tile id="28">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -323,7 +300,6 @@
   <tile id="29">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -334,7 +310,6 @@
   <tile id="30">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -345,7 +320,6 @@
   <tile id="31">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -356,7 +330,6 @@
   <tile id="32">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -367,7 +340,6 @@
   <tile id="33">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -378,7 +350,6 @@
   <tile id="34">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -389,7 +360,6 @@
   <tile id="35">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -400,7 +370,6 @@
   <tile id="36">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
@@ -411,14 +380,33 @@
   <tile id="37">
    <properties>
     <property name="newton_adventure.type" value="platform"/>
-    
    </properties>
    <image format="png">
     <data encoding="base64">
      iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABx0lEQVR42p1XS05DQQybcyGxYIeE1A0b4AbADrFC4iq9Ckcrmkqp/Dyxk/cWUT9TNY7HcfLG7+fj5fx9usb78/01Xk53t/cz5m9mxJmLt6+HND7OT5efv9clRiQPAJgczyaASIJnDCpLjLEAyKqLqjE5n2fAFQMWAFKN1QeAeMUkCO4ICAQyMDEDwECQASK+Z/1UQDYMIK34nsUXnzkJnymhMhMbAHwNWRe4DmAWOywEiIF3qipQ7CiRdlryBoAVXQHh5FkrdirfiLBSNbdnVr3rgpYPMAgluKx6p36VeGGgajsWJnuHA6CSL0aUOZ7qjmDC3X1V/eIDLhFXiWwdufvFCRXValoq4J2BtFixM6A9HdLxgMUH4k8dAwhETc2sazq7wWYfcB5fjezOfpBeAf6Jcz43sjH5XlEOpNcNG6eTbGtqr2SV6UTLZUJjjWR2XLVi2gWsfjfnO8up2wtHNWoViMySu9MwXclU9WorzjbnIywMd6cqedegOovp6PR+VHfEIatrGNXIddUzkM6TkpwFSoxoPsgMtl7HhmfSFAD6gOpzdz3d5LINu8uo2oj2en/qhEpIagLueQ5oAVDU8hg++njuAPwDV+dwrhd+0K8AAAAASUVORK5CYII=
     </data>
    </image>
-  </tile>  
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="newton_adventure.type" value="world_map"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABZklEQVR42s1XO67CQAzMUejoKJE4AKLnBJwioqajpeYEHIEKUdDRImgouUaQIxwNxt4PWSOeZDlC+8aT8exmXVV/+Ne8Ap9LRQVZL76YDJr1fNRlistx2dxOq16BmCES7aJDPe3yfjv+ALufN10OBa8nDMRMUoEy/SO/PQIiEYrHddeGRoAwCI8xOSf5AAlYb8zFJQl8+xwPvJGIEbCKGwTyd4MkoElv9b0oAQbmXsZCeqCIAgScYj5cV5xAyAOokguBlBa4KYDm0pTAwm4KYCHZBv4dn4ubUFPAcj+q4EpAOw9kG1wJWN8ANwLSA1Qc3Y/htg3lYYTmkwrQswsBWUx+B9x2gSW3dhi5ErCOYlcTSmCLgGyVqwLaVnTdBbH+a4YsTiCmABYv1oKUa3joVvwNgcY6imOXEnkv/OZWrM4FKYOI9mEiDJ4NUuaCpMkoN3Imo3ZRPRt2mYJU6BuIGR3NfjkdPwFSt6V41ODw2QAAAABJRU5ErkJggg==
+    </data>
+   </image>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="newton_adventure.type" value="compass"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABnElEQVR42u2XP0rEQBjFcxBLDyB6iFTbeQYLQXtLwQNYLAELW2Erm4DlVt7BIleQLTzAyAy85eXL92eybBBhA49swsy837zZ5Js0zen4R0eq0HLG6/vWVf98vQhMerq5LHp7vCradu1en6+36ev9oZjnNgbM4bOGcR7QEsPkc77HycwFSTxraRYtAQMBSiRSH7dmLAfHGUYazByIkTnHCTMvAYBwO04kgpiYZ+V7PLthGEwxDGaOZWQIF4Cjw7U0/j47H11vutaFqYHYz55nXiLr+8ngL83FBMJS7i+XwwSQ0bO5nGWGsExlW0CwR/7NECGApW3XVifBS3w0AOuPqaUQAsjnnCE2wUybj111AlgONQH57AIiSmN191NUE/8sAAnh/TFlEjCW5uoSoNJxI5mEBPGE9nibRgCTF5FVXDBwJLTXzF0ALkKysMjSy+9+nKWpNo5mHhYjDcaTrAsM5gGoSfASRNsyrWwzWGRuQmjL4EnrV2tu7gVr42flfhjnkP3haHvGMJG4zzF2yUmD8bTkt0L6yw+U07HI8QvdEUA/xiLwvgAAAABJRU5ErkJggg==
+    </data>
+   </image>
+  </tile>
  </tileset>
  <layer name="level" width="25" height="24">
   <data>

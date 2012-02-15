@@ -517,6 +517,26 @@
     </data>
    </image>
   </tile>
+  <tile id="51">
+   <properties>
+    <property name="newton_adventure.type" value="world_map"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABZklEQVR42s1XO67CQAzMUejoKJE4AKLnBJwioqajpeYEHIEKUdDRImgouUaQIxwNxt4PWSOeZDlC+8aT8exmXVV/+Ne8Ap9LRQVZL76YDJr1fNRlistx2dxOq16BmCES7aJDPe3yfjv+ALufN10OBa8nDMRMUoEy/SO/PQIiEYrHddeGRoAwCI8xOSf5AAlYb8zFJQl8+xwPvJGIEbCKGwTyd4MkoElv9b0oAQbmXsZCeqCIAgScYj5cV5xAyAOokguBlBa4KYDm0pTAwm4KYCHZBv4dn4ubUFPAcj+q4EpAOw9kG1wJWN8ANwLSA1Qc3Y/htg3lYYTmkwrQswsBWUx+B9x2gSW3dhi5ErCOYlcTSmCLgGyVqwLaVnTdBbH+a4YsTiCmABYv1oKUa3joVvwNgcY6imOXEnkv/OZWrM4FKYOI9mEiDJ4NUuaCpMkoN3Imo3ZRPRt2mYJU6BuIGR3NfjkdPwFSt6V41ODw2QAAAABJRU5ErkJggg==
+    </data>
+   </image>
+  </tile>
+  <tile id="52">
+   <properties>
+    <property name="newton_adventure.type" value="compass"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABnElEQVR42u2XP0rEQBjFcxBLDyB6iFTbeQYLQXtLwQNYLAELW2Erm4DlVt7BIleQLTzAyAy85eXL92eybBBhA49swsy837zZ5Js0zen4R0eq0HLG6/vWVf98vQhMerq5LHp7vCradu1en6+36ev9oZjnNgbM4bOGcR7QEsPkc77HycwFSTxraRYtAQMBSiRSH7dmLAfHGUYazByIkTnHCTMvAYBwO04kgpiYZ+V7PLthGEwxDGaOZWQIF4Cjw7U0/j47H11vutaFqYHYz55nXiLr+8ngL83FBMJS7i+XwwSQ0bO5nGWGsExlW0CwR/7NECGApW3XVifBS3w0AOuPqaUQAsjnnCE2wUybj111AlgONQH57AIiSmN191NUE/8sAAnh/TFlEjCW5uoSoNJxI5mEBPGE9nibRgCTF5FVXDBwJLTXzF0ALkKysMjSy+9+nKWpNo5mHhYjDcaTrAsM5gGoSfASRNsyrWwzWGRuQmjL4EnrV2tu7gVr42flfhjnkP3haHvGMJG4zzF2yUmD8bTkt0L6yw+U07HI8QvdEUA/xiLwvgAAAABJRU5ErkJggg==
+    </data>
+   </image>
+  </tile>
  </tileset>
  <layer name="level" width="64" height="64">
   <data>
@@ -1137,7 +1157,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="53"/>
    <tile gid="26"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2662,7 +2682,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="42"/>
-   <tile gid="0"/>
+   <tile gid="52"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
