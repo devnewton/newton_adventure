@@ -33,7 +33,7 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
-import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
@@ -46,7 +46,7 @@ import im.bci.newtonadv.util.Vector;
  *
  * @author devnewton
  */
-public strictfp class EgyptianBossHand extends Body implements Drawable, Updatable {
+public strictfp class EgyptianBossHand extends AbstractDrawableBody implements Updatable {
     private final World world;
 
     enum Side {

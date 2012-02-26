@@ -34,7 +34,7 @@ package im.bci.newtonadv.world;
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.ROVector2f;
 import im.bci.newtonadv.anim.Animation;
-import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
@@ -48,7 +48,7 @@ import net.phys2d.raw.shapes.Circle;
  * 
  * @author devnewton
  */
-public strictfp class Hero extends Body implements Drawable, Updatable {
+public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 
 	private ISoundCache.Playable jumpSound;
 	private Animation animation;

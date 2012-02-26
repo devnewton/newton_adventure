@@ -31,17 +31,22 @@
  */
 package im.bci.newtonadv.game;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.TreeSet;
+
 import im.bci.newtonadv.world.GameOverException;
 
 /**
  *
  * @author devnewton
  */
-public class EntityList extends ArrayList<Entity> {
+public class EntityList extends TreeSet<Entity> {
 
 	private static final long serialVersionUID = -774329323255199905L;
+	
+	public EntityList() {
+		super(Drawable.comparator);
+	}
 
 	public void draw() {
         for (Entity e : this) {

@@ -35,9 +35,9 @@ import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Circle;
 
-import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.AbstractDrawableBody;
 
-public strictfp class FireBall extends Body  implements Drawable {
+public strictfp class FireBall extends AbstractDrawableBody {
     public static final float size = Cannon.size / 2.0f;
     World world;
     private ITexture texture;

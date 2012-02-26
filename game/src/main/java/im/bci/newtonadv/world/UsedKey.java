@@ -34,10 +34,10 @@ package im.bci.newtonadv.world;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
 
-import im.bci.newtonadv.game.Entity;
+import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 
-public strictfp class UsedKey implements Entity {
+public strictfp class UsedKey extends AbstractEntity {
 
     private World world;
     private ITexture texture;
@@ -69,7 +69,7 @@ public strictfp class UsedKey implements Entity {
             endTime = frameTimeInfos.currentTime + waitingDuration;
         } else {
             //size = Key.size * 1.1f;//* ( 0.5f + 0.5f * (endTime -  frameTimeInfos.currentTime) / (float)waitingDuration);
-            size = Key.size * ( 2.0f - 1.0f * (endTime -  frameTimeInfos.currentTime) / (float)waitingDuration);
+            size = Key.size * ( 2.0f - 1.0f * (endTime -  frameTimeInfos.currentTime) / waitingDuration);
             isDead = frameTimeInfos.currentTime > endTime;
         }
     }

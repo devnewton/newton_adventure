@@ -188,7 +188,7 @@ public strictfp class World extends net.phys2d.raw.World {
             ((StaticQuadSpaceStrategy) collisionStrategy).removeBody(body);
         }
         if (body instanceof Updatable) {
-            updatableBodies.remove((Updatable) body);
+            updatableBodies.remove(body);
         }
         super.remove(body);
     }
@@ -525,6 +525,13 @@ public strictfp class World extends net.phys2d.raw.World {
             platform.setPosition(x * Platform.size, y * Platform.size);
             platform.setFriction(getTileFriction(tile));
             add(platform);
+        } else if(c.equals("teleporter")){
+            Platform teleporter = new Platform(this);
+            teleporter.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+            teleporter.setPosition(x * Platform.size, y * Platform.size);
+            teleporter.setEnabled(false);
+            teleporter.setZOrder(1);
+            add(teleporter);
         } else if (c.equals("egyptian_boss")) {
             EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
             boss.setBodyTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_body.png")));

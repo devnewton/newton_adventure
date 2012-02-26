@@ -34,14 +34,14 @@ package im.bci.newtonadv.world;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
 
-import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.AbstractDrawableBody;
 import net.phys2d.raw.shapes.Circle;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class Key extends Body implements Drawable {
+public strictfp class Key extends AbstractDrawableBody {
 
     static final float size = 2.0f * World.distanceUnit;
     private World world;

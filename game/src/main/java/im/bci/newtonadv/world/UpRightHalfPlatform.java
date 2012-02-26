@@ -34,16 +34,15 @@ package im.bci.newtonadv.world;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
 
-import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import net.phys2d.math.Vector2f;
-import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.ConvexPolygon;
 
 /**
  *
  * @author devnewton
  */
-public class UpRightHalfPlatform extends StaticBody implements Drawable {
+public class UpRightHalfPlatform extends AbstractDrawableStaticBody {
 
     static final float size = 2.0f * World.distanceUnit;
     static final ROVector2f[] vertices = new ROVector2f[] { new Vector2f(-size/2.0f, size/2.0f), new Vector2f(size/2.0f, -size/2.0f), new Vector2f(size/2.0f, size/2.0f) };

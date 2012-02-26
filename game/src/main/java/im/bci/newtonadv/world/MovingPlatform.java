@@ -31,19 +31,18 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.Vector2f;
-import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Box;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class MovingPlatform extends Body implements Drawable, Updatable {
+public strictfp class MovingPlatform extends AbstractDrawableBody implements Updatable {
 
     private final Destinations destinations;
 

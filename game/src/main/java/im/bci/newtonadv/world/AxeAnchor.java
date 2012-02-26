@@ -33,15 +33,14 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
-import im.bci.newtonadv.game.Drawable;
-import net.phys2d.raw.StaticBody;
+import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import net.phys2d.raw.shapes.Circle;
 
 /**
  *
  * @author devnewton
  */
-public class AxeAnchor extends StaticBody implements Drawable {
+public class AxeAnchor extends AbstractDrawableStaticBody {
 
     static final float radius = World.distanceUnit;
     private ITexture texture;

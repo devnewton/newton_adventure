@@ -34,7 +34,7 @@ package im.bci.newtonadv.world;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.Matrix2f;
 
-import im.bci.newtonadv.game.Entity;
+import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
@@ -43,7 +43,7 @@ import net.phys2d.math.Vector2f;
  *
  * @author devnewton
  */
-public strictfp class LosedApple implements Entity {
+public strictfp class LosedApple extends AbstractEntity {
 
     float size = Apple.size / 2.0f;
     private World world;

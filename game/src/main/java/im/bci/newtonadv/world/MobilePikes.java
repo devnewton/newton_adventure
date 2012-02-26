@@ -33,7 +33,7 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
-import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.AbstractDrawableBody;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
@@ -43,7 +43,7 @@ import net.phys2d.raw.shapes.Box;
  *
  * @author devnewton
  */
-public strictfp class MobilePikes extends Body implements Drawable {
+public strictfp class MobilePikes extends AbstractDrawableBody {
 
     private static final float weight = 10.0f;
     static final float width = World.distanceUnit;

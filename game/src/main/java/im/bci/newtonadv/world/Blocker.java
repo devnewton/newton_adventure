@@ -63,7 +63,7 @@ public class Blocker extends Platform implements Updatable {
            if( disappearEndTime < 0 )
                disappearEndTime = frameTimeInfos.currentTime + disappearDuration;
            else if( frameTimeInfos.currentTime  < disappearEndTime ) {
-               alpha = 0.5f + 0.5f * (disappearEndTime -  frameTimeInfos.currentTime) / (float)disappearDuration;
+               alpha = 0.5f + 0.5f * (disappearEndTime -  frameTimeInfos.currentTime) / disappearDuration;
            } else {
                this.setEnabled(false);
                //world.remove(this);

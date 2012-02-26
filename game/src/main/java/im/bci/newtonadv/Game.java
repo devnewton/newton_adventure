@@ -64,7 +64,7 @@ public strictfp class Game {
     private final IGameData data;
     private boolean running = true;
     static public final int FPS = 60;
-    static public final float FPSf = (float) FPS;
+    static public final float FPSf = FPS;
     static public final int DEFAULT_SCREEN_WIDTH = 1280;
     static public final int DEFAULT_SCREEN_HEIGHT = 800;
     private FrameTimeInfos frameTimeInfos = new FrameTimeInfos();

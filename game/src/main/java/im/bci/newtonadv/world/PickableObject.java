@@ -46,6 +46,7 @@ public abstract strictfp class PickableObject extends StaticBody implements Draw
     static final float size = 2.0f * World.distanceUnit;
     protected ITexture texture;
     protected World world;
+    private int zOrder = 0;
 
     PickableObject(World world) {
         super(new Circle(size / 2.0f));
@@ -68,5 +69,16 @@ public abstract strictfp class PickableObject extends StaticBody implements Draw
     @Override
     public void draw() {
         world.getView().drawPickableObject(this, texture, world);
-    }    
+    }
+
+    @Override
+	public int getZOrder() {
+		return zOrder;
+	}
+
+	public void setOrder(int zOrder) {
+		this.zOrder = zOrder;
+	} 
+    
+    
 }

@@ -37,8 +37,8 @@ class GameData implements IGameData {
 				"artic_level2", "artic_level3", "artic_level4"));
 		questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
 				"level3", "level4", "level5"));
-		questLevels.put("hades", Arrays.asList("hades_level0"/*,
-				"hades_level1", "hades_level2", "hades_level3",
+		questLevels.put("hades", Arrays.asList("hades_level0",
+				"hades_level1"/*, "hades_level2", "hades_level3",
 				"hades_level4"*/));
 		questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
 				"bonus_level3", "bonus_level4", "bonus_level5"));

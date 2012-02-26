@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.game.Entity;
+import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
@@ -41,7 +41,7 @@ import im.bci.newtonadv.anim.Animation;
  *
  * @author devnewton
  */
-public strictfp class Explosion implements Entity {
+public strictfp class Explosion extends AbstractEntity {
     
     float size = World.distanceUnit * 2.0f;
     private World world;

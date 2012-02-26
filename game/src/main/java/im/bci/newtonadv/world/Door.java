@@ -34,15 +34,14 @@ package im.bci.newtonadv.world;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
 
-import im.bci.newtonadv.game.Drawable;
-import net.phys2d.raw.StaticBody;
+import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import net.phys2d.raw.shapes.Box;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class Door extends StaticBody implements Drawable, CollisionDetectionOnly {
+public strictfp class Door extends AbstractDrawableStaticBody implements CollisionDetectionOnly {
 
     static final float width = 2.0f * World.distanceUnit;
     static final float height = 4.0f * World.distanceUnit;

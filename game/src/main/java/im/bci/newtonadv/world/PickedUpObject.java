@@ -33,7 +33,7 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
-import im.bci.newtonadv.game.Entity;
+import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
@@ -42,7 +42,7 @@ import net.phys2d.math.Vector2f;
  *
  * @author devnewton
  */
-public strictfp class PickedUpObject implements Entity {
+public strictfp class PickedUpObject extends AbstractEntity {
     
     final float originalSize;
     float size;
@@ -79,7 +79,7 @@ public strictfp class PickedUpObject implements Entity {
             }
             else {
                 canMove = frameTimeInfos.currentTime > canMoveTime;
-                size = originalSize * ( 0.5f + 0.5f * (canMoveTime -  frameTimeInfos.currentTime) / (float)waitingDuration);
+                size = originalSize * ( 0.5f + 0.5f * (canMoveTime -  frameTimeInfos.currentTime) / waitingDuration);
             }
         }
     }

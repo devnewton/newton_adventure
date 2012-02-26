@@ -70,6 +70,7 @@ import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -1349,12 +1350,18 @@ public strictfp class GameView implements IGameView {
 		final BodyList visibleBodies = world.getVisibleBodies(heroPos.getX()
 				- cameraSize, heroPos.getY() - cameraSize, heroPos.getX()
 				+ cameraSize, heroPos.getY() + cameraSize);
+		
+		ArrayList<Drawable> drawableBodies = new ArrayList<Drawable>();
 		for (int i = 0; i < visibleBodies.size(); i++) {
 			Body body = visibleBodies.get(i);
 			if (body instanceof Drawable) {
-				((Drawable) body).draw();
+				drawableBodies.add(((Drawable) body));
 			}
 		}
+		java.util.Collections.sort(drawableBodies, Drawable.comparator);
+		for(Drawable drawableBody:drawableBodies)
+			drawableBody.draw();
+		
 		world.getTopLevelEntities().draw();
 		GL11.glPopMatrix();
 	}

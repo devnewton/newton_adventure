@@ -33,11 +33,11 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
-import im.bci.newtonadv.game.Drawable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.Box;
+import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
@@ -45,7 +45,7 @@ import im.bci.newtonadv.game.Updatable;
  *
  * @author devnewton
  */
-public strictfp class Axe extends Body implements Drawable, Updatable {
+public strictfp class Axe extends AbstractDrawableBody implements Updatable {
 
     private static final float weight = 10.0f;
     static final float width = World.distanceUnit;

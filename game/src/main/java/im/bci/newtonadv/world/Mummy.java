@@ -33,7 +33,7 @@ package im.bci.newtonadv.world;
 
 import net.phys2d.math.Matrix2f;
 import im.bci.newtonadv.anim.Animation;
-import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
@@ -46,7 +46,7 @@ import im.bci.newtonadv.util.Vector;
  *
  * @author devnewton
  */
-public strictfp class Mummy extends Body implements Drawable, Updatable {
+public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 
     private Animation animation;
     private static final float weight = 1.0f;
