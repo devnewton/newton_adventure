@@ -58,606 +58,739 @@ import tiled.core.Tile;
 import tiled.io.TMXMapReader;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public strictfp class World extends net.phys2d.raw.World {
 
-    static final int STATIC_BODY_COLLIDE_BIT = 1;
-    boolean mustDrawContacts = false;
-    boolean mustDrawNormals = false;
-    boolean mustDrawJoints = false;
-    static public final float distanceUnit = 1.0f;
-    Hero hero = new Hero(this);
-    private float gravityAngle = 0.0f;
-    private boolean nonProgressiveGravityRotationActive = false;
-    private float gravityAngleTarget;
-    private static final float gravityForce = 2f;
-    private Vector2f gravityVector = new Vector2f();
-    private Game game;
-    private ITexture backgroundTexture;
-    private List<Updatable> updatableBodies = new LinkedList<Updatable>();
-    protected EntityList topLevelEntities = new EntityList();
-    private ITexture appleIconTexture;
-    private ITexture coinTexture;
-    private ITexture worldMapTexture;
-    private ITexture compassTexture;
-    private ITexture fireBallTexture;
-    private boolean objectivesCompleted = false;
-    private float nonProgressiveGravityRotationStep;
-    private Animation explosionAnimation;
-    private Animation mummyAnimation;
-    private Animation batAnimation;
-    private ITexture keyTexture;
-    private ITexture openDoorTexture;
-    private ITexture closedDoorTexture;
-    private ITexture openDoorToBonusWorldTexture;
-    private ITexture closedDoorToBonusWorldTexture;
-    private ITexture mobilePikesTexture;
-    private ITexture axeTexture;
-    private ITexture activator1OnTexture;
-    private ITexture activator2OnTexture;
-    private ITexture activator3OnTexture;
-    private ITexture activator1OffTexture;
-    private ITexture activator2OffTexture;
-    private ITexture activator3OffTexture;
-    private ITexture blocker1Texture;
-    private ITexture blocker2Texture;
-    private ITexture blocker3Texture;
-    private final String questName;
-    private final String levelName;
-    private int nbCollectableApple;
-    private boolean gotoBonusWorld;
-    private ArrayList<Key> keys = new ArrayList<Key>();
+	static final int STATIC_BODY_COLLIDE_BIT = 1;
+	boolean mustDrawContacts = false;
+	boolean mustDrawNormals = false;
+	boolean mustDrawJoints = false;
+	static public final float distanceUnit = 1.0f;
+	Hero hero = new Hero(this);
+	private float gravityAngle = 0.0f;
+	private boolean nonProgressiveGravityRotationActive = false;
+	private float gravityAngleTarget;
+	private static final float gravityForce = 2f;
+	private Vector2f gravityVector = new Vector2f();
+	private Game game;
+	private ITexture backgroundTexture;
+	private List<Updatable> updatableBodies = new LinkedList<Updatable>();
+	protected EntityList topLevelEntities = new EntityList();
+	private ITexture appleIconTexture;
+	private ITexture coinTexture;
+	private ITexture worldMapTexture;
+	private ITexture compassTexture;
+	private ITexture fireBallTexture;
+	private boolean objectivesCompleted = false;
+	private float nonProgressiveGravityRotationStep;
+	private Animation explosionAnimation;
+	private Animation mummyAnimation;
+	private Animation batAnimation;
+	private ITexture keyTexture;
+	private ITexture openDoorTexture;
+	private ITexture closedDoorTexture;
+	private ITexture openDoorToBonusWorldTexture;
+	private ITexture closedDoorToBonusWorldTexture;
+	private ITexture mobilePikesTexture;
+	private ITexture axeTexture;
+	private ITexture activator1OnTexture;
+	private ITexture activator2OnTexture;
+	private ITexture activator3OnTexture;
+	private ITexture activator1OffTexture;
+	private ITexture activator2OffTexture;
+	private ITexture activator3OffTexture;
+	private ITexture blocker1Texture;
+	private ITexture blocker2Texture;
+	private ITexture blocker3Texture;
+	private final String questName;
+	private final String levelName;
+	private int nbCollectableApple;
+	private boolean gotoBonusWorld;
+	private ArrayList<Key> keys = new ArrayList<Key>();
 
-    public boolean areObjectivesCompleted() {
-        return objectivesCompleted;
-    }
+	public boolean areObjectivesCompleted() {
+		return objectivesCompleted;
+	}
 
-    public void setObjectivesCompleted(boolean objectivesCompleted) {
-        this.objectivesCompleted = objectivesCompleted;
-    }
+	public void setObjectivesCompleted(boolean objectivesCompleted) {
+		this.objectivesCompleted = objectivesCompleted;
+	}
 
-    public ITexture getAppleIconTexture() {
-        return appleIconTexture;
-    }
+	public ITexture getAppleIconTexture() {
+		return appleIconTexture;
+	}
 
-    public ITexture getFireBallTexture() {
-        return fireBallTexture;
-    }
+	public ITexture getFireBallTexture() {
+		return fireBallTexture;
+	}
 
-    Animation getMummyAnimation() {
-        return mummyAnimation;
-    }
+	Animation getMummyAnimation() {
+		return mummyAnimation;
+	}
 
-    Animation getBatAnimation() {
-        return batAnimation;
-    }
+	Animation getBatAnimation() {
+		return batAnimation;
+	}
 
-    Animation getExplosionAnimation() {
-        return explosionAnimation;
-    }
+	Animation getExplosionAnimation() {
+		return explosionAnimation;
+	}
 
-    public Hero getHero() {
-        return hero;
-    }
+	public Hero getHero() {
+		return hero;
+	}
 
-    public World(Game game, String questName, String levelName) {
-        super(new Vector2f(0.0f, -gravityForce), 2, new StaticQuadSpaceStrategy(20, 5));
-        this.game = game;
-        progressiveRotateGravity(0.0f);
-        this.questName = questName;
-        this.levelName = levelName;
-    }
+	public World(Game game, String questName, String levelName) {
+		super(new Vector2f(0.0f, -gravityForce), 2,
+				new StaticQuadSpaceStrategy(20, 5));
+		this.game = game;
+		progressiveRotateGravity(0.0f);
+		this.questName = questName;
+		this.levelName = levelName;
+	}
 
-    public AbsoluteAABox getStaticBounds() {
-        if (collisionStrategy instanceof StaticQuadSpaceStrategy) {
-            return ((StaticQuadSpaceStrategy) collisionStrategy).getStaticBounds();
-        } else {
-            return null;//todo
-        }
-    }
+	public AbsoluteAABox getStaticBounds() {
+		if (collisionStrategy instanceof StaticQuadSpaceStrategy) {
+			return ((StaticQuadSpaceStrategy) collisionStrategy)
+					.getStaticBounds();
+		} else {
+			return null;// todo
+		}
+	}
 
-    public BodyList getVisibleBodies(float camera_x1, float camera_y1, float camera_x2, float camera_y2) {
-        if (collisionStrategy instanceof StaticQuadSpaceStrategy) {
-            return ((StaticQuadSpaceStrategy) collisionStrategy).findVisibleBodies(camera_x1, camera_y1, camera_x2, camera_y2);
-        } else {
-            return bodies;
-        }
-    }
+	public BodyList getVisibleBodies(float camera_x1, float camera_y1,
+			float camera_x2, float camera_y2) {
+		if (collisionStrategy instanceof StaticQuadSpaceStrategy) {
+			return ((StaticQuadSpaceStrategy) collisionStrategy)
+					.findVisibleBodies(camera_x1, camera_y1, camera_x2,
+							camera_y2);
+		} else {
+			return bodies;
+		}
+	}
 
-    @Override
-    public strictfp void add(Body body) {
-        if (body instanceof Updatable) {
-            updatableBodies.add((Updatable) body);
-        }
-        super.add(body);
-        if (collisionStrategy instanceof StaticQuadSpaceStrategy) {
-            ((StaticQuadSpaceStrategy) collisionStrategy).addBody(body);
-        }
-    }
+	@Override
+	public strictfp void add(Body body) {
+		if (body instanceof Updatable) {
+			updatableBodies.add((Updatable) body);
+		}
+		super.add(body);
+		if (collisionStrategy instanceof StaticQuadSpaceStrategy) {
+			((StaticQuadSpaceStrategy) collisionStrategy).addBody(body);
+		}
+	}
 
-    void addTopLevelEntities(Entity e) {
-        topLevelEntities.add(e);
-    }
+	void addTopLevelEntities(Entity e) {
+		topLevelEntities.add(e);
+	}
 
-    @Override
-    public void remove(Body body) {
-        body.setEnabled(false);
-        if (collisionStrategy instanceof StaticQuadSpaceStrategy) {
-            ((StaticQuadSpaceStrategy) collisionStrategy).removeBody(body);
-        }
-        if (body instanceof Updatable) {
-            updatableBodies.remove(body);
-        }
-        super.remove(body);
-    }
+	@Override
+	public void remove(Body body) {
+		body.setEnabled(false);
+		if (collisionStrategy instanceof StaticQuadSpaceStrategy) {
+			((StaticQuadSpaceStrategy) collisionStrategy).removeBody(body);
+		}
+		if (body instanceof Updatable) {
+			updatableBodies.remove(body);
+		}
+		super.remove(body);
+	}
 
-    @Override
-    public void step() {
+	@Override
+	public void step() {
 
-        if (nonProgressiveGravityRotationActive) {
-            if (Math.abs(gravityAngle - gravityAngleTarget) < Math.abs(nonProgressiveGravityRotationStep)) {
-                gravityAngle = gravityAngleTarget;
-                nonProgressiveGravityRotationStep = 0.0f;
-                nonProgressiveGravityRotationActive = false;
-            }
+		if (nonProgressiveGravityRotationActive) {
+			if (Math.abs(gravityAngle - gravityAngleTarget) < Math
+					.abs(nonProgressiveGravityRotationStep)) {
+				gravityAngle = gravityAngleTarget;
+				nonProgressiveGravityRotationStep = 0.0f;
+				nonProgressiveGravityRotationActive = false;
+			}
 
-            progressiveRotateGravity(nonProgressiveGravityRotationStep);
-        } else {
-            hero.step();
-            super.step();
-        }
-    }
-    private static final Properties defaultMapProperties = new Properties();
+			progressiveRotateGravity(nonProgressiveGravityRotationStep);
+		} else {
+			hero.step();
+			super.step();
+		}
+	}
 
-    static {
-        defaultMapProperties.put("newton_adventure.mummy", "mummy.gif");
-        defaultMapProperties.put("newton_adventure.bat", "bat.gif");
-        defaultMapProperties.put("newton_adventure.explosion", "explosion.gif");
-        defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
-        defaultMapProperties.put("newton_adventure.axe", "axe.png");
-        defaultMapProperties.put("newton_adventure.mobilePikes", "mobile_pikes.png");
-        defaultMapProperties.put("newton_adventure.door_to_bonus_world", "door_to_bonus_world.png");
-        defaultMapProperties.put("newton_adventure.door_to_bonus_world_open", "door_to_bonus_world_open.png");
-        defaultMapProperties.put("newton_adventure.door", "door.png");
-        defaultMapProperties.put("newton_adventure.door_open", "door_open.png");
-        defaultMapProperties.put("newton_adventure.key", "key.png");
-        defaultMapProperties.put("newton_adventure.hero", "hero.gif");
-        defaultMapProperties.put("newton_adventure.apple", "apple.png");
-        defaultMapProperties.put("newton_adventure.coin", "coin.png");
-        defaultMapProperties.put("newton_adventure.world_map", "map.png");
-        defaultMapProperties.put("newton_adventure.compass", "compass.png");
-        defaultMapProperties.put("newton_adventure.activator1.on", "actived1.png");
-        defaultMapProperties.put("newton_adventure.activator2.on", "actived2.png");
-        defaultMapProperties.put("newton_adventure.activator3.on", "actived3.png");
-        defaultMapProperties.put("newton_adventure.activator1.off", "activable1.png");
-        defaultMapProperties.put("newton_adventure.activator2.off", "activable2.png");
-        defaultMapProperties.put("newton_adventure.activator3.off", "activable3.png");
-        defaultMapProperties.put("newton_adventure.blocker1", "blocker1.png");
-        defaultMapProperties.put("newton_adventure.blocker2", "blocker2.png");
-        defaultMapProperties.put("newton_adventure.blocker3", "blocker3.png");
-        defaultMapProperties.put("newton_adventure.music", "hopnbop.ogg");
-    }
+	private static final Properties defaultMapProperties = new Properties();
 
-    public String getFileFromMap(tiled.core.Map map, String filePropertyName) {
-        String filename = map.getProperties().getProperty(filePropertyName);
-        if (filename == null) {
-            filename = defaultMapProperties.getProperty(filePropertyName);
-            if (filename == null) {
-                throw new RuntimeException("error in tmx map file, cannot find property " + filePropertyName);
-            }
-        }
-        return game.getData().getLevelFilePath(questName, levelName, filename);
-    }
+	static {
+		defaultMapProperties.put("newton_adventure.mummy", "mummy.gif");
+		defaultMapProperties.put("newton_adventure.bat", "bat.gif");
+		defaultMapProperties.put("newton_adventure.explosion", "explosion.gif");
+		defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
+		defaultMapProperties.put("newton_adventure.axe", "axe.png");
+		defaultMapProperties.put("newton_adventure.mobilePikes",
+				"mobile_pikes.png");
+		defaultMapProperties.put("newton_adventure.door_to_bonus_world",
+				"door_to_bonus_world.png");
+		defaultMapProperties.put("newton_adventure.door_to_bonus_world_open",
+				"door_to_bonus_world_open.png");
+		defaultMapProperties.put("newton_adventure.door", "door.png");
+		defaultMapProperties.put("newton_adventure.door_open", "door_open.png");
+		defaultMapProperties.put("newton_adventure.key", "key.png");
+		defaultMapProperties.put("newton_adventure.hero", "hero.gif");
+		defaultMapProperties.put("newton_adventure.apple", "apple.png");
+		defaultMapProperties.put("newton_adventure.coin", "coin.png");
+		defaultMapProperties.put("newton_adventure.world_map", "map.png");
+		defaultMapProperties.put("newton_adventure.compass", "compass.png");
+		defaultMapProperties.put("newton_adventure.activator1.on",
+				"actived1.png");
+		defaultMapProperties.put("newton_adventure.activator2.on",
+				"actived2.png");
+		defaultMapProperties.put("newton_adventure.activator3.on",
+				"actived3.png");
+		defaultMapProperties.put("newton_adventure.activator1.off",
+				"activable1.png");
+		defaultMapProperties.put("newton_adventure.activator2.off",
+				"activable2.png");
+		defaultMapProperties.put("newton_adventure.activator3.off",
+				"activable3.png");
+		defaultMapProperties.put("newton_adventure.blocker1", "blocker1.png");
+		defaultMapProperties.put("newton_adventure.blocker2", "blocker2.png");
+		defaultMapProperties.put("newton_adventure.blocker3", "blocker3.png");
+		defaultMapProperties.put("newton_adventure.music", "hopnbop.ogg");
+	}
 
-    public void loadLevel() throws IOException, Exception {
+	public String getFileFromMap(tiled.core.Map map, String filePropertyName) {
+		String filename = map.getProperties().getProperty(filePropertyName);
+		if (filename == null) {
+			filename = defaultMapProperties.getProperty(filePropertyName);
+			if (filename == null) {
+				throw new RuntimeException(
+						"error in tmx map file, cannot find property "
+								+ filePropertyName);
+			}
+		}
+		return game.getData().getLevelFilePath(questName, levelName, filename);
+	}
 
-        TMXMapReader mapReader = new TMXMapReader();
-        tiled.core.Map map;
-        InputStream mapInputStream = game.getData().openLevelTmx(questName, levelName);
-        try {
-            map = mapReader.readMap(mapInputStream);
-        } finally {
-            mapInputStream.close();
-        }
+	public void loadLevel() throws IOException, Exception {
 
+		TMXMapReader mapReader = new TMXMapReader();
+		tiled.core.Map map;
+		InputStream mapInputStream = game.getData().openLevelTmx(questName,
+				levelName);
+		try {
+			map = mapReader.readMap(mapInputStream);
+		} finally {
+			mapInputStream.close();
+		}
 
-        final ITextureCache textureCache = game.getView().getTextureCache();
-        explosionAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.explosion"));
-        mummyAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.mummy"));
-        batAnimation = game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.bat"));
-        appleIconTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.apple"));
-        coinTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.coin"));
-        worldMapTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.world_map"));
-        compassTexture= textureCache.getTexture(getFileFromMap(map, "newton_adventure.compass"));
-        fireBallTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.fireball"));
-        keyTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.key"));
-        closedDoorTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door"));
-        openDoorTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door_open"));
-        closedDoorToBonusWorldTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door_to_bonus_world"));
-        openDoorToBonusWorldTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.door_to_bonus_world_open"));
-        mobilePikesTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.mobilePikes"));
-        axeTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.axe"));
-        activator1OnTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator1.on"));
-        activator2OnTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator2.on"));
-        activator3OnTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator3.on"));
-        activator1OffTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator1.off"));
-        activator2OffTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator2.off"));
-        activator3OffTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.activator3.off"));
-        blocker1Texture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.blocker1"));
-        blocker2Texture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.blocker2"));
-        blocker3Texture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.blocker3"));
+		final ITextureCache textureCache = game.getView().getTextureCache();
+		explosionAnimation = game.getView().loadFromGif(
+				getFileFromMap(map, "newton_adventure.explosion"));
+		mummyAnimation = game.getView().loadFromGif(
+				getFileFromMap(map, "newton_adventure.mummy"));
+		batAnimation = game.getView().loadFromGif(
+				getFileFromMap(map, "newton_adventure.bat"));
+		appleIconTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.apple"));
+		coinTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.coin"));
+		worldMapTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.world_map"));
+		compassTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.compass"));
+		fireBallTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.fireball"));
+		keyTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.key"));
+		closedDoorTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.door"));
+		openDoorTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.door_open"));
+		closedDoorToBonusWorldTexture = textureCache.getTexture(getFileFromMap(
+				map, "newton_adventure.door_to_bonus_world"));
+		openDoorToBonusWorldTexture = textureCache.getTexture(getFileFromMap(
+				map, "newton_adventure.door_to_bonus_world_open"));
+		mobilePikesTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.mobilePikes"));
+		axeTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.axe"));
+		activator1OnTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.activator1.on"));
+		activator2OnTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.activator2.on"));
+		activator3OnTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.activator3.on"));
+		activator1OffTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.activator1.off"));
+		activator2OffTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.activator2.off"));
+		activator3OffTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.activator3.off"));
+		blocker1Texture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.blocker1"));
+		blocker2Texture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.blocker2"));
+		blocker3Texture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.blocker3"));
 
-        for (tiled.core.MapLayer layer : map.getLayers()) {
-            if (layer instanceof tiled.core.TileLayer) {
-                tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
-                for (int x = 0; x < tileLayer.getWidth(); ++x) {
-                    for (int y = 0; y < tileLayer.getHeight(); ++y) {
-                        Tile tile = tileLayer.getTileAt(x, y);
-                        if (null != tile) {
-                            initFromTile(x - map.getWidth() / 2.0f, -y + map.getHeight() / 2.0f, map, tile);
-                        }
-                    }
-                }
-            }
-        }
-        backgroundTexture = textureCache.getTexture(getFileFromMap(map, "newton_adventure.background"));
-        this.getHero().setAnimation(game.getView().loadFromGif(getFileFromMap(map, "newton_adventure.hero")));
-        this.getHero().setJumpSound(game.getSoundCache().getSoundIfEnabled(game.getData().getFile("jump.wav")));
-        game.getSoundCache().playMusicIfEnabled(getFileFromMap(map, "newton_adventure.music"));
+		for (tiled.core.MapLayer layer : map.getLayers()) {
+			if (layer instanceof tiled.core.TileLayer) {
+				tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
+				for (int x = 0; x < tileLayer.getWidth(); ++x) {
+					for (int y = 0; y < tileLayer.getHeight(); ++y) {
+						Tile tile = tileLayer.getTileAt(x, y);
+						if (null != tile) {
+							initFromTile(x - map.getWidth() / 2.0f,
+									-y + map.getHeight() / 2.0f, map, tile);
+						}
+					}
+				}
+			}
+		}
+		backgroundTexture = textureCache.getTexture(getFileFromMap(map,
+				"newton_adventure.background"));
+		this.getHero().setAnimation(
+				game.getView().loadFromGif(
+						getFileFromMap(map, "newton_adventure.hero")));
+		this.getHero().setJumpSound(
+				game.getSoundCache().getSoundIfEnabled(
+						game.getData().getFile("jump.wav")));
+		game.getSoundCache().playMusicIfEnabled(
+				getFileFromMap(map, "newton_adventure.music"));
 
-    }
+	}
 
-    public float getGravityAngle() {
-        return gravityAngle;
-    }
+	public float getGravityAngle() {
+		return gravityAngle;
+	}
 
-    public final void progressiveRotateGravity(float angle) {
-        gravityAngle += angle;
-        Matrix2f rot = new Matrix2f(gravityAngle);
-        this.gravityVector = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0, -gravityForce));
-        setGravity(getGravityVector().x, getGravityVector().y);
-    }
+	public final void progressiveRotateGravity(float angle) {
+		gravityAngle += angle;
+		Matrix2f rot = new Matrix2f(gravityAngle);
+		this.gravityVector = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0,
+				-gravityForce));
+		setGravity(getGravityVector().x, getGravityVector().y);
+	}
 
-    public void rotateGravity(float angle) {
-        if (!nonProgressiveGravityRotationActive) {
-            this.gravityAngleTarget = this.gravityAngle + angle;
-            this.nonProgressiveGravityRotationStep = 2.0f * angle / Game.FPSf;
-            this.nonProgressiveGravityRotationActive = true;
-        }
-    }
+	public void rotateGravity(float angle) {
+		if (!nonProgressiveGravityRotationActive) {
+			this.gravityAngleTarget = this.gravityAngle + angle;
+			this.nonProgressiveGravityRotationStep = 2.0f * angle / Game.FPSf;
+			this.nonProgressiveGravityRotationActive = true;
+		}
+	}
 
-    float getGravityForce() {
-        return gravityForce;
-    }
+	float getGravityForce() {
+		return gravityForce;
+	}
 
-    private void initFromTile(float x, float y, tiled.core.Map map, tiled.core.Tile tile) throws IOException {
-        ITextureCache textureCache = game.getView().getTextureCache();
-        String c = tile.getProperties().getProperty("newton_adventure.type", "unknown");
-        if (c.equals("platform")) {
-            Platform platform = new Platform(this);
-            platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c.equals("up_right_half_platform")) {
-            UpRightHalfPlatform platform = new UpRightHalfPlatform(this);
-            platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c.equals("up_left_half_platform")) {
-            UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this);
-            platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c.equals("down_left_half_platform")) {
-            DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this);
-            platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c.equals("down_right_half_platform")) {
-            DownRightHalfPlatform platform = new DownRightHalfPlatform(this);
-            platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if (c.equals("hero")) {
-            hero.setPosition(x * Platform.size, y * Platform.size);
-            add(hero);
-        } else if (c.equals("mummy")) {
-            Mummy mummy = new Mummy(this);
-            mummy.setPosition(x * Platform.size, y * Platform.size);
-            add(mummy);
-        } else if (c.equals("bat")) {
-            Bat bat = new Bat(this);
-            bat.setPosition(x * Platform.size, y * Platform.size);
-            add(bat);
-        } else if (c.equals("apple")) {
-            Apple apple = new Apple(this);
-            ++nbCollectableApple;
-            apple.setPosition(x * Platform.size, y * Platform.size);
-            apple.setTexture(appleIconTexture);
-            add(apple);
-        } else if (c.equals("coin")) {
-            Coin coin = new Coin(this);
-            coin.setPosition(x * Platform.size, y * Platform.size);
-            coin.setTexture(coinTexture);
-            add(coin);
-        } else if (c.equals("world_map")) {
-            WorldMap worldMap = new WorldMap(this);
-            worldMap.setPosition(x * Platform.size, y * Platform.size);
-            worldMap.setTexture(worldMapTexture);
-            add(worldMap);
-        } else if (c.equals("compass")) {
-            Compass compass = new Compass(this);
-            compass.setPosition(x * Platform.size, y * Platform.size);
-            compass.setTexture(compassTexture);
-            add(compass);
-        } else if (c.equals("key")) {
-            Key key = new Key(this);
-            key.setPosition(x * Platform.size, y * Platform.size);
-            key.setTexture(keyTexture);
-            add(key);
-            keys.add(key);
-        } else if (c.equals("door")) {
-            Door door = new Door(this);
-            door.setPosition(x * Platform.size/* + Door.width / 2.0f*/, y * Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
-            door.setClosedTexture(closedDoorTexture);
-            door.setOpenTexture(openDoorTexture);
-            add(door);
-        } else if (c.equals("door_to_bonus_world")) {
-            DoorToBonusWorld door = new DoorToBonusWorld(this);
-            door.setPosition(x * Platform.size/* + Door.width / 2.0f*/, y * Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
-            door.setClosedTexture(closedDoorToBonusWorldTexture);
-            door.setOpenTexture(openDoorToBonusWorldTexture);
-            add(door);
-        } else if (c.equals("cloud")) {
-            Cloud cloud = new Cloud(this);
-            cloud.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            cloud.setPosition(x * Platform.size, y * Platform.size);
-            add(cloud);
-        } else if (c.equals("pikes_up")) {
-            Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
-            pikes.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            pikes.setPosition(x * Platform.size, y * Platform.size);
-            add(pikes);
-        } else if (c.equals("pikes_down")) {
-            Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
-            pikes.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            pikes.setPosition(x * Platform.size, y * Platform.size);
-            add(pikes);
-        } else if (c.equals("pikes_left")) {
-            Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
-            pikes.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            pikes.setPosition(x * Platform.size, y * Platform.size);
-            add(pikes);
-        } else if (c.equals("pikes_right")) {
-            Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
-            pikes.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            pikes.setPosition(x * Platform.size, y * Platform.size);
-            add(pikes);
-        } else if (c.equals("cannon_up")) {
-            Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
-            cannon.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            cannon.setPosition(x * Platform.size, y * Platform.size);
-            add(cannon);
-        } else if (c.equals("cannon_down")) {
-            Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
-            cannon.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            cannon.setPosition(x * Platform.size, y * Platform.size);
-            add(cannon);
-        } else if (c.equals("cannon_right")) {
-            Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
-            cannon.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            cannon.setPosition(x * Platform.size, y * Platform.size);
-            add(cannon);
-        } else if (c.equals("cannon_left")) {
-            Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
-            cannon.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            cannon.setPosition(x * Platform.size, y * Platform.size);
-            add(cannon);
-        } else if (c.equals("mobile_pike_anchor")) {
-            MobilePikeAnchor anchor = new MobilePikeAnchor(this);
-            anchor.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            anchor.setPosition(x * Platform.size, y * Platform.size);
-            add(anchor);
+	private void initFromTile(float x, float y, tiled.core.Map map,
+			tiled.core.Tile tile) throws IOException {
+		ITextureCache textureCache = game.getView().getTextureCache();
+		String c = tile.getProperties().getProperty("newton_adventure.type",
+				"unknown");
+		if (c.equals("platform")) {
+			Platform platform = new Platform(this);
+			platform.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setFriction(getTileFriction(tile));
+			add(platform);
+		} else if (c.equals("up_right_half_platform")) {
+			UpRightHalfPlatform platform = new UpRightHalfPlatform(this);
+			platform.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setFriction(getTileFriction(tile));
+			add(platform);
+		} else if (c.equals("up_left_half_platform")) {
+			UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this);
+			platform.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setFriction(getTileFriction(tile));
+			add(platform);
+		} else if (c.equals("down_left_half_platform")) {
+			DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this);
+			platform.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setFriction(getTileFriction(tile));
+			add(platform);
+		} else if (c.equals("down_right_half_platform")) {
+			DownRightHalfPlatform platform = new DownRightHalfPlatform(this);
+			platform.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setFriction(getTileFriction(tile));
+			add(platform);
+		} else if (c.equals("hero")) {
+			hero.setPosition(x * Platform.size, y * Platform.size);
+			add(hero);
+		} else if (c.equals("mummy")) {
+			Mummy mummy = new Mummy(this);
+			mummy.setPosition(x * Platform.size, y * Platform.size);
+			add(mummy);
+		} else if (c.equals("bat")) {
+			Bat bat = new Bat(this);
+			bat.setPosition(x * Platform.size, y * Platform.size);
+			add(bat);
+		} else if (c.equals("apple")) {
+			Apple apple = new Apple(this);
+			++nbCollectableApple;
+			apple.setPosition(x * Platform.size, y * Platform.size);
+			apple.setTexture(appleIconTexture);
+			add(apple);
+		} else if (c.equals("coin")) {
+			Coin coin = new Coin(this);
+			coin.setPosition(x * Platform.size, y * Platform.size);
+			coin.setTexture(coinTexture);
+			add(coin);
+		} else if (c.equals("world_map")) {
+			WorldMap worldMap = new WorldMap(this);
+			worldMap.setPosition(x * Platform.size, y * Platform.size);
+			worldMap.setTexture(worldMapTexture);
+			add(worldMap);
+		} else if (c.equals("compass")) {
+			Compass compass = new Compass(this);
+			compass.setPosition(x * Platform.size, y * Platform.size);
+			compass.setTexture(compassTexture);
+			add(compass);
+		} else if (c.equals("key")) {
+			Key key = new Key(this);
+			key.setPosition(x * Platform.size, y * Platform.size);
+			key.setTexture(keyTexture);
+			add(key);
+			keys.add(key);
+		} else if (c.equals("door")) {
+			Door door = new Door(this);
+			door.setPosition(x * Platform.size/* + Door.width / 2.0f */, y
+					* Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
+			door.setClosedTexture(closedDoorTexture);
+			door.setOpenTexture(openDoorTexture);
+			add(door);
+		} else if (c.equals("door_to_bonus_world")) {
+			DoorToBonusWorld door = new DoorToBonusWorld(this);
+			door.setPosition(x * Platform.size/* + Door.width / 2.0f */, y
+					* Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
+			door.setClosedTexture(closedDoorToBonusWorldTexture);
+			door.setOpenTexture(openDoorToBonusWorldTexture);
+			add(door);
+		} else if (c.equals("cloud")) {
+			Cloud cloud = new Cloud(this);
+			cloud.setTexture(textureCache.getTexture(questName, levelName, map,
+					tile));
+			cloud.setPosition(x * Platform.size, y * Platform.size);
+			add(cloud);
+		} else if (c.equals("pikes_up")) {
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
+			pikes.setTexture(textureCache.getTexture(questName, levelName, map,
+					tile));
+			pikes.setPosition(x * Platform.size, y * Platform.size);
+			add(pikes);
+		} else if (c.equals("pikes_down")) {
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
+			pikes.setTexture(textureCache.getTexture(questName, levelName, map,
+					tile));
+			pikes.setPosition(x * Platform.size, y * Platform.size);
+			add(pikes);
+		} else if (c.equals("pikes_left")) {
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
+			pikes.setTexture(textureCache.getTexture(questName, levelName, map,
+					tile));
+			pikes.setPosition(x * Platform.size, y * Platform.size);
+			add(pikes);
+		} else if (c.equals("pikes_right")) {
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
+			pikes.setTexture(textureCache.getTexture(questName, levelName, map,
+					tile));
+			pikes.setPosition(x * Platform.size, y * Platform.size);
+			add(pikes);
+		} else if (c.equals("cannon_up")) {
+			Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
+			cannon.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			cannon.setPosition(x * Platform.size, y * Platform.size);
+			add(cannon);
+		} else if (c.equals("cannon_down")) {
+			Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
+			cannon.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			cannon.setPosition(x * Platform.size, y * Platform.size);
+			add(cannon);
+		} else if (c.equals("cannon_right")) {
+			Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
+			cannon.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			cannon.setPosition(x * Platform.size, y * Platform.size);
+			add(cannon);
+		} else if (c.equals("cannon_left")) {
+			Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
+			cannon.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			cannon.setPosition(x * Platform.size, y * Platform.size);
+			add(cannon);
+		} else if (c.equals("mobile_pike_anchor")) {
+			MobilePikeAnchor anchor = new MobilePikeAnchor(this);
+			anchor.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			anchor.setPosition(x * Platform.size, y * Platform.size);
+			add(anchor);
 
-            MobilePikes pikes = new MobilePikes(this);
-            pikes.setTexture(mobilePikesTexture);
-            pikes.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY() - MobilePikes.height / 2.0f - MobilePikeAnchor.radius);
-            add(pikes);
+			MobilePikes pikes = new MobilePikes(this);
+			pikes.setTexture(mobilePikesTexture);
+			pikes.setPosition(anchor.getPosition().getX(), anchor.getPosition()
+					.getY()
+					- MobilePikes.height
+					/ 2.0f
+					- MobilePikeAnchor.radius);
+			add(pikes);
 
-            BasicJoint j = new BasicJoint(anchor, pikes, new Vector2f(anchor.getPosition()));
-            j.setRelaxation(0);
-            add(j);
-        } else if (c.equals("axe_anchor")) {
-            AxeAnchor anchor = new AxeAnchor(this);
-            anchor.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            anchor.setPosition(x * Platform.size, y * Platform.size);
-            add(anchor);
+			BasicJoint j = new BasicJoint(anchor, pikes, new Vector2f(
+					anchor.getPosition()));
+			j.setRelaxation(0);
+			add(j);
+		} else if (c.equals("axe_anchor")) {
+			AxeAnchor anchor = new AxeAnchor(this);
+			anchor.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			anchor.setPosition(x * Platform.size, y * Platform.size);
+			add(anchor);
 
-            Axe axe = new Axe(this);
-            axe.setTexture(axeTexture);
-            axe.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY() - MobilePikes.height / 2.0f - MobilePikeAnchor.radius);
-            add(axe);
+			Axe axe = new Axe(this);
+			axe.setTexture(axeTexture);
+			axe.setPosition(anchor.getPosition().getX(), anchor.getPosition()
+					.getY()
+					- MobilePikes.height
+					/ 2.0f
+					- MobilePikeAnchor.radius);
+			add(axe);
 
-            BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(anchor.getPosition()));
-            j.setRelaxation(0);
-            add(j);
-        } else if (c.equals("bounce_platform")) {
-            BouncePlatform platform = new BouncePlatform(this);
-            platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            add(platform);
-        } else if (c.equals("activator1")) {
-            Activator activator = new Activator(this, 1, activator1OnTexture, activator1OffTexture);
-            activator.setPosition(x * Platform.size, y * Platform.size);
-            add(activator);
-        } else if (c.equals("activator2")) {
-            Activator activator = new Activator(this, 2, activator2OnTexture, activator2OffTexture);
-            activator.setPosition(x * Platform.size, y * Platform.size);
-            add(activator);
-        } else if (c.equals("activator3")) {
-            Activator activator = new Activator(this, 3, activator3OnTexture, activator3OffTexture);
-            activator.setPosition(x * Platform.size, y * Platform.size);
-            add(activator);
-        } else if (c.equals("blocker1")) {
-            Blocker activable = new Blocker(this, 1);
-            activable.setTexture(blocker1Texture);
-            activable.setPosition(x * Platform.size, y * Platform.size);
-            add(activable);
-        } else if (c.equals("blocker2")) {
-            Blocker activable = new Blocker(this, 2);
-            activable.setTexture(blocker2Texture);
-            activable.setPosition(x * Platform.size, y * Platform.size);
-            add(activable);
-        } else if (c.equals("blocker3")) {
-            Blocker activable = new Blocker(this, 3);
-            activable.setTexture(blocker3Texture);
-            activable.setPosition(x * Platform.size, y * Platform.size);
-            add(activable);
-        } else if (c.equals("moving_platform")) {
-            MovingPlatform platform = new MovingPlatform(this, textureCache.getTexture(questName, levelName, map, tile), getMovingPlatformDestination(tile, x, y));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setFriction(getTileFriction(tile));
-            add(platform);
-        } else if(c.equals("teleporter")){
-            Platform teleporter = new Platform(this);
-            teleporter.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            teleporter.setPosition(x * Platform.size, y * Platform.size);
-            teleporter.setEnabled(false);
-            teleporter.setZOrder(1);
-            add(teleporter);
-        } else if (c.equals("egyptian_boss")) {
-            EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y * Platform.size);
-            boss.setBodyTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_body.png")));
-            boss.setHandTexture(textureCache.getTexture(game.getData().getFile("egyptian_boss_hand.png")));
-            add(boss);
-            add(boss.getLeftHand());
-            add(boss.getRightHand());
-        } else {
-            Platform platform = new Platform(this);
-            platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-            platform.setPosition(x * Platform.size, y * Platform.size);
-            platform.setEnabled(false);
-            add(platform);
-        }
-    }
+			BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(
+					anchor.getPosition()));
+			j.setRelaxation(0);
+			add(j);
+		} else if (c.equals("bounce_platform")) {
+			BouncePlatform platform = new BouncePlatform(this);
+			platform.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			platform.setPosition(x * Platform.size, y * Platform.size);
+			add(platform);
+		} else if (c.equals("activator1")) {
+			Activator activator = new Activator(this, 1, activator1OnTexture,
+					activator1OffTexture);
+			activator.setPosition(x * Platform.size, y * Platform.size);
+			add(activator);
+		} else if (c.equals("activator2")) {
+			Activator activator = new Activator(this, 2, activator2OnTexture,
+					activator2OffTexture);
+			activator.setPosition(x * Platform.size, y * Platform.size);
+			add(activator);
+		} else if (c.equals("activator3")) {
+			Activator activator = new Activator(this, 3, activator3OnTexture,
+					activator3OffTexture);
+			activator.setPosition(x * Platform.size, y * Platform.size);
+			add(activator);
+		} else if (c.equals("blocker1")) {
+			Blocker activable = new Blocker(this, 1);
+			activable.setTexture(blocker1Texture);
+			activable.setPosition(x * Platform.size, y * Platform.size);
+			add(activable);
+		} else if (c.equals("blocker2")) {
+			Blocker activable = new Blocker(this, 2);
+			activable.setTexture(blocker2Texture);
+			activable.setPosition(x * Platform.size, y * Platform.size);
+			add(activable);
+		} else if (c.equals("blocker3")) {
+			Blocker activable = new Blocker(this, 3);
+			activable.setTexture(blocker3Texture);
+			activable.setPosition(x * Platform.size, y * Platform.size);
+			add(activable);
+		} else if (c.equals("moving_platform")) {
+			MovingPlatform platform = new MovingPlatform(this,
+					textureCache.getTexture(questName, levelName, map, tile),
+					getMovingPlatformDestination(tile, x, y));
+			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setFriction(getTileFriction(tile));
+			add(platform);
+		} else if (c.equals("teleporter")) {
+			Teleporter teleporter = new Teleporter(this);
+			teleporter.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			teleporter.setPosition(x * Platform.size, y * Platform.size);
+			teleporter.setZOrder(1);
+			teleporter.setColor(tile.getProperties().getProperty("newton_adventure.teleporter.color"));
+			add(teleporter);
+		} else if (c.equals("egyptian_boss")) {
+			EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y
+					* Platform.size);
+			boss.setBodyTexture(textureCache.getTexture(game.getData().getFile(
+					"egyptian_boss_body.png")));
+			boss.setHandTexture(textureCache.getTexture(game.getData().getFile(
+					"egyptian_boss_hand.png")));
+			add(boss);
+			add(boss.getLeftHand());
+			add(boss.getRightHand());
+		} else {
+			Platform platform = new Platform(this);
+			platform.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setEnabled(false);
+			add(platform);
+		}
+	}
 
-    public Vector2f getGravityVector() {
-        return gravityVector;
-    }
+	public Vector2f getGravityVector() {
+		return gravityVector;
+	}
 
-    public void cheatActivateAll() {
-        final BodyList allBodies = getBodies();
-        for (int i = 0; i < allBodies.size(); ++i) {
-            Body b = allBodies.get(i);
-            if (b instanceof Blocker) {
-                Blocker a = (Blocker) b;
-                a.activate();
-            }
-        }
-    }
-    public static final float ortho2DBaseSize = World.distanceUnit * 20.0f;
-    public static final float ortho2DLeft = -ortho2DBaseSize;
-    public static final float ortho2DBottom = -ortho2DBaseSize;
-    public static final float ortho2DRight = ortho2DBaseSize;
-    public static final float ortho2DTop = ortho2DBaseSize;
-    float aspectRatio = 1.0f;
+	public void cheatActivateAll() {
+		final BodyList allBodies = getBodies();
+		for (int i = 0; i < allBodies.size(); ++i) {
+			Body b = allBodies.get(i);
+			if (b instanceof Blocker) {
+				Blocker a = (Blocker) b;
+				a.activate();
+			}
+		}
+	}
 
-    public void draw() {
-        getView().drawWorld(this);
-    }
+	public static final float ortho2DBaseSize = World.distanceUnit * 20.0f;
+	public static final float ortho2DLeft = -ortho2DBaseSize;
+	public static final float ortho2DBottom = -ortho2DBaseSize;
+	public static final float ortho2DRight = ortho2DBaseSize;
+	public static final float ortho2DTop = ortho2DBaseSize;
+	float aspectRatio = 1.0f;
 
-    public void update() throws GameOverException, TransitionException {
-        if (gotoBonusWorld) {
-            game.goToRandomBonusLevel(questName);
-        }
-        FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
-        for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {//copy to allow updatable body to be removed from list
-            u.update(frameTimeInfos);
-        }
-        topLevelEntities.update(frameTimeInfos);
-    }
+	public void draw() {
+		getView().drawWorld(this);
+	}
 
-    @Override
-    public void resolve(BodyList bodyList, float dt) {
-        super.resolve(bodyList, dt);
+	public void update() throws GameOverException, TransitionException {
+		if (gotoBonusWorld) {
+			game.goToRandomBonusLevel(questName);
+		}
+		FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
+		for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {// copy
+																		// to
+																		// allow
+																		// updatable
+																		// body
+																		// to be
+																		// removed
+																		// from
+																		// list
+			u.update(frameTimeInfos);
+		}
+		topLevelEntities.update(frameTimeInfos);
+	}
 
-        for (int i = 0; i < bodyList.size(); ++i) {
-            Body body = bodyList.get(i);
-            if (body instanceof CollisionDetectionOnly) {
-                clearArbiters(body);
-            }
-        }
-    }
+	@Override
+	public void resolve(BodyList bodyList, float dt) {
+		super.resolve(bodyList, dt);
 
-    private float getTileFriction(Tile tile) {
-        return Float.parseFloat(tile.getProperties().getProperty("newton_adventure.friction", "10"));
-    }
+		for (int i = 0; i < bodyList.size(); ++i) {
+			Body body = bodyList.get(i);
+			if (body instanceof CollisionDetectionOnly) {
+				clearArbiters(body);
+			}
+		}
+	}
 
-    private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile, float x, float y) {
-        MovingPlatform.Destinations dest = new MovingPlatform.Destinations();
-        float ax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.a.x", "-1"));
-        float ay = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.a.y", "-1"));
-        float bx = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.b.x", "1"));
-        float by = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.moving_platform.b.y", "1"));
+	private float getTileFriction(Tile tile) {
+		return Float.parseFloat(tile.getProperties().getProperty(
+				"newton_adventure.friction", "10"));
+	}
 
-        ax += x;
-        bx += x;
-        ay += y;
-        by += y;
+	private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile,
+			float x, float y) {
+		MovingPlatform.Destinations dest = new MovingPlatform.Destinations();
+		float ax = Float.parseFloat(tile.getProperties().getProperty(
+				"newton_adventure.moving_platform.a.x", "-1"));
+		float ay = Float.parseFloat(tile.getProperties().getProperty(
+				"newton_adventure.moving_platform.a.y", "-1"));
+		float bx = Float.parseFloat(tile.getProperties().getProperty(
+				"newton_adventure.moving_platform.b.x", "1"));
+		float by = Float.parseFloat(tile.getProperties().getProperty(
+				"newton_adventure.moving_platform.b.y", "1"));
 
-        ax *= Platform.size;
-        bx *= Platform.size;
-        ay *= Platform.size;
-        by *= Platform.size;
+		ax += x;
+		bx += x;
+		ay += y;
+		by += y;
 
-        dest.a.set(ax, ay);
-        dest.b.set(bx, by);
+		ax *= Platform.size;
+		bx *= Platform.size;
+		ay *= Platform.size;
+		by *= Platform.size;
 
-        return dest;
-    }
+		dest.a.set(ax, ay);
+		dest.b.set(bx, by);
 
-    public LevelScore getLevelScore() {
-        return hero.getLevelScore();
-    }
+		return dest;
+	}
 
-    IGameView getView() {
-        return game.getView();
-    }
+	public LevelScore getLevelScore() {
+		return hero.getLevelScore();
+	}
 
-    public ITexture getBackgroundTexture() {
-        return backgroundTexture;
-    }
+	IGameView getView() {
+		return game.getView();
+	}
 
-    public EntityList getTopLevelEntities() {
-        return topLevelEntities;
-    }
+	public ITexture getBackgroundTexture() {
+		return backgroundTexture;
+	}
 
-    void goToBonusWorld() {
-        gotoBonusWorld = true;
-        objectivesCompleted = true;
-    }
+	public EntityList getTopLevelEntities() {
+		return topLevelEntities;
+	}
 
-    void removeApple(Apple apple) {
-        remove(apple);
-        --nbCollectableApple;
-        if (nbCollectableApple <= 0) {
-            for (int i = 0; i < bodies.size(); ++i) {
-                Body body = bodies.get(i);
-                if (body instanceof DoorToBonusWorld) {
-                    ((DoorToBonusWorld) body).open();
-                }
-            }
-        }
-    }
+	void goToBonusWorld() {
+		gotoBonusWorld = true;
+		objectivesCompleted = true;
+	}
+
+	void removeApple(Apple apple) {
+		remove(apple);
+		--nbCollectableApple;
+		if (nbCollectableApple <= 0) {
+			for (int i = 0; i < bodies.size(); ++i) {
+				Body body = bodies.get(i);
+				if (body instanceof DoorToBonusWorld) {
+					((DoorToBonusWorld) body).open();
+				}
+			}
+		}
+	}
 
 	public List<Key> getKeys() {
 		return keys;
+	}
+
+	private Teleporter findNextTeleporter(Teleporter previousTeleporter) {
+		Teleporter firstTeleporterWithSameColor = null;
+		boolean previousTeleporterFound = false;
+
+		for (int i = 0; i < bodies.size(); ++i) {
+			Body body = bodies.get(i);
+			if (body instanceof Teleporter) {
+				Teleporter teleporter = (Teleporter) body;
+				if (teleporter.getColor().equals(previousTeleporter.getColor())) {
+					if (previousTeleporterFound)
+						return teleporter;
+					if (firstTeleporterWithSameColor == null)
+						firstTeleporterWithSameColor = teleporter;
+					if (teleporter == previousTeleporter)
+						previousTeleporterFound = true;
+
+				}
+			}
+		}
+		return firstTeleporterWithSameColor;
+	}
+
+	public void teleportFrom(Teleporter previousTeleporter) {
+		 Teleporter teleporter = findNextTeleporter(previousTeleporter);
+		 hero.setPosition(teleporter.getPosition().getX(), teleporter.getPosition().getY()+1.0f);
 	}
 }
