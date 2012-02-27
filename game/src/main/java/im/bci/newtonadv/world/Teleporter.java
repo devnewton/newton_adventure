@@ -43,7 +43,7 @@ public strictfp class Teleporter extends Platform implements CollisionDetectionO
 
     private String color;
     private boolean collideHero = false;
-    private static final long durationBeforeTeleport = 3000000000L;
+    private static final long durationBeforeTeleport = 2000000000L;
     private long teleportTime = -1;
 
     Teleporter(World world) {

@@ -109,6 +109,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	private int nbCollectableApple;
 	private boolean gotoBonusWorld;
 	private ArrayList<Key> keys = new ArrayList<Key>();
+	private ArrayList<Runnable> postStepActions = new ArrayList<Runnable>();
 
 	public boolean areObjectivesCompleted() {
 		return objectivesCompleted;
@@ -213,7 +214,15 @@ public strictfp class World extends net.phys2d.raw.World {
 		} else {
 			hero.step();
 			super.step();
+			postStep();
 		}
+	}
+
+	private void postStep() {
+		for (Runnable runnable : postStepActions) {
+			runnable.run();
+		}
+		postStepActions.clear();
 	}
 
 	private static final Properties defaultMapProperties = new Properties();
@@ -617,7 +626,8 @@ public strictfp class World extends net.phys2d.raw.World {
 					map, tile));
 			teleporter.setPosition(x * Platform.size, y * Platform.size);
 			teleporter.setZOrder(1);
-			teleporter.setColor(tile.getProperties().getProperty("newton_adventure.teleporter.color"));
+			teleporter.setColor(tile.getProperties().getProperty(
+					"newton_adventure.teleporter.color"));
 			add(teleporter);
 		} else if (c.equals("egyptian_boss")) {
 			EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y
@@ -790,7 +800,16 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public void teleportFrom(Teleporter previousTeleporter) {
-		 Teleporter teleporter = findNextTeleporter(previousTeleporter);
-		 hero.setPosition(teleporter.getPosition().getX(), teleporter.getPosition().getY()+1.0f);
+		final Teleporter teleporter = findNextTeleporter(previousTeleporter);
+		remove(hero);
+		postStepActions.add(new Runnable() {
+			public void run() {
+				hero.setEnabled(true);
+				hero.setPosition(teleporter.getPosition().getX(), teleporter
+						.getPosition().getY() + 1.0f);
+				add(hero);
+			};
+		});
+		
 	}
 }
