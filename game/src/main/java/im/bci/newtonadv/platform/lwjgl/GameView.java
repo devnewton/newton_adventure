@@ -59,6 +59,7 @@ import im.bci.newtonadv.world.Explosion;
 import im.bci.newtonadv.world.FireBall;
 import im.bci.newtonadv.world.Hero;
 import im.bci.newtonadv.world.Key;
+import im.bci.newtonadv.world.KeyLock;
 import im.bci.newtonadv.world.LosedApple;
 import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
@@ -464,7 +465,6 @@ public strictfp class GameView implements IGameView {
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
 		drawPlatform(blocker, texture);
 		GL11.glPopAttrib();
-
 	}
 
 	@Override
@@ -1569,5 +1569,16 @@ public strictfp class GameView implements IGameView {
 		GL11.glVertex2f(icon_x1, icon_y1);
 		GL11.glEnd();
 		GL11.glPopMatrix();
+	}
+
+	@Override
+	public void drawKeyLock(KeyLock keyLock, ITexture texture, float alpha) {
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
+				| GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+		drawPlatform(keyLock, texture);
+		GL11.glPopAttrib();
 	}
 }

@@ -629,6 +629,13 @@ public strictfp class World extends net.phys2d.raw.World {
 			teleporter.setColor(tile.getProperties().getProperty(
 					"newton_adventure.teleporter.color"));
 			add(teleporter);
+		}else if (c.equals("keylock")) {
+			KeyLock keylock = new KeyLock(this);
+			keylock.setTexture(textureCache.getTexture(questName, levelName,
+					map, tile));
+			keylock.setPosition(x * Platform.size, y * Platform.size);
+			keylock.setZOrder(1);
+			add(keylock);
 		} else if (c.equals("egyptian_boss")) {
 			EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y
 					* Platform.size);

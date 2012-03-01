@@ -55,6 +55,7 @@ import im.bci.newtonadv.world.Explosion;
 import im.bci.newtonadv.world.FireBall;
 import im.bci.newtonadv.world.Hero;
 import im.bci.newtonadv.world.Key;
+import im.bci.newtonadv.world.KeyLock;
 import im.bci.newtonadv.world.LosedApple;
 import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
@@ -171,4 +172,6 @@ public interface IGameView {
 	float getHeight();
 
 	void drawMinimap(World world, ITexture minimapTexture);
+
+	void drawKeyLock(KeyLock keyLock, ITexture texture, float alpha);
 }

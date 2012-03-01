@@ -29,58 +29,48 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
-import net.phys2d.raw.Body;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 
-import im.bci.newtonadv.game.AbstractDrawableBody;
-import net.phys2d.raw.shapes.Circle;
+public class KeyLock extends Platform implements Updatable {
+	private boolean opened = false;
+	private long disappearEndTime = -1;
+	private float alpha = 1.0f;
+	private static final long disappearDuration = 1000000000L;
 
-/**
- *
- * @author devnewton
- */
-public strictfp class Key extends AbstractDrawableBody {
-
-    static final float size = 2.0f * World.distanceUnit;
-    private World world;
-    private ITexture texture;
-
-    Key(World world) {
-        super(new Circle(size / 2.0f), 1.0f);
-        this.world = world;
-        setRotatable(false);
-    }
-
-    @Override
-    public void draw() {
-        world.getView().drawKey(this, texture, world);
-    }
-
-    void setTexture(ITexture texture) {
-        this.texture = texture;
-    }
-
-    @Override
-    public strictfp void collided(Body body) {
-        if (body instanceof Door) {
-            use();
-        } else if(body instanceof KeyLock) {
-        	KeyLock keyLock = (KeyLock) body;
-        	if(!keyLock.isOpened()) {
-        		keyLock.open();
-                use();
-        	}
-        }
-    }
-
-	private void use() {
-		world.remove(this);
-		world.addTopLevelEntities(new UsedKey(world, texture, getPosition()));
+	public KeyLock(World world) {
+		super(world);
 	}
 
-	public ITexture getTexture() {
-		return texture;
+	@Override
+	public void draw() {
+		world.getView().drawKeyLock(this, texture, alpha);
+	}
+
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) {
+		if (opened) {
+			if (disappearEndTime < 0)
+				disappearEndTime = frameTimeInfos.currentTime
+						+ disappearDuration;
+			else if (frameTimeInfos.currentTime < disappearEndTime) {
+				alpha = 0.5f + 0.5f
+						* (disappearEndTime - frameTimeInfos.currentTime)
+						/ disappearDuration;
+			} else {
+				this.setEnabled(false);
+			}
+		}
+	}
+
+	boolean isOpened() {
+		return opened;
+	}
+
+	public void open() {
+		this.opened = true;
 	}
 }
