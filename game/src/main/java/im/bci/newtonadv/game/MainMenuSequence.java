@@ -75,6 +75,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
 
             @Override
             void activate() throws TransitionException {
+            	resumeSequence = null;
                 throw new Sequence.TransitionException(playSequence);
             }
         };

@@ -36,6 +36,7 @@ import im.bci.newtonadv.Game;
 import java.util.List;
 
 import net.phys2d.math.ROVector2f;
+import net.phys2d.math.Vector2f;
 
 /**
  * 
@@ -60,6 +61,7 @@ public abstract class MenuSequence implements Sequence {
 	protected Game game;
 	private String backgroundImage;
 	private boolean mouseActivateCurrentButton = false;
+	private Vector2f oldMousePos = new Vector2f();
 
 	public MenuSequence(Game game) {
 		this.game = game;
@@ -136,7 +138,7 @@ public abstract class MenuSequence implements Sequence {
 		}
 
 		ROVector2f mousePos = game.getInput().getMousePos();
-		if (mousePos != null) {
+		if (null != mousePos) {
 			float viewWidth = game.getView().getWidth();
 			float viewHeight = game.getView().getHeight();
 			if (viewWidth != 0.0f && viewHeight != 0.0f) {
@@ -147,12 +149,16 @@ public abstract class MenuSequence implements Sequence {
 					if (mouseX > button.x && mouseX < (button.x + button.w)
 							&& mouseY > button.y
 							&& mouseY < (button.y + button.h)) {
-						buttons.get(currentButtonIndex).setOff();
-						currentButtonIndex = buttons.indexOf(button);
-						button.setOn();
-						if(game.getInput().isMouseButtonDown()) {
+						if ((oldMousePos.getX() != mousePos.getX() || oldMousePos
+								.getY() != mousePos.getY())
+								|| game.getInput().isMouseButtonDown()) {
+							buttons.get(currentButtonIndex).setOff();
+							currentButtonIndex = buttons.indexOf(button);
+							button.setOn();
+						}
+						if (game.getInput().isMouseButtonDown()) {
 							mouseActivateCurrentButton = true;
-						} else if(mouseActivateCurrentButton) {
+						} else if (mouseActivateCurrentButton) {
 							mouseActivateCurrentButton = false;
 							button.activate();
 						}
@@ -160,6 +166,7 @@ public abstract class MenuSequence implements Sequence {
 					}
 				}
 			}
+			oldMousePos.set(mousePos);
 		}
 	}
 
