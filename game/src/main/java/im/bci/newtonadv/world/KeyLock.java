@@ -57,11 +57,10 @@ public class KeyLock extends Platform implements Updatable {
 				disappearEndTime = frameTimeInfos.currentTime
 						+ disappearDuration;
 			else if (frameTimeInfos.currentTime < disappearEndTime) {
-				alpha = 0.5f + 0.5f
-						* (disappearEndTime - frameTimeInfos.currentTime)
-						/ disappearDuration;
+				alpha = (disappearEndTime - frameTimeInfos.currentTime)
+						/ (float)disappearDuration;
 			} else {
-				this.setEnabled(false);
+				world.remove(this);
 			}
 		}
 	}
