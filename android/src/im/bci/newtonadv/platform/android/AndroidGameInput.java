@@ -126,4 +126,16 @@ public class AndroidGameInput implements IGameInput {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public boolean isKeyCheatGetWorldMapDown() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isKeyCheatGetCompassDown() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

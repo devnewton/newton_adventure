@@ -53,6 +53,7 @@ import im.bci.newtonadv.world.Explosion;
 import im.bci.newtonadv.world.FireBall;
 import im.bci.newtonadv.world.Hero;
 import im.bci.newtonadv.world.Key;
+import im.bci.newtonadv.world.KeyLock;
 import im.bci.newtonadv.world.LosedApple;
 import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
@@ -1232,6 +1233,90 @@ public class AndroidGameView implements IGameView {
 	@Override
 	public float getHeight() {
 		return viewPortHeight;
+	}
+
+	static final float minimapSize = 32;
+	
+	@Override
+	public void drawMinimap(World world, ITexture minimapTexture) {
+		if (!world.getHero().hasMap() && !world.getHero().hasCompass()) {
+			return;
+		}
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glPushMatrix();
+		gl.glLoadIdentity();
+		gl.glOrthof(0, 100, 0, 100, -1, 1);
+		gl.glTranslatef(100 - minimapSize / 1.5f, minimapSize / 1.5f, 0);
+
+		gl.glPushMatrix();
+		gl.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float x1 = -minimapSize / 2.0f;
+		final float x2 = minimapSize / 2.0f;
+		final float y1 = -minimapSize / 2.0f;
+		final float y2 = minimapSize / 2.0f;
+		final float u1 = 0.0f, u2 = 1.0f;		
+		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+
+		if (world.getHero().hasMap()) {
+			drawTexturedTriangleFans(minimapTexture, vert, tex);
+		} else {
+			gl.glDisable(GL10.GL_TEXTURE_2D);
+			gl.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+			drawNonTexturedTriangleFans(vert);
+			gl.glEnable(GL10.GL_TEXTURE_2D);
+		}
+
+		gl.glPopMatrix();
+
+		if (world.getHero().hasCompass()) {
+			drawMinimapIcon(world, world.getHero().getPosition(), world
+					.getHero().getAnimation().getFirstTexture());
+			for (Key key : world.getKeys())
+				drawMinimapIcon(world, key.getPosition(), key.getTexture());
+		}
+		gl.glPopMatrix();
+		gl.glDisable(GL10.GL_BLEND);
+
+	}
+
+	private void drawMinimapIcon(World world, ROVector2f worldPos,
+			ITexture minimapTexture) {
+		float iconW = World.distanceUnit * 8.0f;
+		float iconH = World.distanceUnit * 8.0f;
+
+		final float x1 = -iconW / 2.0f;
+		final float x2 = iconW / 2.0f;
+		final float y1 = -iconH / 2.0f;
+		final float y2 = iconH / 2.0f;
+		float u1 = 0.0f, u2 = 1.0f;
+		gl.glPushMatrix();
+		gl.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float miniMapPlatformSize = minimapSize * 4.0f / 256.0f;// harcoded,
+																		// that's
+																		// bad!
+		gl.glScalef(miniMapPlatformSize / (World.distanceUnit * 2.0f),
+				miniMapPlatformSize / (World.distanceUnit * 2.0f), 1);
+		gl.glTranslatef(worldPos.getX(), worldPos.getY(), 0);
+		gl.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawTexturedTriangleFans(minimapTexture, vert, tex);
+		gl.glPopMatrix();		
+	}
+
+	@Override
+	public void drawKeyLock(KeyLock keyLock, ITexture texture, float alpha) {
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+		drawPlatform(keyLock, texture);
+		gl.glDisable(GL10.GL_BLEND);
+		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 }

@@ -22,7 +22,8 @@ public class AndroidGameData implements IGameData {
 	@Override
 	public List<String> listQuests() {
 		try {
-			ArrayList<String> quests = new ArrayList<String>(Arrays.asList(assets.list("quests")));
+			ArrayList<String> quests = new ArrayList<String>(
+					Arrays.asList(assets.list("quests")));
 			quests.remove("bonus");
 			return quests;
 		} catch (IOException e) {
@@ -78,5 +79,16 @@ public class AndroidGameData implements IGameData {
 	@Override
 	public InputStream openFile(String path) throws IOException {
 		return assets.open(path);
+	}
+
+	@Override
+	public boolean fileExists(String path) {
+		try {
+			assets.open(path);
+			assets.close();
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
 	}
 }

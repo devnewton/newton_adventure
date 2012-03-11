@@ -34,17 +34,17 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/data</locationURI>
+			<locationURI>NEWTON_ADVENTURE_BASEDIR/game/data</locationURI>
 		</link>
 		<link>
 			<name>lib</name>
 			<type>2</type>
-			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/lib</locationURI>
+			<locationURI>NEWTON_ADVENTURE_BASEDIR/game/lib</locationURI>
 		</link>
 		<link>
 			<name>newton_adventure_core</name>
 			<type>2</type>
-			<locationURI>NEWTON_ADVENTURE_BASEDIR/newton_adventure/src/main/java</locationURI>
+			<locationURI>NEWTON_ADVENTURE_BASEDIR/game/src/main/java</locationURI>
 		</link>
 		<link>
 			<name>.settings/lib</name>
