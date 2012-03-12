@@ -6,6 +6,8 @@ import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 import im.bci.newtonadv.platform.lwjgl.SoundCache;
 import im.bci.newtonadv.score.ScoreServer;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Controller;
+import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -44,8 +48,21 @@ public class OptionsGUI extends Widget {
 	ComboBox<String> keyRotate90CounterClockwise;
 	EditField scoreServerUrl, scorePlayer, scoreSecret;
 	ToggleButton musicEnabled;
+	ComboBox<Controller> joypad;
+	ComboBox<String> joypadXAxis;
+	ComboBox<String> joypadYAxis;
+	ComboBox<String> joypadKeyJump;
+	ComboBox<String> joypadKeyRotateClockwise;
+	ComboBox<String> joypadKeyRotateCounterClockwise;
+	ComboBox<String> joypadKeyRotate90Clockwise;
+	ComboBox<String> joypadKeyRotate90CounterClockwise;
+	ComboBox<String> joypadKeyPause;
+	ComboBox<String> joypadKeyReturn;
+	ComboBox<String> joypadKeyReturnToMenu;
+
 	private final ColumnLayout layout;
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
+	private SimpleChangableListModel<Controller> controllerModel = buildControllerListModel();
 
 	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
 			SoundCache soundCache) throws LWJGLException {
@@ -75,6 +92,19 @@ public class OptionsGUI extends Widget {
 		layout.addRow("label", "widget").addWithLabel("", fullscreen);
 		layout.addRow("label", "widget").addWithLabel("Video mode", mode);
 		layout.addRow("label", "widget").addWithLabel("Quality", quality);
+		
+		joypad = new ComboBox<Controller>(controllerModel);
+		joypad.addPropertyChangeListener("selected", new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent arg0) {
+				System.out.print("pouet");
+				
+			}
+		});
+		joypadXAxis = new ComboBox<String>();
+		joypadYAxis = new ComboBox<String>();
+		layout.addRow("label", "joypad").addWithLabel("Joypad", joypad);
 
 		keyJump = addKeyCombo(layout, "Jump", gameInput.keyJump);
 		keyLeft = addKeyCombo(layout, "Left", gameInput.keyLeft);
@@ -126,6 +156,20 @@ public class OptionsGUI extends Widget {
 				cancelPressed = true;
 			}
 		});
+	}
+
+	private SimpleChangableListModel<Controller> buildControllerListModel() {
+		try {
+			Controllers.create();
+		} catch (LWJGLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		SimpleChangableListModel<Controller> model = new SimpleChangableListModel<Controller>();
+		for(int i=0,n=Controllers.getControllerCount(); i<n; ++i) {
+			model.addElement(Controllers.getController(i));
+		}
+		return model;
 	}
 
 	@Override

@@ -35,10 +35,13 @@ package im.bci.newtonadv.platform.lwjgl;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 
+import org.lwjgl.input.Controller;
+import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -59,6 +62,18 @@ public class GameInput implements IGameInput {
 	public int keyToggleFullscreen;
 	public int keyPause;
 	public int keyReturnToMenu;
+
+	public Controller joypad;
+	public int joypadXAxis = -1;
+	public int joypadYAxis = -1;
+	public int joypadKeyJump;
+	public int joypadKeyRotateClockwise;
+	public int joypadKeyRotateCounterClockwise;
+	public int joypadKeyRotate90Clockwise;
+	public int joypadKeyRotate90CounterClockwise;
+	public int joypadKeyPause;
+	public int joypadKeyReturn;
+	public int joypadKeyReturnToMenu;
 
 	public GameInput(Properties gameConfig) throws Exception {
 		config = new Properties();
@@ -101,11 +116,74 @@ public class GameInput implements IGameInput {
 		keyToggleFullscreen = getKeyCode("key.toggle_fullscreen");
 		keyPause = getKeyCode("key.pause");
 		keyReturnToMenu = getKeyCode("key.return_to_menu");
+		setupJoypad();
+	}
+
+	private void setupJoypad() {
+		String joypadName = config.getProperty("joypad.name");
+		if (null != joypadName) {
+			for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
+				Controller controller = Controllers.getController(i);
+				if (controller.getName().equals(joypadName)) {
+					joypad = controller;
+					break;
+				}
+			}
+			if ((null != joypad)) {
+				joypadXAxis = findJoypadAxisByName(joypad,
+						config.getProperty("joypad.axis.x"));
+				joypadYAxis = findJoypadAxisByName(joypad,
+						config.getProperty("joypad.axis.y"));
+				joypadKeyJump = findJoypadButtonByName(joypad,
+						config.getProperty("joypad.button.jump"), 0);
+				joypadKeyRotateClockwise = findJoypadButtonByName(joypad,
+						config.getProperty("joypad.button.rotate_clockwise"), 1);
+				joypadKeyRotateCounterClockwise = findJoypadButtonByName(
+						joypad,
+						config.getProperty("joypad.button.rotate_counter_clockwise"),
+						2);
+				joypadKeyPause = findJoypadButtonByName(joypad,
+						config.getProperty("joypad.button.pause"), 3);
+				joypadKeyReturn = findJoypadButtonByName(joypad,
+						config.getProperty("joypad.button.ok"), 3);
+				joypadKeyReturnToMenu = findJoypadButtonByName(joypad,
+						config.getProperty("joypad.button.return_to_menu"), 4);
+				joypadKeyRotate90Clockwise = findJoypadButtonByName(
+						joypad,
+						config.getProperty("joypad.button.rotate_90_clockwise"),
+						5);
+				joypadKeyRotate90CounterClockwise = findJoypadButtonByName(
+						joypad,
+						config.getProperty("joypad.button.rotate_90_counter_clockwise"),
+						6);
+			} else {
+				Logger.getLogger(this.getClass().getName()).warning(
+						"Cannot find joypad '" + joypadName + "'");
+			}
+		}
+	}
+
+	private static int findJoypadButtonByName(Controller controller,
+			String buttonName, int defaultButton) {
+		for (int i = 0, n = controller.getButtonCount(); i < n; ++i)
+			if (controller.getButtonName(i).equals(buttonName))
+				return i;
+		return defaultButton;
+	}
+
+	private static int findJoypadAxisByName(Controller controller,
+			String axisName) {
+		for (int i = 0, n = controller.getAxisCount(); i < n; ++i)
+			if (controller.getAxisName(i).equals(axisName))
+				return i;
+		return -1;
 	}
 
 	@Override
 	public boolean isKeyReturnToMenuDown() {
-		return Keyboard.isKeyDown(keyReturnToMenu);
+		return Keyboard.isKeyDown(keyReturnToMenu)
+				|| (joypad != null && joypad
+						.isButtonPressed(joypadKeyReturnToMenu));
 	}
 
 	@Override
@@ -115,64 +193,112 @@ public class GameInput implements IGameInput {
 
 	@Override
 	public boolean isKeyPauseDown() {
-		return Keyboard.isKeyDown(keyPause);
+		return Keyboard.isKeyDown(keyPause)
+				|| (joypad != null && joypad.isButtonPressed(joypadKeyPause));
 	}
 
 	@Override
 	public boolean isKeyRotateClockwiseDown() {
-		return Keyboard.isKeyDown(keyRotateClockwise);
+		return Keyboard.isKeyDown(keyRotateClockwise)
+				|| (joypad != null && joypad
+						.isButtonPressed(joypadKeyRotateClockwise));
 	}
 
 	@Override
 	public boolean isKeyRotateCounterClockwiseDown() {
-		return Keyboard.isKeyDown(keyRotateCounterClockwise);
+		return Keyboard.isKeyDown(keyRotateCounterClockwise)
+				|| (joypad != null && joypad
+						.isButtonPressed(joypadKeyRotateCounterClockwise));
 	}
 
 	@Override
 	public boolean isKeyRotate90ClockwiseDown() {
-		return Keyboard.isKeyDown(keyRotate90Clockwise);
+		return Keyboard.isKeyDown(keyRotate90Clockwise)
+				|| (joypad != null && joypad
+						.isButtonPressed(joypadKeyRotate90Clockwise));
 	}
 
 	@Override
 	public boolean isKeyRotate90CounterClockwiseDown() {
-		return Keyboard.isKeyDown(keyRotate90CounterClockwise);
+		return Keyboard.isKeyDown(keyRotate90CounterClockwise)
+				|| (joypad != null && joypad
+						.isButtonPressed(joypadKeyRotate90CounterClockwise));
 	}
 
 	@Override
 	public boolean isKeyRightDown() {
-		return Keyboard.isKeyDown(keyRight);
+		if (Keyboard.isKeyDown(keyRight))
+			return true;
+		if (null != joypad) {
+			if (joypadXAxis < 0)
+				return joypad.getXAxisValue() > joypad.getXAxisDeadZone();
+			else
+				return joypad.getAxisValue(joypadXAxis) > joypad
+						.getDeadZone(joypadXAxis);
+		}
+		return false;
 	}
 
 	@Override
 	public boolean isKeyLeftDown() {
-		return Keyboard.isKeyDown(keyLeft);
+		if (Keyboard.isKeyDown(keyLeft))
+			return true;
+		if (null != joypad) {
+			if (joypadXAxis < 0)
+				return joypad.getXAxisValue() < -joypad.getXAxisDeadZone();
+			else
+				return joypad.getAxisValue(joypadXAxis) < -joypad
+						.getDeadZone(joypadXAxis);
+		}
+		return false;
 	}
 
 	@Override
 	public boolean isKeyJumpDown() {
-		return Keyboard.isKeyDown(keyJump);
+		return Keyboard.isKeyDown(keyJump)
+				|| (joypad != null && joypad.isButtonPressed(joypadKeyJump));
 	}
 
 	@Override
 	public boolean isKeyUpDown() {
-		return Keyboard.isKeyDown(Keyboard.KEY_UP);
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			return true;
+		}
+		if (null != joypad) {
+			if (joypadYAxis < 0)
+				return joypad.getYAxisValue() > joypad.getYAxisDeadZone();
+			else
+				return joypad.getAxisValue(joypadYAxis) > joypad
+						.getDeadZone(joypadYAxis);
+		}
+		return false;
 	}
 
 	@Override
 	public boolean isKeyDownDown() {
-		return Keyboard.isKeyDown(Keyboard.KEY_DOWN);
+		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+			return true;
+		if (null != joypad) {
+			if (joypadXAxis < 0)
+				return joypad.getYAxisValue() < -joypad.getYAxisDeadZone();
+			else
+				return joypad.getAxisValue(joypadYAxis) < -joypad
+						.getDeadZone(joypadYAxis);
+		}
+		return false;
 	}
 
 	@Override
 	public boolean isKeyReturnDown() {
-		return Keyboard.isKeyDown(Keyboard.KEY_RETURN);
+		return Keyboard.isKeyDown(Keyboard.KEY_RETURN)
+				|| (joypad != null && joypad.isButtonPressed(joypadKeyReturn));
 	}
-	
+
 	@Override
 	public boolean isKeyCheatGotoNextLevelDown() {
 		return Keyboard.isKeyDown(Keyboard.KEY_F12);
 	}
-	
+
 	@Override
 	public boolean isKeyCheatActivateAllDown() {
 		return Keyboard.isKeyDown(Keyboard.KEY_F11);
@@ -182,7 +308,7 @@ public class GameInput implements IGameInput {
 	public boolean isKeyCheatGotoNextBonusLevelDown() {
 		return Keyboard.isKeyDown(Keyboard.KEY_F10);
 	}
-	
+
 	@Override
 	public boolean isKeyCheatGetWorldMapDown() {
 		return Keyboard.isKeyDown(Keyboard.KEY_F9);
@@ -195,7 +321,7 @@ public class GameInput implements IGameInput {
 
 	@Override
 	public ROVector2f getMousePos() {
-		return new Vector2f(Mouse.getX(),Mouse.getY());
+		return new Vector2f(Mouse.getX(), Mouse.getY());
 	}
 
 	@Override
