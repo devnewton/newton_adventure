@@ -6,8 +6,6 @@ import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 import im.bci.newtonadv.platform.lwjgl.SoundCache;
 import im.bci.newtonadv.score.ScoreServer;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,30 +37,27 @@ public class OptionsGUI extends Widget {
 	ToggleButton fullscreen;
 	ComboBox<DisplayMode> mode;
 	ComboBox<GameViewQuality> quality;
-	ComboBox<String> keyJump;
-	ComboBox<String> keyLeft;
-	ComboBox<String> keyRight;
-	ComboBox<String> keyRotateClockwise;
-	ComboBox<String> keyRotateCounterClockwise;
-	ComboBox<String> keyRotate90Clockwise;
-	ComboBox<String> keyRotate90CounterClockwise;
+	InputChoice keyJump;
+	InputChoice keyLeft;
+	InputChoice keyRight;
+	InputChoice keyRotateClockwise;
+	InputChoice keyRotateCounterClockwise;
+	InputChoice keyRotate90Clockwise;
+	InputChoice keyRotate90CounterClockwise;
+	InputChoice keyPause;
+	InputChoice keyReturn;
+	InputChoice keyReturnToMenu;
 	EditField scoreServerUrl, scorePlayer, scoreSecret;
 	ToggleButton musicEnabled;
 	ComboBox<Controller> joypad;
 	ComboBox<String> joypadXAxis;
 	ComboBox<String> joypadYAxis;
-	ComboBox<String> joypadKeyJump;
-	ComboBox<String> joypadKeyRotateClockwise;
-	ComboBox<String> joypadKeyRotateCounterClockwise;
-	ComboBox<String> joypadKeyRotate90Clockwise;
-	ComboBox<String> joypadKeyRotate90CounterClockwise;
-	ComboBox<String> joypadKeyPause;
-	ComboBox<String> joypadKeyReturn;
-	ComboBox<String> joypadKeyReturnToMenu;
 
 	private final ColumnLayout layout;
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
 	private SimpleChangableListModel<Controller> controllerModel = buildControllerListModel();
+	private SimpleChangableListModel<String> joyAxisModel = new SimpleChangableListModel<String>();
+	private SimpleChangableListModel<String> joyButtonModel = new SimpleChangableListModel<String>();
 
 	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
 			SoundCache soundCache) throws LWJGLException {
@@ -92,32 +87,66 @@ public class OptionsGUI extends Widget {
 		layout.addRow("label", "widget").addWithLabel("", fullscreen);
 		layout.addRow("label", "widget").addWithLabel("Video mode", mode);
 		layout.addRow("label", "widget").addWithLabel("Quality", quality);
-		
+
 		joypad = new ComboBox<Controller>(controllerModel);
-		joypad.addPropertyChangeListener("selected", new PropertyChangeListener() {
-			
+		joypad.setNoSelectionIsError(false);
+		joypad.addCallback(new Runnable() {
+
 			@Override
-			public void propertyChange(PropertyChangeEvent arg0) {
-				System.out.print("pouet");
-				
+			public void run() {
+				Controller controller = joypad.getModel().getEntry(
+						joypad.getSelected());
+				controllerSelected(controller);
 			}
 		});
-		joypadXAxis = new ComboBox<String>();
-		joypadYAxis = new ComboBox<String>();
+		joypadXAxis = new ComboBox<String>(joyAxisModel);
+		joypadYAxis = new ComboBox<String>(joyAxisModel);
 		layout.addRow("label", "joypad").addWithLabel("Joypad", joypad);
+		Row rowJoypadAxis = layout.addRow("label", "xaxis", "yaxis");
+		rowJoypadAxis.addLabel("Joypad XY axis").add(joypadXAxis)
+				.add(joypadYAxis);
+		if (null != gameInput.joypad) {
+			int joypadIndex = controllerModel.findElement(gameInput.joypad);
+			joypad.setSelected(joypadIndex);
+			controllerSelected(gameInput.joypad);
+			if (gameInput.joypadXAxis >= 0
+					&& gameInput.joypadXAxis < gameInput.joypad.getAxisCount()) {
+				joypadXAxis.setSelected(joyAxisModel
+						.findElement(gameInput.joypad
+								.getAxisName(gameInput.joypadXAxis)));
+			}
+			if (gameInput.joypadYAxis >= 0
+					&& gameInput.joypadYAxis < gameInput.joypad.getAxisCount()) {
+				joypadYAxis.setSelected(joyAxisModel
+						.findElement(gameInput.joypad
+								.getAxisName(gameInput.joypadYAxis)));
+			}
+		}
 
-		keyJump = addKeyCombo(layout, "Jump", gameInput.keyJump);
-		keyLeft = addKeyCombo(layout, "Left", gameInput.keyLeft);
-		keyRight = addKeyCombo(layout, "Right", gameInput.keyRight);
-		keyRotateClockwise = addKeyCombo(layout, "Rotate clockwise",
-				gameInput.keyRotateClockwise);
-		keyRotateCounterClockwise = addKeyCombo(layout,
-				"Rotate counter clockwise", gameInput.keyRotateCounterClockwise);
-		keyRotate90Clockwise = addKeyCombo(layout, "Rotate 90 clockwise",
-				gameInput.keyRotate90Clockwise);
-		keyRotate90CounterClockwise = addKeyCombo(layout,
+		keyJump = addInputChoice(layout, "Jump", gameInput.keyJump,
+				gameInput.joypadKeyJump);
+		keyLeft = addInputChoice(layout, "Left", gameInput.keyLeft, gameInput.joypadKeyLeft);
+		keyRight = addInputChoice(layout, "Right", gameInput.keyRight, gameInput.joypadKeyRight);
+		keyRotateClockwise = addInputChoice(layout, "Rotate clockwise",
+				gameInput.keyRotateClockwise,
+				gameInput.joypadKeyRotateClockwise);
+		keyRotateCounterClockwise = addInputChoice(layout,
+				"Rotate counter clockwise",
+				gameInput.keyRotateCounterClockwise,
+				gameInput.joypadKeyRotateCounterClockwise);
+		keyRotate90Clockwise = addInputChoice(layout, "Rotate 90 clockwise",
+				gameInput.keyRotate90Clockwise,
+				gameInput.joypadKeyRotate90Clockwise);
+		keyRotate90CounterClockwise = addInputChoice(layout,
 				"Rotate 90 counter clockwise",
-				gameInput.keyRotate90CounterClockwise);
+				gameInput.keyRotate90CounterClockwise,
+				gameInput.joypadKeyRotate90CounterClockwise);
+		keyPause = addInputChoice(layout, "Pause", gameInput.keyPause,
+				gameInput.joypadKeyPause);
+		keyReturn = addInputChoice(layout, "Return", gameInput.keyReturn,
+				gameInput.joypadKeyReturn);
+		keyReturnToMenu = addInputChoice(layout, "Return to menu",
+				gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
 
 		scoreServerUrl = new EditField();
 		scoreServerUrl.setText(scoreServer.getServerUrl());
@@ -158,15 +187,23 @@ public class OptionsGUI extends Widget {
 		});
 	}
 
-	private SimpleChangableListModel<Controller> buildControllerListModel() {
-		try {
-			Controllers.create();
-		} catch (LWJGLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private void controllerSelected(Controller controller) {
+		joyAxisModel.clear();
+		joyButtonModel.clear();
+
+		if (null != controller) {
+			for (int i = 0, n = controller.getAxisCount(); i < n; ++i) {
+				joyAxisModel.addElement(controller.getAxisName(i));
+			}
+			for (int i = 0, n = controller.getButtonCount(); i < n; ++i) {
+				joyButtonModel.addElement(controller.getButtonName(i));
+			}
 		}
+	}
+
+	private SimpleChangableListModel<Controller> buildControllerListModel() {
 		SimpleChangableListModel<Controller> model = new SimpleChangableListModel<Controller>();
-		for(int i=0,n=Controllers.getControllerCount(); i<n; ++i) {
+		for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
 			model.addElement(Controllers.getController(i));
 		}
 		return model;
@@ -178,13 +215,24 @@ public class OptionsGUI extends Widget {
 				(getHeight() - layout.getPreferredHeight()) / 2);
 	}
 
-	private ComboBox<String> addKeyCombo(ColumnLayout layout, String label,
-			int key) {
-		ComboBox<String> combo = new ComboBox<String>(keyModel);
-		Row rowKeys = layout.addRow("label", "key");
-		rowKeys.addWithLabel(label, combo);
-		combo.setSelected(keyModel.findElement((Keyboard.getKeyName(key))));
-		return combo;
+	public class InputChoice {
+		ComboBox<String> key;
+		ComboBox<String> joyButton;
+	}
+
+	private InputChoice addInputChoice(ColumnLayout layout, String label,
+			int key, int button) {
+		InputChoice choice = new InputChoice();
+		choice.key = new ComboBox<String>(keyModel);
+		choice.joyButton = new ComboBox<String>(joyButtonModel);
+		Row rowKeys = layout.addRow("label", "key", "joyButton");
+		rowKeys.addLabel(label).add(choice.key).add(choice.joyButton);
+		choice.key
+				.setSelected(keyModel.findElement((Keyboard.getKeyName(key))));
+		if (button >= 0 && button < choice.joyButton.getModel().getNumEntries()) {
+			choice.joyButton.setSelected(button);
+		}
+		return choice;
 	}
 
 	private static SimpleChangableListModel<String> buildKeyListModel() {

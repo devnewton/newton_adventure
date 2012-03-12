@@ -7,11 +7,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
+import de.matthiasmann.twl.ComboBox;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
@@ -22,6 +24,7 @@ import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 import im.bci.newtonadv.platform.lwjgl.PlatformFactory;
 import im.bci.newtonadv.platform.lwjgl.SoundCache;
+import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.io.FileOutputStream;
@@ -110,34 +113,87 @@ public class OptionsSequence implements IOptionsSequence {
 	private void applyOptions() throws LWJGLException {
 		view.setDisplayMode(optionsGui.fullscreen.isActive(),
 				getSelectedQuality(), getSelectedMode());
-		input.keyJump = Keyboard.getKeyIndex(optionsGui.keyJump.getModel()
-				.getEntry(optionsGui.keyJump.getSelected()));
-		input.keyLeft = Keyboard.getKeyIndex(optionsGui.keyLeft.getModel()
-				.getEntry(optionsGui.keyLeft.getSelected()));
-		input.keyRight = Keyboard.getKeyIndex(optionsGui.keyRight.getModel()
-				.getEntry(optionsGui.keyRight.getSelected()));
-		input.keyRotate90Clockwise = Keyboard
-				.getKeyIndex(optionsGui.keyRotate90Clockwise
-						.getModel()
-						.getEntry(optionsGui.keyRotate90Clockwise.getSelected()));
-		input.keyRotate90CounterClockwise = Keyboard
-				.getKeyIndex(optionsGui.keyRotate90CounterClockwise.getModel()
-						.getEntry(
-								optionsGui.keyRotate90CounterClockwise
-										.getSelected()));
-		input.keyRotateClockwise = Keyboard
-				.getKeyIndex(optionsGui.keyRotateClockwise.getModel().getEntry(
-						optionsGui.keyRotateClockwise.getSelected()));
-		input.keyRotateCounterClockwise = Keyboard
-				.getKeyIndex(optionsGui.keyRotateCounterClockwise.getModel()
-						.getEntry(
-								optionsGui.keyRotateCounterClockwise
-										.getSelected()));
+		input.keyJump = findKeyIndex(optionsGui.keyJump);
+		input.keyLeft = findKeyIndex(optionsGui.keyLeft);
+		input.keyRight = findKeyIndex(optionsGui.keyRight);
+		input.keyRotate90Clockwise = findKeyIndex(optionsGui.keyRotate90Clockwise);
+		input.keyRotate90CounterClockwise = findKeyIndex(optionsGui.keyRotate90CounterClockwise);
+		input.keyRotateClockwise = findKeyIndex(optionsGui.keyRotateClockwise);
+		input.keyRotateCounterClockwise = findKeyIndex(optionsGui.keyRotateCounterClockwise);
+		input.keyPause = findKeyIndex(optionsGui.keyPause);
+		input.keyReturn = findKeyIndex(optionsGui.keyReturn);
+		input.keyReturnToMenu = findKeyIndex(optionsGui.keyReturnToMenu);
+		if (optionsGui.joypad.getSelected() >= 0
+				&& optionsGui.joypad.getSelected() < optionsGui.joypad
+						.getModel().getNumEntries()) {
+			input.joypad = optionsGui.joypad.getModel().getEntry(
+					optionsGui.joypad.getSelected());
+			if (null != input.joypad) {
+				input.joypadXAxis = findJoypadAxisIndex(input.joypad,
+						optionsGui.joypadXAxis);
+				input.joypadYAxis = findJoypadAxisIndex(input.joypad,
+						optionsGui.joypadYAxis);
+				input.joypadKeyJump = findJoypadButtonIndex(input.joypad,
+						optionsGui.keyJump);
+				input.joypadKeyLeft = findJoypadButtonIndex(input.joypad,
+						optionsGui.keyLeft);
+				input.joypadKeyRight = findJoypadButtonIndex(input.joypad,
+						optionsGui.keyRight);
+				input.joypadKeyPause = findJoypadButtonIndex(input.joypad,
+						optionsGui.keyPause);
+				input.joypadKeyReturn = findJoypadButtonIndex(input.joypad,
+						optionsGui.keyReturn);
+				input.joypadKeyReturnToMenu = findJoypadButtonIndex(
+						input.joypad, optionsGui.keyReturnToMenu);
+				input.joypadKeyRotate90Clockwise = findJoypadButtonIndex(
+						input.joypad, optionsGui.keyRotate90Clockwise);
+				input.joypadKeyRotate90CounterClockwise = findJoypadButtonIndex(
+						input.joypad, optionsGui.keyRotate90CounterClockwise);
+				input.joypadKeyRotateClockwise = findJoypadButtonIndex(
+						input.joypad, optionsGui.keyRotateClockwise);
+				input.joypadKeyRotateCounterClockwise = findJoypadButtonIndex(
+						input.joypad, optionsGui.keyRotateCounterClockwise);
+			}
+		} else {
+			input.joypad = null;
+		}
 		scoreServer.setPlayer(optionsGui.scorePlayer.getText());
 		scoreServer.setSecret(optionsGui.scoreSecret.getText());
 		scoreServer.setServerUrl(optionsGui.scoreServerUrl.getText());
 		soundCache.setSoundEnabled(optionsGui.soundEnabled.isActive());
 		soundCache.setMusicEnabled(optionsGui.musicEnabled.isActive());
+	}
+
+	private int findJoypadAxisIndex(Controller controller,
+			ComboBox<String> joypadAxis) {
+		if (joypadAxis.getSelected() >= 0
+				&& joypadAxis.getSelected() < joypadAxis.getModel()
+						.getNumEntries()) {
+			String axisName = joypadAxis.getModel().getEntry(
+					joypadAxis.getSelected());
+			return GameInput.findJoypadAxisByName(controller, axisName);
+		} else {
+			return -1;
+		}
+	}
+
+	private static int findKeyIndex(InputChoice c) {
+		return Keyboard.getKeyIndex(c.key.getModel().getEntry(
+				c.key.getSelected()));
+	}
+
+	private static int findJoypadButtonIndex(Controller controller,
+			InputChoice c) {
+		ComboBox<String> joyButton = c.joyButton;
+		if (joyButton.getSelected() >= 0
+				&& joyButton.getSelected() < joyButton.getModel()
+						.getNumEntries()) {
+			String buttonName = joyButton.getModel().getEntry(
+					joyButton.getSelected());
+			return GameInput.findJoypadButtonByName(controller, buttonName);
+		} else {
+			return -1;
+		}
 	}
 
 	DisplayMode getSelectedMode() {
@@ -207,12 +263,58 @@ public class OptionsSequence implements IOptionsSequence {
 				getKeyFieldName(input.keyRotate90Clockwise));
 		config.setProperty("key.rotate_90_counter_clockwise",
 				getKeyFieldName(input.keyRotate90CounterClockwise));
+		config.setProperty("key.return", getKeyFieldName(input.keyReturn));
+		config.setProperty("key.return_to_menu",
+				getKeyFieldName(input.keyReturnToMenu));
+		config.setProperty("key.pause", getKeyFieldName(input.keyPause));
+		config.setProperty("joypad.name",
+				null != input.joypad ? input.joypad.getName() : null);
+		config.setProperty("joypad.axis.x",
+				getJoypadAxisName(input.joypadXAxis));
+		config.setProperty("joypad.axis.y",
+				getJoypadAxisName(input.joypadYAxis));
+		config.setProperty("joypad.button.left",
+				getJoypadButtonName(input.joypadKeyLeft));
+		config.setProperty("joypad.button.right",
+				getJoypadButtonName(input.joypadKeyRight));
+		config.setProperty("joypad.button.jump",
+				getJoypadButtonName(input.joypadKeyJump));
+		config.setProperty("joypad.button.pause",
+				getJoypadButtonName(input.joypadKeyPause));
+		config.setProperty("joypad.button.return",
+				getJoypadButtonName(input.joypadKeyReturn));
+		config.setProperty("joypad.button.return_to_menu",
+				getJoypadButtonName(input.joypadKeyReturnToMenu));
+		config.setProperty("joypad.button.rotate_clockwise",
+				getJoypadButtonName(input.joypadKeyRotateClockwise));
+		config.setProperty("joypad.button.rotate_counter_clockwise",
+				getJoypadButtonName(input.joypadKeyRotateCounterClockwise));
+		config.setProperty("joypad.button.rotate_90_clockwise",
+				getJoypadButtonName(input.joypadKeyRotate90Clockwise));
+		config.setProperty("joypad.button.rotate_90_counter_clockwise",
+				getJoypadButtonName(input.joypadKeyRotate90CounterClockwise));
 
 		config.setProperty("scoreserver.url", scoreServer.getServerUrl());
 		config.setProperty("scoreserver.player", scoreServer.getPlayer());
 		config.setProperty("scoreserver.secret", scoreServer.getSecret());
 		config.setProperty("sound.enabled", "" + soundCache.isSoundEnabled());
 		config.setProperty("music.enabled", "" + soundCache.isMusicEnabled());
+	}
+
+	private String getJoypadAxisName(int joypadXAxis) {
+		if (null != input.joypad && joypadXAxis >= 0
+				&& joypadXAxis < input.joypad.getAxisCount()) {
+			return input.joypad.getAxisName(joypadXAxis);
+		}
+		return "";
+	}
+
+	private String getJoypadButtonName(int joypadButton) {
+		if (null != input.joypad && joypadButton >= 0
+				&& joypadButton < input.joypad.getButtonCount()) {
+			return input.joypad.getButtonName(joypadButton);
+		}
+		return "";
 	}
 
 	private String getKeyFieldName(int key) {

@@ -77,7 +77,9 @@ public class Main {
 			if (!nativeDir.exists())
 				nativeDir = new File("native" + File.separator + osDir);
 
-			System.setProperty("org.lwjgl.librarypath", nativeDir.getCanonicalPath());
+			String nativePath = nativeDir.getCanonicalPath();
+			System.setProperty("org.lwjgl.librarypath", nativePath);
+			System.setProperty("net.java.games.input.librarypath", nativePath);
 		} catch (IOException e) {
 			Logger.getLogger(Main.class.getName())
 					.log(Level.WARNING,
