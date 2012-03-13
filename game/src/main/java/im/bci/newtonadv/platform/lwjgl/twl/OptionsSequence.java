@@ -24,6 +24,7 @@ import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 import im.bci.newtonadv.platform.lwjgl.PlatformFactory;
 import im.bci.newtonadv.platform.lwjgl.SoundCache;
+import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
 import im.bci.newtonadv.score.ScoreServer;
 
@@ -126,8 +127,9 @@ public class OptionsSequence implements IOptionsSequence {
 		if (optionsGui.joypad.getSelected() >= 0
 				&& optionsGui.joypad.getSelected() < optionsGui.joypad
 						.getModel().getNumEntries()) {
-			input.joypad = optionsGui.joypad.getModel().getEntry(
+			ControllerItem controllerItem = optionsGui.joypad.getModel().getEntry(
 					optionsGui.joypad.getSelected());
+			input.joypad = null != controllerItem ? controllerItem.getController() : null;
 			if (null != input.joypad) {
 				input.joypadXAxis = findJoypadAxisIndex(input.joypad,
 						optionsGui.joypadXAxis);
@@ -268,7 +270,7 @@ public class OptionsSequence implements IOptionsSequence {
 				getKeyFieldName(input.keyReturnToMenu));
 		config.setProperty("key.pause", getKeyFieldName(input.keyPause));
 		config.setProperty("joypad.name",
-				null != input.joypad ? input.joypad.getName() : null);
+				null != input.joypad ? input.joypad.getName() : "");
 		config.setProperty("joypad.axis.x",
 				getJoypadAxisName(input.joypadXAxis));
 		config.setProperty("joypad.axis.y",

@@ -49,13 +49,13 @@ public class OptionsGUI extends Widget {
 	InputChoice keyReturnToMenu;
 	EditField scoreServerUrl, scorePlayer, scoreSecret;
 	ToggleButton musicEnabled;
-	ComboBox<Controller> joypad;
+	ComboBox<ControllerItem> joypad;
 	ComboBox<String> joypadXAxis;
 	ComboBox<String> joypadYAxis;
 
 	private final ColumnLayout layout;
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
-	private SimpleChangableListModel<Controller> controllerModel = buildControllerListModel();
+	private SimpleChangableListModel<ControllerItem> controllerModel = buildControllerListModel();
 	private SimpleChangableListModel<String> joyAxisModel = new SimpleChangableListModel<String>();
 	private SimpleChangableListModel<String> joyButtonModel = new SimpleChangableListModel<String>();
 
@@ -88,15 +88,15 @@ public class OptionsGUI extends Widget {
 		layout.addRow("label", "widget").addWithLabel("Video mode", mode);
 		layout.addRow("label", "widget").addWithLabel("Quality", quality);
 
-		joypad = new ComboBox<Controller>(controllerModel);
+		joypad = new ComboBox<ControllerItem>(controllerModel);
 		joypad.setNoSelectionIsError(false);
 		joypad.addCallback(new Runnable() {
 
 			@Override
 			public void run() {
-				Controller controller = joypad.getModel().getEntry(
+				ControllerItem item = joypad.getModel().getEntry(
 						joypad.getSelected());
-				controllerSelected(controller);
+				controllerSelected(item.getController());
 			}
 		});
 		joypadXAxis = new ComboBox<String>(joyAxisModel);
@@ -106,7 +106,8 @@ public class OptionsGUI extends Widget {
 		rowJoypadAxis.addLabel("Joypad XY axis").add(joypadXAxis)
 				.add(joypadYAxis);
 		if (null != gameInput.joypad) {
-			int joypadIndex = controllerModel.findElement(gameInput.joypad);
+			int joypadIndex = controllerModel.findElement(new ControllerItem(
+					gameInput.joypad));
 			joypad.setSelected(joypadIndex);
 			controllerSelected(gameInput.joypad);
 			if (gameInput.joypadXAxis >= 0
@@ -125,8 +126,10 @@ public class OptionsGUI extends Widget {
 
 		keyJump = addInputChoice(layout, "Jump", gameInput.keyJump,
 				gameInput.joypadKeyJump);
-		keyLeft = addInputChoice(layout, "Left", gameInput.keyLeft, gameInput.joypadKeyLeft);
-		keyRight = addInputChoice(layout, "Right", gameInput.keyRight, gameInput.joypadKeyRight);
+		keyLeft = addInputChoice(layout, "Left", gameInput.keyLeft,
+				gameInput.joypadKeyLeft);
+		keyRight = addInputChoice(layout, "Right", gameInput.keyRight,
+				gameInput.joypadKeyRight);
 		keyRotateClockwise = addInputChoice(layout, "Rotate clockwise",
 				gameInput.keyRotateClockwise,
 				gameInput.joypadKeyRotateClockwise);
@@ -201,10 +204,36 @@ public class OptionsGUI extends Widget {
 		}
 	}
 
-	private SimpleChangableListModel<Controller> buildControllerListModel() {
-		SimpleChangableListModel<Controller> model = new SimpleChangableListModel<Controller>();
+	public static class ControllerItem {
+		private Controller controller;
+
+		ControllerItem(Controller controller) {
+			this.controller = controller;
+		}
+
+		public Controller getController() {
+			return controller;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof ControllerItem) {
+				return controller.equals(((ControllerItem) o).getController());
+			} else {
+				return super.equals(o);
+			}
+		}
+
+		@Override
+		public String toString() {
+			return controller.getName();
+		}
+	}
+
+	private SimpleChangableListModel<ControllerItem> buildControllerListModel() {
+		SimpleChangableListModel<ControllerItem> model = new SimpleChangableListModel<ControllerItem>();
 		for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
-			model.addElement(Controllers.getController(i));
+			model.addElement(new ControllerItem(Controllers.getController(i)));
 		}
 		return model;
 	}
