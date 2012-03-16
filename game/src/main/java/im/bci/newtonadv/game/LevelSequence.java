@@ -217,4 +217,8 @@ strictfp public class LevelSequence implements Sequence {
 	public void setNextSequence(Sequence nextSequence) {
 		this.nextSequence = nextSequence;
 	}
+
+	public Object getLevelName() {
+		return this.levelName;
+	}
 }

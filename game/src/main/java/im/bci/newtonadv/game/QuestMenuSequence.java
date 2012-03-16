@@ -125,4 +125,13 @@ public class QuestMenuSequence extends MenuSequence {
 		questButton.h = QUEST_MINIATURE_HEIGHT;
 		addButton(questButton);
 	}
+
+	public void gotoLevel(String newQuestName, String newLevelName) throws TransitionException {
+		for(QuestSequence quest: quests) {
+			if(quest.getQuestName().equals(newLevelName)) {
+				quest.gotoLevel(newLevelName);
+			}
+		}
+		
+	}
 }

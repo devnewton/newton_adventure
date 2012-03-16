@@ -107,9 +107,15 @@ public strictfp class World extends net.phys2d.raw.World {
 	private final String questName;
 	private final String levelName;
 	private int nbCollectableApple;
-	private boolean gotoBonusWorld;
 	private ArrayList<Key> keys = new ArrayList<Key>();
 	private ArrayList<Runnable> postStepActions = new ArrayList<Runnable>();
+	private ArrayList<PostUpdateAction> postUpdateActions = new ArrayList<PostUpdateAction>();
+
+	public static interface PostUpdateAction {
+
+		public void run() throws TransitionException;
+
+	}
 
 	public boolean areObjectivesCompleted() {
 		return objectivesCompleted;
@@ -629,7 +635,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			teleporter.setColor(tile.getProperties().getProperty(
 					"newton_adventure.teleporter.color"));
 			add(teleporter);
-		}else if (c.equals("keylock")) {
+		} else if (c.equals("keylock")) {
 			KeyLock keylock = new KeyLock(this);
 			keylock.setTexture(textureCache.getTexture(questName, levelName,
 					map, tile));
@@ -683,9 +689,6 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public void update() throws GameOverException, TransitionException {
-		if (gotoBonusWorld) {
-			game.goToRandomBonusLevel(questName);
-		}
 		FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
 		for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {// copy
 																		// to
@@ -699,6 +702,14 @@ public strictfp class World extends net.phys2d.raw.World {
 			u.update(frameTimeInfos);
 		}
 		topLevelEntities.update(frameTimeInfos);
+
+		try {
+			for (PostUpdateAction action : postUpdateActions) {
+				action.run();
+			}
+		} finally {
+			postUpdateActions.clear();
+		}
 	}
 
 	@Override
@@ -763,8 +774,13 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	void goToBonusWorld() {
-		gotoBonusWorld = true;
-		objectivesCompleted = true;
+		postUpdateActions.add(new PostUpdateAction() {
+			
+			@Override
+			public void run() throws TransitionException {
+				game.goToRandomBonusLevel(questName);				
+			}
+		});
 	}
 
 	void removeApple(Apple apple) {
@@ -817,6 +833,16 @@ public strictfp class World extends net.phys2d.raw.World {
 				add(hero);
 			};
 		});
-		
+
+	}
+
+	public void gotoLevel(final String newQuestName, final String newLevelName) {
+		postUpdateActions.add(new PostUpdateAction() {
+			
+			@Override
+			public void run() throws TransitionException {
+				game.gotoLevel(newQuestName,newLevelName);				
+			}
+		});
 	}
 }

@@ -45,10 +45,12 @@ public class QuestSequence implements Sequence {
     List<LevelSequence> levels;
     private Sequence nextSequence;
     private ScoreSequence scoreSequence;
+	private final String questName;
 
-    public QuestSequence(Game game, String questDirectory) {
+    public QuestSequence(Game game, String questName) {
         this.game = game;
-        loadLevels(questDirectory);
+        this.questName = questName;
+        loadLevels(questName);
     }
 
     @Override
@@ -99,4 +101,17 @@ public class QuestSequence implements Sequence {
             scoreSequence.setNextSequence(nextSequence);
         }
     }
+
+	public String getQuestName() {
+		return this.questName;
+	}
+
+	public void gotoLevel(String newLevelName) throws TransitionException {
+		for(LevelSequence level: levels) {
+			if(level.getLevelName().equals(newLevelName)) {
+				throw new TransitionException(new FadeSequence(this.game, level, 1, 1, 1, 1000000000L));
+			}
+		}
+		
+	}
 }

@@ -76,6 +76,7 @@ public strictfp class Game {
     private List<BonusSequence> bonusSequences;
     private BonusSequence lastBonusSequence;
 	private IOptionsSequence optionsSequence;
+	private QuestMenuSequence questMenuSequence;
 
     public Properties getConfig() {
         return config;
@@ -155,7 +156,7 @@ public strictfp class Game {
 
     Sequence setupSequences() {
         Sequence outroSequence = new StoryboardSequence(this, data.getFile("outro.jpg"), data.getFile("The_End.ogg"), null);
-        QuestMenuSequence questMenuSequence = new QuestMenuSequence(this);
+        this.questMenuSequence = new QuestMenuSequence(this);
         mainMenuSequence = new MainMenuSequence(this, questMenuSequence, outroSequence, optionsSequence);
         questMenuSequence.setNextSequence(mainMenuSequence);
         if(null != optionsSequence)
@@ -246,5 +247,9 @@ public strictfp class Game {
 
 	public ScoreServer getScoreServer() {
 		return scoreServer;
+	}
+	
+	public void gotoLevel(String newQuestName, String newLevelName) throws TransitionException {
+		this.questMenuSequence.gotoLevel(newQuestName,newLevelName);		
 	}
 }
