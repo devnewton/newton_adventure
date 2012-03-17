@@ -38,84 +38,83 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 
 class MemoryActivator extends Platform implements Updatable {
-    private final int activableId;
-    private final ITexture onTexture, offTexture, hiddenTexture;
-    private State state = State.HIDDEN;
-    private long showEndTime = -1;
-    private static final long showDuration = 1000000000L;
-    
-    enum State {
-    	HIDDEN,
-    	SHOW,
-    	ACTIVATED
-    }
+	private final int activableId;
+	private final ITexture onTexture, offTexture, hiddenTexture;
+	private State state = State.HIDDEN;
+	private long showEndTime = -1;
+	private static final long showDuration = 5000000000L;
 
-    MemoryActivator(World world, int activableId, ITexture onTexture, ITexture offTexture, ITexture hiddenTexture) {
-        super(world);
-        this.activableId = activableId;
-        this.offTexture = offTexture;
-        this.onTexture = onTexture;
-        this.hiddenTexture = hiddenTexture;
-        this.setTexture(hiddenTexture);
-    }
+	enum State {
+		HIDDEN, SHOW, ACTIVATED
+	}
 
-    @Override
-    public strictfp void collided(Body body) {
-        if (state != State.HIDDEN) {
-            if (body instanceof Hero || body instanceof Key) {
-            	state = State.SHOW;
-            	setTexture(offTexture);
-            	if(areAllShown()) {
-            		activate();
-            	}
-            }
-        }
-    }
-    
-    private boolean areAllShown() {
-    	BodyList bodies = world.getBodies();
-    	for (int i = 0; i < bodies.size(); ++i) {
-    		Body b = bodies.get(i);
-            if (b instanceof MemoryActivator) {
-            	MemoryActivator m = (MemoryActivator) b;
-            	if(m.activableId == activableId && m.state != State.SHOW)
-            		return false;
-            }
-    	}
-    	return true;
+	MemoryActivator(World world, int activableId, ITexture onTexture,
+			ITexture offTexture, ITexture hiddenTexture) {
+		super(world);
+		this.activableId = activableId;
+		this.offTexture = offTexture;
+		this.onTexture = onTexture;
+		this.hiddenTexture = hiddenTexture;
+		this.setTexture(hiddenTexture);
+	}
+
+	@Override
+	public strictfp void collided(Body body) {
+		if (state != State.ACTIVATED) {
+			if (body instanceof Hero || body instanceof Key) {
+				state = State.SHOW;
+				setTexture(offTexture);
+				if (areAllShown()) {
+					activate();
+				}
+			}
+		}
+	}
+
+	private boolean areAllShown() {
+		BodyList bodies = world.getBodies();
+		for (int i = 0; i < bodies.size(); ++i) {
+			Body b = bodies.get(i);
+			if (b instanceof MemoryActivator) {
+				MemoryActivator m = (MemoryActivator) b;
+				if (m.activableId == activableId && m.state != State.SHOW)
+					return false;
+			}
+		}
+		return true;
 	}
 
 	void activate() {
-        BodyList bodies = world.getBodies();
-        for (int i = 0; i < bodies.size(); ++i) {
-            Body b = bodies.get(i);
-            if (b instanceof Blocker) {
-                Blocker a = (Blocker) b;
-                if (a.getActivableId() == activableId) {
-                    a.activate();
-                    this.setTexture(onTexture);
-                }
-            } else  if (b instanceof MemoryActivator) {
-            	MemoryActivator m = (MemoryActivator) b;
-            	if(m.activableId == activableId) {
-            		m.state = State.ACTIVATED;
-            		m.setTexture(m.onTexture);
-            	}
-            }
-        }
-    }
+		BodyList bodies = world.getBodies();
+		for (int i = 0; i < bodies.size(); ++i) {
+			Body b = bodies.get(i);
+			if (b instanceof Blocker) {
+				Blocker a = (Blocker) b;
+				if (a.getActivableId() == activableId) {
+					a.activate();
+					this.setTexture(onTexture);
+				}
+			} else if (b instanceof MemoryActivator) {
+				MemoryActivator m = (MemoryActivator) b;
+				if (m.activableId == activableId) {
+					m.state = State.ACTIVATED;
+					m.setTexture(m.onTexture);
+				}
+			}
+		}
+	}
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		if(state == State.SHOW) {
-			if(showEndTime < 0)
+		if (state == State.SHOW) {
+			if (showEndTime < 0)
 				showEndTime = frameTimeInfos.currentTime + showDuration;
-			else if(showEndTime > frameTimeInfos.currentTime){
+			else if (frameTimeInfos.currentTime > showEndTime) {
 				state = State.HIDDEN;
 				showEndTime = -1;
 				setTexture(hiddenTexture);
 			}
 		}
-		
+
 	}
 }

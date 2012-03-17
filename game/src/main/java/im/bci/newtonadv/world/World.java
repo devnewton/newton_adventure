@@ -101,6 +101,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	private ITexture activator1OffTexture;
 	private ITexture activator2OffTexture;
 	private ITexture activator3OffTexture;
+	private ITexture memoryActivatorHiddenTexture;
 	private ITexture blocker1Texture;
 	private ITexture blocker2Texture;
 	private ITexture blocker3Texture;
@@ -265,6 +266,8 @@ public strictfp class World extends net.phys2d.raw.World {
 				"activable2.png");
 		defaultMapProperties.put("newton_adventure.activator3.off",
 				"activable3.png");
+		defaultMapProperties.put("newton_adventure.memory_activator.hidden",
+				"activable_hidden.png");
 		defaultMapProperties.put("newton_adventure.blocker1", "blocker1.png");
 		defaultMapProperties.put("newton_adventure.blocker2", "blocker2.png");
 		defaultMapProperties.put("newton_adventure.blocker3", "blocker3.png");
@@ -339,6 +342,8 @@ public strictfp class World extends net.phys2d.raw.World {
 				"newton_adventure.activator2.off"));
 		activator3OffTexture = textureCache.getTexture(getFileFromMap(map,
 				"newton_adventure.activator3.off"));
+		memoryActivatorHiddenTexture = textureCache.getTexture(getFileFromMap(
+				map, "newton_adventure.memory_activator.hidden"));
 		blocker1Texture = textureCache.getTexture(getFileFromMap(map,
 				"newton_adventure.blocker1"));
 		blocker2Texture = textureCache.getTexture(getFileFromMap(map,
@@ -604,6 +609,24 @@ public strictfp class World extends net.phys2d.raw.World {
 					activator3OffTexture);
 			activator.setPosition(x * Platform.size, y * Platform.size);
 			add(activator);
+		} else if (c.equals("memory_activator1")) {
+			MemoryActivator activator = new MemoryActivator(this, 1,
+					activator1OnTexture, activator1OffTexture,
+					memoryActivatorHiddenTexture);
+			activator.setPosition(x * Platform.size, y * Platform.size);
+			add(activator);
+		} else if (c.equals("memory_activator2")) {
+			MemoryActivator activator = new MemoryActivator(this, 2,
+					activator2OnTexture, activator2OffTexture,
+					memoryActivatorHiddenTexture);
+			activator.setPosition(x * Platform.size, y * Platform.size);
+			add(activator);
+		} else if (c.equals("memory_activator3")) {
+			MemoryActivator activator = new MemoryActivator(this, 3,
+					activator3OnTexture, activator3OffTexture,
+					memoryActivatorHiddenTexture);
+			activator.setPosition(x * Platform.size, y * Platform.size);
+			add(activator);
 		} else if (c.equals("blocker1")) {
 			Blocker activable = new Blocker(this, 1);
 			activable.setTexture(blocker1Texture);
@@ -775,10 +798,10 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	void goToBonusWorld() {
 		postUpdateActions.add(new PostUpdateAction() {
-			
+
 			@Override
 			public void run() throws TransitionException {
-				game.goToRandomBonusLevel(questName);				
+				game.goToRandomBonusLevel(questName);
 			}
 		});
 	}
@@ -838,10 +861,10 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	public void gotoLevel(final String newQuestName, final String newLevelName) {
 		postUpdateActions.add(new PostUpdateAction() {
-			
+
 			@Override
 			public void run() throws TransitionException {
-				game.gotoLevel(newQuestName,newLevelName);				
+				game.gotoLevel(newQuestName, newLevelName);
 			}
 		});
 	}
