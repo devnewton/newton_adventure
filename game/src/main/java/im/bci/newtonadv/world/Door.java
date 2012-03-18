@@ -80,4 +80,8 @@ public strictfp class Door extends AbstractDrawableStaticBody implements Collisi
     void open() {
         isClose = false;
     }
+
+	public boolean isOpenableWithKey() {
+		return true;
+	}
 }

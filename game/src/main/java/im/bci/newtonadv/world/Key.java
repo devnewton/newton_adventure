@@ -65,7 +65,9 @@ public strictfp class Key extends AbstractDrawableBody {
     @Override
     public strictfp void collided(Body body) {
         if (body instanceof Door) {
-            use();
+        	Door door = (Door) body;
+        	if(door.isOpenableWithKey())
+        		use();
         } else if(body instanceof KeyLock) {
         	KeyLock keyLock = (KeyLock) body;
         	if(!keyLock.isOpened()) {

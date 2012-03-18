@@ -59,4 +59,9 @@ public strictfp class DoorToLevel extends Door {
 	public void setLevelName(String levelName) {
 		this.levelName = levelName;
 	}
+	
+    @Override
+	public boolean isOpenableWithKey() {
+		return false;
+	}
 }
