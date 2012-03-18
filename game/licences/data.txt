@@ -100,6 +100,11 @@ License: CC-BY-SA 3.0
 Author: SouljahdeShiva (http://opengameart.org/content/india-rythm)
 License: CC-BY 3.0
 
+* caves_of_sorrow.ogg
+
+Author: Alexander Zhelanov (http://opengameart.org/content/caves-of-sorrow-from-flare-project)
+License: CC-BY 3.0
+
 * story_time.ogg
 
 Author: Augmentality (http://opengameart.org/content/story-time)
