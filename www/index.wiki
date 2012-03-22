@@ -6,6 +6,8 @@ Code is available under BSD licences, data under CC-BY-SA licence.
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5MR7VMMMSNSS"><img src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donateCC_LG.gif" alt="Faire un don"></a>
 
+[Contribute]
+
 <h1>Downloads</h1>
 
 <p><a href="downloads/newton_adventure_1.3.zip">Version 1.3</a></p>
