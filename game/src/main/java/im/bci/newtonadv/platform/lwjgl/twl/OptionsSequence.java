@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
+import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -269,32 +270,35 @@ public class OptionsSequence implements IOptionsSequence {
 		config.setProperty("key.return_to_menu",
 				getKeyFieldName(input.keyReturnToMenu));
 		config.setProperty("key.pause", getKeyFieldName(input.keyPause));
-		config.setProperty("joypad.name",
-				null != input.joypad ? input.joypad.getName() : "");
-		config.setProperty("joypad.axis.x",
-				getJoypadAxisName(input.joypadXAxis));
-		config.setProperty("joypad.axis.y",
-				getJoypadAxisName(input.joypadYAxis));
-		config.setProperty("joypad.button.left",
-				getJoypadButtonName(input.joypadKeyLeft));
-		config.setProperty("joypad.button.right",
-				getJoypadButtonName(input.joypadKeyRight));
-		config.setProperty("joypad.button.jump",
-				getJoypadButtonName(input.joypadKeyJump));
-		config.setProperty("joypad.button.pause",
-				getJoypadButtonName(input.joypadKeyPause));
-		config.setProperty("joypad.button.return",
-				getJoypadButtonName(input.joypadKeyReturn));
-		config.setProperty("joypad.button.return_to_menu",
-				getJoypadButtonName(input.joypadKeyReturnToMenu));
-		config.setProperty("joypad.button.rotate_clockwise",
-				getJoypadButtonName(input.joypadKeyRotateClockwise));
-		config.setProperty("joypad.button.rotate_counter_clockwise",
-				getJoypadButtonName(input.joypadKeyRotateCounterClockwise));
-		config.setProperty("joypad.button.rotate_90_clockwise",
-				getJoypadButtonName(input.joypadKeyRotate90Clockwise));
-		config.setProperty("joypad.button.rotate_90_counter_clockwise",
-				getJoypadButtonName(input.joypadKeyRotate90CounterClockwise));
+		
+		if( Controllers.getControllerCount() > 0 ) {
+			config.setProperty("joypad.name",
+					null != input.joypad ? input.joypad.getName() : "");
+			config.setProperty("joypad.axis.x",
+					getJoypadAxisName(input.joypadXAxis));
+			config.setProperty("joypad.axis.y",
+					getJoypadAxisName(input.joypadYAxis));
+			config.setProperty("joypad.button.left",
+					getJoypadButtonName(input.joypadKeyLeft));
+			config.setProperty("joypad.button.right",
+					getJoypadButtonName(input.joypadKeyRight));
+			config.setProperty("joypad.button.jump",
+					getJoypadButtonName(input.joypadKeyJump));
+			config.setProperty("joypad.button.pause",
+					getJoypadButtonName(input.joypadKeyPause));
+			config.setProperty("joypad.button.return",
+					getJoypadButtonName(input.joypadKeyReturn));
+			config.setProperty("joypad.button.return_to_menu",
+					getJoypadButtonName(input.joypadKeyReturnToMenu));
+			config.setProperty("joypad.button.rotate_clockwise",
+					getJoypadButtonName(input.joypadKeyRotateClockwise));
+			config.setProperty("joypad.button.rotate_counter_clockwise",
+					getJoypadButtonName(input.joypadKeyRotateCounterClockwise));
+			config.setProperty("joypad.button.rotate_90_clockwise",
+					getJoypadButtonName(input.joypadKeyRotate90Clockwise));
+			config.setProperty("joypad.button.rotate_90_counter_clockwise",
+					getJoypadButtonName(input.joypadKeyRotate90CounterClockwise));
+		}
 
 		config.setProperty("scoreserver.url", scoreServer.getServerUrl());
 		config.setProperty("scoreserver.player", scoreServer.getPlayer());
