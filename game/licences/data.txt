@@ -68,12 +68,12 @@ License: CC-BY-SA 3.0
 Author: Scribe (Daniel Stephens) (http://opengameart.org/content/breakout-graphics-no-shadow)
 License: CC0
 
-* most of hades quest tiles
+* most of volcano quest tiles
 
 Author: surt (Carl Olsson) (http://opengameart.org/content/monsterboy-in-wonder-world-mockup-assets)
 License: CC-BY-SA 3.0
 
-* hades quest bt-quest-off.jpg  bt-quest-on.jpg completed.jpg illustration, hades_background.jpg
+* volcano quest bt-quest-off.jpg  bt-quest-on.jpg completed.jpg illustration, volcano_background.jpg
 
 Author: jap (http://opengameart.org/content/oil-painting-landscapes)
 Artistic filters author: devnewton@bci.im
