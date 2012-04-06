@@ -28,14 +28,14 @@ class GameData implements IGameData {
 		quests = Arrays.asList("jungle", "vatican", "arctic", "volcano",
 				"egypt");
 		questLevels = new HashMap<String, List<String>>();
-		questLevels.put("jungle", Arrays.asList("jungle_level0",
-				"jungle_level1", "jungle_level2", "jungle_level3",
-				"jungle_level4"));
-		questLevels.put("vatican", Arrays.asList("vatican_level0",
-				"vatican_level1", "vatican_level2", "vatican_level3",
-				"vatican_level4"));
-		questLevels.put("arctic", Arrays.asList("artic_level0", "artic_level1",
-				"artic_level2", "artic_level3", "artic_level4"));
+		questLevels.put("jungle", Arrays.asList("level0",
+				"level1", "level2", "level3",
+				"level4"));
+		questLevels.put("vatican", Arrays.asList("level0",
+				"level1", "level2", "level3",
+				"level4"));
+		questLevels.put("arctic", Arrays.asList("level0", "level1",
+				"level2", "level3", "level4"));
 		questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
 				"level3", "level4", "level5"));
 		questLevels
