@@ -98,17 +98,18 @@ public class QuestMenuSequence extends MenuSequence {
 	}
 
 	private void createQuestButton(int i, int j, final String questName,
-			final QuestSequence questSequence) {
+			QuestSequence questSequence) {
+		final LevelMenuSequence levelMenuSequence = new LevelMenuSequence(game, questSequence);
 		Button questButton = new Button() {
 
 			@Override
 			void activate() throws TransitionException {
-				throw new Sequence.TransitionException(questSequence);
+				throw new Sequence.TransitionException(levelMenuSequence);
 			}
 
 			@Override
 			public void draw() {
-				game.getView().drawQuestMenuButton(this, questNameFont,
+				game.getView().drawMenuButton(this, questNameFont,
 						questName);
 			}
 		};

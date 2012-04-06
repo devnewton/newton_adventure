@@ -131,7 +131,7 @@ public interface IGameView {
 
     void drawPlatform(Platform platform, ITexture texture);
 
-    void drawQuestMenuButton(Button button, ITrueTypeFont questNameFont, String questName);
+    void drawMenuButton(Button button, ITrueTypeFont questNameFont, String questName);
 
     void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font, QuestScore questScore, long scorePerCentToShow);
 

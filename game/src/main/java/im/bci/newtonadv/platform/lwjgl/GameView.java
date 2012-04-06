@@ -1316,7 +1316,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawQuestMenuButton(Button button, ITrueTypeFont questNameFont,
+	public void drawMenuButton(Button button, ITrueTypeFont questNameFont,
 			String questName) {
 		drawButton(button);
 		GL11.glPushMatrix();
