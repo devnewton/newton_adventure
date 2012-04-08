@@ -69,7 +69,7 @@ public strictfp class Game {
     static public final int DEFAULT_SCREEN_WIDTH = 1280;
     static public final int DEFAULT_SCREEN_HEIGHT = 800;
     private FrameTimeInfos frameTimeInfos = new FrameTimeInfos();
-    private Properties config = new Properties();
+    private Properties config;
     private ISoundCache soundCache = null;
     private MainMenuSequence mainMenuSequence;
     private GameScore score = new GameScore();
@@ -97,20 +97,13 @@ public strictfp class Game {
     }
 
     public Game(IPlatformFactory platform) throws Exception {
-        config.setProperty("view.width", Integer.toString(DEFAULT_SCREEN_WIDTH));
-        config.setProperty("view.height", Integer.toString(DEFAULT_SCREEN_HEIGHT));
-        config.setProperty("view.quality", "NICEST");
-        config.setProperty("sound.enabled", "false");
-        config.setProperty("music.enabled", "true");
-
-        platform.loadConfig(config);
-
-        this.data = platform.createGameData(config);
-        this.soundCache = platform.createSoundCache(config);
-        this.view = platform.createGameView(config);
-        this.input = platform.createGameInput(config);
-        this.scoreServer = platform.createScoreServer(config);
-        this.optionsSequence = platform.createOptionsSequence();
+    	this.config = platform.getConfig();
+        this.data = platform.getGameData();
+        this.soundCache = platform.getSoundCache();
+        this.view = platform.getGameView();
+        this.input = platform.getGameInput();
+        this.scoreServer = platform.getScoreServer();
+        this.optionsSequence = platform.getOptionsSequence();
         
         this.platform = platform;
     }

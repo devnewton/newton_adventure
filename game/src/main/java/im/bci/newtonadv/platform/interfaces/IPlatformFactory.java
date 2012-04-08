@@ -41,21 +41,21 @@ import java.util.Properties;
  * @author devnewton
  */
 public interface IPlatformFactory {
-
-    IGameInput createGameInput(Properties config) throws Exception;
-
-    IGameView createGameView(Properties config);
-
-    ISoundCache createSoundCache(Properties config);
-
-	void loadConfig(Properties config);
-
-	IGameData createGameData(Properties config);
-
-	IOptionsSequence createOptionsSequence();
-
-	ScoreServer createScoreServer(Properties config);
+	
+	Properties getConfig();
 
 	void saveConfig();
+	
+    IGameInput getGameInput();
+
+    IGameView getGameView();
+
+    ISoundCache getSoundCache();
+
+	IGameData getGameData();
+
+	IOptionsSequence getOptionsSequence();
+
+	ScoreServer getScoreServer();
 
 }

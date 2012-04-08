@@ -32,8 +32,11 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.newtonadv.platform.interfaces.IGameInput;
+import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 import im.bci.newtonadv.score.ScoreServer;
 
@@ -60,9 +63,21 @@ public class PlatformFactory implements IPlatformFactory {
 	private ScoreServer scoreServer;
 	private GameData data;
 	private SoundCache soundCache;
+	private IOptionsSequence options;
+	
+	public PlatformFactory() throws Exception {
+        loadConfig();
 
-	@Override
-	public SoundCache createSoundCache(Properties config) {
+        createGameData();
+        createSoundCache();
+        createGameView();
+        createGameInput();
+        createScoreServer();
+        createOptionsSequence();
+
+	}
+
+	private SoundCache createSoundCache() {
 		if (null == data)
 			throw new RuntimeException("create IGameData before  SoundCache");
 		if (null == soundCache)
@@ -70,8 +85,7 @@ public class PlatformFactory implements IPlatformFactory {
 		return soundCache;
 	}
 
-	@Override
-	public GameView createGameView(Properties config) {
+	private GameView createGameView() {
 		if (null == data)
 			throw new RuntimeException("create IGameData before IGameView");
 		if (view == null) {
@@ -80,16 +94,14 @@ public class PlatformFactory implements IPlatformFactory {
 		return view;
 	}
 
-	@Override
-	public GameInput createGameInput(Properties config) throws Exception {
+	private GameInput createGameInput() throws Exception {
 		if (null == input) {
 			input = new GameInput(config);
 		}
 		return input;
 	}
 
-	@Override
-	public void loadConfig(Properties config) {
+	private void loadConfig() {
 		try {
 			URL configFilePath = getUserOrDefaultConfigFilePath();
 			Logger.getLogger(PlatformFactory.class.getName()).log(Level.INFO,
@@ -97,8 +109,8 @@ public class PlatformFactory implements IPlatformFactory {
 
 			InputStream f = configFilePath.openStream();
 			try {
+				config = new Properties();
 				config.load(f);
-				this.config = config;
 			} finally {
 				f.close();
 			}
@@ -108,15 +120,13 @@ public class PlatformFactory implements IPlatformFactory {
 		}
 	}
 
-	@Override
-	public IGameData createGameData(Properties config) {
+	private IGameData createGameData() {
 		if (data == null)
 			data = new GameData(config);
 		return data;
 	}
 
-	@Override
-	public IOptionsSequence createOptionsSequence() {
+	private IOptionsSequence createOptionsSequence() {
 		if (null == view) {
 			throw new RuntimeException(
 					"create IGameView before IOptionsSequence");
@@ -133,7 +143,8 @@ public class PlatformFactory implements IPlatformFactory {
 			throw new RuntimeException(
 					"load config before creating IOptionsSequence");
 		}
-		return new OptionsSequence(this, view, input, scoreServer, soundCache, config);
+		options = new OptionsSequence(this, view, input, scoreServer, soundCache, config);
+		return options;
 	}
 
 	public static URL getDefaultConfigFilePath() {
@@ -166,8 +177,7 @@ public class PlatformFactory implements IPlatformFactory {
 		return getDefaultConfigFilePath();
 	}
 
-	@Override
-	public ScoreServer createScoreServer(Properties config) {
+	private ScoreServer createScoreServer() {
 		scoreServer = new ScoreServer(config);
 		return scoreServer;
 	}
@@ -197,6 +207,41 @@ public class PlatformFactory implements IPlatformFactory {
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
 		}
+	}
+
+	@Override
+	public Properties getConfig() {
+		return config;
+	}
+
+	@Override
+	public IGameInput getGameInput() {
+		return input;
+	}
+
+	@Override
+	public IGameView getGameView() {
+		return view;
+	}
+
+	@Override
+	public ISoundCache getSoundCache() {
+		return soundCache;
+	}
+
+	@Override
+	public IGameData getGameData() {
+		return data;
+	}
+
+	@Override
+	public IOptionsSequence getOptionsSequence() {
+		return options;
+	}
+
+	@Override
+	public ScoreServer getScoreServer() {
+		return scoreServer;
 	}
 	
 	
