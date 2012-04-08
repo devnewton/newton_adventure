@@ -19,28 +19,37 @@ import im.bci.newtonadv.score.ScoreServer;
 public class AndroidPlatformFactory implements IPlatformFactory {
 
 	private AssetManager assets;
+	private Properties config;
+	private AndroidGameInput input;
+	private AndroidGameView view;
+	private AndroidSoundCache soundCache;
+	private AndroidGameData data;
+	private ScoreServer scoreServer;
 
-	public AndroidPlatformFactory(AssetManager assets) {
+	public AndroidPlatformFactory(AssetManager assets) throws Exception {
 		this.assets = assets;
+        loadConfig();
+
+        createGameData();
+        createSoundCache();
+        createGameView();
+        createGameInput();
+        createScoreServer();
 	}
 
-	@Override
-	public IGameInput createGameInput(Properties config) throws Exception {
-		return new AndroidGameInput(config);
+	private void createGameInput() throws Exception {
+		input = new AndroidGameInput(config);
 	}
 
-	@Override
-	public IGameView createGameView(Properties config) {
-		return new AndroidGameView(assets,config);
+	private void createGameView() {
+		view = new AndroidGameView(assets,config);
 	}
 
-	@Override
-	public ISoundCache createSoundCache(Properties config) {
-		return new AndroidSoundCache(assets,config);
+	private void createSoundCache() {
+		soundCache = new AndroidSoundCache(assets,config);
 	}
 
-	@Override
-	public void loadConfig(Properties config) {
+	private void loadConfig() {
 		try {
 			InputStream f;
 			f = assets.open("config.properties");
@@ -55,19 +64,52 @@ public class AndroidPlatformFactory implements IPlatformFactory {
 		}
 	}
 
-	@Override
-	public IGameData createGameData(Properties config) {
-		return new AndroidGameData(assets);
+	private void createGameData() {
+		data = new AndroidGameData(assets);
+	}
+
+
+	private void createScoreServer() {
+		scoreServer = new ScoreServer(config);
 	}
 
 	@Override
-	public IOptionsSequence createOptionsSequence() {
+	public Properties getConfig() {
+		return config;
+	}
+
+	@Override
+	public IGameInput getGameInput() {
+		return input;
+	}
+
+	@Override
+	public IGameView getGameView() {
+		return view;
+	}
+
+	@Override
+	public ISoundCache getSoundCache() {
+		return soundCache;
+	}
+
+	@Override
+	public IGameData getGameData() {
+		return data;
+	}
+
+	@Override
+	public IOptionsSequence getOptionsSequence() {
 		return null;
 	}
 
 	@Override
-	public ScoreServer createScoreServer(Properties config) {
-		return new ScoreServer(config);
+	public ScoreServer getScoreServer() {
+		return scoreServer;
 	}
 
+	@Override
+	public void saveConfig() {
+		// TODO Auto-generated method stub
+	}
 }

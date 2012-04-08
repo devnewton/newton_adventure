@@ -1037,15 +1037,15 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public void drawQuestMenuButton(Button button, ITrueTypeFont questNameFont,
-			String questName) {
+	public void drawMenuButton(Button button, ITrueTypeFont questNameFont,
+			String label) {
 		drawButton(button);
 		gl.glPushMatrix();
 		gl.glTranslatef(button.x,
 				button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
 						+ questNameFont.getHeight(), 0);
 		gl.glScalef(1, -1, 1);
-		questNameFont.drawString(questName);
+		questNameFont.drawString(label);
 		gl.glPopMatrix();
 	}
 

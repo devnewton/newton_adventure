@@ -243,10 +243,4 @@ public class PlatformFactory implements IPlatformFactory {
 	public ScoreServer getScoreServer() {
 		return scoreServer;
 	}
-	
-	
-	
-	
-	
-	
 }
