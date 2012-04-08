@@ -51,6 +51,7 @@ import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -77,6 +78,7 @@ public strictfp class Game {
     private BonusSequence lastBonusSequence;
 	private IOptionsSequence optionsSequence;
 	private QuestMenuSequence questMenuSequence;
+	private IPlatformFactory platform;
 
     public Properties getConfig() {
         return config;
@@ -109,6 +111,8 @@ public strictfp class Game {
         this.input = platform.createGameInput(config);
         this.scoreServer = platform.createScoreServer(config);
         this.optionsSequence = platform.createOptionsSequence();
+        
+        this.platform = platform;
     }
 
     public void tick() {
@@ -251,5 +255,29 @@ public strictfp class Game {
 	
 	public void gotoLevel(String newQuestName, String newLevelName) throws TransitionException {
 		this.questMenuSequence.gotoLevel(newQuestName,newLevelName);		
+	}
+
+	public boolean isLevelBlocked(String questName, String levelName) {
+		if(data.listQuestLevels(questName).get(0).equals(levelName)) {
+			return false;
+		}
+		return config.getProperty("game." + questName + "." + levelName + ".blocked", "true").equals("true");
+	}
+
+	public void unblockNextLevel(String questName, String completedLevelName) {
+		Iterator<String> it = data.listQuestLevels(questName).iterator();
+		while(it.hasNext()) {
+			if(it.next().equals(completedLevelName)) {
+				if(it.hasNext()) {
+					unblockLevel(questName, it.next());
+				}
+			}
+		}
+		
+	}
+
+	private void unblockLevel(String questName, String levelName) {
+		config.setProperty("game." + questName + "." + levelName + ".blocked", "false");
+		platform.saveConfig();
 	}
 }

@@ -38,6 +38,8 @@ import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -131,7 +133,7 @@ public class PlatformFactory implements IPlatformFactory {
 			throw new RuntimeException(
 					"load config before creating IOptionsSequence");
 		}
-		return new OptionsSequence(view, input, scoreServer, soundCache, config);
+		return new OptionsSequence(this, view, input, scoreServer, soundCache, config);
 	}
 
 	public static URL getDefaultConfigFilePath() {
@@ -169,4 +171,37 @@ public class PlatformFactory implements IPlatformFactory {
 		scoreServer = new ScoreServer(config);
 		return scoreServer;
 	}
+
+	private void writeConfig(String path) throws FileNotFoundException,
+			IOException {
+		FileOutputStream os = new FileOutputStream(path);
+		try {
+			config.store(os, "Newton adventure configuration, see "
+					+ PlatformFactory.getDefaultConfigFilePath()
+					+ " for example and documentation");
+		} finally {
+			os.close();
+		}
+
+	}
+
+	@Override
+	public void saveConfig() {
+		File userConfigFile = new File(PlatformFactory.getUserConfigFilePath());
+
+		if (!userConfigFile.exists()) {
+			(new File(PlatformFactory.getUserConfigDirPath())).mkdirs();
+		}
+		try {
+			writeConfig(userConfigFile.getAbsolutePath());
+		} catch (Exception e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+		}
+	}
+	
+	
+	
+	
+	
+	
 }

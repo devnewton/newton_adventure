@@ -1,8 +1,5 @@
 package im.bci.newtonadv.platform.lwjgl.twl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,16 +17,15 @@ import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
+import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.platform.lwjgl.PlatformFactory;
 import im.bci.newtonadv.platform.lwjgl.SoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
 import im.bci.newtonadv.score.ScoreServer;
 
-import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.util.Properties;
 
@@ -43,9 +39,12 @@ public class OptionsSequence implements IOptionsSequence {
 	private final Properties config;
 	private final ScoreServer scoreServer;
 	private final SoundCache soundCache;
+	private IPlatformFactory platform;
 
-	public OptionsSequence(GameView view, GameInput input,
-			ScoreServer scoreServer, SoundCache soundCache, Properties config) {
+	public OptionsSequence(IPlatformFactory platform, GameView view,
+			GameInput input, ScoreServer scoreServer, SoundCache soundCache,
+			Properties config) {
+		this.platform = platform;
 		this.view = view;
 		this.input = input;
 		this.scoreServer = scoreServer;
@@ -98,13 +97,8 @@ public class OptionsSequence implements IOptionsSequence {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
 						"cannot apply options", e);
 			}
-			try {
-				updateConfig();
-				saveConfig();
-			} catch (IOException ex) {
-				Logger.getLogger(OptionsSequence.class.getName()).log(
-						Level.SEVERE, "cannot save options", ex);
-			}
+			updateConfig();
+			platform.saveConfig();
 			throw new TransitionException(nextSequence);
 		}
 		if (optionsGui.cancelPressed) {
@@ -128,9 +122,10 @@ public class OptionsSequence implements IOptionsSequence {
 		if (optionsGui.joypad.getSelected() >= 0
 				&& optionsGui.joypad.getSelected() < optionsGui.joypad
 						.getModel().getNumEntries()) {
-			ControllerItem controllerItem = optionsGui.joypad.getModel().getEntry(
-					optionsGui.joypad.getSelected());
-			input.joypad = null != controllerItem ? controllerItem.getController() : null;
+			ControllerItem controllerItem = optionsGui.joypad.getModel()
+					.getEntry(optionsGui.joypad.getSelected());
+			input.joypad = null != controllerItem ? controllerItem
+					.getController() : null;
 			if (null != input.joypad) {
 				input.joypadXAxis = findJoypadAxisIndex(input.joypad,
 						optionsGui.joypadXAxis);
@@ -225,28 +220,6 @@ public class OptionsSequence implements IOptionsSequence {
 		this.nextSequence = mainMenuSequence;
 	}
 
-	private void writeConfig(String path) throws FileNotFoundException,
-			IOException {
-		FileOutputStream os = new FileOutputStream(path);
-		try {
-			config.store(os, "Newton adventure configuration, see "
-					+ PlatformFactory.getDefaultConfigFilePath()
-					+ " for example and documentation");
-		} finally {
-			os.close();
-		}
-
-	}
-
-	private void saveConfig() throws IOException {
-		File userConfigFile = new File(PlatformFactory.getUserConfigFilePath());
-
-		if (!userConfigFile.exists()) {
-			(new File(PlatformFactory.getUserConfigDirPath())).mkdirs();
-		}
-		writeConfig(userConfigFile.getAbsolutePath());
-	}
-
 	private void updateConfig() {
 		config.setProperty("view.width", "" + Display.getWidth());
 		config.setProperty("view.height", "" + Display.getHeight());
@@ -270,8 +243,8 @@ public class OptionsSequence implements IOptionsSequence {
 		config.setProperty("key.return_to_menu",
 				getKeyFieldName(input.keyReturnToMenu));
 		config.setProperty("key.pause", getKeyFieldName(input.keyPause));
-		
-		if( Controllers.getControllerCount() > 0 ) {
+
+		if (Controllers.getControllerCount() > 0) {
 			config.setProperty("joypad.name",
 					null != input.joypad ? input.joypad.getName() : "");
 			config.setProperty("joypad.axis.x",
@@ -296,7 +269,8 @@ public class OptionsSequence implements IOptionsSequence {
 					getJoypadButtonName(input.joypadKeyRotateCounterClockwise));
 			config.setProperty("joypad.button.rotate_90_clockwise",
 					getJoypadButtonName(input.joypadKeyRotate90Clockwise));
-			config.setProperty("joypad.button.rotate_90_counter_clockwise",
+			config.setProperty(
+					"joypad.button.rotate_90_counter_clockwise",
 					getJoypadButtonName(input.joypadKeyRotate90CounterClockwise));
 		}
 

@@ -56,4 +56,6 @@ public interface IPlatformFactory {
 
 	ScoreServer createScoreServer(Properties config);
 
+	void saveConfig();
+
 }

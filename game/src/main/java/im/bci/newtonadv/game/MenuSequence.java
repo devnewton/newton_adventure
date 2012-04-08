@@ -74,6 +74,10 @@ public abstract class MenuSequence implements Sequence {
 	public List<Button> getButtons() {
 		return buttons;
 	}
+	
+	protected void clearButtons() {
+		buttons.clear();
+	}
 
 	@Override
 	public void draw() {

@@ -57,13 +57,13 @@ public class LevelMenuSequence extends MenuSequence {
 		super(game);
 		this.questSequence = questSequence;
 		verticalIncrement = LEVEL_MINIATURE_ON_X;
-		loadLevels();
 	}
 
 	@Override
 	public void start() {
 		super.start();
 		levelNameFont = game.getView().createQuestNameFont();
+		loadLevels();
 	}
 
 	@Override
@@ -74,6 +74,8 @@ public class LevelMenuSequence extends MenuSequence {
 
 	private void loadLevels() {
 
+		clearButtons();
+		
 		Iterator<String> levelNamesIterator = game.getData().listQuestLevels(questSequence.getQuestName()).iterator();
 
 		for (int j = 0; j < LEVEL_MINIATURE_ON_Y; ++j) {
@@ -87,11 +89,14 @@ public class LevelMenuSequence extends MenuSequence {
 	}
 
 	private void createQuestButton(int i, int j, final String levelName) {
+		final boolean isBlocked = game.isLevelBlocked(questSequence.getQuestName(),levelName);
 		Button questButton = new Button() {
 
 			@Override
 			void activate() throws TransitionException {
-				questSequence.gotoLevel(levelName);
+				if(!isBlocked) {
+					questSequence.gotoLevel(levelName);
+				}
 			}
 
 			@Override
@@ -100,10 +105,14 @@ public class LevelMenuSequence extends MenuSequence {
 						levelName);
 			}
 		};
-		questButton.offTexture = game.getData().getLevelFilePath(questSequence.getQuestName(),
+		questButton.currentTexture = questButton.offTexture = game.getData().getLevelFilePath(questSequence.getQuestName(),
 				levelName, "bt-level-off.jpg");
-		questButton.onTexture = game.getData().getLevelFilePath(questSequence.getQuestName(),
+		if(!isBlocked) {
+			questButton.onTexture = game.getData().getLevelFilePath(questSequence.getQuestName(),
 				levelName, "bt-level-on.jpg");
+		}else{
+			questButton.onTexture = game.getData().getFile("btn-blocked.png");
+		}
 
 		questButton.x = LEVEL_MINIATURE_SPACING + i
 				* (LEVEL_MINIATURE_WIDTH + LEVEL_MINIATURE_SPACING);

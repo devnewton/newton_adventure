@@ -113,6 +113,7 @@ strictfp public class LevelSequence implements Sequence {
 			if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
 				game.getScore().setLevelScore(questName, levelName,
 						world.getLevelScore());
+				game.unblockNextLevel(questName, levelName);
 				throw new TransitionException(new FadeSequence(game,
 						nextSequence, 0, 0, 0, 1000000000L));
 			}
