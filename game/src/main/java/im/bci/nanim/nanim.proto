@@ -1,0 +1,33 @@
+package im.bci.nanim;
+
+message Frame {
+    required string imageName = 1;
+    required int32 duration = 2;
+}
+
+message Animation {
+    required string name = 1;
+    repeated Frame frames = 2;
+}
+
+enum PixelFormat {
+    RGB = 1;
+    RGBA = 2;
+}
+
+message Image {
+    required string name = 1;
+    required int32 width = 2;
+    required int32 height = 3;
+    required PixelFormat format = 4;
+    required bytes pixels = 5;
+}
+
+message AnimationCollection {
+    repeated Image images = 1;
+    repeated Animation animations = 2;
+    optional string author = 3;
+    optional string license = 4;
+};
+
+
