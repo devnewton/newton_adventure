@@ -3,6 +3,10 @@ package im.bci.nanim;
 message Frame {
     required string imageName = 1;
     required int32 duration = 2;
+    required float u1 = 3;
+    required float v1 = 4;
+    required float u2 = 5;
+    required float v2 = 6;
 }
 
 message Animation {
