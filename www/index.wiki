@@ -2,7 +2,7 @@
 
 Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.
 
-Code is available under BSD licence, data under CC-BY-SA licence.
+Code is available under BSD licence, data under CC-BY-SA or more permissive licences.
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K5MR7VMMMSNSS"><img src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" alt="Faire un don"></a>
 
