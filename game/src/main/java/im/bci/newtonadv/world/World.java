@@ -409,36 +409,31 @@ public strictfp class World extends net.phys2d.raw.World {
 				"unknown");
 		if (c.equals("platform")) {
 			Platform platform = new Platform(this);
-			platform.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			add(platform);
 		} else if (c.equals("up_right_half_platform")) {
 			UpRightHalfPlatform platform = new UpRightHalfPlatform(this);
-			platform.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			add(platform);
 		} else if (c.equals("up_left_half_platform")) {
 			UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this);
-			platform.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			add(platform);
 		} else if (c.equals("down_left_half_platform")) {
 			DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this);
-			platform.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			add(platform);
 		} else if (c.equals("down_right_half_platform")) {
 			DownRightHalfPlatform platform = new DownRightHalfPlatform(this);
-			platform.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			add(platform);
@@ -496,62 +491,52 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(door);
 		} else if (c.equals("cloud")) {
 			Cloud cloud = new Cloud(this);
-			cloud.setTexture(textureCache.getTexture(questName, levelName, map,
-					tile));
+			cloud.setTexture(getTextureForTile(map, tile, textureCache));
 			cloud.setPosition(x * Platform.size, y * Platform.size);
 			add(cloud);
 		} else if (c.equals("pikes_up")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
-			pikes.setTexture(textureCache.getTexture(questName, levelName, map,
-					tile));
+			pikes.setTexture(getTextureForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
 			add(pikes);
 		} else if (c.equals("pikes_down")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
-			pikes.setTexture(textureCache.getTexture(questName, levelName, map,
-					tile));
+			pikes.setTexture(getTextureForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
 			add(pikes);
 		} else if (c.equals("pikes_left")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
-			pikes.setTexture(textureCache.getTexture(questName, levelName, map,
-					tile));
+			pikes.setTexture(getTextureForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
 			add(pikes);
 		} else if (c.equals("pikes_right")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
-			pikes.setTexture(textureCache.getTexture(questName, levelName, map,
-					tile));
+			pikes.setTexture(getTextureForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
 			add(pikes);
 		} else if (c.equals("cannon_up")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
-			cannon.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			cannon.setTexture(getTextureForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
 			add(cannon);
 		} else if (c.equals("cannon_down")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
-			cannon.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			cannon.setTexture(getTextureForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
 			add(cannon);
 		} else if (c.equals("cannon_right")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
-			cannon.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			cannon.setTexture(getTextureForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
 			add(cannon);
 		} else if (c.equals("cannon_left")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
-			cannon.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			cannon.setTexture(getTextureForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
 			add(cannon);
 		} else if (c.equals("mobile_pike_anchor")) {
 			MobilePikeAnchor anchor = new MobilePikeAnchor(this);
-			anchor.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			anchor.setTexture(getTextureForTile(map, tile, textureCache));
 			anchor.setPosition(x * Platform.size, y * Platform.size);
 			add(anchor);
 
@@ -570,8 +555,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(j);
 		} else if (c.equals("axe_anchor")) {
 			AxeAnchor anchor = new AxeAnchor(this);
-			anchor.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			anchor.setTexture(getTextureForTile(map, tile, textureCache));
 			anchor.setPosition(x * Platform.size, y * Platform.size);
 			add(anchor);
 
@@ -590,8 +574,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(j);
 		} else if (c.equals("bounce_platform")) {
 			BouncePlatform platform = new BouncePlatform(this);
-			platform.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			add(platform);
 		} else if (c.equals("activator1")) {
@@ -651,8 +634,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(platform);
 		} else if (c.equals("teleporter")) {
 			Teleporter teleporter = new Teleporter(this);
-			teleporter.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			teleporter.setTexture(getTextureForTile(map, tile, textureCache));
 			teleporter.setPosition(x * Platform.size, y * Platform.size);
 			teleporter.setZOrder(1);
 			teleporter.setColor(tile.getProperties().getProperty(
@@ -660,8 +642,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(teleporter);
 		} else if (c.equals("keylock")) {
 			KeyLock keylock = new KeyLock(this);
-			keylock.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			keylock.setTexture(getTextureForTile(map, tile, textureCache));
 			keylock.setPosition(x * Platform.size, y * Platform.size);
 			keylock.setZOrder(1);
 			add(keylock);
@@ -677,12 +658,24 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(boss.getRightHand());
 		} else {
 			Platform platform = new Platform(this);
-			platform.setTexture(textureCache.getTexture(questName, levelName,
-					map, tile));
+			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setEnabled(false);
 			add(platform);
 		}
+	}
+
+	private ITexture getTextureForTile(tiled.core.Map map,
+			tiled.core.Tile tile, ITextureCache textureCache) {
+		ITexture texture;
+		String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+		if(null != gfx) {
+			texture = textureCache.getTexture(game.getData().getLevelFilePath(questName, levelName, gfx));
+		} else {
+			texture = textureCache.getTexture(questName, levelName,
+				map, tile);
+		}
+		return texture;
 	}
 
 	public Vector2f getGravityVector() {
