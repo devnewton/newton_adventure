@@ -1,9 +1,9 @@
-<jnlp spec="1.0+" codebase="http://bci.im/devnewton/webstart" href="newton_adventure.jnlp">
+<jnlp spec="1.0+" codebase="http://devnewton.bci.im/devnewton/webstart" href="newton_adventure.jnlp">
   <information>
     <title>Newton Adventure</title>
     <vendor>devnewton</vendor>
     <description>2D platform game</description>
-    <homepage href="http://bci.im"/>
+    <homepage href="http://devnewton.bci.im"/>
     <offline-allowed/>
     <icon kind="default" href="icon.png"/>
     <shortcut online="false" install="false">

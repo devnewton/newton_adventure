@@ -123,4 +123,4 @@ License: CC-BY-SA
 * Other files
 
 License: CC-BY-SA 3.0
-Author: devnewton (devnewton@bci.im, http://bci.im)
+Author: devnewton (devnewton@bci.im, http://devnewton.bci.im)

@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  */
 public class ScoreServer {
 
-	private String serverUrl = "http://bci.im/scoreserver";
+	private String serverUrl = "http://devnewton.bci.im/scoreserver";
 	private String player = "anonymous";
 	private String secret = "c20d29ce-36dd-11e1-94e7-0016cba93a68";
 

@@ -17,5 +17,5 @@ like this:
 
 java -jar -Dorg.lwjgl.util.Debug=true newton_adventure-1.3-SNAPSHOT.jar
 
-Go to http://bci.im/ for news and updates.
+Go to http://devnewton.bci.im/ for news and updates.
 
