@@ -412,30 +412,35 @@ public strictfp class World extends net.phys2d.raw.World {
 			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("up_right_half_platform")) {
 			UpRightHalfPlatform platform = new UpRightHalfPlatform(this);
 			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("up_left_half_platform")) {
 			UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this);
 			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("down_left_half_platform")) {
 			DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this);
 			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("down_right_half_platform")) {
 			DownRightHalfPlatform platform = new DownRightHalfPlatform(this);
 			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("hero")) {
 			hero.setPosition(x * Platform.size, y * Platform.size);
@@ -473,6 +478,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			Key key = new Key(this);
 			key.setPosition(x * Platform.size, y * Platform.size);
 			key.setTexture(keyTexture);
+			key.setZOrder(getTileZOrder(tile));
 			add(key);
 			keys.add(key);
 		} else if (c.equals("door")) {
@@ -481,6 +487,7 @@ public strictfp class World extends net.phys2d.raw.World {
 					* Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
 			door.setClosedTexture(closedDoorTexture);
 			door.setOpenTexture(openDoorTexture);
+			door.setZOrder(getTileZOrder(tile));
 			add(door);
 		} else if (c.equals("door_to_bonus_world")) {
 			DoorToBonusWorld door = new DoorToBonusWorld(this);
@@ -488,41 +495,49 @@ public strictfp class World extends net.phys2d.raw.World {
 					* Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
 			door.setClosedTexture(closedDoorToBonusWorldTexture);
 			door.setOpenTexture(openDoorToBonusWorldTexture);
+			door.setZOrder(getTileZOrder(tile));
 			add(door);
 		} else if (c.equals("cloud")) {
 			Cloud cloud = new Cloud(this);
 			cloud.setTexture(getTextureForTile(map, tile, textureCache));
 			cloud.setPosition(x * Platform.size, y * Platform.size);
+			cloud.setZOrder(getTileZOrder(tile));
 			add(cloud);
 		} else if (c.equals("pikes_up")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
 			pikes.setTexture(getTextureForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
+			pikes.setZOrder(getTileZOrder(tile));
 			add(pikes);
 		} else if (c.equals("pikes_down")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
 			pikes.setTexture(getTextureForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
+			pikes.setZOrder(getTileZOrder(tile));
 			add(pikes);
 		} else if (c.equals("pikes_left")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
 			pikes.setTexture(getTextureForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
+			pikes.setZOrder(getTileZOrder(tile));
 			add(pikes);
 		} else if (c.equals("pikes_right")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
 			pikes.setTexture(getTextureForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
+			pikes.setZOrder(getTileZOrder(tile));
 			add(pikes);
 		} else if (c.equals("cannon_up")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
 			cannon.setTexture(getTextureForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
+			cannon.setZOrder(getTileZOrder(tile));
 			add(cannon);
 		} else if (c.equals("cannon_down")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
 			cannon.setTexture(getTextureForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
+			cannon.setZOrder(getTileZOrder(tile));
 			add(cannon);
 		} else if (c.equals("cannon_right")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
@@ -533,11 +548,13 @@ public strictfp class World extends net.phys2d.raw.World {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
 			cannon.setTexture(getTextureForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
+			cannon.setZOrder(getTileZOrder(tile));
 			add(cannon);
 		} else if (c.equals("mobile_pike_anchor")) {
 			MobilePikeAnchor anchor = new MobilePikeAnchor(this);
 			anchor.setTexture(getTextureForTile(map, tile, textureCache));
 			anchor.setPosition(x * Platform.size, y * Platform.size);
+			anchor.setZOrder(getTileZOrder(tile));
 			add(anchor);
 
 			MobilePikes pikes = new MobilePikes(this);
@@ -548,6 +565,7 @@ public strictfp class World extends net.phys2d.raw.World {
 					/ 2.0f
 					- MobilePikeAnchor.radius);
 			add(pikes);
+			pikes.setZOrder(getTileZOrder(tile));
 
 			BasicJoint j = new BasicJoint(anchor, pikes, new Vector2f(
 					anchor.getPosition()));
@@ -566,6 +584,7 @@ public strictfp class World extends net.phys2d.raw.World {
 					- MobilePikes.height
 					/ 2.0f
 					- MobilePikeAnchor.radius);
+			axe.setZOrder(getTileZOrder(tile));
 			add(axe);
 
 			BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(
@@ -576,54 +595,64 @@ public strictfp class World extends net.phys2d.raw.World {
 			BouncePlatform platform = new BouncePlatform(this);
 			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("activator1")) {
 			Activator activator = new Activator(this, 1, activator1OnTexture,
 					activator1OffTexture);
 			activator.setPosition(x * Platform.size, y * Platform.size);
+			activator.setZOrder(getTileZOrder(tile));
 			add(activator);
 		} else if (c.equals("activator2")) {
 			Activator activator = new Activator(this, 2, activator2OnTexture,
 					activator2OffTexture);
 			activator.setPosition(x * Platform.size, y * Platform.size);
+			activator.setZOrder(getTileZOrder(tile));
 			add(activator);
 		} else if (c.equals("activator3")) {
 			Activator activator = new Activator(this, 3, activator3OnTexture,
 					activator3OffTexture);
 			activator.setPosition(x * Platform.size, y * Platform.size);
+			activator.setZOrder(getTileZOrder(tile));
 			add(activator);
 		} else if (c.equals("memory_activator1")) {
 			MemoryActivator activator = new MemoryActivator(this, 1,
 					activator1OnTexture, activator1OffTexture,
 					memoryActivatorHiddenTexture);
 			activator.setPosition(x * Platform.size, y * Platform.size);
+			activator.setZOrder(getTileZOrder(tile));
 			add(activator);
 		} else if (c.equals("memory_activator2")) {
 			MemoryActivator activator = new MemoryActivator(this, 2,
 					activator2OnTexture, activator2OffTexture,
 					memoryActivatorHiddenTexture);
 			activator.setPosition(x * Platform.size, y * Platform.size);
+			activator.setZOrder(getTileZOrder(tile));
 			add(activator);
 		} else if (c.equals("memory_activator3")) {
 			MemoryActivator activator = new MemoryActivator(this, 3,
 					activator3OnTexture, activator3OffTexture,
 					memoryActivatorHiddenTexture);
 			activator.setPosition(x * Platform.size, y * Platform.size);
+			activator.setZOrder(getTileZOrder(tile));
 			add(activator);
 		} else if (c.equals("blocker1")) {
 			Blocker activable = new Blocker(this, 1);
 			activable.setTexture(blocker1Texture);
 			activable.setPosition(x * Platform.size, y * Platform.size);
+			activable.setZOrder(getTileZOrder(tile));
 			add(activable);
 		} else if (c.equals("blocker2")) {
 			Blocker activable = new Blocker(this, 2);
 			activable.setTexture(blocker2Texture);
 			activable.setPosition(x * Platform.size, y * Platform.size);
+			activable.setZOrder(getTileZOrder(tile));
 			add(activable);
 		} else if (c.equals("blocker3")) {
 			Blocker activable = new Blocker(this, 3);
 			activable.setTexture(blocker3Texture);
 			activable.setPosition(x * Platform.size, y * Platform.size);
+			activable.setZOrder(getTileZOrder(tile));
 			add(activable);
 		} else if (c.equals("moving_platform")) {
 			MovingPlatform platform = new MovingPlatform(this,
@@ -631,12 +660,13 @@ public strictfp class World extends net.phys2d.raw.World {
 					getMovingPlatformDestination(tile, x, y));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("teleporter")) {
 			Teleporter teleporter = new Teleporter(this);
 			teleporter.setTexture(getTextureForTile(map, tile, textureCache));
 			teleporter.setPosition(x * Platform.size, y * Platform.size);
-			teleporter.setZOrder(1);
+			teleporter.setZOrder(getTileZOrder(tile,1));
 			teleporter.setColor(tile.getProperties().getProperty(
 					"newton_adventure.teleporter.color"));
 			add(teleporter);
@@ -644,7 +674,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			KeyLock keylock = new KeyLock(this);
 			keylock.setTexture(getTextureForTile(map, tile, textureCache));
 			keylock.setPosition(x * Platform.size, y * Platform.size);
-			keylock.setZOrder(1);
+			keylock.setZOrder(getTileZOrder(tile,1));
 			add(keylock);
 		} else if (c.equals("egyptian_boss")) {
 			EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y
@@ -661,6 +691,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			platform.setTexture(getTextureForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setEnabled(false);
+			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		}
 	}
@@ -743,6 +774,16 @@ public strictfp class World extends net.phys2d.raw.World {
 	private float getTileFriction(Tile tile) {
 		return Float.parseFloat(tile.getProperties().getProperty(
 				"newton_adventure.friction", "10"));
+	}
+	
+	private int getTileZOrder(Tile tile, int defaultZ) {
+		return Integer.parseInt(tile.getProperties().getProperty(
+				"newton_adventure.zorder", "" + defaultZ));
+	}
+	
+
+	private int getTileZOrder(Tile tile) {
+		return getTileZOrder(tile, 0);
 	}
 
 	private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile,
