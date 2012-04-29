@@ -659,7 +659,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(activable);
 		} else if (c.equals("moving_platform")) {
 			MovingPlatform platform = new MovingPlatform(this,
-					textureCache.getTexture(questName, levelName, map, tile),
+					getAnimationForTile(map, tile, textureCache),
 					getMovingPlatformDestination(tile, x, y));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));

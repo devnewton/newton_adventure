@@ -31,23 +31,23 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
 
+import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 
 public strictfp class UsedKey extends AbstractEntity {
 
     private World world;
-    private ITexture texture;
+    private AnimationFrame texture;
     private ROVector2f position;
     private float size = Key.size;
     private long endTime = -1;
     private static final long waitingDuration = 300000000L;
     private boolean isDead = false;
 
-    UsedKey(World world, ITexture texture, ROVector2f position) {
+    UsedKey(World world, AnimationFrame texture, ROVector2f position) {
         this.world = world;
         this.texture = texture;
         this.position = position;

@@ -60,7 +60,7 @@ public abstract strictfp class PickableObject extends StaticBody implements Draw
     public void collided(Body body) {
         if( body instanceof Hero) {
             world.remove(this);
-            world.addTopLevelEntities( new PickedUpObject(world, texture.getFirst().getCurrentFrame().getImage(), getPosition(),size));
+            world.addTopLevelEntities( new PickedUpObject(world, texture.getFirst().getCurrentFrame(), getPosition(),size));
         }
     }
 

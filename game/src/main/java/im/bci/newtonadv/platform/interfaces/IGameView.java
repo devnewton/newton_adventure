@@ -128,7 +128,7 @@ public interface IGameView {
 
     void drawMummy(Mummy mummy, World world, AnimationFrame texture, float scale);
 
-    void drawPickedUpObject(PickedUpObject apple, World world, ITexture texture);
+    void drawPickedUpObject(PickedUpObject apple, World world, AnimationFrame texture);
 
     void drawPlatform(Platform platform, AnimationFrame frame);
 
@@ -144,7 +144,7 @@ public interface IGameView {
 
     void drawUpRightHalfPlatform(UpRightHalfPlatform platform, AnimationFrame texture);
 
-    void drawUsedKey(UsedKey key, ITexture texture, World world);
+    void drawUsedKey(UsedKey key, AnimationFrame texture, World world);
 
     void drawWorld(World world);
 
@@ -164,7 +164,7 @@ public interface IGameView {
 
     public void drawFadeSequence(float r, float g, float b, float a);
 
-    public void drawMovingPlatform(MovingPlatform aThis, ITexture texture);
+    public void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture);
 
 	void drawMainMenuSequence(MainMenuSequence mainMenuSequence);
 

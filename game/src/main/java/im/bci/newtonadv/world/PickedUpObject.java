@@ -31,8 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
-
+import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
@@ -47,13 +46,13 @@ public strictfp class PickedUpObject extends AbstractEntity {
     final float originalSize;
     float size;
     private World world;
-    private ITexture texture;
+    private AnimationFrame texture;
     private Vector2f position;
     private boolean canMove = false;
     private long canMoveTime = -1;
     private static final long waitingDuration = 300000000L;
 
-    PickedUpObject(World world, ITexture texture, ROVector2f position, float size) {
+    PickedUpObject(World world, AnimationFrame texture, ROVector2f position, float size) {
         this.world = world;
         this.texture = texture;
         this.position = new Vector2f(position);

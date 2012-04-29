@@ -82,7 +82,7 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
 
 	private void use() {
 		world.remove(this);
-		world.addTopLevelEntities(new UsedKey(world, texture.getFirst().getCurrentFrame().getImage(), getPosition()));
+		world.addTopLevelEntities(new UsedKey(world, texture.getFirst().getCurrentFrame(), getPosition()));
 	}
 
 	public AnimationCollection getTexture() {

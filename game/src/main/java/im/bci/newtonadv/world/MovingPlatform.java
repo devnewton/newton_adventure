@@ -31,10 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Box;
 
@@ -53,21 +53,22 @@ public strictfp class MovingPlatform extends AbstractDrawableBody implements Upd
     static final float size = 2.0f * World.distanceUnit;
     private static final float weight = 10000.0f;
     final World world;
-    final ITexture texture;
+    final AnimationCollection texture;
     final Vector2f f = new Vector2f();
 
-    public MovingPlatform(World world, ITexture texture, Destinations destinations) {
+    public MovingPlatform(World world, AnimationCollection texture, Destinations destinations) {
         super(new Box(size, size), weight);
         this.world = world;
         this.texture = texture;
         this.destinations = destinations;
         this.setGravityEffected(false);
         this.setRotatable(false);
+        texture.getFirst().start();
     }
 
     @Override
 	public void draw() {
-        world.getView().drawMovingPlatform(this, texture);
+        world.getView().drawMovingPlatform(this, texture.getFirst().getCurrentFrame());
     }
 
     @Override

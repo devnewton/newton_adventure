@@ -488,9 +488,6 @@ public strictfp class GameView implements IGameView {
 			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		} else {
-			int bci;
-			bci = 0;
 		}
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 		GL11.glBegin(GL11.GL_QUADS);
@@ -509,28 +506,28 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawMovingPlatform(MovingPlatform platform, ITexture texture) {
+	public void drawMovingPlatform(MovingPlatform platform, AnimationFrame texture) {
 		Box box = (Box) platform.getShape();
 		Vector2f[] pts = box.getPoints(platform.getPosition(),
 				platform.getRotation());
 
-		if (texture.hasAlpha()) {
+		if (texture.getImage().hasAlpha()) {
 			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0.0f, 1.0f);
+		GL11.glTexCoord2f(texture.getU1(), texture.getV2());
 		GL11.glVertex2f(pts[0].x, pts[0].y);
-		GL11.glTexCoord2f(1.0f, 1.0f);
+		GL11.glTexCoord2f(texture.getU2(), texture.getV2());
 		GL11.glVertex2f(pts[1].x, pts[1].y);
-		GL11.glTexCoord2f(1.0f, 0.0f);
+		GL11.glTexCoord2f(texture.getU2(), texture.getV1());
 		GL11.glVertex2f(pts[2].x, pts[2].y);
-		GL11.glTexCoord2f(0.0f, 0.0f);
+		GL11.glTexCoord2f(texture.getU1(), texture.getV1());
 		GL11.glVertex2f(pts[3].x, pts[3].y);
 		GL11.glEnd();
-		if (texture.hasAlpha()) {
+		if (texture.getImage().hasAlpha()) {
 			GL11.glPopAttrib();
 		}
 	}
@@ -967,7 +964,7 @@ public strictfp class GameView implements IGameView {
 
 	@Override
 	public void drawPickedUpObject(PickedUpObject pickedUpObject, World world,
-			ITexture texture) {
+			AnimationFrame texture) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(pickedUpObject.getPosition().getX(), pickedUpObject
 				.getPosition().getY(), 0.0f);
@@ -982,17 +979,18 @@ public strictfp class GameView implements IGameView {
 		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
 											// transperancy
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
-		final float u1 = 0.0f, u2 = 1.0f;
+		final float u1 = texture.getU1(), u2 = texture.getU2();
+		final float v1 = texture.getV1(), v2 = texture.getV2();
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glTexCoord2f(u1, v1);
 		GL11.glVertex2f(x1, y2);
-		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glTexCoord2f(u2, v1);
 		GL11.glVertex2f(x2, y2);
-		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glTexCoord2f(u2, v2);
 		GL11.glVertex2f(x2, y1);
-		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glTexCoord2f(u1, v2);
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
 		GL11.glPopAttrib();
@@ -1000,7 +998,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawUsedKey(UsedKey key, ITexture texture, World world) {
+	public void drawUsedKey(UsedKey key, AnimationFrame texture, World world) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(),
 				0.0f);
@@ -1015,17 +1013,18 @@ public strictfp class GameView implements IGameView {
 		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
 											// transperancy
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
-		final float u1 = 0.0f, u2 = 1.0f;
+		final float u1 = texture.getU1(), u2 = texture.getU2();
+		final float v1 = texture.getV1(), v2 = texture.getV2();
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glTexCoord2f(u1, v1);
 		GL11.glVertex2f(x1, y2);
-		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glTexCoord2f(u2, v1);
 		GL11.glVertex2f(x2, y2);
-		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glTexCoord2f(u2, v2);
 		GL11.glVertex2f(x2, y1);
-		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glTexCoord2f(u1, v2);
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
 		GL11.glPopAttrib();
