@@ -31,6 +31,8 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.nanim.NanimParser.Nanim;
+import im.bci.nanim.NanimParser.PixelFormat;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import java.awt.Color;
@@ -52,6 +54,7 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -121,6 +124,29 @@ public class TextureCache implements ITextureCache {
 		Texture texture = convertImageToTexture(loaded, false);
 		textures.put(name, new TextureWeakReference(texture, referenceQueue));
 		return texture;
+	}
+	
+	public Map<String, ITexture> getTextures(String nanimName, Nanim nanim) {
+		String baseName = nanimName + "#nanim_";
+		Map<String, ITexture> nanimTextures = new HashMap<String, ITexture>();
+		for(im.bci.nanim.NanimParser.Image nimage : nanim.getImagesList()) {
+			String name = baseName + nimage.getName();
+			TextureWeakReference textureRef = textures.get(name);
+			if (textureRef != null) {
+				ITexture texture = textureRef.get();
+				if (texture != null) {
+					nanimTextures.put(nimage.getName(), texture);
+					continue;
+				} else {
+					textures.remove(nanimName);
+				}
+			}
+			
+			Texture texture = convertNImageToTexture(nimage);
+			textures.put(name, new TextureWeakReference(texture, referenceQueue));
+			nanimTextures.put(nimage.getName(), texture);
+		}
+		return nanimTextures;
 	}
 
 	@Override
@@ -219,6 +245,36 @@ public class TextureCache implements ITextureCache {
 		GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
 				GL11.GL_MODULATE);
 		int pixelFormat = texImage.getColorModel().hasAlpha() ? GL11.GL_RGBA
+				: GL11.GL_RGB;
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, pixelFormat, texWidth,
+				texHeight, 0, pixelFormat, GL11.GL_UNSIGNED_BYTE, imageBuffer);
+		return texture;
+	}
+	
+	private Texture convertNImageToTexture(im.bci.nanim.NanimParser.Image nimage) {
+		int texWidth = nimage.getWidth();
+		int texHeight = nimage.getHeight();
+		Texture texture = new Texture(texWidth, texHeight);
+		
+		ByteBuffer imageBuffer = ByteBuffer.allocateDirect(nimage.getPixels().size());
+		imageBuffer.order(ByteOrder.nativeOrder());
+		imageBuffer.put(nimage.getPixels().asReadOnlyByteBuffer());
+		imageBuffer.flip();
+
+		// produce a texture from the byte buffer
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
+				GL11.GL_CLAMP);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T,
+				GL11.GL_CLAMP);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER,
+				GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER,
+				GL11.GL_NEAREST);
+		GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+				GL11.GL_MODULATE);
+		int pixelFormat = nimage.getFormat().equals(PixelFormat.RGBA_8888) ? GL11.GL_RGBA
 				: GL11.GL_RGB;
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, pixelFormat, texWidth,
 				texHeight, 0, pixelFormat, GL11.GL_UNSIGNED_BYTE, imageBuffer);

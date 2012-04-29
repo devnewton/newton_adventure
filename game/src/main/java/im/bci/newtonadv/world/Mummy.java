@@ -33,6 +33,7 @@ package im.bci.newtonadv.world;
 
 import net.phys2d.math.Matrix2f;
 import im.bci.newtonadv.anim.Animation;
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -48,7 +49,7 @@ import im.bci.newtonadv.util.Vector;
  */
 public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 
-    private Animation animation;
+    private AnimationCollection animation;
     private static final float weight = 1.0f;
     private static final float horizontalSpeed = 4.0f;
     private static final long moveStraightDuration = 4000000000L;
@@ -147,12 +148,12 @@ public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
     }
 
     public Animation getAnimation() {
-        return animation;
+        return animation.getFirst();
     }
 
     @Override
     public void draw() {
-        world.getView().drawMummy(this,world,getAnimation().getCurrentTexture(),scale);
+        world.getView().drawMummy(this,world,getAnimation().getCurrentFrame(),scale);
     }
 
     @Override

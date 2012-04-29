@@ -35,7 +35,7 @@ import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
-import im.bci.newtonadv.anim.Animation;
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -85,9 +85,9 @@ public strictfp class World extends net.phys2d.raw.World {
 	private ITexture fireBallTexture;
 	private boolean objectivesCompleted = false;
 	private float nonProgressiveGravityRotationStep;
-	private Animation explosionAnimation;
-	private Animation mummyAnimation;
-	private Animation batAnimation;
+	private AnimationCollection explosionAnimation;
+	private AnimationCollection mummyAnimation;
+	private AnimationCollection batAnimation;
 	private ITexture keyTexture;
 	private ITexture openDoorTexture;
 	private ITexture closedDoorTexture;
@@ -134,15 +134,15 @@ public strictfp class World extends net.phys2d.raw.World {
 		return fireBallTexture;
 	}
 
-	Animation getMummyAnimation() {
+	AnimationCollection getMummyAnimation() {
 		return mummyAnimation;
 	}
 
-	Animation getBatAnimation() {
+	AnimationCollection getBatAnimation() {
 		return batAnimation;
 	}
 
-	Animation getExplosionAnimation() {
+	AnimationCollection getExplosionAnimation() {
 		return explosionAnimation;
 	}
 
@@ -236,7 +236,7 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	static {
 		defaultMapProperties.put("newton_adventure.mummy", "mummy.gif");
-		defaultMapProperties.put("newton_adventure.bat", "bat.gif");
+		defaultMapProperties.put("newton_adventure.bat", "bat.nanim");
 		defaultMapProperties.put("newton_adventure.explosion", "explosion.gif");
 		defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
 		defaultMapProperties.put("newton_adventure.axe", "axe.png");
@@ -300,11 +300,11 @@ public strictfp class World extends net.phys2d.raw.World {
 		}
 
 		final ITextureCache textureCache = game.getView().getTextureCache();
-		explosionAnimation = game.getView().loadFromGif(
+		explosionAnimation = game.getView().loadFromAnimation(
 				getFileFromMap(map, "newton_adventure.explosion"));
-		mummyAnimation = game.getView().loadFromGif(
+		mummyAnimation = game.getView().loadFromAnimation(
 				getFileFromMap(map, "newton_adventure.mummy"));
-		batAnimation = game.getView().loadFromGif(
+		batAnimation = game.getView().loadFromAnimation(
 				getFileFromMap(map, "newton_adventure.bat"));
 		appleIconTexture = textureCache.getTexture(getFileFromMap(map,
 				"newton_adventure.apple"));
@@ -368,7 +368,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		backgroundTexture = textureCache.getTexture(getFileFromMap(map,
 				"newton_adventure.background"));
 		this.getHero().setAnimation(
-				game.getView().loadFromGif(
+				game.getView().loadFromAnimation(
 						getFileFromMap(map, "newton_adventure.hero")));
 		this.getHero().setJumpSound(
 				game.getSoundCache().getSoundIfEnabled(

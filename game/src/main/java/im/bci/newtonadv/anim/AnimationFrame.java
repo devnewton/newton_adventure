@@ -38,12 +38,17 @@ import im.bci.newtonadv.platform.interfaces.ITexture;
  *
  * @author devnewton
  */
-class Frame {
+public class AnimationFrame {
 
     private ITexture image;
     private long duration;//milliseconds
     long endTime;//milliseconds
-    public Frame(ITexture image, long duration) {
+    float u1 = 0;
+    float v1 = 0;
+    float u2 = 1;
+    float v2 = 1;
+
+	public AnimationFrame(ITexture image, long duration) {
         this.image = image;
         this.duration = duration;
     }
@@ -55,4 +60,20 @@ class Frame {
     public ITexture getImage() {
         return image;
     }
+    
+	public float getU1() {
+		return u1;
+	}
+
+	public float getV1() {
+		return v1;
+	}
+
+	public float getU2() {
+		return u2;
+	}
+
+	public float getV2() {
+		return v2;
+	}
 }

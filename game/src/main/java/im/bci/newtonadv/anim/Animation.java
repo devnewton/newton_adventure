@@ -31,9 +31,11 @@
  */
 package im.bci.newtonadv.anim;
 
+import im.bci.nanim.NanimParser.Frame;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  *
@@ -52,23 +54,39 @@ public class Animation {
         STARTED,
         STOPPED
     }
-    private ArrayList<Frame> frames = new ArrayList<Frame>();
+    private ArrayList<AnimationFrame> frames = new ArrayList<AnimationFrame>();
     private long totalDuration;//milliseconds
     private int currentFrameIndex;
     private long currentTime;//milliseconds
     private PlayMode mode = PlayMode.LOOP;
     private State state = State.STOPPED;
 
-    public ITexture getCurrentTexture() {
-        assert !frames.isEmpty();
-        return frames.get(currentFrameIndex).getImage();
+	public Animation() {
+	}
+	
+    public Animation(im.bci.nanim.NanimParser.Animation nanimation,
+			Map<String, ITexture> textures) {
+    	frames.ensureCapacity(nanimation.getFramesCount());
+		for(Frame nframe : nanimation.getFramesList()) {
+			AnimationFrame frame = addFrame(textures.get(nframe.getImageName()), nframe.getDuration());
+			frame.u1 = nframe.getU1();
+			frame.v1 = nframe.getV1();
+			frame.u2 = nframe.getU2();
+			frame.v2 = nframe.getV2();
+			frames.add(frame);
+		}
+	}
+
+	public AnimationFrame getCurrentFrame() {
+        return frames.get(currentFrameIndex);
     }
 
-    public void addFrame(ITexture image, long duration) {
-        final Frame frame = new Frame(image, duration);
+    public AnimationFrame addFrame(ITexture image, long duration) {
+        final AnimationFrame frame = new AnimationFrame(image, duration);
         frames.add(frame);
         totalDuration += duration;
         frame.endTime = totalDuration;
+		return frame;
     }
     
     public void stop() {

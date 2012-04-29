@@ -31,9 +31,13 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.nanim.NanimParser;
+import im.bci.nanim.NanimParser.Nanim;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
+import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.GameOverSequence;
 import im.bci.newtonadv.game.MainMenuSequence;
@@ -74,6 +78,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
@@ -91,7 +96,8 @@ import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.world.World;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
 import net.phys2d.math.ROVector2f;
@@ -420,7 +426,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawBat(Bat bat, float scale, ITexture texture, World world) {
+	public void drawBat(Bat bat, float scale, AnimationFrame frame, World world) {
 		AABox bounds = bat.getShape().getBounds();
 
 		GL11.glPushMatrix();
@@ -439,17 +445,16 @@ public strictfp class GameView implements IGameView {
 											// transperancy
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
 
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 
-		final float u1 = 1, u2 = 0;
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glTexCoord2f(frame.getU2(), frame.getV1());
 		GL11.glVertex2f(x1, y2);
-		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glTexCoord2f(frame.getU1(), frame.getV1());
 		GL11.glVertex2f(x2, y2);
-		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glTexCoord2f(frame.getU1(), frame.getV2());
 		GL11.glVertex2f(x2, y1);
-		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glTexCoord2f(frame.getU2(), frame.getV2());
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
 		GL11.glPopAttrib();
@@ -642,7 +647,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawExplosion(Explosion explosion, ITexture texture, World world) {
+	public void drawExplosion(Explosion explosion, AnimationFrame frame, World world) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(explosion.getPosition().getX(), explosion
 				.getPosition().getY(), 0.0f);
@@ -657,17 +662,17 @@ public strictfp class GameView implements IGameView {
 		GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
 											// transperancy
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 
-		final float u1 = 0.0f, u2 = 1.0f;
+		final float u1 = frame.getU1(), v1 = frame.getV1(), u2 = frame.getU2(), v2 = frame.getV2();
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glTexCoord2f(u1, v1);
 		GL11.glVertex2f(x1, y2);
-		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glTexCoord2f(u2, v1);
 		GL11.glVertex2f(x2, y2);
-		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glTexCoord2f(u2, v2);
 		GL11.glVertex2f(x2, y1);
-		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glTexCoord2f(u1, v2);
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
 		GL11.glPopAttrib();
@@ -709,7 +714,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawHero(Hero hero, ITexture texture, World world, float scale) {
+	public void drawHero(Hero hero, AnimationFrame frame, World world, float scale) {
 		AABox bounds = hero.getShape().getBounds();
 
 		GL11.glPushMatrix();
@@ -728,24 +733,26 @@ public strictfp class GameView implements IGameView {
 											// transperancy
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
 
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 
-		float u1, u2;
+		final float v1 = frame.getV1(), v2 = frame.getV2();
+		final float u1, u2;
 		if (hero.isLookingLeft()) {
-			u1 = 1.0f;
-			u2 = 0.0f;
+			u1 = frame.getU2();
+			u2 = frame.getU1();
 		} else {
-			u1 = 0.0f;
-			u2 = 1.0f;
+			u1 = frame.getU1();
+			u2 = frame.getU2();
 		}
+		
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glTexCoord2f(u1, v1);
 		GL11.glVertex2f(x1, y2);
-		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glTexCoord2f(u2, v1);
 		GL11.glVertex2f(x2, y2);
-		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glTexCoord2f(u2, v2);
 		GL11.glVertex2f(x2, y1);
-		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glTexCoord2f(u1, v2);
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
 		GL11.glPopAttrib();
@@ -880,7 +887,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawMummy(Mummy mummy, World world, ITexture texture,
+	public void drawMummy(Mummy mummy, World world, AnimationFrame frame,
 			float scale) {
 		AABox bounds = mummy.getShape().getBounds();
 
@@ -900,24 +907,26 @@ public strictfp class GameView implements IGameView {
 											// transperancy
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f); // sets aplha function
 
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 
-		float u1, u2;
+		final float v1 = frame.getV1(), v2 = frame.getV2();
+		final float u1, u2;
 		if (mummy.isLookingLeft()) {
-			u1 = 1.0f;
-			u2 = 0.0f;
+			u1 = frame.getU2();
+			u2 = frame.getU1();
 		} else {
-			u1 = 0.0f;
-			u2 = 1.0f;
+			u1 = frame.getU1();
+			u2 = frame.getU2();
 		}
+		
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(u1, 0.0f);
+		GL11.glTexCoord2f(u1, v1);
 		GL11.glVertex2f(x1, y2);
-		GL11.glTexCoord2f(u2, 0.0f);
+		GL11.glTexCoord2f(u2, v1);
 		GL11.glVertex2f(x2, y2);
-		GL11.glTexCoord2f(u2, 1.0f);
+		GL11.glTexCoord2f(u2, v2);
 		GL11.glVertex2f(x2, y1);
-		GL11.glTexCoord2f(u1, 1.0f);
+		GL11.glTexCoord2f(u1, v2);
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
 		GL11.glPopAttrib();
@@ -1434,18 +1443,33 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public Animation loadFromGif(String name) throws FileNotFoundException {
-		GifDecoder d = new GifDecoder();
-		d.read(data.openFile(name));
-		Animation animation = new Animation();
-		int n = d.getFrameCount();
-		for (int i = 0; i < n; i++) {
-			BufferedImage frameImage = d.getFrame(i); // frame i
-			int t = d.getDelay(i); // display duration of frame in milliseconds
-			animation.addFrame(
-					textureCache.createTexture(name + '#' + i, frameImage), t);
+	public AnimationCollection loadFromAnimation(String name) throws IOException {
+		if(name.endsWith("gif")) {
+			GifDecoder d = new GifDecoder();
+			d.read(data.openFile(name));
+			Animation animation = new Animation();
+			int n = d.getFrameCount();
+			for (int i = 0; i < n; i++) {
+				BufferedImage frameImage = d.getFrame(i); // frame i
+				int t = d.getDelay(i); // display duration of frame in milliseconds
+				animation.addFrame(
+						textureCache.createTexture(name + '#' + i, frameImage), t);
+			}
+			AnimationCollection collection = new AnimationCollection();
+			collection.addAnimation(animation);
+			return collection;
+		} else if(name.endsWith("nanim")) {
+			InputStream is = data.openFile(name);
+			try {
+				Nanim nanim = NanimParser.Nanim.parseFrom(is);
+				Map<String, ITexture> textures = textureCache.getTextures(name, nanim);
+				return new AnimationCollection(nanim, textures);
+			} finally {
+				is.close();
+			}
+		} else {
+			throw new RuntimeException("Unknow animation file format for file : " + name);
 		}
-		return animation;
 	}
 
 	@Override

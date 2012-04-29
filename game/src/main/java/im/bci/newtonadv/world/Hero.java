@@ -34,6 +34,7 @@ package im.bci.newtonadv.world;
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.ROVector2f;
 import im.bci.newtonadv.anim.Animation;
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -51,7 +52,7 @@ import net.phys2d.raw.shapes.Circle;
 public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 
 	private ISoundCache.Playable jumpSound;
-	private Animation animation;
+	private AnimationCollection animations;
 	private int nbApple = 10;
 	private static final float jumpForce = 180.0f;
 	private static final float weight = 1.0f;
@@ -197,11 +198,11 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 	}
 
 	public Animation getAnimation() {
-		return animation;
+		return animations.getFirst();
 	}
 
-	public void setAnimation(Animation heroAnimation) {
-		this.animation = heroAnimation;
+	public void setAnimation(AnimationCollection heroAnimation) {
+		this.animations = heroAnimation;
 	}
 
 	@Override
@@ -212,7 +213,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 				return;
 			}
 		}
-		world.getView().drawHero(this, getAnimation().getCurrentTexture(),
+		world.getView().drawHero(this, getAnimation().getCurrentFrame(),
 				world, scale);
 	}
 

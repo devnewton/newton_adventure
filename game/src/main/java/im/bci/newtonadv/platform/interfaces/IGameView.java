@@ -31,7 +31,8 @@
  */
 package im.bci.newtonadv.platform.interfaces;
 
-import im.bci.newtonadv.anim.Animation;
+import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.GameOverSequence;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.MenuSequence;
@@ -85,7 +86,7 @@ public interface IGameView {
 
     void drawAxeAnchor(AxeAnchor axeAnchor, float radius, ITexture texture);
 
-    void drawBat(Bat bat, float scale, ITexture texture, World world);
+    void drawBat(Bat bat, float scale, AnimationFrame texture, World world);
 
     void drawBlocker(Blocker blocker, ITexture texture, float alpha);
 
@@ -103,7 +104,7 @@ public interface IGameView {
 
     void drawEgyptianBossHand(EgyptianBossHand hand, ITexture texture);
 
-    void drawExplosion(Explosion explosion, ITexture texture, World world);
+    void drawExplosion(Explosion explosion, AnimationFrame texture, World world);
 
     void drawFPS(int nbFps);
 
@@ -111,7 +112,7 @@ public interface IGameView {
 
     void drawGameOverSequence(GameOverSequence sequence, ITrueTypeFont font);
 
-    void drawHero(Hero hero, ITexture texture, World world, float scale);
+    void drawHero(Hero hero, AnimationFrame texture, World world, float scale);
 
     void drawKey(Key key, ITexture texture, World world);
 
@@ -125,7 +126,7 @@ public interface IGameView {
 
     void drawMobilePikes(MobilePikes pikes, ITexture texture);
 
-    void drawMummy(Mummy mummy, World world, ITexture texture, float scale);
+    void drawMummy(Mummy mummy, World world, AnimationFrame texture, float scale);
 
     void drawPickedUpObject(PickedUpObject apple, World world, ITexture texture);
 
@@ -159,7 +160,7 @@ public interface IGameView {
 
     public ITrueTypeFont createScoreSequenceFont();
 
-    public Animation loadFromGif(String name) throws FileNotFoundException, IOException;
+    public AnimationCollection loadFromAnimation(String name) throws FileNotFoundException, IOException;
 
     public void drawFadeSequence(float r, float g, float b, float a);
 
