@@ -45,8 +45,9 @@ public class Texture implements ITexture {
 
     private int id;
     private int width, height;
+    private boolean alpha;
 
-    public Texture(int width, int height) {
+    public Texture(int width, int height, boolean alpha) {
         ByteBuffer temp = ByteBuffer.allocateDirect(4);
         temp.order(ByteOrder.nativeOrder());
         IntBuffer intBuffer = temp.asIntBuffer();
@@ -54,6 +55,7 @@ public class Texture implements ITexture {
         id = intBuffer.get(0);
         this.width = width;
         this.height = height;
+        this.alpha = alpha;
     }
 
     @Override
@@ -70,4 +72,9 @@ public class Texture implements ITexture {
 	public int getWidth() {
         return width;
     }
+
+	@Override
+	public boolean hasAlpha() {
+		return alpha;
+	}
 }

@@ -44,6 +44,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
+import java.awt.image.PixelGrabber;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.InputStream;
@@ -119,7 +120,6 @@ public class TextureCache implements ITextureCache {
 				textures.remove(name);
 			}
 		}
-
 		BufferedImage loaded = convertToBufferedImage(tile.getImage());
 		Texture texture = convertImageToTexture(loaded, false);
 		textures.put(name, new TextureWeakReference(texture, referenceQueue));
@@ -229,7 +229,7 @@ public class TextureCache implements ITextureCache {
 
 		// GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter);
 		// }
-		Texture texture = new Texture(texWidth, texHeight);
+		Texture texture = new Texture(texWidth, texHeight, texImage.getColorModel().hasAlpha());
 
 		// produce a texture from the byte buffer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
@@ -254,7 +254,7 @@ public class TextureCache implements ITextureCache {
 	private Texture convertNImageToTexture(im.bci.nanim.NanimParser.Image nimage) {
 		int texWidth = nimage.getWidth();
 		int texHeight = nimage.getHeight();
-		Texture texture = new Texture(texWidth, texHeight);
+		Texture texture = new Texture(texWidth, texHeight, nimage.getFormat().equals(PixelFormat.RGBA_8888));
 		
 		ByteBuffer imageBuffer = ByteBuffer.allocateDirect(nimage.getPixels().size());
 		imageBuffer.order(ByteOrder.nativeOrder());
@@ -307,12 +307,29 @@ public class TextureCache implements ITextureCache {
 
 	private BufferedImage convertToBufferedImage(Image image) {
 		BufferedImage bi = new BufferedImage(image.getWidth(null),
-				image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+				image.getHeight(null), hasAlpha(image) ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 		Graphics bg = bi.getGraphics();
 		bg.drawImage(image, 0, 0, null);
 		bg.dispose();
 		return bi;
 	}
+	
+	private static boolean hasAlpha(Image image) {
+	    if (image instanceof BufferedImage) {
+	        BufferedImage bimage = (BufferedImage)image;
+	        return bimage.getColorModel().hasAlpha();
+	    }
+	     PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
+	    try {
+	        pg.grabPixels();
+	    } catch (InterruptedException e) {
+	    }
+
+	    // Get the image's color model
+	    ColorModel cm = pg.getColorModel();
+	    return cm.hasAlpha();
+	}
+
 
 	private static final class TextureWeakReference extends
 			WeakReference<Texture> {
