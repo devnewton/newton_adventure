@@ -84,7 +84,7 @@ public abstract strictfp class PickableObject extends StaticBody implements Draw
     	texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
     };
 
-	public void setOrder(int zOrder) {
+	public void setZOrder(int zOrder) {
 		this.zOrder = zOrder;
 	} 
     
