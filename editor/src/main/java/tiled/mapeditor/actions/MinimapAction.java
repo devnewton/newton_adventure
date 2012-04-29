@@ -25,7 +25,6 @@ public class MinimapAction extends AbstractAction {
 		this.editor = editor;
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		String startLocation =
                 TiledConfiguration.node("recent").get("file0", null);

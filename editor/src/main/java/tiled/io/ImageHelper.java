@@ -14,6 +14,8 @@ package tiled.io;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.PixelGrabber;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,7 +43,7 @@ public class ImageHelper
         try {
             BufferedImage buffer = new BufferedImage(
                     image.getWidth(null), image.getHeight(null),
-                    BufferedImage.TYPE_INT_ARGB);
+                    hasAlpha(image) ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 
             buffer.createGraphics().drawImage(image, 0, 0, null);
             ImageIO.write(buffer, "PNG", baos);
@@ -77,4 +79,20 @@ public class ImageHelper
     static public BufferedImage loadImageFile(File file) throws IOException {
         return ImageIO.read(file);
     }
+    
+	private static boolean hasAlpha(Image image) {
+	    if (image instanceof BufferedImage) {
+	        BufferedImage bimage = (BufferedImage)image;
+	        return bimage.getColorModel().hasAlpha();
+	    }
+	     PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
+	    try {
+	        pg.grabPixels();
+	    } catch (InterruptedException e) {
+	    }
+
+	    // Get the image's color model
+	    ColorModel cm = pg.getColorModel();
+	    return cm.hasAlpha();
+	}
 }
