@@ -80,25 +80,25 @@ public interface IGameView {
 
     void draw(Sequence sequence);
 
-    void drawPickableObject(PickableObject pickable, ITexture texture, World world);
+    void drawPickableObject(PickableObject pickable, AnimationFrame texture, World world);
 
-    void drawAxe(Axe axe, ITexture texture);
+    void drawAxe(Axe axe, AnimationFrame texture);
 
     void drawAxeAnchor(AxeAnchor axeAnchor, float radius, ITexture texture);
 
-    void drawBat(Bat bat, float scale, AnimationFrame texture, World world);
+    void drawBat(Bat bat, float scale, AnimationFrame frame, World world);
 
-    void drawBlocker(Blocker blocker, ITexture texture, float alpha);
+    void drawBlocker(Blocker blocker, AnimationFrame frame, float alpha);
 
     void drawButton(Button button);
 
-    void drawCloud(Cloud cloud, ITexture texture, float alpha);
+    void drawCloud(Cloud cloud, AnimationFrame frame, float alpha);
 
-    void drawDoor(Door door, ITexture texture);
+    void drawDoor(Door door, AnimationFrame texture);
 
-    void drawDownLeftHalfPlatform(DownLeftHalfPlatform platform, ITexture texture);
+    void drawDownLeftHalfPlatform(DownLeftHalfPlatform platform, AnimationFrame texture);
 
-    void drawDownRightHalfPlatform(DownRightHalfPlatform platform, ITexture texture);
+    void drawDownRightHalfPlatform(DownRightHalfPlatform platform, AnimationFrame texture);
 
     void drawEgyptianBoss(EgyptianBoss boss, ITexture bodyTexture, boolean isHurtBlinkState);
 
@@ -108,29 +108,29 @@ public interface IGameView {
 
     void drawFPS(int nbFps);
 
-    void drawFireBall(FireBall fireball, ITexture texture, World world);
+    void drawFireBall(FireBall fireball, AnimationFrame texture, World world);
 
     void drawGameOverSequence(GameOverSequence sequence, ITrueTypeFont font);
 
     void drawHero(Hero hero, AnimationFrame texture, World world, float scale);
 
-    void drawKey(Key key, ITexture texture, World world);
+    void drawKey(Key key, AnimationFrame texture, World world);
 
     void drawLevelIndicators(String indicators, ITrueTypeFont appleFont);
 
-    void drawLosedApple(LosedApple apple, World world, ITexture texture, float alpha);
+    void drawLosedApple(LosedApple apple, World world, AnimationFrame texture, float alpha);
 
     void drawMenuSequence(MenuSequence sequence);
 
     void drawMobilePikeAnchor(MobilePikeAnchor anchor, ITexture texture);
 
-    void drawMobilePikes(MobilePikes pikes, ITexture texture);
+    void drawMobilePikes(MobilePikes pikes, AnimationFrame texture);
 
     void drawMummy(Mummy mummy, World world, AnimationFrame texture, float scale);
 
     void drawPickedUpObject(PickedUpObject apple, World world, ITexture texture);
 
-    void drawPlatform(Platform platform, ITexture texture);
+    void drawPlatform(Platform platform, AnimationFrame frame);
 
     void drawMenuButton(Button button, ITrueTypeFont questNameFont, String questName);
 
@@ -140,9 +140,9 @@ public interface IGameView {
 
     void drawStoryBoardSequence(StoryboardSequence sequence, ITrueTypeFont font);
 
-    void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform, ITexture texture);
+    void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform, AnimationFrame texture);
 
-    void drawUpRightHalfPlatform(UpRightHalfPlatform platform, ITexture texture);
+    void drawUpRightHalfPlatform(UpRightHalfPlatform platform, AnimationFrame texture);
 
     void drawUsedKey(UsedKey key, ITexture texture, World world);
 
@@ -174,5 +174,5 @@ public interface IGameView {
 
 	void drawMinimap(World world, ITexture minimapTexture);
 
-	void drawKeyLock(KeyLock keyLock, ITexture texture, float alpha);
+	void drawKeyLock(KeyLock keyLock, AnimationFrame frame, float alpha);
 }

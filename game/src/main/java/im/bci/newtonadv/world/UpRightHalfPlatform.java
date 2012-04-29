@@ -31,10 +31,12 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
 
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.ConvexPolygon;
 
@@ -42,11 +44,11 @@ import net.phys2d.raw.shapes.ConvexPolygon;
  *
  * @author devnewton
  */
-public class UpRightHalfPlatform extends AbstractDrawableStaticBody {
+public class UpRightHalfPlatform extends AbstractDrawableStaticBody implements Updatable {
 
     static final float size = 2.0f * World.distanceUnit;
     static final ROVector2f[] vertices = new ROVector2f[] { new Vector2f(-size/2.0f, size/2.0f), new Vector2f(size/2.0f, -size/2.0f), new Vector2f(size/2.0f, size/2.0f) };
-    private ITexture texture;
+    private AnimationCollection texture;
     private final World world;
 
     UpRightHalfPlatform(World world) {
@@ -56,12 +58,18 @@ public class UpRightHalfPlatform extends AbstractDrawableStaticBody {
         this.world = world;
     }
 
-    public void setTexture(ITexture texture) {
+    public void setTexture(AnimationCollection texture) {
         this.texture = texture;
+        texture.getFirst().start();
     }
 
     @Override
     public void draw() {
-        world.getView().drawUpRightHalfPlatform(this,texture);
+        world.getView().drawUpRightHalfPlatform(this,texture.getFirst().getCurrentFrame());
     }
+
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+	}
 }

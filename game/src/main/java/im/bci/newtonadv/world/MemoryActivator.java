@@ -31,15 +31,15 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 
 class MemoryActivator extends Platform implements Updatable {
 	private final int activableId;
-	private final ITexture onTexture, offTexture, hiddenTexture;
+	private final AnimationCollection onTexture, offTexture, hiddenTexture;
 	private State state = State.HIDDEN;
 	private long showEndTime = -1;
 	private static final long showDuration = 5000000000L;
@@ -48,8 +48,8 @@ class MemoryActivator extends Platform implements Updatable {
 		HIDDEN, SHOW, ACTIVATED
 	}
 
-	MemoryActivator(World world, int activableId, ITexture onTexture,
-			ITexture offTexture, ITexture hiddenTexture) {
+	MemoryActivator(World world, int activableId, AnimationCollection onTexture,
+			AnimationCollection offTexture, AnimationCollection hiddenTexture) {
 		super(world);
 		this.activableId = activableId;
 		this.offTexture = offTexture;

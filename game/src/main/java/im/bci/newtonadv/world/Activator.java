@@ -31,16 +31,16 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
+import im.bci.newtonadv.anim.AnimationCollection;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 
 class Activator extends Platform {
     private final int activableId;
     private boolean activated;
-    private final ITexture onTexture;
+    private final AnimationCollection onTexture;
 
-    Activator(World world, int activableId, ITexture onTexture, ITexture offTexture) {
+    Activator(World world, int activableId, AnimationCollection onTexture, AnimationCollection offTexture) {
         super(world);
         this.activableId = activableId;
         this.setTexture(offTexture);

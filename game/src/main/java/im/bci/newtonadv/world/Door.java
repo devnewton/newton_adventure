@@ -31,57 +31,73 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
 
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.shapes.Box;
 
 /**
- *
+ * 
  * @author devnewton
  */
-public strictfp class Door extends AbstractDrawableStaticBody implements CollisionDetectionOnly {
+public strictfp class Door extends AbstractDrawableStaticBody implements
+		CollisionDetectionOnly, Updatable {
 
-    static final float width = 2.0f * World.distanceUnit;
-    static final float height = 4.0f * World.distanceUnit;
-    protected final World world;
-    private ITexture closedTexture;
-    private ITexture openTexture;
-    protected boolean isClose = true;
+	static final float width = 2.0f * World.distanceUnit;
+	static final float height = 4.0f * World.distanceUnit;
+	protected final World world;
+	private AnimationCollection closedTexture;
+	private AnimationCollection openTexture;
+	protected boolean isClose = true;
 
-    Door(World world) {
-        super(new Box(width, height));
-        this.world = world;
-        addBit(World.STATIC_BODY_COLLIDE_BIT);
-    }
+	Door(World world) {
+		super(new Box(width, height));
+		this.world = world;
+		addBit(World.STATIC_BODY_COLLIDE_BIT);
+	}
 
-    @Override
-    public void draw() {
-        world.getView().drawDoor(this, isClose ? closedTexture : openTexture );
-    }
+	@Override
+	public void draw() {
+		world.getView().drawDoor(this, isClose ? closedTexture.getFirst().getCurrentFrame() : openTexture.getFirst().getCurrentFrame());
+	}
 
-    void setOpenTexture(ITexture texture) {
-        this.openTexture = texture;
-    }
+	void setOpenTexture(AnimationCollection texture) {
+		this.openTexture = texture;
+		openTexture.getFirst().start();
+	}
 
-    void setClosedTexture(ITexture texture) {
-        this.closedTexture = texture;
-    }
+	void setClosedTexture(AnimationCollection texture) {
+		this.closedTexture = texture;
+		closedTexture.getFirst().start();
+	}
 
-    @Override
-    public strictfp void collided(Body body) {
-        if (body instanceof Key) {
-            isClose = false;
-        } else if( body instanceof Hero && !isClose )
-            world.setObjectivesCompleted(true);
-    }
+	@Override
+	public strictfp void collided(Body body) {
+		if (body instanceof Key) {
+			isClose = false;
+		} else if (body instanceof Hero && !isClose)
+			world.setObjectivesCompleted(true);
+	}
 
-    void open() {
-        isClose = false;
-    }
+	void open() {
+		isClose = false;
+	}
 
 	public boolean isOpenableWithKey() {
 		return true;
+	}
+
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		if (isClose) {
+			closedTexture.getFirst()
+					.update(frameTimeInfos.elapsedTime / 1000000);
+		} else {
+			openTexture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
+		}
+
 	}
 }

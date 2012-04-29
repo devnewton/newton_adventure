@@ -31,23 +31,26 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Circle;
 
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 
-public strictfp class FireBall extends AbstractDrawableBody {
+public strictfp class FireBall extends AbstractDrawableBody implements Updatable{
     public static final float size = Cannon.size / 2.0f;
     World world;
-    private ITexture texture;
+    private AnimationCollection texture;
     FireBall(World world) {
         super(new Circle(size/2.0f), 40.0f);
         this.world = world;
     }
 
-    void setTexture(ITexture texture) {
+    void setTexture(AnimationCollection texture) {
         this.texture = texture;
+        texture.getFirst().start();
     }
 
     @Override
@@ -65,11 +68,16 @@ public strictfp class FireBall extends AbstractDrawableBody {
     
     @Override
 	public void draw() {
-        world.getView().drawFireBall(this,texture,world);
+        world.getView().drawFireBall(this,texture.getFirst().getCurrentFrame(),world);
     }
 
     public float getSize() {
         return size;
     }
+    
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+	}
     
 }

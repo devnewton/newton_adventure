@@ -31,8 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Circle;
@@ -41,10 +43,10 @@ import net.phys2d.raw.shapes.Circle;
  *
  * @author devnewton
  */
-public abstract strictfp class PickableObject extends StaticBody implements Drawable, CollisionDetectionOnly{
+public abstract strictfp class PickableObject extends StaticBody implements Drawable, CollisionDetectionOnly, Updatable{
     
     static final float size = 2.0f * World.distanceUnit;
-    protected ITexture texture;
+    protected AnimationCollection texture;
     protected World world;
     private int zOrder = 0;
 
@@ -58,23 +60,29 @@ public abstract strictfp class PickableObject extends StaticBody implements Draw
     public void collided(Body body) {
         if( body instanceof Hero) {
             world.remove(this);
-            world.addTopLevelEntities( new PickedUpObject(world, texture, getPosition(),size));
+            world.addTopLevelEntities( new PickedUpObject(world, texture.getFirst().getCurrentFrame().getImage(), getPosition(),size));
         }
     }
 
-    public void setTexture(ITexture texture) {
+    public void setTexture(AnimationCollection texture) {
         this.texture = texture;
+        texture.getFirst().start();
     }
 
     @Override
     public void draw() {
-        world.getView().drawPickableObject(this, texture, world);
+        world.getView().drawPickableObject(this, texture.getFirst().getCurrentFrame(), world);
     }
 
     @Override
 	public int getZOrder() {
 		return zOrder;
 	}
+    
+    @Override
+    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+    	texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
+    };
 
 	public void setOrder(int zOrder) {
 		this.zOrder = zOrder;

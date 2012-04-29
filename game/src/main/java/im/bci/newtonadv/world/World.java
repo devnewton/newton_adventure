@@ -36,6 +36,7 @@ import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -43,6 +44,8 @@ import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -78,33 +81,33 @@ public strictfp class World extends net.phys2d.raw.World {
 	private ITexture backgroundTexture;
 	private List<Updatable> updatableBodies = new LinkedList<Updatable>();
 	protected EntityList topLevelEntities = new EntityList();
-	private ITexture appleIconTexture;
-	private ITexture coinTexture;
-	private ITexture worldMapTexture;
-	private ITexture compassTexture;
-	private ITexture fireBallTexture;
+	private AnimationCollection appleIconTexture;
+	private AnimationCollection coinTexture;
+	private AnimationCollection worldMapTexture;
+	private AnimationCollection compassTexture;
+	private AnimationCollection fireBallTexture;
 	private boolean objectivesCompleted = false;
 	private float nonProgressiveGravityRotationStep;
 	private AnimationCollection explosionAnimation;
 	private AnimationCollection mummyAnimation;
 	private AnimationCollection batAnimation;
-	private ITexture keyTexture;
-	private ITexture openDoorTexture;
-	private ITexture closedDoorTexture;
-	private ITexture openDoorToBonusWorldTexture;
-	private ITexture closedDoorToBonusWorldTexture;
-	private ITexture mobilePikesTexture;
-	private ITexture axeTexture;
-	private ITexture activator1OnTexture;
-	private ITexture activator2OnTexture;
-	private ITexture activator3OnTexture;
-	private ITexture activator1OffTexture;
-	private ITexture activator2OffTexture;
-	private ITexture activator3OffTexture;
-	private ITexture memoryActivatorHiddenTexture;
-	private ITexture blocker1Texture;
-	private ITexture blocker2Texture;
-	private ITexture blocker3Texture;
+	private AnimationCollection keyTexture;
+	private AnimationCollection openDoorTexture;
+	private AnimationCollection closedDoorTexture;
+	private AnimationCollection openDoorToBonusWorldTexture;
+	private AnimationCollection closedDoorToBonusWorldTexture;
+	private AnimationCollection mobilePikesTexture;
+	private AnimationCollection axeTexture;
+	private AnimationCollection activator1OnTexture;
+	private AnimationCollection activator2OnTexture;
+	private AnimationCollection activator3OnTexture;
+	private AnimationCollection activator1OffTexture;
+	private AnimationCollection activator2OffTexture;
+	private AnimationCollection activator3OffTexture;
+	private AnimationCollection memoryActivatorHiddenTexture;
+	private AnimationCollection blocker1Texture;
+	private AnimationCollection blocker2Texture;
+	private AnimationCollection blocker3Texture;
 	private final String questName;
 	private final String levelName;
 	private int nbCollectableApple;
@@ -126,11 +129,11 @@ public strictfp class World extends net.phys2d.raw.World {
 		this.objectivesCompleted = objectivesCompleted;
 	}
 
-	public ITexture getAppleIconTexture() {
-		return appleIconTexture;
+	public AnimationFrame getAppleIconTexture() {
+		return appleIconTexture.getFirst().getCurrentFrame();
 	}
 
-	public ITexture getFireBallTexture() {
+	public AnimationCollection getFireBallTexture() {
 		return fireBallTexture;
 	}
 
@@ -306,49 +309,49 @@ public strictfp class World extends net.phys2d.raw.World {
 				getFileFromMap(map, "newton_adventure.mummy"));
 		batAnimation = game.getView().loadFromAnimation(
 				getFileFromMap(map, "newton_adventure.bat"));
-		appleIconTexture = textureCache.getTexture(getFileFromMap(map,
+		appleIconTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.apple"));
-		coinTexture = textureCache.getTexture(getFileFromMap(map,
+		coinTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.coin"));
-		worldMapTexture = textureCache.getTexture(getFileFromMap(map,
+		worldMapTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.world_map"));
-		compassTexture = textureCache.getTexture(getFileFromMap(map,
+		compassTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.compass"));
-		fireBallTexture = textureCache.getTexture(getFileFromMap(map,
+		fireBallTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.fireball"));
-		keyTexture = textureCache.getTexture(getFileFromMap(map,
+		keyTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.key"));
-		closedDoorTexture = textureCache.getTexture(getFileFromMap(map,
+		closedDoorTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.door"));
-		openDoorTexture = textureCache.getTexture(getFileFromMap(map,
+		openDoorTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.door_open"));
-		closedDoorToBonusWorldTexture = textureCache.getTexture(getFileFromMap(
+		closedDoorToBonusWorldTexture = game.getView().loadFromAnimation(getFileFromMap(
 				map, "newton_adventure.door_to_bonus_world"));
-		openDoorToBonusWorldTexture = textureCache.getTexture(getFileFromMap(
+		openDoorToBonusWorldTexture = game.getView().loadFromAnimation(getFileFromMap(
 				map, "newton_adventure.door_to_bonus_world_open"));
-		mobilePikesTexture = textureCache.getTexture(getFileFromMap(map,
+		mobilePikesTexture = game.getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.mobilePikes"));
-		axeTexture = textureCache.getTexture(getFileFromMap(map,
+		axeTexture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.axe"));
-		activator1OnTexture = textureCache.getTexture(getFileFromMap(map,
+		activator1OnTexture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.activator1.on"));
-		activator2OnTexture = textureCache.getTexture(getFileFromMap(map,
+		activator2OnTexture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.activator2.on"));
-		activator3OnTexture = textureCache.getTexture(getFileFromMap(map,
+		activator3OnTexture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.activator3.on"));
-		activator1OffTexture = textureCache.getTexture(getFileFromMap(map,
+		activator1OffTexture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.activator1.off"));
-		activator2OffTexture = textureCache.getTexture(getFileFromMap(map,
+		activator2OffTexture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.activator2.off"));
-		activator3OffTexture = textureCache.getTexture(getFileFromMap(map,
+		activator3OffTexture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.activator3.off"));
-		memoryActivatorHiddenTexture = textureCache.getTexture(getFileFromMap(
+		memoryActivatorHiddenTexture = getView().loadFromAnimation(getFileFromMap(
 				map, "newton_adventure.memory_activator.hidden"));
-		blocker1Texture = textureCache.getTexture(getFileFromMap(map,
+		blocker1Texture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.blocker1"));
-		blocker2Texture = textureCache.getTexture(getFileFromMap(map,
+		blocker2Texture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.blocker2"));
-		blocker3Texture = textureCache.getTexture(getFileFromMap(map,
+		blocker3Texture = getView().loadFromAnimation(getFileFromMap(map,
 				"newton_adventure.blocker3"));
 
 		for (tiled.core.MapLayer layer : map.getLayers()) {
@@ -409,35 +412,35 @@ public strictfp class World extends net.phys2d.raw.World {
 				"unknown");
 		if (c.equals("platform")) {
 			Platform platform = new Platform(this);
-			platform.setTexture(getTextureForTile(map, tile, textureCache));
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("up_right_half_platform")) {
 			UpRightHalfPlatform platform = new UpRightHalfPlatform(this);
-			platform.setTexture(getTextureForTile(map, tile, textureCache));
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("up_left_half_platform")) {
 			UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this);
-			platform.setTexture(getTextureForTile(map, tile, textureCache));
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("down_left_half_platform")) {
 			DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this);
-			platform.setTexture(getTextureForTile(map, tile, textureCache));
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
 		} else if (c.equals("down_right_half_platform")) {
 			DownRightHalfPlatform platform = new DownRightHalfPlatform(this);
-			platform.setTexture(getTextureForTile(map, tile, textureCache));
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile));
@@ -499,54 +502,54 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(door);
 		} else if (c.equals("cloud")) {
 			Cloud cloud = new Cloud(this);
-			cloud.setTexture(getTextureForTile(map, tile, textureCache));
+			cloud.setTexture(getAnimationForTile(map, tile, textureCache));
 			cloud.setPosition(x * Platform.size, y * Platform.size);
 			cloud.setZOrder(getTileZOrder(tile));
 			add(cloud);
 		} else if (c.equals("pikes_up")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
-			pikes.setTexture(getTextureForTile(map, tile, textureCache));
+			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
 			pikes.setZOrder(getTileZOrder(tile));
 			add(pikes);
 		} else if (c.equals("pikes_down")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
-			pikes.setTexture(getTextureForTile(map, tile, textureCache));
+			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
 			pikes.setZOrder(getTileZOrder(tile));
 			add(pikes);
 		} else if (c.equals("pikes_left")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
-			pikes.setTexture(getTextureForTile(map, tile, textureCache));
+			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
 			pikes.setZOrder(getTileZOrder(tile));
 			add(pikes);
 		} else if (c.equals("pikes_right")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
-			pikes.setTexture(getTextureForTile(map, tile, textureCache));
+			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
 			pikes.setPosition(x * Platform.size, y * Platform.size);
 			pikes.setZOrder(getTileZOrder(tile));
 			add(pikes);
 		} else if (c.equals("cannon_up")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
-			cannon.setTexture(getTextureForTile(map, tile, textureCache));
+			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
 			cannon.setZOrder(getTileZOrder(tile));
 			add(cannon);
 		} else if (c.equals("cannon_down")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
-			cannon.setTexture(getTextureForTile(map, tile, textureCache));
+			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
 			cannon.setZOrder(getTileZOrder(tile));
 			add(cannon);
 		} else if (c.equals("cannon_right")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
-			cannon.setTexture(getTextureForTile(map, tile, textureCache));
+			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
 			add(cannon);
 		} else if (c.equals("cannon_left")) {
 			Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
-			cannon.setTexture(getTextureForTile(map, tile, textureCache));
+			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
 			cannon.setPosition(x * Platform.size, y * Platform.size);
 			cannon.setZOrder(getTileZOrder(tile));
 			add(cannon);
@@ -593,7 +596,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(j);
 		} else if (c.equals("bounce_platform")) {
 			BouncePlatform platform = new BouncePlatform(this);
-			platform.setTexture(getTextureForTile(map, tile, textureCache));
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setZOrder(getTileZOrder(tile));
 			add(platform);
@@ -664,7 +667,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(platform);
 		} else if (c.equals("teleporter")) {
 			Teleporter teleporter = new Teleporter(this);
-			teleporter.setTexture(getTextureForTile(map, tile, textureCache));
+			teleporter.setTexture(getAnimationForTile(map, tile, textureCache));
 			teleporter.setPosition(x * Platform.size, y * Platform.size);
 			teleporter.setZOrder(getTileZOrder(tile,1));
 			teleporter.setColor(tile.getProperties().getProperty(
@@ -672,7 +675,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(teleporter);
 		} else if (c.equals("keylock")) {
 			KeyLock keylock = new KeyLock(this);
-			keylock.setTexture(getTextureForTile(map, tile, textureCache));
+			keylock.setTexture(getAnimationForTile(map, tile, textureCache));
 			keylock.setPosition(x * Platform.size, y * Platform.size);
 			keylock.setZOrder(getTileZOrder(tile,1));
 			add(keylock);
@@ -688,7 +691,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(boss.getRightHand());
 		} else {
 			Platform platform = new Platform(this);
-			platform.setTexture(getTextureForTile(map, tile, textureCache));
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(x * Platform.size, y * Platform.size);
 			platform.setEnabled(false);
 			platform.setZOrder(getTileZOrder(tile));
@@ -696,15 +699,28 @@ public strictfp class World extends net.phys2d.raw.World {
 		}
 	}
 
+	private AnimationCollection getAnimationForTile(tiled.core.Map map,
+			tiled.core.Tile tile, ITextureCache textureCache) throws FileNotFoundException, IOException {
+		AnimationCollection animation;
+		String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+		if(null != gfx) {
+			animation = game.getView().loadFromAnimation(game.getData().getLevelFilePath(questName, levelName, gfx));
+		} else {
+			animation = new AnimationCollection(textureCache.getTexture(questName, levelName,
+					map, tile));
+		}
+		return animation;
+	}
+	
 	private ITexture getTextureForTile(tiled.core.Map map,
-			tiled.core.Tile tile, ITextureCache textureCache) {
+			tiled.core.Tile tile, ITextureCache textureCache) throws FileNotFoundException, IOException {
 		ITexture texture;
 		String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
 		if(null != gfx) {
 			texture = textureCache.getTexture(game.getData().getLevelFilePath(questName, levelName, gfx));
 		} else {
 			texture = textureCache.getTexture(questName, levelName,
-				map, tile);
+					map, tile);
 		}
 		return texture;
 	}

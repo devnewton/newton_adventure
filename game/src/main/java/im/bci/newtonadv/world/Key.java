@@ -31,21 +31,23 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.Body;
 
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.shapes.Circle;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class Key extends AbstractDrawableBody {
+public strictfp class Key extends AbstractDrawableBody implements Updatable {
 
     static final float size = 2.0f * World.distanceUnit;
     private World world;
-    private ITexture texture;
+    private AnimationCollection texture;
 
     Key(World world) {
         super(new Circle(size / 2.0f), 1.0f);
@@ -55,11 +57,12 @@ public strictfp class Key extends AbstractDrawableBody {
 
     @Override
     public void draw() {
-        world.getView().drawKey(this, texture, world);
+        world.getView().drawKey(this, texture.getFirst().getCurrentFrame(), world);
     }
 
-    void setTexture(ITexture texture) {
+    void setTexture(AnimationCollection texture) {
         this.texture = texture;
+        texture.getFirst().start();
     }
 
     @Override
@@ -79,10 +82,15 @@ public strictfp class Key extends AbstractDrawableBody {
 
 	private void use() {
 		world.remove(this);
-		world.addTopLevelEntities(new UsedKey(world, texture, getPosition()));
+		world.addTopLevelEntities(new UsedKey(world, texture.getFirst().getCurrentFrame().getImage(), getPosition()));
 	}
 
-	public ITexture getTexture() {
+	public AnimationCollection getTexture() {
 		return texture;
+	}
+
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
 	}
 }

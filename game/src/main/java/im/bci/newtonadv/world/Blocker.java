@@ -54,7 +54,7 @@ public class Blocker extends Platform implements Updatable {
 
     @Override
     public void draw() {
-        world.getView().drawBlocker(this,texture,alpha);
+        world.getView().drawBlocker(this,texture.getFirst().getCurrentFrame(),alpha);
     }
 
      @Override

@@ -47,7 +47,7 @@ public class KeyLock extends Platform implements Updatable {
 
 	@Override
 	public void draw() {
-		world.getView().drawKeyLock(this, texture, alpha);
+		world.getView().drawKeyLock(this, texture.getFirst().getCurrentFrame(), alpha);
 	}
 
 	@Override

@@ -31,8 +31,6 @@
  */
 package im.bci.newtonadv.world;
 
-import net.phys2d.raw.Body;
-
 /**
  *
  * @author devnewton
@@ -42,12 +40,4 @@ public strictfp class Apple extends PickableObject {
     Apple(World world) {
         super(world);
     }
-
-    @Override
-    public void collided(Body body) {
-        if( body instanceof Hero) {
-            world.removeApple(this);
-            world.addTopLevelEntities( new PickedUpObject(world, texture, getPosition(),size));
-        }
-    }  
 }

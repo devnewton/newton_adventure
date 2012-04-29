@@ -31,19 +31,20 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
-
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.shapes.Box;
 
 /**
  *
  * @author devnewton
  */
-public class Platform extends AbstractDrawableStaticBody {
+public class Platform extends AbstractDrawableStaticBody implements Updatable {
 
     static final float size = 2.0f * World.distanceUnit;
-    protected ITexture texture;
+    protected AnimationCollection texture;
     protected final World world;
 
     Platform(World world) {
@@ -53,12 +54,18 @@ public class Platform extends AbstractDrawableStaticBody {
         this.world = world;
     }
 
-    public void setTexture(ITexture texture) {
+    public void setTexture(AnimationCollection texture) {
         this.texture = texture;
+        texture.getFirst().start();
     }
 
     @Override
     public void draw() {
-        world.getView().drawPlatform(this, texture);
+        world.getView().drawPlatform(this, texture.getFirst().getCurrentFrame());
     }
+
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+	}
 }

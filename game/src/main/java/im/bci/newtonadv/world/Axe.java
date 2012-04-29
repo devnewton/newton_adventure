@@ -31,12 +31,11 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
-
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.Box;
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -50,7 +49,7 @@ public strictfp class Axe extends AbstractDrawableBody implements Updatable {
     private static final float weight = 10.0f;
     static final float width = World.distanceUnit;
     static final float height = 3.9f * World.distanceUnit;
-    private ITexture texture;
+    private AnimationCollection texture;
     private World world;
 
     Axe(World world) {
@@ -60,8 +59,9 @@ public strictfp class Axe extends AbstractDrawableBody implements Updatable {
         setGravityEffected(false);
     }
 
-    public void setTexture(ITexture texture) {
+    public void setTexture(AnimationCollection texture) {
         this.texture = texture;
+        texture.getFirst().start();
     }
 
     @Override
@@ -88,7 +88,7 @@ public strictfp class Axe extends AbstractDrawableBody implements Updatable {
 
     @Override
     public void draw() {
-        world.getView().drawAxe(this, texture);
+        world.getView().drawAxe(this, texture.getFirst().getCurrentFrame());
     }
 
     @Override

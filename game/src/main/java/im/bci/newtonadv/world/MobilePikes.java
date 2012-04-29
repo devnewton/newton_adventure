@@ -31,9 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
-
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
@@ -43,12 +44,12 @@ import net.phys2d.raw.shapes.Box;
  *
  * @author devnewton
  */
-public strictfp class MobilePikes extends AbstractDrawableBody {
+public strictfp class MobilePikes extends AbstractDrawableBody implements Updatable {
 
     private static final float weight = 10.0f;
     static final float width = World.distanceUnit;
     static final float height = 3.9f * World.distanceUnit;
-    private ITexture texture;
+    private AnimationCollection texture;
     private World world;
 
     MobilePikes(World world) {
@@ -57,8 +58,9 @@ public strictfp class MobilePikes extends AbstractDrawableBody {
         setDamping(0.02f);
     }
 
-    public void setTexture(ITexture texture) {
+    public void setTexture(AnimationCollection texture) {
         this.texture = texture;
+        texture.getFirst().start();
     }
 
     @Override
@@ -86,6 +88,11 @@ public strictfp class MobilePikes extends AbstractDrawableBody {
 
     @Override
     public void draw() {
-        world.getView().drawMobilePikes(this,texture);
+        world.getView().drawMobilePikes(this,texture.getFirst().getCurrentFrame());
     }
+
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+	}
 }

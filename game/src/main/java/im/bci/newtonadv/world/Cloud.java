@@ -54,7 +54,7 @@ public class Cloud extends Platform implements Updatable {
 
     @Override
     public void draw() {
-        world.getView().drawCloud(this, texture,alpha);       
+        world.getView().drawCloud(this, texture.getFirst().getCurrentFrame(),alpha);       
     }
 
     @Override
