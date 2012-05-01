@@ -31,7 +31,12 @@
  */
 package im.bci.newtonadv.world;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -47,7 +52,9 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements Upd
     static final float size = 2.0f * World.distanceUnit;
     protected AnimationCollection texture;
     protected final World world;
-    private Vector2f[] points;
+    public FloatBuffer vertices = ByteBuffer.allocateDirect(2 * 4 * Float.SIZE / 8).order(ByteOrder.nativeOrder()).asFloatBuffer();
+	public FloatBuffer texCoords = ByteBuffer.allocateDirect(2 * 4 * Float.SIZE / 8).order(ByteOrder.nativeOrder()).asFloatBuffer();
+	private AnimationFrame frame;
 
     Platform(World world) {
         super(new Box(size, size));
@@ -59,21 +66,40 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements Upd
     @Override
 	public  void setPosition(float x, float y) {
 		super.setPosition(x, y);
-	    Box box = (Box) getShape();
-	    points = box.getPoints(getPosition(),
+		
+		Box box = (Box) getShape();
+	    Vector2f[] points = box.getPoints(getPosition(),
 				getRotation());
+	    for(int i=0; i<4; ++i) {
+	    	vertices.put(points[i].x);
+	    	vertices.put(points[i].y);
+	    }
+	    vertices.flip();
 	}
-    
-    public Vector2f[] getPoints() {
-    	return points;
-    }
 
 	public void setTexture(AnimationCollection texture) {
         this.texture = texture;
         texture.getFirst().start();
+        setAnimationFrame(texture.getFirst().getCurrentFrame());
     }
 
-    @Override
+    private void setAnimationFrame(AnimationFrame currentFrame) {
+    	if(this.frame != currentFrame) {
+    		this.frame = currentFrame;
+    		texCoords.put(frame.getU1());
+    		texCoords.put(frame.getV2());
+    		texCoords.put(frame.getU2());
+    		texCoords.put(frame.getV2());
+    		texCoords.put(frame.getU2());
+    		texCoords.put(frame.getV1());
+    		texCoords.put(frame.getU1());
+    		texCoords.put(frame.getV1());
+    		texCoords.flip();    		
+    	}
+		
+	}
+
+	@Override
     public void draw() {
         world.getView().drawPlatform(this, texture.getFirst().getCurrentFrame());
     }

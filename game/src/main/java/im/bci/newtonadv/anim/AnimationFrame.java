@@ -31,6 +31,10 @@
  */
 package im.bci.newtonadv.anim;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
 

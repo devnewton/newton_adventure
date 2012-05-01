@@ -276,6 +276,8 @@ public strictfp class GameView implements IGameView {
 		GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, newQuality.toGL());
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 		GL11.glColor4f(1, 1, 1, 1);
 
 		if (null == textureCache) {
@@ -480,24 +482,15 @@ public strictfp class GameView implements IGameView {
 
 	@Override
 	public void drawPlatform(Platform platform, AnimationFrame frame) {
-		Vector2f[] pts = platform.getPoints();
-
 		if (frame.getImage().hasAlpha()) {
 			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(frame.getU1(), frame.getV2());
-		GL11.glVertex2f(pts[0].x, pts[0].y);
-		GL11.glTexCoord2f(frame.getU2(), frame.getV2());
-		GL11.glVertex2f(pts[1].x, pts[1].y);
-		GL11.glTexCoord2f(frame.getU2(), frame.getV1());
-		GL11.glVertex2f(pts[2].x, pts[2].y);
-		GL11.glTexCoord2f(frame.getU1(), frame.getV1());
-		GL11.glVertex2f(pts[3].x, pts[3].y);
-		GL11.glEnd();
+		GL11.glTexCoordPointer(2, 0, platform.texCoords);
+		GL11.glVertexPointer(2, 0, platform.vertices);
+		GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 		if (frame.getImage().hasAlpha()) {
 			GL11.glPopAttrib();
 		}
