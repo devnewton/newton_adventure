@@ -197,7 +197,7 @@ public class TextureCache implements ITextureCache {
 
 		// create a raster that can be used by OpenGL as a source
 		// for a texture
-		if (bufferedImage.getColorModel().hasAlpha()) {
+		if (bufferedImage.getColorModel().hasAlpha() && hasUsefullAlphaChannel(bufferedImage)) {
 			raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
 					texWidth, texHeight, 4, null);
 			texImage = new BufferedImage(glAlphaColorModel, raster, false,
@@ -251,6 +251,21 @@ public class TextureCache implements ITextureCache {
 		return texture;
 	}
 	
+	private static boolean hasUsefullAlphaChannel(BufferedImage image) {
+		int w = image.getWidth();
+		int h = image.getHeight();
+		for (int y = 0; y < h; ++y) {
+			for (int x = 0; x < w; ++x) {
+				int rgba = image.getRGB(x, y);
+				byte a = (byte) ((rgba >> 24) & 0xff);
+				if(a != -1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private Texture convertNImageToTexture(im.bci.nanim.NanimParser.Image nimage) {
 		int texWidth = nimage.getWidth();
 		int texHeight = nimage.getHeight();
@@ -313,7 +328,7 @@ public class TextureCache implements ITextureCache {
 		bg.dispose();
 		return bi;
 	}
-	
+
 	private static boolean hasAlpha(Image image) {
 	    if (image instanceof BufferedImage) {
 	        BufferedImage bimage = (BufferedImage)image;
