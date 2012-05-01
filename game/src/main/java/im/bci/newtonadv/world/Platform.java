@@ -35,17 +35,19 @@ import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Box;
 
 /**
  *
  * @author devnewton
  */
-public class Platform extends AbstractDrawableStaticBody implements Updatable {
+public strictfp class Platform extends AbstractDrawableStaticBody implements Updatable {
 
     static final float size = 2.0f * World.distanceUnit;
     protected AnimationCollection texture;
     protected final World world;
+    private Vector2f[] points;
 
     Platform(World world) {
         super(new Box(size, size));
@@ -53,8 +55,20 @@ public class Platform extends AbstractDrawableStaticBody implements Updatable {
         addBit(World.STATIC_BODY_COLLIDE_BIT);
         this.world = world;
     }
+    
+    @Override
+	public  void setPosition(float x, float y) {
+		super.setPosition(x, y);
+	    Box box = (Box) getShape();
+	    points = box.getPoints(getPosition(),
+				getRotation());
+	}
+    
+    public Vector2f[] getPoints() {
+    	return points;
+    }
 
-    public void setTexture(AnimationCollection texture) {
+	public void setTexture(AnimationCollection texture) {
         this.texture = texture;
         texture.getFirst().start();
     }

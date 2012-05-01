@@ -480,9 +480,7 @@ public strictfp class GameView implements IGameView {
 
 	@Override
 	public void drawPlatform(Platform platform, AnimationFrame frame) {
-		Box box = (Box) platform.getShape();
-		Vector2f[] pts = box.getPoints(platform.getPosition(),
-				platform.getRotation());
+		Vector2f[] pts = platform.getPoints();
 
 		if (frame.getImage().hasAlpha()) {
 			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);

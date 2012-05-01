@@ -3,7 +3,7 @@ package im.bci.newtonadv.game;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Shape;
 
-public abstract class AbstractDrawableStaticBody extends StaticBody implements Drawable {
+public strictfp abstract class AbstractDrawableStaticBody extends StaticBody implements Drawable {
 	
 	private int zorder = 0;
 
