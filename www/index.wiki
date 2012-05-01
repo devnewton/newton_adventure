@@ -15,7 +15,8 @@ If you like this game, you can make a donation or better [Contribute] to his dev
 <p>Release: <a href="downloads/newton_adventure_1.3.zip">Version 1.3</a></p>
 <p>Source: this site a <a href="http://fossil-scm.org">fossil</a> repository. Use the "files" menu entry or use "fossil clone" command.</p>
 
-<h1>Screenshots</h1>
+<h1>Screenshots and videos</h1>
+<p><a href="http://youtu.be/Jta0M-uOGXA">Video of gameplay</a></p>
 <p><img src="screenshots/montage_800_600.jpg" /></p>
 
 <h1> Contact </h1>
