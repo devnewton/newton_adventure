@@ -40,11 +40,12 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
 public strictfp class FireBall extends AbstractDrawableBody implements Updatable{
-    public static final float size = Cannon.size / 2.0f;
+    final float size;
     World world;
     private AnimationCollection texture;
-    FireBall(World world) {
+    FireBall(World world, float size) {
         super(new Circle(size/2.0f), 40.0f);
+        this.size = size;
         this.world = world;
     }
 

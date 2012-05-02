@@ -41,8 +41,8 @@ import net.phys2d.raw.CollisionEvent;
  */
 public strictfp class BouncePlatform extends Platform {
 
-    public BouncePlatform(World world) {
-        super(world);
+    public BouncePlatform(World world, float w, float h) {
+        super(world, w, h);
     }
 
     @Override

@@ -40,8 +40,8 @@ class Activator extends Platform {
     private boolean activated;
     private final AnimationCollection onTexture;
 
-    Activator(World world, int activableId, AnimationCollection onTexture, AnimationCollection offTexture) {
-        super(world);
+    Activator(World world, int activableId, AnimationCollection onTexture, AnimationCollection offTexture, float w, float h) {
+        super(world, w, h);
         this.activableId = activableId;
         this.setTexture(offTexture);
         this.onTexture = onTexture;

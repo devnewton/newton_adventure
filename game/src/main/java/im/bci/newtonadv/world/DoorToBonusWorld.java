@@ -39,8 +39,8 @@ import net.phys2d.raw.Body;
  */
 public strictfp class DoorToBonusWorld extends Door {
 
-    DoorToBonusWorld(World world) {
-        super(world);
+    DoorToBonusWorld(World world, float w, float h) {
+        super(world, w, h);
     }
 
     @Override

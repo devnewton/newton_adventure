@@ -46,8 +46,8 @@ public strictfp class Teleporter extends Platform implements CollisionDetectionO
     private static final long durationBeforeTeleport = 2000000000L;
     private long teleportTime = -1;
 
-    Teleporter(World world) {
-    	super(world);
+    Teleporter(World world, float w, float h) {
+    	super(world, w, h);
     }
 
     @Override

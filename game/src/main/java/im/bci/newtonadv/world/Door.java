@@ -46,15 +46,13 @@ import net.phys2d.raw.shapes.Box;
 public strictfp class Door extends AbstractDrawableStaticBody implements
 		CollisionDetectionOnly, Updatable {
 
-	static final float width = 2.0f * World.distanceUnit;
-	static final float height = 4.0f * World.distanceUnit;
 	protected final World world;
 	private AnimationCollection closedTexture;
 	private AnimationCollection openTexture;
 	protected boolean isClose = true;
 
-	Door(World world) {
-		super(new Box(width, height));
+	Door(World world, float w, float h) {
+		super(new Box(w, h));
 		this.world = world;
 		addBit(World.STATIC_BODY_COLLIDE_BIT);
 	}

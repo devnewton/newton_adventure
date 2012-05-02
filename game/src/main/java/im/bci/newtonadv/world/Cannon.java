@@ -54,8 +54,8 @@ public strictfp class Cannon extends Platform implements Updatable {
     }
     private Orientation orientation;
 
-    public Cannon(World world, Orientation orientation) {
-        super(world);
+    public Cannon(World world, Orientation orientation, float w, float h) {
+        super(world, w, h);
         this.orientation = orientation;
         setEnabled(false);
     }
@@ -71,7 +71,7 @@ public strictfp class Cannon extends Platform implements Updatable {
     private void throwFireball() {
         Vector2f pos = new Vector2f(getPosition());
         //pos.add( new Vector2f( size, size));
-        FireBall fireBall = new FireBall(world);
+        FireBall fireBall = new FireBall(world, w / 2.0f);
         fireBall.setPosition(pos.x, pos.y);
         fireBall.setTexture(world.getFireBallTexture());
         world.add(fireBall);

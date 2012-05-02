@@ -41,13 +41,14 @@ public class KeyLock extends Platform implements Updatable {
 	private float alpha = 1.0f;
 	private static final long disappearDuration = 1000000000L;
 
-	public KeyLock(World world) {
-		super(world);
+	public KeyLock(World world, float w, float h) {
+		super(world, w, h);
 	}
 
 	@Override
 	public void draw() {
-		world.getView().drawKeyLock(this, texture.getFirst().getCurrentFrame(), alpha);
+		world.getView().drawKeyLock(this, texture.getFirst().getCurrentFrame(),
+				alpha);
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class KeyLock extends Platform implements Updatable {
 						+ disappearDuration;
 			else if (frameTimeInfos.currentTime < disappearEndTime) {
 				alpha = (disappearEndTime - frameTimeInfos.currentTime)
-						/ (float)disappearDuration;
+						/ (float) disappearDuration;
 			} else {
 				world.remove(this);
 			}

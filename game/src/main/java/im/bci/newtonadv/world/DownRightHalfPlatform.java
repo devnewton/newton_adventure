@@ -47,18 +47,21 @@ import net.phys2d.raw.shapes.ConvexPolygon;
 public class DownRightHalfPlatform extends AbstractDrawableStaticBody implements Updatable {
 
     static final float size = 2.0f * World.distanceUnit;
-    static final ROVector2f[] vertices = new ROVector2f[] { new Vector2f(-size/2.0f, -size/2.0f), new Vector2f(size/2.0f, -size/2.0f), new Vector2f(size/2.0f, size/2.0f) };
     private AnimationCollection texture;
     private final World world;
 
-    DownRightHalfPlatform(World world) {
-        super(new ConvexPolygon(vertices));
+    DownRightHalfPlatform(World world, float w, float h) {
+        super(new ConvexPolygon(computeVertices(w, h)));
         setFriction(10.0f);
         addBit(World.STATIC_BODY_COLLIDE_BIT);
         this.world = world;
     }
 
-    public void setTexture(AnimationCollection texture) {
+    private static ROVector2f[] computeVertices(float w, float h) {
+		return new ROVector2f[] { new Vector2f(-w/2.0f, -h/2.0f), new Vector2f(w/2.0f, -h/2.0f), new Vector2f(w/2.0f, h/2.0f) };
+	}
+
+	public void setTexture(AnimationCollection texture) {
         this.texture = texture;
         texture.getFirst().start();
     }

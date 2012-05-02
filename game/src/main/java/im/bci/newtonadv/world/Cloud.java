@@ -35,21 +35,22 @@ import net.phys2d.raw.Body;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
-public class Cloud extends Platform implements Updatable {
+public strictfp class Cloud extends Platform implements Updatable {
 
     private boolean touched = false;
     private long disappearEndTime = -1;
     private float alpha = 1.0f;
     private static final long disappearDuration = 1000000000L;
 
-    public Cloud(World world) {
-        super(world);
+    public Cloud(World world, float w, float h) {
+        super(world, w, h);
     }
     
     @Override
-    public strictfp void collided(Body body) {
-        if( body instanceof Hero )
+    public void collided(Body body) {
+        if( body instanceof Hero ) {
             touched = true;
+        }
     }
 
     @Override

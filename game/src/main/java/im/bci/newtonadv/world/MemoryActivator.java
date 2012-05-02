@@ -49,8 +49,8 @@ class MemoryActivator extends Platform implements Updatable {
 	}
 
 	MemoryActivator(World world, int activableId, AnimationCollection onTexture,
-			AnimationCollection offTexture, AnimationCollection hiddenTexture) {
-		super(world);
+			AnimationCollection offTexture, AnimationCollection hiddenTexture, float w, float h) {
+		super(world, w, h);
 		this.activableId = activableId;
 		this.offTexture = offTexture;
 		this.onTexture = onTexture;

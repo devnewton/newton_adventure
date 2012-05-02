@@ -412,161 +412,168 @@ public strictfp class World extends net.phys2d.raw.World {
 		ITextureCache textureCache = game.getView().getTextureCache();
 		String c = tile.getProperties().getProperty("newton_adventure.type",
 				"unknown");
+		
+		final float baseSize = 2.0f * World.distanceUnit;
+		final float tileWidthScale = (float)tile.getWidth() / (float)map.getTileWidth();
+		final float tileHeightScale = (float)tile.getHeight() / (float)map.getTileHeight();
+		final float tileWidth = baseSize * tileWidthScale;
+		final float tileHeight = baseSize * tileHeightScale;
+		final float tileX = x * baseSize + tileWidth / 2.0f;
+		final float tileY = y * baseSize + tileHeight / 2.0f;
+
 		if (c.equals("platform")) {
-			Platform platform = new Platform(this);
+			Platform platform = new Platform(this, tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
-			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("up_right_half_platform")) {
-			UpRightHalfPlatform platform = new UpRightHalfPlatform(this);
+			UpRightHalfPlatform platform = new UpRightHalfPlatform(this, tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
-			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("up_left_half_platform")) {
-			UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this);
+			UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this, tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
-			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("down_left_half_platform")) {
-			DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this);
+			DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this, tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
-			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("down_right_half_platform")) {
-			DownRightHalfPlatform platform = new DownRightHalfPlatform(this);
+			DownRightHalfPlatform platform = new DownRightHalfPlatform(this, tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
-			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("hero")) {
-			hero.setPosition(x * Platform.size, y * Platform.size);
+			hero.setPosition(tileX, tileY);
 			hero.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(hero);
 		} else if (c.equals("mummy")) {
 			Mummy mummy = new Mummy(this);
-			mummy.setPosition(x * Platform.size, y * Platform.size);
+			mummy.setPosition(tileX, tileY);
 			mummy.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(mummy);
 		} else if (c.equals("bat")) {
 			Bat bat = new Bat(this);
-			bat.setPosition(x * Platform.size, y * Platform.size);
+			bat.setPosition(tileX, tileY);
 			bat.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(bat);
 		} else if (c.equals("apple")) {
 			Apple apple = new Apple(this);
 			++nbCollectableApple;
-			apple.setPosition(x * Platform.size, y * Platform.size);
+			apple.setPosition(tileX, tileY);
 			apple.setTexture(appleIconTexture);
 			apple.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(apple);
 		} else if (c.equals("coin")) {
 			Coin coin = new Coin(this);
-			coin.setPosition(x * Platform.size, y * Platform.size);
+			coin.setPosition(tileX, tileY);
 			coin.setTexture(coinTexture);
 			coin.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(coin);
 		} else if (c.equals("world_map")) {
 			WorldMap worldMap = new WorldMap(this);
-			worldMap.setPosition(x * Platform.size, y * Platform.size);
+			worldMap.setPosition(tileX, tileY);
 			worldMap.setTexture(worldMapTexture);
 			worldMap.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(worldMap);
 		} else if (c.equals("compass")) {
 			Compass compass = new Compass(this);
-			compass.setPosition(x * Platform.size, y * Platform.size);
+			compass.setPosition(tileX, tileY);
 			compass.setTexture(compassTexture);
 			compass.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(compass);
 		} else if (c.equals("key")) {
 			Key key = new Key(this);
-			key.setPosition(x * Platform.size, y * Platform.size);
+			key.setPosition(tileX, tileY);
 			key.setTexture(keyTexture);
 			key.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(key);
 			keys.add(key);
 		} else if (c.equals("door")) {
-			Door door = new Door(this);
-			door.setPosition(x * Platform.size/* + Door.width / 2.0f */, y
-					* Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
+			Door door = new Door(this, tileWidth, tileHeight);
+			door.setPosition(tileX, tileY);
 			door.setClosedTexture(closedDoorTexture);
 			door.setOpenTexture(openDoorTexture);
 			door.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(door);
 		} else if (c.equals("door_to_bonus_world")) {
-			DoorToBonusWorld door = new DoorToBonusWorld(this);
-			door.setPosition(x * Platform.size/* + Door.width / 2.0f */, y
-					* Platform.size + Door.height / 2.0f - Platform.size / 2.0f);
+			DoorToBonusWorld door = new DoorToBonusWorld(this, tileWidth, tileHeight);
+			door.setPosition(tileX, tileY);
 			door.setClosedTexture(closedDoorToBonusWorldTexture);
 			door.setOpenTexture(openDoorToBonusWorldTexture);
 			door.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(door);
 		} else if (c.equals("cloud")) {
-			Cloud cloud = new Cloud(this);
+			Cloud cloud = new Cloud(this, tileWidth, tileHeight);
 			cloud.setTexture(getAnimationForTile(map, tile, textureCache));
-			cloud.setPosition(x * Platform.size, y * Platform.size);
+			cloud.setPosition(tileX, tileY);
 			cloud.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cloud);
 		} else if (c.equals("pikes_up")) {
-			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP);
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP, tileWidth, tileHeight);
 			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
-			pikes.setPosition(x * Platform.size, y * Platform.size);
+			pikes.setPosition(tileX, tileY);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(pikes);
 		} else if (c.equals("pikes_down")) {
-			Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN);
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN, tileWidth, tileHeight);
 			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
-			pikes.setPosition(x * Platform.size, y * Platform.size);
+			pikes.setPosition(tileX, tileY);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(pikes);
 		} else if (c.equals("pikes_left")) {
-			Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT);
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT, tileWidth, tileHeight);
 			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
-			pikes.setPosition(x * Platform.size, y * Platform.size);
+			pikes.setPosition(tileX, tileY);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(pikes);
 		} else if (c.equals("pikes_right")) {
-			Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT);
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT, tileWidth, tileHeight);
 			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
-			pikes.setPosition(x * Platform.size, y * Platform.size);
+			pikes.setPosition(tileX, tileY);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(pikes);
 		} else if (c.equals("cannon_up")) {
-			Cannon cannon = new Cannon(this, Cannon.Orientation.UP);
+			Cannon cannon = new Cannon(this, Cannon.Orientation.UP, tileWidth, tileHeight);
 			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-			cannon.setPosition(x * Platform.size, y * Platform.size);
+			cannon.setPosition(tileX, tileY);
 			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cannon);
 		} else if (c.equals("cannon_down")) {
-			Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN);
+			Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN, tileWidth, tileHeight);
 			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-			cannon.setPosition(x * Platform.size, y * Platform.size);
+			cannon.setPosition(tileX, tileY);
 			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cannon);
 		} else if (c.equals("cannon_right")) {
-			Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT);
+			Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT, tileWidth, tileHeight);
 			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-			cannon.setPosition(x * Platform.size, y * Platform.size);
+			cannon.setPosition(tileX, tileY);
 			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cannon);
 		} else if (c.equals("cannon_left")) {
-			Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT);
+			Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT, tileWidth, tileHeight);
 			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-			cannon.setPosition(x * Platform.size, y * Platform.size);
+			cannon.setPosition(tileX, tileY);
 			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cannon);
 		} else if (c.equals("mobile_pike_anchor")) {
 			MobilePikeAnchor anchor = new MobilePikeAnchor(this);
 			anchor.setTexture(getTextureForTile(map, tile, textureCache));
-			anchor.setPosition(x * Platform.size, y * Platform.size);
+			anchor.setPosition(tileX, tileY);
 			anchor.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(anchor);
 
@@ -587,7 +594,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		} else if (c.equals("axe_anchor")) {
 			AxeAnchor anchor = new AxeAnchor(this);
 			anchor.setTexture(getTextureForTile(map, tile, textureCache));
-			anchor.setPosition(x * Platform.size, y * Platform.size);
+			anchor.setPosition(tileX, tileY);
 			anchor.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(anchor);
 
@@ -606,93 +613,92 @@ public strictfp class World extends net.phys2d.raw.World {
 			j.setRelaxation(0);
 			add(j);
 		} else if (c.equals("bounce_platform")) {
-			BouncePlatform platform = new BouncePlatform(this);
+			BouncePlatform platform = new BouncePlatform(this, tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
-			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setPosition(tileX, tileY);
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("activator1")) {
 			Activator activator = new Activator(this, 1, activator1OnTexture,
-					activator1OffTexture);
-			activator.setPosition(x * Platform.size, y * Platform.size);
+					activator1OffTexture, tileWidth, tileHeight);
+			activator.setPosition(tileX, tileY);
 			activator.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activator);
 		} else if (c.equals("activator2")) {
 			Activator activator = new Activator(this, 2, activator2OnTexture,
-					activator2OffTexture);
-			activator.setPosition(x * Platform.size, y * Platform.size);
+					activator2OffTexture, tileWidth, tileHeight);
+			activator.setPosition(tileX, tileY);
 			activator.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activator);
 		} else if (c.equals("activator3")) {
 			Activator activator = new Activator(this, 3, activator3OnTexture,
-					activator3OffTexture);
-			activator.setPosition(x * Platform.size, y * Platform.size);
+					activator3OffTexture, tileWidth, tileHeight);
+			activator.setPosition(tileX, tileY);
 			activator.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activator);
 		} else if (c.equals("memory_activator1")) {
 			MemoryActivator activator = new MemoryActivator(this, 1,
 					activator1OnTexture, activator1OffTexture,
-					memoryActivatorHiddenTexture);
-			activator.setPosition(x * Platform.size, y * Platform.size);
+					memoryActivatorHiddenTexture, tileWidth, tileHeight);
+			activator.setPosition(tileX, tileY);
 			activator.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activator);
 		} else if (c.equals("memory_activator2")) {
 			MemoryActivator activator = new MemoryActivator(this, 2,
 					activator2OnTexture, activator2OffTexture,
-					memoryActivatorHiddenTexture);
-			activator.setPosition(x * Platform.size, y * Platform.size);
+					memoryActivatorHiddenTexture, tileWidth, tileHeight);
+			activator.setPosition(tileX, tileY);
 			activator.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activator);
 		} else if (c.equals("memory_activator3")) {
 			MemoryActivator activator = new MemoryActivator(this, 3,
 					activator3OnTexture, activator3OffTexture,
-					memoryActivatorHiddenTexture);
-			activator.setPosition(x * Platform.size, y * Platform.size);
+					memoryActivatorHiddenTexture, tileWidth, tileHeight);
+			activator.setPosition(tileX, tileY);
 			activator.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activator);
 		} else if (c.equals("blocker1")) {
-			Blocker activable = new Blocker(this, 1);
+			Blocker activable = new Blocker(this, 1, tileWidth, tileHeight);
 			activable.setTexture(blocker1Texture);
-			activable.setPosition(x * Platform.size, y * Platform.size);
+			activable.setPosition(tileX, tileY);
 			activable.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activable);
 		} else if (c.equals("blocker2")) {
-			Blocker activable = new Blocker(this, 2);
+			Blocker activable = new Blocker(this, 2, tileWidth, tileHeight);
 			activable.setTexture(blocker2Texture);
-			activable.setPosition(x * Platform.size, y * Platform.size);
+			activable.setPosition(tileX, tileY);
 			activable.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activable);
 		} else if (c.equals("blocker3")) {
-			Blocker activable = new Blocker(this, 3);
+			Blocker activable = new Blocker(this, 3, tileWidth, tileHeight);
 			activable.setTexture(blocker3Texture);
-			activable.setPosition(x * Platform.size, y * Platform.size);
+			activable.setPosition(tileX, tileY);
 			activable.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activable);
 		} else if (c.equals("moving_platform")) {
 			MovingPlatform platform = new MovingPlatform(this,
 					getAnimationForTile(map, tile, textureCache),
-					getMovingPlatformDestination(tile, x, y));
-			platform.setPosition(x * Platform.size, y * Platform.size);
+					getMovingPlatformDestination(tile, x, y, baseSize), tileWidth, tileHeight);
+			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("teleporter")) {
-			Teleporter teleporter = new Teleporter(this);
+			Teleporter teleporter = new Teleporter(this, tileWidth, tileHeight);
 			teleporter.setTexture(getAnimationForTile(map, tile, textureCache));
-			teleporter.setPosition(x * Platform.size, y * Platform.size);
+			teleporter.setPosition(tileX, tileY);
 			teleporter.setZOrder(getTileZOrder(tile,zOrderBase,1));
 			teleporter.setColor(tile.getProperties().getProperty(
 					"newton_adventure.teleporter.color"));
 			add(teleporter);
 		} else if (c.equals("keylock")) {
-			KeyLock keylock = new KeyLock(this);
+			KeyLock keylock = new KeyLock(this, tileWidth, tileHeight);
 			keylock.setTexture(getAnimationForTile(map, tile, textureCache));
-			keylock.setPosition(x * Platform.size, y * Platform.size);
+			keylock.setPosition(tileX, tileY);
 			keylock.setZOrder(getTileZOrder(tile,zOrderBase));
 			add(keylock);
 		} else if (c.equals("egyptian_boss")) {
-			EgyptianBoss boss = new EgyptianBoss(this, x * Platform.size, y
-					* Platform.size);
+			EgyptianBoss boss = new EgyptianBoss(this, tileX, tileY);
 			boss.setBodyTexture(textureCache.getTexture(game.getData().getFile(
 					"egyptian_boss_body.png")));
 			boss.setHandTexture(textureCache.getTexture(game.getData().getFile(
@@ -704,9 +710,9 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(boss.getLeftHand());
 			add(boss.getRightHand());
 		} else {
-			Platform platform = new Platform(this);
+			Platform platform = new Platform(this, tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
-			platform.setPosition(x * Platform.size, y * Platform.size);
+			platform.setPosition(tileX, tileY);
 			platform.setEnabled(false);
 			platform.setZOrder(getTileZOrder(tile,zOrderBase));
 			add(platform);
@@ -824,7 +830,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile,
-			float x, float y) {
+			float x, float y, float baseSize) {
 		MovingPlatform.Destinations dest = new MovingPlatform.Destinations();
 		float ax = Float.parseFloat(tile.getProperties().getProperty(
 				"newton_adventure.moving_platform.a.x", "-1"));
@@ -840,10 +846,10 @@ public strictfp class World extends net.phys2d.raw.World {
 		ay += y;
 		by += y;
 
-		ax *= Platform.size;
-		bx *= Platform.size;
-		ay *= Platform.size;
-		by *= Platform.size;
+		ax *= baseSize;
+		bx *= baseSize;
+		ay *= baseSize;
+		by *= baseSize;
 
 		dest.a.set(ax, ay);
 		dest.b.set(bx, by);

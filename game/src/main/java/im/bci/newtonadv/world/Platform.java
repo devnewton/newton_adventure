@@ -49,18 +49,21 @@ import net.phys2d.raw.shapes.Box;
  */
 public strictfp class Platform extends AbstractDrawableStaticBody implements Updatable {
 
-    static final float size = 2.0f * World.distanceUnit;
     protected AnimationCollection texture;
     protected final World world;
+    protected float w;
+    protected float h;
     public FloatBuffer vertices = ByteBuffer.allocateDirect(2 * 4 * Float.SIZE / 8).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	public FloatBuffer texCoords = ByteBuffer.allocateDirect(2 * 4 * Float.SIZE / 8).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	private AnimationFrame frame;
 
-    Platform(World world) {
-        super(new Box(size, size));
+    Platform(World world, float w, float h) {
+        super(new Box(w, h));
         setFriction(10.0f);
         addBit(World.STATIC_BODY_COLLIDE_BIT);
         this.world = world;
+        this.w = w;
+        this.h = h;
     }
     
     @Override

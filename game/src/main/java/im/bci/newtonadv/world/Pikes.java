@@ -51,8 +51,8 @@ public strictfp class Pikes extends Platform {
     }
     DangerousSide dangerousSide;
 
-    public Pikes(World world, DangerousSide dangerousSide) {
-        super(world);
+    public Pikes(World world, DangerousSide dangerousSide, float w, float h) {
+        super(world, w, h);
         this.dangerousSide = dangerousSide;
     }
 
@@ -102,13 +102,13 @@ public strictfp class Pikes extends Platform {
     private boolean isPointOnDangerousSide(ROVector2f point) {
         switch (dangerousSide) {
             case UP:
-                return point.getY() >= (this.getPosition().getY() + size * 0.45f);
+                return point.getY() >= (this.getPosition().getY() + h * 0.45f);
             case DOWN:
-                return point.getY() <= (this.getPosition().getY() - size * 0.45);
+                return point.getY() <= (this.getPosition().getY() - h * 0.45);
             case RIGHT:
-                return point.getX() >= (this.getPosition().getX() + size * 0.45f);
+                return point.getX() >= (this.getPosition().getX() + w * 0.45f);
             case LEFT:
-                return point.getX() <= (this.getPosition().getX() - size * 0.45f);
+                return point.getX() <= (this.getPosition().getX() - w * 0.45f);
         }
         return false;
     }

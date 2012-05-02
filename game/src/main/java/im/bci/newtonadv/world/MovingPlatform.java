@@ -50,14 +50,13 @@ public strictfp class MovingPlatform extends AbstractDrawableBody implements Upd
 
         Vector2f a = new Vector2f(), b = new Vector2f();
     }
-    static final float size = 2.0f * World.distanceUnit;
     private static final float weight = 10000.0f;
     final World world;
     final AnimationCollection texture;
     final Vector2f f = new Vector2f();
 
-    public MovingPlatform(World world, AnimationCollection texture, Destinations destinations) {
-        super(new Box(size, size), weight);
+    public MovingPlatform(World world, AnimationCollection texture, Destinations destinations, float w, float h) {
+        super(new Box(w, h), weight);
         this.world = world;
         this.texture = texture;
         this.destinations = destinations;

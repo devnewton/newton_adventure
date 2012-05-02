@@ -43,8 +43,8 @@ public class Blocker extends Platform implements Updatable {
     private float alpha = 1.0f;
     private static final long disappearDuration = 1000000000L;
 
-    public Blocker(World world, int activableId) {
-        super(world);
+    public Blocker(World world, int activableId, float w, float h) {
+        super(world, w , h);
         this.activableId = activableId;
     }
 

@@ -34,23 +34,23 @@ package im.bci.newtonadv.world;
 import net.phys2d.raw.Body;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public strictfp class DoorToLevel extends Door {
-	
+
 	private String questName, levelName;
 
-    DoorToLevel(World world) {
-        super(world);
-    }
+	DoorToLevel(World world, float w, float h) {
+		super(world, w, h);
+	}
 
-    @Override
-    public void collided(Body body) {
-        if (!isClose && body instanceof Hero) {
-            world.gotoLevel(questName,levelName);
-        }
-    }
+	@Override
+	public void collided(Body body) {
+		if (!isClose && body instanceof Hero) {
+			world.gotoLevel(questName, levelName);
+		}
+	}
 
 	public void setQuestName(String questName) {
 		this.questName = questName;
@@ -59,8 +59,8 @@ public strictfp class DoorToLevel extends Door {
 	public void setLevelName(String levelName) {
 		this.levelName = levelName;
 	}
-	
-    @Override
+
+	@Override
 	public boolean isOpenableWithKey() {
 		return false;
 	}
