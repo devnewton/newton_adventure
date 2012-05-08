@@ -1,2 +1,2 @@
 #!/bin/sh
-java -jar newton_adventure-1.3-SNAPSHOT.jar
+java -jar newton_adventure-1.4-SNAPSHOT.jar
