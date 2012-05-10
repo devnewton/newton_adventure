@@ -32,7 +32,6 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.game.Sequence.TransitionException;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.anim.AnimationCollection;
@@ -40,6 +39,9 @@ import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Sequence;
+import im.bci.newtonadv.game.Sequence.NormalTransitionException;
+import im.bci.newtonadv.game.Sequence.ResumableTransitionException;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.score.LevelScore;
@@ -117,7 +119,7 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	public static interface PostUpdateAction {
 
-		public void run() throws TransitionException;
+		public void run() throws Sequence.NormalTransitionException, ResumableTransitionException;
 
 	}
 
@@ -771,7 +773,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		getView().drawWorld(this);
 	}
 
-	public void update() throws GameOverException, TransitionException {
+	public void update() throws GameOverException, NormalTransitionException, ResumableTransitionException {
 		FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
 		for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {// copy
 																		// to
@@ -877,7 +879,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		postUpdateActions.add(new PostUpdateAction() {
 
 			@Override
-			public void run() throws TransitionException {
+			public void run() throws ResumableTransitionException {
 				game.goToRandomBonusLevel(questName);
 			}
 		});
@@ -940,9 +942,18 @@ public strictfp class World extends net.phys2d.raw.World {
 		postUpdateActions.add(new PostUpdateAction() {
 
 			@Override
-			public void run() throws TransitionException {
+			public void run() throws NormalTransitionException {
 				game.gotoLevel(newQuestName, newLevelName);
 			}
 		});
+	}
+
+	public void resume() {
+		for (int i = 0; i < bodies.size(); ++i) {
+			Body body = bodies.get(i);
+			if (body instanceof DoorToBonusWorld) {
+				((DoorToBonusWorld) body).close();
+			}
+		}
 	}
 }

@@ -34,6 +34,7 @@ package im.bci.newtonadv.game;
 import java.util.ArrayList;
 import java.util.List;
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.game.FadeSequence.FadeSequenceTransition;
 
 /**
  *
@@ -66,12 +67,12 @@ public class QuestSequence implements Sequence {
     }
 
     @Override
-	public void update() throws TransitionException {
-        throw new TransitionException(levels.isEmpty() ? nextSequence : levels.get(0));
+	public void update() throws NormalTransitionException {
+        throw new NormalTransitionException(levels.isEmpty() ? nextSequence : levels.get(0));
     }
 
     @Override
-	public void processInputs() throws TransitionException {
+	public void processInputs() {
     }
 
     private void loadLevels(String questName) {
@@ -106,12 +107,18 @@ public class QuestSequence implements Sequence {
 		return this.questName;
 	}
 
-	public void gotoLevel(String newLevelName) throws TransitionException {
+	public void gotoLevel(String newLevelName) throws NormalTransitionException {
 		for(LevelSequence level: levels) {
 			if(level.getLevelName().equals(newLevelName)) {
-				throw new TransitionException(new FadeSequence(this.game, level, 1, 1, 1, 1000000000L));
+				throw new NormalTransitionException(new FadeSequence(this.game, level, 1, 1, 1, 1000000000L,FadeSequenceTransition.NORMAL));
 			}
 		}
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
 		
 	}
 }

@@ -85,11 +85,11 @@ public class OptionsSequence implements IOptionsSequence {
 	}
 
 	@Override
-	public void processInputs() throws TransitionException {
+	public void processInputs() {
 	}
 
 	@Override
-	public void update() throws TransitionException {
+	public void update() throws Sequence.NormalTransitionException {
 		if (optionsGui.okPressed) {
 			try {
 				applyOptions();
@@ -99,10 +99,10 @@ public class OptionsSequence implements IOptionsSequence {
 			}
 			updateConfig();
 			platform.saveConfig();
-			throw new TransitionException(nextSequence);
+			throw new Sequence.NormalTransitionException(nextSequence);
 		}
 		if (optionsGui.cancelPressed) {
-			throw new TransitionException(nextSequence);
+			throw new Sequence.NormalTransitionException(nextSequence);
 		}
 	}
 
@@ -312,5 +312,11 @@ public class OptionsSequence implements IOptionsSequence {
 		Logger.getLogger(OptionsSequence.class.getName()).log(Level.SEVERE,
 				"Unknow lwjgl key value {0}", key);
 		return "";
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
 	}
 }

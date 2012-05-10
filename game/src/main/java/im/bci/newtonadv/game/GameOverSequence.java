@@ -43,9 +43,9 @@ public class GameOverSequence extends StoryboardSequence {
     }
 
     @Override
-    public void processInputs() throws TransitionException {
+    public void processInputs() throws NormalTransitionException {
         if (game.getInput().isKeyUpDown()) {
-            throw new Sequence.TransitionException(level);
+            throw new Sequence.NormalTransitionException(level);
         }
         super.processInputs();
     }

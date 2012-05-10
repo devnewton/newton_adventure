@@ -85,7 +85,7 @@ public abstract class MenuSequence implements Sequence {
 	}
 
 	@Override
-	public void processInputs() throws TransitionException {
+	public void processInputs() throws Sequence.NormalTransitionException, ResumeTransitionException {
 		if (game.getInput().isKeyRightDown()) {
 			horizontalSelectNextButton = true;
 		} else if (horizontalSelectNextButton) {
@@ -186,7 +186,7 @@ public abstract class MenuSequence implements Sequence {
 	}
 
 	@Override
-	public void update() throws TransitionException {
+	public void update() {
 		// NOTHING
 	}
 
@@ -239,6 +239,6 @@ public abstract class MenuSequence implements Sequence {
 			currentTexture = offTexture;
 		}
 
-		abstract void activate() throws Sequence.TransitionException;
+		abstract void activate() throws Sequence.NormalTransitionException, Sequence.ResumeTransitionException;
 	}
 }

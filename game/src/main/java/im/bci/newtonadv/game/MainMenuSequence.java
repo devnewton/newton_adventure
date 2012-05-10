@@ -54,7 +54,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
     }
 
 	@Override
-    public void update() throws TransitionException {
+    public void update() {
         super.update();
         specialOccasionLayer.update();
     }
@@ -74,9 +74,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
         playButton = new Button() {
 
             @Override
-            void activate() throws TransitionException {
+            void activate() throws Sequence.NormalTransitionException {
             	resumeSequence = null;
-                throw new Sequence.TransitionException(playSequence);
+                throw new Sequence.NormalTransitionException(playSequence);
             }
         };
         playButton.offTexture = game.getData().getFile("main_menu/bt-play-off.png");
@@ -90,9 +90,11 @@ public strictfp class MainMenuSequence extends MenuSequence {
         resumeButton = new Button() {
 
             @Override
-            void activate() throws TransitionException {
+            void activate() throws ResumeTransitionException {
                 if (resumeSequence != null) {
-                    throw new Sequence.TransitionException(resumeSequence);
+                    ResumeTransitionException ex = new ResumeTransitionException(resumeSequence);
+                    resumeSequence = null;
+                    throw ex;
                 }
             }
         };
@@ -107,8 +109,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
         Button optionsButton = new Button() {
 
             @Override
-            void activate() throws TransitionException {
-                throw new Sequence.TransitionException(optionsSequence);
+            void activate() throws Sequence.NormalTransitionException {
+                throw new Sequence.NormalTransitionException(optionsSequence);
             }
         };
         optionsButton.currentTexture = optionsButton.offTexture = game.getData().getFile("main_menu/bt-options-off.png");
@@ -122,9 +124,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
         Button helpButton = new Button() {
 
             @Override
-            void activate() throws TransitionException {
+            void activate() throws NormalTransitionException {
                 if (helpSequence != null) {
-                    throw new Sequence.TransitionException(helpSequence);
+                    throw new Sequence.NormalTransitionException(helpSequence);
                 }
             }
         };
@@ -139,8 +141,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
         Button quitButton = new Button() {
 
             @Override
-            void activate() throws TransitionException {
-                throw new Sequence.TransitionException(quitSequence);
+            void activate() throws Sequence.NormalTransitionException {
+                throw new Sequence.NormalTransitionException(quitSequence);
             }
         };
         quitButton.currentTexture = quitButton.offTexture = game.getData().getFile("main_menu/bt-quit-off.png");
@@ -167,7 +169,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
         this.resumeSequence = s;
     }
 
-    public boolean isResumeSequence(Sequence s) {
-        return s == resumeSequence && s != null;
-    }
+	@Override
+	public void resume() {
+	}
 }

@@ -103,8 +103,8 @@ public class QuestMenuSequence extends MenuSequence {
 		Button questButton = new Button() {
 
 			@Override
-			void activate() throws TransitionException {
-				throw new Sequence.TransitionException(levelMenuSequence);
+			void activate() throws Sequence.NormalTransitionException {
+				throw new Sequence.NormalTransitionException(levelMenuSequence);
 			}
 
 			@Override
@@ -127,12 +127,18 @@ public class QuestMenuSequence extends MenuSequence {
 		addButton(questButton);
 	}
 
-	public void gotoLevel(String newQuestName, String newLevelName) throws TransitionException {
+	public void gotoLevel(String newQuestName, String newLevelName) throws Sequence.NormalTransitionException {
 		for(QuestSequence quest: quests) {
 			if(quest.getQuestName().equals(newLevelName)) {
 				quest.gotoLevel(newLevelName);
 			}
 		}
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
 		
 	}
 }

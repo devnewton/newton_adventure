@@ -40,4 +40,9 @@ public strictfp class Apple extends PickableObject {
     Apple(World world) {
         super(world);
     }
+    
+    @Override
+	protected void removeFromWorld() {
+		world.removeApple(this);
+	}
 }

@@ -37,12 +37,14 @@ package im.bci.newtonadv.game;
  */
 public interface Sequence {
     
-    static public class TransitionException extends Throwable {
+
+
+	static public abstract class AbstractTransitionException extends Throwable {
 
 		private static final long serialVersionUID = -5802470623539315494L;
 		private Sequence nextSequence;
 
-        public TransitionException(Sequence nextSequence) {
+        public AbstractTransitionException(Sequence nextSequence) {
             this.nextSequence = nextSequence;
         }
 
@@ -50,10 +52,40 @@ public interface Sequence {
             return nextSequence;
         }
     }
+    
+    static public class NormalTransitionException extends AbstractTransitionException {
 
-    public void start();
-    public void draw();
-    public void stop();
-    void update() throws TransitionException;
-    void processInputs() throws TransitionException;
+		public NormalTransitionException(Sequence nextSequence) {
+			super(nextSequence);
+		}
+
+		private static final long serialVersionUID = 8455803096542664269L;
+
+    }
+    
+    static public class ResumableTransitionException extends AbstractTransitionException {
+
+		public ResumableTransitionException(Sequence nextSequence) {
+			super(nextSequence);
+		}
+
+		private static final long serialVersionUID = -1975859829767781443L;
+
+	}
+    
+    static public class ResumeTransitionException extends AbstractTransitionException {
+
+		public ResumeTransitionException(Sequence nextSequence) {
+			super(nextSequence);
+		}
+
+		private static final long serialVersionUID = -1654173561106215285L;
+    }
+
+    void start();
+    void draw();
+    void stop();
+    void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
+    void processInputs() throws NormalTransitionException, ResumeTransitionException;
+	void resume();
 }

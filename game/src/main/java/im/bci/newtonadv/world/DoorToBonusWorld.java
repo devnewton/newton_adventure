@@ -54,4 +54,8 @@ public strictfp class DoorToBonusWorld extends Door {
 	public boolean isOpenableWithKey() {
 		return false;
 	}
+
+	public void close() {
+		isClose = true;		
+	}
 }

@@ -93,7 +93,7 @@ public class LevelMenuSequence extends MenuSequence {
 		Button questButton = new Button() {
 
 			@Override
-			void activate() throws TransitionException {
+			void activate() throws NormalTransitionException {
 				if(!isBlocked) {
 					questSequence.gotoLevel(levelName);
 				}
@@ -121,5 +121,10 @@ public class LevelMenuSequence extends MenuSequence {
 		questButton.w = LEVEL_MINIATURE_WIDTH;
 		questButton.h = LEVEL_MINIATURE_HEIGHT;
 		addButton(questButton);
+	}
+
+	@Override
+	public void resume() {
+		
 	}
 }

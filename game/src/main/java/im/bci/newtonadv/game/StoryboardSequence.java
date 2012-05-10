@@ -60,17 +60,17 @@ public class StoryboardSequence implements Sequence {
     }
 
     @Override
-    public void update() throws TransitionException {
+    public void update() {
         //NOTHING
     }
     private boolean mustQuit;
 
     @Override
-    public void processInputs() throws TransitionException {
+    public void processInputs() throws NormalTransitionException {
         if (game.getInput().isKeyReturnDown()) {
             mustQuit = true;
         } else if (mustQuit) {
-            throw new Sequence.TransitionException(nextSequence);
+            throw new Sequence.NormalTransitionException(nextSequence);
         }
     }
 
@@ -104,4 +104,10 @@ public class StoryboardSequence implements Sequence {
     public String getTexture() {
         return texture;
     }
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
 }

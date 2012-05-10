@@ -45,14 +45,22 @@ public class FadeSequence implements Sequence {
     private final Game game;
     private final long duration;
     private long endTime;
+	private FadeSequenceTransition transition;
+    
+    public enum FadeSequenceTransition {
+    	NORMAL,
+    	RESUME,
+    	RESUMABLE
+    }
 
-    public FadeSequence(Game game, Sequence nextSequence, float r, float g, float b, long duration) {
+    public FadeSequence(Game game, Sequence nextSequence, float r, float g, float b, long duration, FadeSequenceTransition transition) {
         this.game = game;
         this.nextSequence = nextSequence;
         this.r = r;
         this.g = g;
         this.b = b;
         this.duration = duration;
+        this.transition = transition;
     }
 
     @Override
@@ -70,15 +78,29 @@ public class FadeSequence implements Sequence {
     }
 
     @Override
-	public void update() throws TransitionException {
+	public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
         long remaining = endTime - game.getFrameTimeInfos().currentTime;
-        if(remaining <= 0)
-            throw new TransitionException(nextSequence);
+        if(remaining <= 0) {
+        	switch(transition) {
+        	case NORMAL:
+        		throw new NormalTransitionException(nextSequence);
+        	case RESUME:
+        		throw new ResumeTransitionException(nextSequence);
+        	case RESUMABLE:
+        		throw new ResumableTransitionException(nextSequence);
+        	}
+        }
         a = 1.0f - (float)remaining / (float)duration;
     }
 
     @Override
-	public void processInputs() throws TransitionException {
+	public void processInputs() {
     }
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

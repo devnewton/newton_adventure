@@ -32,6 +32,7 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.game.FadeSequence.FadeSequenceTransition;
 
 /**
  *
@@ -61,12 +62,12 @@ public strictfp class BonusSequence extends LevelSequence {
     }
 
     @Override
-    public strictfp void update() throws TransitionException {
+    public strictfp void update() throws ResumeTransitionException, NormalTransitionException, ResumableTransitionException {
         super.update();
 
         if (game.getFrameTimeInfos().currentTime > endTime) {
             game.getScore().setLevelScore(currentQuestName, levelName, world.getLevelScore());
-            throw new TransitionException(new FadeSequence(game, nextSequence, 1, 1, 1, 1000000000L));
+            throw new NormalTransitionException(new FadeSequence(game, nextSequence, 1, 1, 1, 1000000000L,FadeSequenceTransition.RESUME));
         }
     }
 

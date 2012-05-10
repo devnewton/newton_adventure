@@ -32,6 +32,7 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.game.FadeSequence.FadeSequenceTransition;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
@@ -94,7 +95,7 @@ strictfp public class LevelSequence implements Sequence {
 	}
 
 	@Override
-	public void update() throws TransitionException {
+	public void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
 		try {
 			if (world.getHero().isDead()) {
 				world.getHero().update(frameTimeInfos);
@@ -114,14 +115,14 @@ strictfp public class LevelSequence implements Sequence {
 				game.getScore().setLevelScore(questName, levelName,
 						world.getLevelScore());
 				game.unblockNextLevel(questName, levelName);
-				throw new TransitionException(new FadeSequence(game,
-						nextSequence, 0, 0, 0, 1000000000L));
+				throw new NormalTransitionException(new FadeSequence(game,
+						nextSequence, 0, 0, 0, 1000000000L,FadeSequenceTransition.NORMAL));
 			}
 			if (cheatCodeGotoNextBonusLevel) {
 				game.goToNextBonusLevel(questName);
 			}
 		} catch (GameOverException ex) {
-			throw new TransitionException(new GameOverSequence(game, this));
+			throw new NormalTransitionException(new GameOverSequence(game, this));
 		}
 	}
 
@@ -221,5 +222,12 @@ strictfp public class LevelSequence implements Sequence {
 
 	public Object getLevelName() {
 		return this.levelName;
+	}
+
+	@Override
+	public void resume() {
+		this.cheatCodeGotoNextBonusLevel = false;
+		this.cheatCodeGotoNextLevel = false;
+		world.resume();		
 	}
 }

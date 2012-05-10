@@ -85,7 +85,7 @@ public class ScoreSequence implements Sequence {
     }
 
     @Override
-	public void update() throws TransitionException {
+	public void update() {
         timeInfos.update();
         long newScorePercentToShow = Math.min(100, timeInfos.currentTime * 100 / (10 * 1000000000));
         if (newScorePercentToShow != scorePerCentToShow) {
@@ -95,17 +95,17 @@ public class ScoreSequence implements Sequence {
     }
 
     @Override
-	public void processInputs() throws TransitionException {
+	public void processInputs() throws Sequence.NormalTransitionException {
         if (game.getInput().isKeyReturnDown()) {
             mustSendScoreQuit = true;
         } else if (mustSendScoreQuit) {
             scoreServer.sendScore(questScore.getQuestName(), questScore.computeScore());
-            throw new Sequence.TransitionException(nextSequence);
+            throw new Sequence.NormalTransitionException(nextSequence);
         }
         if (game.getInput().isKeyRightDown()) {
             mustQuitWithoutSendingScore = true;
         } else if (mustQuitWithoutSendingScore) {
-            throw new Sequence.TransitionException(nextSequence);
+            throw new Sequence.NormalTransitionException(nextSequence);
         }
     }
 
@@ -120,4 +120,10 @@ public class ScoreSequence implements Sequence {
     public void setDirty(boolean b) {
         redraw = b;
     }
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
 }
