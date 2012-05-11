@@ -2,7 +2,10 @@ package im.bci.newtonadv.platform.android;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +14,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES10;
 import android.opengl.GLUtils;
+import im.bci.nanim.NanimParser.Image;
+import im.bci.nanim.NanimParser.Nanim;
+import im.bci.nanim.NanimParser.PixelFormat;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 
@@ -104,7 +110,7 @@ public class AndroidTextureCache implements ITextureCache {
 			texHeight = bitmap.getHeight();
 		}
 
-		AndroidTexture texture = new AndroidTexture(texWidth, texHeight);
+		AndroidTexture texture = new AndroidTexture(texWidth, texHeight, bitmap.hasAlpha());
 
 		// produce a texture from the byte buffer
 		GLES10.glBindTexture(GLES10.GL_TEXTURE_2D, texture.getId());
@@ -148,6 +154,60 @@ public class AndroidTextureCache implements ITextureCache {
 			super(texture, queue);
 			textureId = texture.getId();
 		}
+	}
+
+	public Map<String, ITexture> getTextures(String nanimName, Nanim nanim) {
+		String baseName = nanimName + "#nanim_";
+		Map<String, ITexture> nanimTextures = new HashMap<String, ITexture>();
+		for(im.bci.nanim.NanimParser.Image nimage : nanim.getImagesList()) {
+			String name = baseName + nimage.getName();
+			TextureWeakReference textureRef = textures.get(name);
+			if (textureRef != null) {
+				ITexture texture = textureRef.get();
+				if (texture != null) {
+					nanimTextures.put(nimage.getName(), texture);
+					continue;
+				} else {
+					textures.remove(nanimName);
+				}
+			}
+			
+			AndroidTexture texture = convertNImageToTexture(nimage);
+			textures.put(name, new TextureWeakReference(texture, referenceQueue));
+			nanimTextures.put(nimage.getName(), texture);
+		}
+		return nanimTextures;
+	}
+
+	private AndroidTexture convertNImageToTexture(Image nimage) {
+		int texWidth = nimage.getWidth();
+		int texHeight = nimage.getHeight();
+		AndroidTexture texture = new AndroidTexture(texWidth, texHeight, nimage.getFormat().equals(PixelFormat.RGBA_8888));
+		
+		ByteBuffer imageBuffer = ByteBuffer.allocateDirect(nimage.getPixels().size());
+		imageBuffer.order(ByteOrder.nativeOrder());
+		imageBuffer.put(nimage.getPixels().asReadOnlyByteBuffer());
+		imageBuffer.flip();
+
+		// produce a texture from the byte buffer
+		GLES10.glBindTexture(GLES10.GL_TEXTURE_2D, texture.getId());
+		GLES10.glPixelStorei(GLES10.GL_UNPACK_ALIGNMENT, 1);
+		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_S,
+				GLES10.GL_CLAMP_TO_EDGE);
+		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_T,
+				GLES10.GL_CLAMP_TO_EDGE);
+		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_MAG_FILTER,
+				GLES10.GL_NEAREST);
+		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_MIN_FILTER,
+				GLES10.GL_NEAREST);
+		GLES10.glTexEnvf(GLES10.GL_TEXTURE_ENV, GLES10.GL_TEXTURE_ENV_MODE,
+				GLES10.GL_MODULATE);
+		int pixelFormat = nimage.getFormat().equals(PixelFormat.RGBA_8888) ? GLES10.GL_RGBA
+				: GLES10.GL_RGB;
+		GLES10.glTexImage2D(GLES10.GL_TEXTURE_2D, 0, pixelFormat, texWidth,
+				texHeight, 0, pixelFormat, GLES10.GL_UNSIGNED_BYTE, imageBuffer);
+		return texture;
+
 	}
 
 }
