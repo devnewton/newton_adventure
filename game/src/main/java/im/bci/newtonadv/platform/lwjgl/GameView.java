@@ -244,7 +244,8 @@ public strictfp class GameView implements IGameView {
 
 		if (Display.isFullscreen() == startFullscreen
 				&& this.quality.equals(newQuality)
-				&& Display.getDisplayMode().equals(chosenMode)) {
+				&& Display.getDisplayMode().equals(chosenMode)
+				&& Display.isCreated()) {
 			return;
 		}
 
@@ -297,8 +298,9 @@ public strictfp class GameView implements IGameView {
 		sequence.draw();
 
 		// now tell the screen to update
-		Display.update();
+		Display.update(false);
 		Display.sync(Game.FPS);
+		Display.processMessages();
 
 		// finally check if the user has requested that the display be
 		// shutdown
