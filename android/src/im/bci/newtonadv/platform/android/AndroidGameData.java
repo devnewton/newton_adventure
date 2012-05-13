@@ -2,9 +2,8 @@ package im.bci.newtonadv.platform.android;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.res.AssetManager;
@@ -14,6 +13,27 @@ import im.bci.newtonadv.platform.interfaces.IGameData;
 public class AndroidGameData implements IGameData {
 
 	private final AssetManager assets;
+	private static final List<String> quests;
+	private static final HashMap<String, List<String>> questLevels;
+
+	static {
+		quests = Arrays.asList("jungle", "vatican", "arctic", "volcano",
+				"egypt");
+		questLevels = new HashMap<String, List<String>>();
+		questLevels.put("jungle", Arrays.asList("level0", "level0.5", "level1",
+				"level2", "level3", "level4"));
+		questLevels.put("vatican", Arrays.asList("level0", "level0.5",
+				"level1", "level2", "level3", "level4"));
+		questLevels.put("arctic", Arrays.asList("level0", "level0.5", "level1",
+				"level2", "level3", "level4"));
+		questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
+				"level3", "level4", "level5"));
+		questLevels.put("volcano", Arrays.asList("level0", "level0.5",
+				"level1", "level2", "level3", "level4"));
+		questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
+				"bonus_level3", "bonus_level4", "bonus_level5"));
+
+	}
 
 	public AndroidGameData(AssetManager assets) {
 		this.assets = assets;
@@ -21,14 +41,7 @@ public class AndroidGameData implements IGameData {
 
 	@Override
 	public List<String> listQuests() {
-		try {
-			ArrayList<String> quests = new ArrayList<String>(
-					Arrays.asList(assets.list("quests")));
-			quests.remove("bonus");
-			return quests;
-		} catch (IOException e) {
-			return Collections.emptyList();
-		}
+		return quests;
 	}
 
 	@Override
@@ -43,23 +56,15 @@ public class AndroidGameData implements IGameData {
 
 	@Override
 	public List<String> listQuestLevels(String questName) {
-		try {
-			return Arrays
-					.asList(assets.list("quests/" + questName + "/levels"));
-		} catch (IOException e) {
-			return Collections.emptyList();
-		}
+		return questLevels.get(questName);
 	}
 
 	@Override
 	public InputStream openLevelTmx(String questName, String levelName)
 			throws Exception {
-		String path = "quests/" + questName + "/levels/" + levelName;
-		for (String file : assets.list(path)) {
-			if (file.endsWith(".tmx"))
-				return assets.open(path + "/" + file);
-		}
-		throw new RuntimeException("no tmx file found in level path " + path);
+		String path = "quests/" + questName + "/levels/" + levelName + "/"
+				+ levelName + ".tmx";
+		return assets.open(path);
 	}
 
 	@Override

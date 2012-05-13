@@ -6,8 +6,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -138,10 +136,7 @@ public class AndroidTextureCache implements ITextureCache {
 		try {
 			return BitmapFactory.decodeStream(assets.open(filename));
 		} catch (Exception e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"Impossible de charger la texture " + filename, e);
-			System.exit(0);
-			return null;
+			throw new RuntimeException("Impossible de charger la texture " + filename);
 		}
 	}
 

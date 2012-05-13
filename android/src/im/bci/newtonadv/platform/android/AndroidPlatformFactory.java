@@ -19,7 +19,7 @@ import im.bci.newtonadv.score.ScoreServer;
 public class AndroidPlatformFactory implements IPlatformFactory {
 
 	private AssetManager assets;
-	private Properties config;
+	private Properties config = new Properties();
 	private AndroidGameInput input;
 	private AndroidGameView view;
 	private AndroidSoundCache soundCache;
