@@ -122,7 +122,9 @@ public strictfp class Game {
 			view.draw(currentSequence);
 			processInputs();
 			if (!frameTimeInfos.paused) {
-				currentSequence.processInputs();
+				do {
+					currentSequence.processInputs();
+				} while (input.poll());
 				currentSequence.update();
 			}
 		} catch (Sequence.NormalTransitionException ex) {
@@ -182,21 +184,23 @@ public strictfp class Game {
 	private ScoreServer scoreServer;
 
 	private void processInputs() {
-		if (input.isKeyReturnToMenuDown()) {
-			bShowMainMenu = true;
-		}
-		if (input.isKeyToggleFullscreenDown()) {
-			bToggleFullscreen = true;
-		} else if (bToggleFullscreen) {
-			bToggleFullscreen = false;
-			view.toggleFullscreen();
-		}
-		if (input.isKeyPauseDown()) {
-			bTogglePause = true;
-		} else if (bTogglePause) {
-			bTogglePause = false;
-			frameTimeInfos.togglePause();
-		}
+		do {
+			if (input.isKeyReturnToMenuDown()) {
+				bShowMainMenu = true;
+			}
+			if (input.isKeyToggleFullscreenDown()) {
+				bToggleFullscreen = true;
+			} else if (bToggleFullscreen) {
+				bToggleFullscreen = false;
+				view.toggleFullscreen();
+			}
+			if (input.isKeyPauseDown()) {
+				bTogglePause = true;
+			} else if (bTogglePause) {
+				bTogglePause = false;
+				frameTimeInfos.togglePause();
+			}
+		} while (input.poll());
 	}
 
 	public GameScore getScore() {
@@ -222,8 +226,9 @@ public strictfp class Game {
 					.get(frameTimeInfos.random.nextInt(bonusSequences.size()));
 			bonusSequence.setCurrentQuestName(currentQuestName);
 			bonusSequence.setNextSequence(currentSequence);
-			throw new Sequence.ResumableTransitionException(new FadeSequence(this,
-					bonusSequence, 1, 1, 1, 1000000000L, FadeSequence.FadeSequenceTransition.NORMAL ));
+			throw new Sequence.ResumableTransitionException(new FadeSequence(
+					this, bonusSequence, 1, 1, 1, 1000000000L,
+					FadeSequence.FadeSequenceTransition.NORMAL));
 		}
 	}
 
@@ -237,8 +242,9 @@ public strictfp class Game {
 			lastBonusSequence = bonusSequences.get(i);
 			lastBonusSequence.setCurrentQuestName(currentQuestName);
 			lastBonusSequence.setNextSequence(currentSequence);
-			throw new Sequence.ResumableTransitionException(new FadeSequence(this,
-					lastBonusSequence, 1, 1, 1, 1000000000L, FadeSequence.FadeSequenceTransition.NORMAL));
+			throw new Sequence.ResumableTransitionException(new FadeSequence(
+					this, lastBonusSequence, 1, 1, 1, 1000000000L,
+					FadeSequence.FadeSequenceTransition.NORMAL));
 		}
 	}
 

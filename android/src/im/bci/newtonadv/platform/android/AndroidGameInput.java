@@ -138,4 +138,9 @@ public class AndroidGameInput implements IGameInput {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public boolean poll() {
+		return false;
+	}
 }

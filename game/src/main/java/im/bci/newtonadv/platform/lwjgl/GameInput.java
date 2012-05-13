@@ -347,4 +347,9 @@ public class GameInput implements IGameInput {
 	public boolean isMouseButtonDown() {
 		return Mouse.isButtonDown(0);
 	}
+
+	@Override
+	public boolean poll() {
+		return Keyboard.next() || Mouse.next();
+	}
 }
