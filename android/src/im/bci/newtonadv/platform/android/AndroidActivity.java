@@ -58,7 +58,7 @@ public class AndroidActivity extends Activity {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-    }
+    }    
     
     @Override
     protected void onPause() {

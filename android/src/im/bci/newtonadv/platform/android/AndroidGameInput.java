@@ -1,6 +1,7 @@
 package im.bci.newtonadv.platform.android;
 
 import java.util.Properties;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import net.phys2d.math.ROVector2f;
 
@@ -8,21 +9,8 @@ import im.bci.newtonadv.platform.interfaces.IGameInput;
 
 public class AndroidGameInput implements IGameInput {
 
-	boolean keyJumpDown;
-	boolean keyLeftDown;
-	boolean keyRightDown;
-	boolean keyRotateClockwiseDown;
-	boolean keyRotateCounterClockwiseDown;
-	boolean keyRotate90ClockwiseDown;
-	boolean keyRotate90CounterClockwiseDown;
-	boolean keyPauseDown;
-	boolean keyReturnToMenuDown;
-	boolean keyCheatActivateAllDown;
-	boolean keyCheatGotoNextLevelDown;
-	boolean keyDownDown;
-	boolean keyReturnDown;
-	boolean keyUpDown;
-	boolean keyCheatGotoNextBonusLevelDown;
+	AndroidGameInputData data = new AndroidGameInputData();
+	ArrayBlockingQueue<AndroidGameInputData> dataBuffer = new ArrayBlockingQueue<AndroidGameInputData>(128);
 
 	public AndroidGameInput(Properties config) {
 		// TODO Auto-generated constructor stub
@@ -30,74 +18,74 @@ public class AndroidGameInput implements IGameInput {
 
 	@Override
 	public boolean isKeyCheatActivateAllDown() {
-		return keyCheatActivateAllDown;
+		return data.keyCheatActivateAllDown;
 	}
 
 	@Override
 	public boolean isKeyCheatGotoNextLevelDown() {
-		return keyCheatGotoNextLevelDown;
+		return data.keyCheatGotoNextLevelDown;
 	}
 
 	@Override
 	public boolean isKeyDownDown() {
-		return keyDownDown;
+		return data.keyDownDown;
 	}
 
 	@Override
 	public boolean isKeyJumpDown() {
-		return keyJumpDown;
+		return data.keyJumpDown;
 	}
 
 	@Override
 	public boolean isKeyLeftDown() {
-		return keyLeftDown;
+		return data.keyLeftDown;
 	}
 
 	@Override
 	public boolean isKeyPauseDown() {
-		return keyPauseDown;
+		return data.keyPauseDown;
 	}
 
 	@Override
 	public boolean isKeyReturnDown() {
 
-		return keyReturnDown;
+		return data.keyReturnDown;
 	}
 
 	@Override
 	public boolean isKeyReturnToMenuDown() {
 
-		return keyReturnToMenuDown;
+		return data.keyReturnToMenuDown;
 	}
 
 	@Override
 	public boolean isKeyRightDown() {
 
-		return keyRightDown;
+		return data.keyRightDown;
 	}
 
 	@Override
 	public boolean isKeyRotate90ClockwiseDown() {
 
-		return keyRotate90ClockwiseDown;
+		return data.keyRotate90ClockwiseDown;
 	}
 
 	@Override
 	public boolean isKeyRotate90CounterClockwiseDown() {
 
-		return keyRotate90CounterClockwiseDown;
+		return data.keyRotate90CounterClockwiseDown;
 	}
 
 	@Override
 	public boolean isKeyRotateClockwiseDown() {
 
-		return keyRotateClockwiseDown;
+		return data.keyRotateClockwiseDown;
 	}
 
 	@Override
 	public boolean isKeyRotateCounterClockwiseDown() {
 
-		return keyRotateCounterClockwiseDown;
+		return data.keyRotateCounterClockwiseDown;
 	}
 
 	@Override
@@ -107,12 +95,12 @@ public class AndroidGameInput implements IGameInput {
 
 	@Override
 	public boolean isKeyUpDown() {
-		return keyUpDown;
+		return data.keyUpDown;
 	}
 
 	@Override
 	public boolean isKeyCheatGotoNextBonusLevelDown() {
-		return keyCheatGotoNextBonusLevelDown;
+		return data.keyCheatGotoNextBonusLevelDown;
 	}
 
 	@Override
@@ -141,6 +129,12 @@ public class AndroidGameInput implements IGameInput {
 
 	@Override
 	public boolean poll() {
-		return false;
+		AndroidGameInputData newData = dataBuffer.poll();
+		if(null != newData) {
+			data = newData;
+			return true;
+		}else {
+			return false;
+		}
 	}
 }

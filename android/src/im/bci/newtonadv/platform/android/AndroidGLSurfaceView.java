@@ -40,6 +40,7 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 
 	private final AndroidGameRenderer renderer;
 	private final AndroidGameInput input;
+	private AndroidGameInputData data = new AndroidGameInputData();
 
 	public AndroidGLSurfaceView(Context context, AndroidGameInput input) {
 		super(context);
@@ -53,80 +54,85 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 		setRenderer(renderer);
 
 		this.setFocusable(true);
+		this.setFocusableInTouchMode(true);
 		this.requestFocus();
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		data = new AndroidGameInputData(data);
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			input.keyRightDown = true;
+			data.keyRightDown = true;
 			break;
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			input.keyLeftDown = true;
+			data.keyLeftDown = true;
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP:
-			input.keyUpDown = true;
-			input.keyRotateClockwiseDown = true;
+			data.keyUpDown = true;
+			data.keyRotateClockwiseDown = true;
 			break;
 		case KeyEvent.KEYCODE_DPAD_DOWN:
-			input.keyDownDown = true;
-			input.keyRotateCounterClockwiseDown = true;
+			data.keyDownDown = true;
+			data.keyRotateCounterClockwiseDown = true;
 			break;
 		case KeyEvent.KEYCODE_DPAD_CENTER:
-			input.keyReturnDown = true;
-			input.keyJumpDown = true;
+			data.keyReturnDown = true;
+			data.keyJumpDown = true;
 			break;
 		case KeyEvent.KEYCODE_MENU:
-			input.keyReturnToMenuDown = true;
+			data.keyReturnToMenuDown = true;
 			break;
 		case KeyEvent.KEYCODE_N:
-			input.keyCheatGotoNextLevelDown = true;
+			data.keyCheatGotoNextLevelDown = true;
 			break;
 		case KeyEvent.KEYCODE_A:
-			input.keyCheatActivateAllDown = true;
+			data.keyCheatActivateAllDown = true;
 			break;
 		case KeyEvent.KEYCODE_B:
-			input.keyCheatGotoNextBonusLevelDown = true;
+			data.keyCheatGotoNextBonusLevelDown = true;
 			break;
 		}
+		input.dataBuffer.add(data);
 		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		data = new AndroidGameInputData(data);
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			input.keyRightDown = false;
+			data.keyRightDown = false;
 			break;
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			input.keyLeftDown = false;
+			data.keyLeftDown = false;
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP:
-			input.keyUpDown = false;
-			input.keyRotateClockwiseDown = false;
+			data.keyUpDown = false;
+			data.keyRotateClockwiseDown = false;
 			break;
 		case KeyEvent.KEYCODE_DPAD_DOWN:
-			input.keyDownDown = false;
-			input.keyRotateCounterClockwiseDown = false;
+			data.keyDownDown = false;
+			data.keyRotateCounterClockwiseDown = false;
 			break;
 		case KeyEvent.KEYCODE_DPAD_CENTER:
-			input.keyReturnDown = false;
-			input.keyJumpDown = false;
+			data.keyReturnDown = false;
+			data.keyJumpDown = false;
 			break;
 		case KeyEvent.KEYCODE_MENU:
-			input.keyReturnToMenuDown = false;
+			data.keyReturnToMenuDown = false;
 			break;
 		case KeyEvent.KEYCODE_N:
-			input.keyCheatGotoNextLevelDown = false;
+			data.keyCheatGotoNextLevelDown = false;
 			break;
 		case KeyEvent.KEYCODE_A:
-			input.keyCheatActivateAllDown = false;
+			data.keyCheatActivateAllDown = false;
 			break;
 		case KeyEvent.KEYCODE_B:
-			input.keyCheatGotoNextBonusLevelDown = false;
+			data.keyCheatGotoNextBonusLevelDown = false;
 			break;
 		}
+		input.dataBuffer.add(data);
 		return super.onKeyUp(keyCode, event);
 	}
 

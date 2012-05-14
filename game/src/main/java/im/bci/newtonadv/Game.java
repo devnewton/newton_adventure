@@ -120,11 +120,13 @@ public strictfp class Game {
 			}
 			frameTimeInfos.update();
 			view.draw(currentSequence);
-			processInputs();
-			if (!frameTimeInfos.paused) {
-				do {
+			do {
+				processInputs();
+				if (!frameTimeInfos.paused) {
 					currentSequence.processInputs();
-				} while (input.poll());
+				}
+			} while (input.poll());
+			if (!frameTimeInfos.paused) {
 				currentSequence.update();
 			}
 		} catch (Sequence.NormalTransitionException ex) {
@@ -184,23 +186,21 @@ public strictfp class Game {
 	private ScoreServer scoreServer;
 
 	private void processInputs() {
-		do {
-			if (input.isKeyReturnToMenuDown()) {
-				bShowMainMenu = true;
-			}
-			if (input.isKeyToggleFullscreenDown()) {
-				bToggleFullscreen = true;
-			} else if (bToggleFullscreen) {
-				bToggleFullscreen = false;
-				view.toggleFullscreen();
-			}
-			if (input.isKeyPauseDown()) {
-				bTogglePause = true;
-			} else if (bTogglePause) {
-				bTogglePause = false;
-				frameTimeInfos.togglePause();
-			}
-		} while (input.poll());
+		if (input.isKeyReturnToMenuDown()) {
+			bShowMainMenu = true;
+		}
+		if (input.isKeyToggleFullscreenDown()) {
+			bToggleFullscreen = true;
+		} else if (bToggleFullscreen) {
+			bToggleFullscreen = false;
+			view.toggleFullscreen();
+		}
+		if (input.isKeyPauseDown()) {
+			bTogglePause = true;
+		} else if (bTogglePause) {
+			bTogglePause = false;
+			frameTimeInfos.togglePause();
+		}
 	}
 
 	public GameScore getScore() {

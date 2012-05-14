@@ -83,12 +83,12 @@ public class LevelMenuSequence extends MenuSequence {
 				if (!levelNamesIterator.hasNext())
 					return;
 				String levelName = levelNamesIterator.next();
-				createQuestButton(i, j, levelName);
+				createLevelButton(i, j, levelName);
 			}
 		}
 	}
 
-	private void createQuestButton(int i, int j, final String levelName) {
+	private void createLevelButton(int i, int j, final String levelName) {
 		final boolean isBlocked = game.isLevelBlocked(questSequence.getQuestName(),levelName);
 		Button questButton = new Button() {
 
