@@ -372,8 +372,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			}
 			zorderBase += 1000000;
 		}
-		backgroundTexture = textureCache.getTexture(getFileFromMap(map,
-				"newton_adventure.background"));
+		backgroundTexture = textureCache.getTexture(getFileFromMap(map,"newton_adventure.background"));
 		this.getHero().setAnimation(
 				game.getView().loadFromAnimation(
 						getFileFromMap(map, "newton_adventure.hero")));

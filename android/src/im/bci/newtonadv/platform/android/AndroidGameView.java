@@ -82,6 +82,8 @@ public class AndroidGameView implements IGameView {
 	private int viewPortHeight;
 	private AssetManager assets;
 	private Properties config;
+	private FloatBuffer vertexBuffer;
+	private FloatBuffer texCoordBuffer;
 
 	public AndroidGameView(AssetManager assets, Properties config) {
 		this.assets = assets;
@@ -106,6 +108,18 @@ public class AndroidGameView implements IGameView {
 
 		textureCache = new AndroidTextureCache(assets);
 		fpsFont = new AndroidTrueTypeFont();
+
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+		vertexBuffer = ByteBuffer.allocateDirect(8 * (Float.SIZE / Byte.SIZE))
+				.order(ByteOrder.nativeOrder()).asFloatBuffer();
+		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vertexBuffer);
+
+		texCoordBuffer = ByteBuffer
+				.allocateDirect(8 * (Float.SIZE / Byte.SIZE))
+				.order(ByteOrder.nativeOrder()).asFloatBuffer();
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoordBuffer);
 	}
 
 	@Override
@@ -133,58 +147,38 @@ public class AndroidGameView implements IGameView {
 		return textureCache;
 	}
 
-	public void drawTexturedTriangleFans(ITexture texture, float vert[], float tex[]) {
+	public void drawTexturedTriangleFans(ITexture texture, float vert[],
+			float tex[]) {
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.getId());
 
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		
-		ByteBuffer bb = ByteBuffer.allocateDirect(vert.length
-				* (Float.SIZE / Byte.SIZE));
-		bb.order(ByteOrder.nativeOrder());
-		FloatBuffer vb = bb.asFloatBuffer();
-		vb.put(vert);
-		vb.position(0);
-		
-		bb = ByteBuffer.allocateDirect(tex.length
-				* (Float.SIZE / Byte.SIZE));
-		bb.order(ByteOrder.nativeOrder());
-		FloatBuffer tb = bb.asFloatBuffer();
-		tb.put(tex);
-		tb.position(0);
+		vertexBuffer.position(0);
+		vertexBuffer.put(vert);
+		vertexBuffer.position(0);
 
-		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vb);
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, tb);
+		texCoordBuffer.position(0);
+		texCoordBuffer.put(tex);
+		texCoordBuffer.position(0);
 
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, vert.length / 2);
-
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 	}
-	
-	public void drawNonTexturedTriangleFans(float vert[]) {
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		
-		ByteBuffer bb = ByteBuffer.allocateDirect(vert.length
-				* (Float.SIZE / Byte.SIZE));
-		bb.order(ByteOrder.nativeOrder());
-		FloatBuffer vb = bb.asFloatBuffer();
-		vb.put(vert);
-		vb.position(0);
-		
-		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vb);
-		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, vert.length / 2);
 
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+	public void drawNonTexturedTriangleFans(float vert[]) {
+
+		vertexBuffer.position(0);
+		vertexBuffer.put(vert);
+		vertexBuffer.position(0);
+
+		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, vert.length / 2);
 	}
 
 	@Override
-	public void drawPickableObject(PickableObject pickableObject, AnimationFrame frame, World world) {
+	public void drawPickableObject(PickableObject pickableObject,
+			AnimationFrame frame, World world) {
 		AABox bounds = pickableObject.getShape().getBounds();
 
 		gl.glPushMatrix();
-		gl.glTranslatef(pickableObject.getPosition().getX(), pickableObject.getPosition().getY(),
-				0.0f);
+		gl.glTranslatef(pickableObject.getPosition().getX(), pickableObject
+				.getPosition().getY(), 0.0f);
 		gl.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
 				1.0f);
 		final float x1 = -bounds.getWidth() / 2.0f;
@@ -214,13 +208,14 @@ public class AndroidGameView implements IGameView {
 				pts[2].y, pts[3].x, pts[3].y };
 		drawAnimationFrame(frame, vert);
 
-
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 
 	}
 
 	private void drawAnimationFrame(AnimationFrame frame, float[] vert) {
-		float tex[] = { frame.getU1(), frame.getV2(), frame.getU2(), frame.getV2(), frame.getU2(), frame.getV1(), frame.getU1(), frame.getV1() };
+		float tex[] = { frame.getU1(), frame.getV2(), frame.getU2(),
+				frame.getV2(), frame.getU2(), frame.getV1(), frame.getU1(),
+				frame.getV1() };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
 	}
 
@@ -393,7 +388,8 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public void drawExplosion(Explosion explosion, AnimationFrame frame, World world) {
+	public void drawExplosion(Explosion explosion, AnimationFrame frame,
+			World world) {
 		gl.glPushMatrix();
 		gl.glTranslatef(explosion.getPosition().getX(), explosion.getPosition()
 				.getY(), 0.0f);
@@ -415,7 +411,8 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public void drawFireBall(FireBall fireball, AnimationFrame frame, World world) {
+	public void drawFireBall(FireBall fireball, AnimationFrame frame,
+			World world) {
 		gl.glPushMatrix();
 		ROVector2f pos = fireball.getPosition();
 		gl.glTranslatef(pos.getX(), pos.getY(), 0.0f);
@@ -437,7 +434,8 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public void drawHero(Hero hero, AnimationFrame frame, World world, float scale) {
+	public void drawHero(Hero hero, AnimationFrame frame, World world,
+			float scale) {
 		AABox bounds = hero.getShape().getBounds();
 
 		gl.glPushMatrix();
@@ -465,7 +463,8 @@ public class AndroidGameView implements IGameView {
 			u2 = frame.getU2();
 		}
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		float tex[] = { u1, frame.getV1(), u2, frame.getV1(), u2, frame.getV2(), u1, frame.getV2() };
+		float tex[] = { u1, frame.getV1(), u2, frame.getV1(), u2,
+				frame.getV2(), u1, frame.getV2() };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
@@ -497,8 +496,8 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public void drawLosedApple(LosedApple apple, World world, AnimationFrame frame,
-			float alpha) {
+	public void drawLosedApple(LosedApple apple, World world,
+			AnimationFrame frame, float alpha) {
 		gl.glPushMatrix();
 		gl.glTranslatef(apple.getPosition().getX(), apple.getPosition().getY(),
 				0.0f);
@@ -592,7 +591,8 @@ public class AndroidGameView implements IGameView {
 			u1 = frame.getU1();
 			u2 = frame.getU2();
 		}
-		float vert[] = { u1, frame.getV1(), u2, frame.getV1(), u2, frame.getV2(), u1, frame.getV2() };
+		float vert[] = { u1, frame.getV1(), u2, frame.getV1(), u2,
+				frame.getV2(), u1, frame.getV2() };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
@@ -603,8 +603,8 @@ public class AndroidGameView implements IGameView {
 	public void drawPickedUpObject(PickedUpObject pickedUpObject, World world,
 			AnimationFrame frame) {
 		gl.glPushMatrix();
-		gl.glTranslatef(pickedUpObject.getPosition().getX(), pickedUpObject.getPosition().getY(),
-				0.0f);
+		gl.glTranslatef(pickedUpObject.getPosition().getX(), pickedUpObject
+				.getPosition().getY(), 0.0f);
 		gl.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
 				1.0f);
 		final float x1 = -pickedUpObject.getSize() / 2.0f;
@@ -715,8 +715,8 @@ public class AndroidGameView implements IGameView {
 		final float u1 = 0.0f, u2 = 1.0f;
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedTriangleFans(getTextureCache().getTexture(sequence.getTexture()),
-				vert, tex);
+		drawTexturedTriangleFans(
+				getTextureCache().getTexture(sequence.getTexture()), vert, tex);
 		drawContinueText(font);
 		gl.glPopMatrix();
 	}
@@ -798,8 +798,8 @@ public class AndroidGameView implements IGameView {
 		final float u1 = 0.0f, u2 = 1.0f;
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-		drawTexturedTriangleFans(getTextureCache().getTexture(sequence.getTexture()),
-				vert, tex);
+		drawTexturedTriangleFans(
+				getTextureCache().getTexture(sequence.getTexture()), vert, tex);
 		drawGameOverText(font);
 		gl.glPopMatrix();
 	}
@@ -810,7 +810,8 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public void drawLevelIndicators(String indicators, ITrueTypeFont indicatorsFont) {
+	public void drawLevelIndicators(String indicators,
+			ITrueTypeFont indicatorsFont) {
 		gl.glEnable(GL10.GL_ALPHA_TEST);
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		gl.glPushMatrix();
@@ -898,6 +899,7 @@ public class AndroidGameView implements IGameView {
 
 		gl.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
 				1.0f);
+
 		drawWorldBackground(world, aspectRatio);
 
 		ROVector2f heroPos = world.getHero().getPosition();
@@ -918,36 +920,41 @@ public class AndroidGameView implements IGameView {
 	}
 
 	private void drawWorldBackground(World world, float aspectRatio) {
-		gl.glPushMatrix();
 
-		ROVector2f heroPos = world.getHero().getPosition();
+		if (null == world.getBackgroundTexture()) {
+			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		} else {
+			gl.glPushMatrix();
 
-		AbsoluteAABox worldStaticBounds = world.getStaticBounds();
-		AbsoluteAABox staticBounds = new AbsoluteAABox();
-		staticBounds.x1 = World.ortho2DLeft * aspectRatio * 2.0f;
-		staticBounds.x2 = World.ortho2DRight * aspectRatio * 2.0f;
-		staticBounds.y1 = World.ortho2DBottom * aspectRatio * 2.0f;
-		staticBounds.y2 = World.ortho2DTop * aspectRatio * 2.0f;
-		float xt = -heroPos.getX()
-				* (staticBounds.getWidth() / worldStaticBounds.getWidth());
-		float yt = -heroPos.getY()
-				* (staticBounds.getHeight() / worldStaticBounds.getHeight());
+			ROVector2f heroPos = world.getHero().getPosition();
 
-		xt = Math.max(xt, -World.ortho2DBaseSize / 2.0f);
-		xt = Math.min(xt, World.ortho2DBaseSize / 2.0f);
-		yt = Math.max(yt, -World.ortho2DBaseSize / 2.0f);
-		yt = Math.min(yt, World.ortho2DBaseSize / 2.0f);
+			AbsoluteAABox worldStaticBounds = world.getStaticBounds();
+			AbsoluteAABox staticBounds = new AbsoluteAABox();
+			staticBounds.x1 = World.ortho2DLeft * aspectRatio * 2.0f;
+			staticBounds.x2 = World.ortho2DRight * aspectRatio * 2.0f;
+			staticBounds.y1 = World.ortho2DBottom * aspectRatio * 2.0f;
+			staticBounds.y2 = World.ortho2DTop * aspectRatio * 2.0f;
+			float xt = -heroPos.getX()
+					* (staticBounds.getWidth() / worldStaticBounds.getWidth());
+			float yt = -heroPos.getY()
+					* (staticBounds.getHeight() / worldStaticBounds.getHeight());
 
-		staticBounds.x1 += xt;
-		staticBounds.x2 += xt;
-		staticBounds.y1 += yt;
-		staticBounds.y2 += yt;
-		float vert[] = { staticBounds.x1, staticBounds.y2, staticBounds.x2,
-				staticBounds.y2, staticBounds.x2, staticBounds.y1,
-				staticBounds.x1, staticBounds.y1 };
-		float tex[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
-		drawTexturedTriangleFans(world.getBackgroundTexture(), vert, tex);
-		gl.glPopMatrix();
+			xt = Math.max(xt, -World.ortho2DBaseSize / 2.0f);
+			xt = Math.min(xt, World.ortho2DBaseSize / 2.0f);
+			yt = Math.max(yt, -World.ortho2DBaseSize / 2.0f);
+			yt = Math.min(yt, World.ortho2DBaseSize / 2.0f);
+
+			staticBounds.x1 += xt;
+			staticBounds.x2 += xt;
+			staticBounds.y1 += yt;
+			staticBounds.y2 += yt;
+			float vert[] = { staticBounds.x1, staticBounds.y2, staticBounds.x2,
+					staticBounds.y2, staticBounds.x2, staticBounds.y1,
+					staticBounds.x1, staticBounds.y1 };
+			float tex[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
+			drawTexturedTriangleFans(world.getBackgroundTexture(), vert, tex);
+			gl.glPopMatrix();
+		}
 	}
 
 	@Override
@@ -977,18 +984,20 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public AnimationCollection loadFromAnimation(String name) throws FileNotFoundException,
-			IOException {
-		if(name.endsWith(".gif")) {
+	public AnimationCollection loadFromAnimation(String name)
+			throws FileNotFoundException, IOException {
+		if (name.endsWith(".gif")) {
 			AndroidGifDecoder d = new AndroidGifDecoder();
 			d.read(assets.open(name));
 			Animation animation = new Animation();
 			int n = d.getFrameCount();
 			for (int i = 0; i < n; i++) {
 				Bitmap frameImage = d.getFrame(i); // frame i
-				int t = d.getDelay(i); // display duration of frame in milliseconds
+				int t = d.getDelay(i); // display duration of frame in
+										// milliseconds
 				animation.addFrame(
-						textureCache.createTexture(name + '#' + i, frameImage), t);
+						textureCache.createTexture(name + '#' + i, frameImage),
+						t);
 			}
 			AnimationCollection collection = new AnimationCollection();
 			collection.addAnimation(animation);
@@ -1025,19 +1034,19 @@ public class AndroidGameView implements IGameView {
 
 	@Override
 	public void drawFadeSequence(float r, float g, float b, float a) {
-        gl.glEnable(GL10.GL_BLEND);
-        gl.glDisable(GL10.GL_TEXTURE_2D);
-        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glPushMatrix();
-        gl.glLoadIdentity();
-        gl.glOrthof(0, 1, 0, 1, -1, 1);
-        gl.glColor4f(r, g, b, a);
-        final float x1 = 0, x2 = 1, y1 = 0, y2 = 1;
-        float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
-        drawNonTexturedTriangleFans(vert);
-        gl.glPopMatrix();
-        gl.glDisable(GL10.GL_BLEND);
-        gl.glEnable(GL10.GL_TEXTURE_2D);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glDisable(GL10.GL_TEXTURE_2D);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glPushMatrix();
+		gl.glLoadIdentity();
+		gl.glOrthof(0, 1, 0, 1, -1, 1);
+		gl.glColor4f(r, g, b, a);
+		final float x1 = 0, x2 = 1, y1 = 0, y2 = 1;
+		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
+		drawNonTexturedTriangleFans(vert);
+		gl.glPopMatrix();
+		gl.glDisable(GL10.GL_BLEND);
+		gl.glEnable(GL10.GL_TEXTURE_2D);
 	}
 
 	@Override
@@ -1057,7 +1066,7 @@ public class AndroidGameView implements IGameView {
 
 	@Override
 	public void drawMainMenuSequence(MainMenuSequence mainMenuSequence) {
-		drawMenuSequence(mainMenuSequence);		
+		drawMenuSequence(mainMenuSequence);
 	}
 
 	@Override
@@ -1071,7 +1080,7 @@ public class AndroidGameView implements IGameView {
 	}
 
 	static final float minimapSize = 32;
-	
+
 	@Override
 	public void drawMinimap(World world, ITexture minimapTexture) {
 		if (!world.getHero().hasMap() && !world.getHero().hasCompass()) {
@@ -1091,7 +1100,7 @@ public class AndroidGameView implements IGameView {
 		final float x2 = minimapSize / 2.0f;
 		final float y1 = -minimapSize / 2.0f;
 		final float y2 = minimapSize / 2.0f;
-		final float u1 = 0.0f, u2 = 1.0f;		
+		final float u1 = 0.0f, u2 = 1.0f;
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 
@@ -1110,7 +1119,8 @@ public class AndroidGameView implements IGameView {
 			drawMinimapIcon(world, world.getHero().getPosition(), world
 					.getHero().getAnimation().getCurrentFrame());
 			for (Key key : world.getKeys())
-				drawMinimapIcon(world, key.getPosition(), key.getTexture().getFirst().getCurrentFrame());
+				drawMinimapIcon(world, key.getPosition(), key.getTexture()
+						.getFirst().getCurrentFrame());
 		}
 		gl.glPopMatrix();
 		gl.glDisable(GL10.GL_BLEND);
@@ -1139,7 +1149,7 @@ public class AndroidGameView implements IGameView {
 				1.0f);
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawAnimationFrame(frame, vert);
-		gl.glPopMatrix();		
+		gl.glPopMatrix();
 	}
 
 	@Override
