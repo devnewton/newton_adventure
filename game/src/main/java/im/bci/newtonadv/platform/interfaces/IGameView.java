@@ -88,11 +88,11 @@ public interface IGameView {
 
     void drawBat(Bat bat, float scale, AnimationFrame frame, World world);
 
-    void drawBlocker(Blocker blocker, AnimationFrame frame, float alpha);
+    void drawBlocker(Blocker blocker, float alpha);
 
     void drawButton(Button button);
 
-    void drawCloud(Cloud cloud, AnimationFrame frame, float alpha);
+    void drawCloud(Cloud cloud, float alpha);
 
     void drawDoor(Door door, AnimationFrame texture);
 
@@ -130,7 +130,7 @@ public interface IGameView {
 
     void drawPickedUpObject(PickedUpObject apple, World world, AnimationFrame texture);
 
-    void drawPlatform(Platform platform, AnimationFrame frame);
+    void drawPlatform(Platform platform);
 
     void drawMenuButton(Button button, ITrueTypeFont questNameFont, String questName);
 
@@ -174,5 +174,5 @@ public interface IGameView {
 
 	void drawMinimap(World world, ITexture minimapTexture);
 
-	void drawKeyLock(KeyLock keyLock, AnimationFrame frame, float alpha);
+	void drawKeyLock(KeyLock keyLock, float alpha);
 }

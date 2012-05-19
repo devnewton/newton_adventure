@@ -37,11 +37,6 @@
 			<locationURI>NEWTON_ADVENTURE_BASEDIR/game/data</locationURI>
 		</link>
 		<link>
-			<name>lib</name>
-			<type>2</type>
-			<locationURI>NEWTON_ADVENTURE_BASEDIR/game/lib</locationURI>
-		</link>
-		<link>
 			<name>newton_adventure_core</name>
 			<type>2</type>
 			<locationURI>NEWTON_ADVENTURE_BASEDIR/game/src/main/java</locationURI>

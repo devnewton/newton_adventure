@@ -49,13 +49,13 @@ import net.phys2d.raw.shapes.Box;
  */
 public strictfp class Platform extends AbstractDrawableStaticBody implements Updatable {
 
-    protected AnimationCollection texture;
+    private AnimationCollection texture;
     protected final World world;
     protected float w;
     protected float h;
     public FloatBuffer vertices = ByteBuffer.allocateDirect(2 * 4 * Float.SIZE / 8).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	public FloatBuffer texCoords = ByteBuffer.allocateDirect(2 * 4 * Float.SIZE / 8).order(ByteOrder.nativeOrder()).asFloatBuffer();
-	private AnimationFrame frame;
+	public AnimationFrame frame;
 
     Platform(World world, float w, float h) {
         super(new Box(w, h));
@@ -104,7 +104,8 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements Upd
 
 	@Override
     public void draw() {
-        world.getView().drawPlatform(this, texture.getFirst().getCurrentFrame());
+		setAnimationFrame(texture.getFirst().getCurrentFrame());
+        world.getView().drawPlatform(this);
     }
 
 	@Override

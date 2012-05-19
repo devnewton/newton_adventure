@@ -171,6 +171,22 @@ public class AndroidGameView implements IGameView {
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, vert.length / 2);
 	}
 
+	public void drawTexturedTriangleFans(ITexture texture, FloatBuffer vert,
+			FloatBuffer tex, int count) {
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.getId());
+
+		vert.position(0);
+		vertexBuffer.position(0);
+		vertexBuffer.put(vert);
+		vertexBuffer.position(0);
+
+		tex.position(0);
+		texCoordBuffer.position(0);
+		texCoordBuffer.put(tex);
+		texCoordBuffer.position(0);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, count);
+	}
+
 	@Override
 	public void drawPickableObject(PickableObject pickableObject,
 			AnimationFrame frame, World world) {
@@ -275,36 +291,37 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public void drawBlocker(Blocker blocker, AnimationFrame frame, float alpha) {
+	public void drawBlocker(Blocker blocker, float alpha) {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-		drawPlatform(blocker, frame);
+		drawPlatform(blocker);
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	@Override
-	public void drawPlatform(Platform platform, AnimationFrame frame) {
-		Box box = (Box) platform.getShape();
-		Vector2f[] pts = box.getPoints(platform.getPosition(),
-				platform.getRotation());
-
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.0f); // sets aplha function
-		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
-				pts[2].y, pts[3].x, pts[3].y };
-		drawAnimationFrame(frame, vert);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
+	public void drawPlatform(Platform platform) {
+		final ITexture texture = platform.frame.getImage();
+		final boolean hasAlpha = texture.hasAlpha();
+		if (hasAlpha) {
+			gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
+												// transperancy
+			gl.glAlphaFunc(GL10.GL_GREATER, 0.0f); // sets aplha function
+		}
+		drawTexturedTriangleFans(texture, platform.vertices,
+				platform.texCoords, 4);
+		if (hasAlpha) {
+			gl.glDisable(GL10.GL_ALPHA_TEST);
+		}
 	}
 
 	@Override
-	public void drawCloud(Cloud cloud, AnimationFrame frame, float alpha) {
+	public void drawCloud(Cloud cloud, float alpha) {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-		drawPlatform(cloud, frame);
+		drawPlatform(cloud);
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
@@ -1153,11 +1170,11 @@ public class AndroidGameView implements IGameView {
 	}
 
 	@Override
-	public void drawKeyLock(KeyLock keyLock, AnimationFrame frame, float alpha) {
+	public void drawKeyLock(KeyLock keyLock, float alpha) {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-		drawPlatform(keyLock, frame);
+		drawPlatform(keyLock);
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}

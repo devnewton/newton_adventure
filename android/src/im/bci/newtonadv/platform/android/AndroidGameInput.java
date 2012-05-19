@@ -1,7 +1,7 @@
 package im.bci.newtonadv.platform.android;
 
 import java.util.Properties;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import net.phys2d.math.ROVector2f;
 
@@ -10,7 +10,7 @@ import im.bci.newtonadv.platform.interfaces.IGameInput;
 public class AndroidGameInput implements IGameInput {
 
 	AndroidGameInputData data = new AndroidGameInputData();
-	ArrayBlockingQueue<AndroidGameInputData> dataBuffer = new ArrayBlockingQueue<AndroidGameInputData>(128);
+	LinkedBlockingQueue<AndroidGameInputData> dataBuffer = new LinkedBlockingQueue<AndroidGameInputData>();
 
 	public AndroidGameInput(Properties config) {
 		// TODO Auto-generated constructor stub

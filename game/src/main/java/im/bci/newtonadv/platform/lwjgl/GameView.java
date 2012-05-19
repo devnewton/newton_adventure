@@ -472,28 +472,28 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawBlocker(Blocker blocker, AnimationFrame frame, float alpha) {
+	public void drawBlocker(Blocker blocker, float alpha) {
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
 				| GL11.GL_CURRENT_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-		drawPlatform(blocker, frame);
+		drawPlatform(blocker);
 		GL11.glPopAttrib();
 	}
 
 	@Override
-	public void drawPlatform(Platform platform, AnimationFrame frame) {
-		if (frame.getImage().hasAlpha()) {
+	public void drawPlatform(Platform platform) {
+		if (platform.frame.getImage().hasAlpha()) {
 			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, platform.frame.getImage().getId());
 		GL11.glTexCoordPointer(2, 0, platform.texCoords);
 		GL11.glVertexPointer(2, 0, platform.vertices);
 		GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
-		if (frame.getImage().hasAlpha()) {
+		if (platform.frame.getImage().hasAlpha()) {
 			GL11.glPopAttrib();
 		}
 	}
@@ -526,13 +526,13 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawCloud(Cloud cloud, AnimationFrame frame, float alpha) {
+	public void drawCloud(Cloud cloud, float alpha) {
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
 				| GL11.GL_CURRENT_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-		drawPlatform(cloud, frame);
+		drawPlatform(cloud);
 		GL11.glPopAttrib();
 
 	}
@@ -1626,13 +1626,13 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawKeyLock(KeyLock keyLock, AnimationFrame frame, float alpha) {
+	public void drawKeyLock(KeyLock keyLock, float alpha) {
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT
 				| GL11.GL_CURRENT_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-		drawPlatform(keyLock, frame);
+		drawPlatform(keyLock);
 		GL11.glPopAttrib();
 	}
 }
