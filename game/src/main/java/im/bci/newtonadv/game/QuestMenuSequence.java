@@ -81,14 +81,40 @@ public class QuestMenuSequence extends MenuSequence {
 
 		for (int j = 0; j < QUEST_MINIATURE_ON_Y; ++j) {
 			for (int i = 0; i < QUEST_MINIATURE_ON_X; ++i) {
-				if (!questNamesIterator.hasNext())
+				if (!questNamesIterator.hasNext()) {
+					createReturnToMenuButton(i, j);
 					return;
+				}
 				String questName = questNamesIterator.next();
 				QuestSequence questSequence = new QuestSequence(game, questName);
 				quests.add(questSequence);
 				createQuestButton(i, j, questName, questSequence);
 			}
 		}
+	}
+	
+	private void createReturnToMenuButton(int i, int j) {
+		Button returnToMenuButton = new Button() {
+
+			@Override
+			void activate() throws NormalTransitionException,
+					ResumeTransitionException {
+				throw new NormalTransitionException(game.getMainMenuSequence());				
+			}
+			
+		};
+		returnToMenuButton.currentTexture = returnToMenuButton.offTexture = game.getData().getFile("quest_menu/bt-menu-off.png");
+		returnToMenuButton.onTexture = game.getData().getFile("quest_menu/bt-menu-on.png");
+		
+		returnToMenuButton.x = QUEST_MINIATURE_SPACING + i
+				* (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
+		returnToMenuButton.y = QUEST_MINIATURE_SPACING + j
+				* (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);
+		returnToMenuButton.w = QUEST_MINIATURE_WIDTH;
+		returnToMenuButton.h = QUEST_MINIATURE_HEIGHT;
+		
+		addButton(returnToMenuButton);
+		
 	}
 
 	public void setNextSequence(Sequence sequence) {
