@@ -352,7 +352,9 @@ public class AndroidGameView implements IGameView {
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
-		drawAnimationFrame(frame, vert);
+		float tex[] = { frame.getU1(), frame.getV1(), frame.getU1(),
+				frame.getV2(), frame.getU2(), frame.getV2() };
+		drawTexturedTriangleFans(frame.getImage(), vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -368,7 +370,9 @@ public class AndroidGameView implements IGameView {
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
-		drawAnimationFrame(frame, vert);
+		float tex[] = { frame.getU1(), frame.getV2(), frame.getU2(),
+				frame.getV2(), frame.getU2(), frame.getV1() };
+		drawTexturedTriangleFans(frame.getImage(), vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -384,7 +388,9 @@ public class AndroidGameView implements IGameView {
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
-		drawAnimationFrame(frame, vert);
+		float tex[] = { frame.getU1(), frame.getV1(), frame.getU1(),
+				frame.getV2(), frame.getU2(), frame.getV1() };
+		drawTexturedTriangleFans(frame.getImage(), vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
@@ -400,7 +406,9 @@ public class AndroidGameView implements IGameView {
 		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
-		drawAnimationFrame(frame, vert);
+		float tex[] = { frame.getU1(), frame.getV1(), frame.getU2(),
+				frame.getV2(), frame.getU2(), frame.getV1() };
+		drawTexturedTriangleFans(frame.getImage(), vert, tex);
 		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
