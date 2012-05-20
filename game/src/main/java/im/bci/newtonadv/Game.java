@@ -42,6 +42,8 @@ import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import java.io.IOException;
 import java.util.Properties;
+
+import im.bci.newtonadv.game.CustomTickSequence;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.Sequence;
@@ -119,15 +121,19 @@ public strictfp class Game {
 				}
 			}
 			frameTimeInfos.update();
-			view.draw(currentSequence);
-			do {
-				processInputs();
+			if (currentSequence instanceof CustomTickSequence) {
+				((CustomTickSequence) currentSequence).tick();
+			} else {
+				view.draw(currentSequence);
+				do {
+					processInputs();
+					if (!frameTimeInfos.paused) {
+						currentSequence.processInputs();
+					}
+				} while (input.poll());
 				if (!frameTimeInfos.paused) {
-					currentSequence.processInputs();
+					currentSequence.update();
 				}
-			} while (input.poll());
-			if (!frameTimeInfos.paused) {
-				currentSequence.update();
 			}
 		} catch (Sequence.NormalTransitionException ex) {
 			currentSequence.stop();

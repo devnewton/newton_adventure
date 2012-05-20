@@ -15,6 +15,7 @@ import de.matthiasmann.twl.ComboBox;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
+import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
@@ -76,12 +77,6 @@ public class OptionsSequence implements IOptionsSequence {
 
 	@Override
 	public void draw() {
-		GL11.glPushMatrix();
-		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		gui.update();
-		GL11.glPopAttrib();
-		GL11.glPopMatrix();
 	}
 
 	@Override
@@ -90,20 +85,6 @@ public class OptionsSequence implements IOptionsSequence {
 
 	@Override
 	public void update() throws Sequence.NormalTransitionException {
-		if (optionsGui.okPressed) {
-			try {
-				applyOptions();
-			} catch (LWJGLException e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-						"cannot apply options", e);
-			}
-			updateConfig();
-			platform.saveConfig();
-			throw new Sequence.NormalTransitionException(nextSequence);
-		}
-		if (optionsGui.cancelPressed) {
-			throw new Sequence.NormalTransitionException(nextSequence);
-		}
 	}
 
 	private void applyOptions() throws LWJGLException {
@@ -318,5 +299,44 @@ public class OptionsSequence implements IOptionsSequence {
 	public void resume() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void tick() throws NormalTransitionException {
+		if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
+			GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		}
+		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		gui.update();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+
+		// now tell the screen to update
+		Display.update(false);
+		Display.sync(Game.FPS);
+		Display.processMessages();
+
+		// finally check if the user has requested that the display be
+		// shutdown
+		if (Display.isCloseRequested()) {
+			System.exit(0);
+		}
+		
+		if (optionsGui.okPressed) {
+			try {
+				applyOptions();
+			} catch (LWJGLException e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+						"cannot apply options", e);
+			}
+			updateConfig();
+			platform.saveConfig();
+			throw new Sequence.NormalTransitionException(nextSequence);
+		}
+		if (optionsGui.cancelPressed) {
+			throw new Sequence.NormalTransitionException(nextSequence);
+		}
 	}
 }

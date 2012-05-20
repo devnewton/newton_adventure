@@ -37,8 +37,6 @@ package im.bci.newtonadv.game;
  */
 public interface Sequence {
     
-
-
 	static public abstract class AbstractTransitionException extends Throwable {
 
 		private static final long serialVersionUID = -5802470623539315494L;
