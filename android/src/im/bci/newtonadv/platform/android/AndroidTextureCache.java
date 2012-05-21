@@ -60,6 +60,11 @@ public class AndroidTextureCache implements ITextureCache {
 				textures.remove(name);
 			}
 		}
+		if(tile.getImage().hasAlpha()) {
+			int bci;
+			bci = 0;
+		}
+		
 		AndroidTexture texture = convertImageToTexture(tile.getImage(), false);
 		textures.put(name, new TextureWeakReference(texture, referenceQueue));
 		return texture;
@@ -108,7 +113,7 @@ public class AndroidTextureCache implements ITextureCache {
 			texHeight = bitmap.getHeight();
 		}
 
-		AndroidTexture texture = new AndroidTexture(texWidth, texHeight, bitmap.hasAlpha());
+		AndroidTexture texture = new AndroidTexture(texWidth, texHeight, bitmap.hasAlpha() && hasUsefullAlphaChannel(bitmap));
 
 		// produce a texture from the byte buffer
 		GLES10.glBindTexture(GLES10.GL_TEXTURE_2D, texture.getId());
@@ -125,6 +130,20 @@ public class AndroidTextureCache implements ITextureCache {
 		GLES10.glTexEnvf(GLES10.GL_TEXTURE_ENV, GLES10.GL_TEXTURE_ENV_MODE,
 				GLES10.GL_MODULATE);
 		return texture;
+	}
+
+	private static boolean hasUsefullAlphaChannel(Bitmap image) {
+		int w = image.getWidth();
+		int h = image.getHeight();
+		for (int y = 0; y < h; ++y) {
+			for (int x = 0; x < w; ++x) {
+				int alpha = image.getPixel(x, y) >>> 24;
+				if(alpha != 255) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private void deleteTexture(int textureId) {

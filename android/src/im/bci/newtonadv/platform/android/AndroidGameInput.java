@@ -105,14 +105,12 @@ public class AndroidGameInput implements IGameInput {
 
 	@Override
 	public ROVector2f getMousePos() {
-		// TODO Auto-generated method stub
-		return null;
+		return data.mousePos;
 	}
 
 	@Override
 	public boolean isMouseButtonDown() {
-		// TODO Auto-generated method stub
-		return false;
+		return data.mouseButtonDown;
 	}
 
 	@Override

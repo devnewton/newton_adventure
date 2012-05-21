@@ -130,8 +130,6 @@ public class AndroidGameView implements IGameView {
 	@Override
 	public void drawFPS(int nbFps) {
 		String fps = nbFps + " FPS";
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glOrthox(0, viewPortWidth, 0, viewPortHeight, -1, 1);
@@ -139,7 +137,6 @@ public class AndroidGameView implements IGameView {
 				viewPortHeight - 64, 0);
 		fpsFont.drawString(fps);
 		gl.glPopMatrix();
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -149,6 +146,11 @@ public class AndroidGameView implements IGameView {
 
 	public void drawTexturedTriangleFans(ITexture texture, float vert[],
 			float tex[]) {
+		if(texture.hasAlpha()) {
+			gl.glEnable(GL10.GL_BLEND);
+			gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		}
+		
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.getId());
 
 		vertexBuffer.position(0);
@@ -160,6 +162,10 @@ public class AndroidGameView implements IGameView {
 		texCoordBuffer.position(0);
 
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, vert.length / 2);
+		
+		if(texture.hasAlpha()) {
+			gl.glDisable(GL10.GL_BLEND);
+		}
 	}
 
 	public void drawNonTexturedTriangleFans(float vert[]) {
@@ -202,14 +208,9 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -bounds.getHeight() / 2.0f;
 		final float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-
 		float vert[] = { x1, y1, x2, y2, x2, y1, x1, y1 };
 		drawAnimationFrame(frame, vert);
 		gl.glPopMatrix();
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -217,14 +218,9 @@ public class AndroidGameView implements IGameView {
 		Box box = (Box) axe.getShape();
 		Vector2f[] pts = box.getPoints(axe.getPosition(), axe.getRotation());
 
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
 		drawAnimationFrame(frame, vert);
-
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 
 	}
 
@@ -279,15 +275,9 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawAnimationFrame(frame, vert);
 		gl.glPopMatrix();
-
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -302,18 +292,8 @@ public class AndroidGameView implements IGameView {
 
 	@Override
 	public void drawPlatform(Platform platform) {
-		final ITexture texture = platform.frame.getImage();
-		final boolean hasAlpha = texture.hasAlpha();
-		if (hasAlpha) {
-			gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-												// transperancy
-			gl.glAlphaFunc(GL10.GL_GREATER, 0.0f); // sets aplha function
-		}
-		drawTexturedTriangleFans(texture, platform.vertices,
+		drawTexturedTriangleFans(platform.frame.getImage(), platform.vertices,
 				platform.texCoords, 4);
-		if (hasAlpha) {
-			gl.glDisable(GL10.GL_ALPHA_TEST);
-		}
 	}
 
 	@Override
@@ -330,14 +310,9 @@ public class AndroidGameView implements IGameView {
 	public void drawDoor(Door door, AnimationFrame frame) {
 		Box box = (Box) door.getShape();
 		Vector2f[] pts = box.getPoints(door.getPosition(), door.getRotation());
-
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
 		drawAnimationFrame(frame, vert);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -346,16 +321,11 @@ public class AndroidGameView implements IGameView {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
 		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
 				platform.getRotation());
-
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
 		float tex[] = { frame.getU1(), frame.getV1(), frame.getU1(),
 				frame.getV2(), frame.getU2(), frame.getV2() };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -364,16 +334,11 @@ public class AndroidGameView implements IGameView {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
 		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
 				platform.getRotation());
-
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
 		float tex[] = { frame.getU1(), frame.getV2(), frame.getU2(),
 				frame.getV2(), frame.getU2(), frame.getV1() };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -382,16 +347,11 @@ public class AndroidGameView implements IGameView {
 		ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
 		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
 				platform.getRotation());
-
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
 		float tex[] = { frame.getU1(), frame.getV1(), frame.getU1(),
 				frame.getV2(), frame.getU2(), frame.getV1() };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -401,15 +361,11 @@ public class AndroidGameView implements IGameView {
 		Vector2f[] pts = polygon.getVertices(platform.getPosition(),
 				platform.getRotation());
 
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y };
 		float tex[] = { frame.getU1(), frame.getV1(), frame.getU2(),
 				frame.getV2(), frame.getU2(), frame.getV1() };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -424,14 +380,8 @@ public class AndroidGameView implements IGameView {
 		final float x2 = explosion.getSize() / 2.0f;
 		final float y1 = -explosion.getSize() / 2.0f;
 		final float y2 = explosion.getSize() / 2.0f;
-
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawAnimationFrame(frame, vert);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
@@ -473,12 +423,6 @@ public class AndroidGameView implements IGameView {
 		float x2 = bounds.getWidth() / 2.0f;
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
-
-		// gl.glPushAttrib(gl.GL_COLOR_BUFFER_BIT | gl.GL_ENABLE_BIT);
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-
 		float u1, u2;
 		if (hero.isLookingLeft()) {
 			u1 = frame.getU2();
@@ -491,7 +435,6 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { u1, frame.getV1(), u2, frame.getV1(), u2,
 				frame.getV2(), u1, frame.getV2() };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
@@ -509,13 +452,8 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -bounds.getHeight() / 2.0f;
 		final float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawAnimationFrame(frame, vert);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 
 	}
@@ -578,15 +516,10 @@ public class AndroidGameView implements IGameView {
 		Box box = (Box) pikes.getShape();
 		Vector2f[] pts = box
 				.getPoints(pikes.getPosition(), pikes.getRotation());
-
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
 		drawAnimationFrame(frame, vert);
 		gl.glPopMatrix();
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -605,9 +538,6 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
-
 		float u1, u2;
 		if (mummy.isLookingLeft()) {
 			u1 = frame.getU2();
@@ -620,7 +550,6 @@ public class AndroidGameView implements IGameView {
 				frame.getV2(), u1, frame.getV2() };
 		float tex[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawTexturedTriangleFans(frame.getImage(), vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
@@ -637,12 +566,8 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -pickedUpObject.getSize() / 2.0f;
 		final float y2 = pickedUpObject.getSize() / 2.0f;
 
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
-
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawAnimationFrame(frame, vert);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
@@ -658,13 +583,8 @@ public class AndroidGameView implements IGameView {
 		final float y1 = -key.getSize() / 2.0f;
 		final float y2 = key.getSize() / 2.0f;
 
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawAnimationFrame(frame, vert);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
@@ -681,10 +601,6 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f); // sets aplha function
-
 		if (isHurtBlinkState) {
 			gl.glColor4f(1, 0, 0, 1);
 		}
@@ -692,11 +608,9 @@ public class AndroidGameView implements IGameView {
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawTexturedTriangleFans(bodyTexture, vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		if (isHurtBlinkState) {
 			gl.glColor4f(1, 1, 1, 1);
 		}
-		gl.glPopMatrix();
 	}
 
 	@Override
@@ -711,14 +625,10 @@ public class AndroidGameView implements IGameView {
 		float y1 = -bounds.getHeight() / 2.0f;
 		float y2 = bounds.getHeight() / 2.0f;
 
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
-
 		final float u1 = 1, u2 = 0;
 		float tex[] = { u1, 0, u2, 0, u2, 1, u1, 1 };
 		float vert[] = { x1, y2, x2, y2, x2, y1, x1, y1 };
 		drawTexturedTriangleFans(texture, vert, tex);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 
 	}
@@ -747,22 +657,16 @@ public class AndroidGameView implements IGameView {
 	}
 
 	private void drawContinueText(ITrueTypeFont font) {
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		font.drawString(StoryboardSequence.ortho2DRight,
 				StoryboardSequence.ortho2DBottom - font.getHeight(),
 				"Press enter to continue ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	private void drawGameOverText(ITrueTypeFont font) {
 		drawContinueText(font);
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		font.drawString(StoryboardSequence.ortho2DRight,
 				StoryboardSequence.ortho2DBottom - font.getHeight() * 2,
 				"Press up to retry ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -773,8 +677,6 @@ public class AndroidGameView implements IGameView {
 		gl.glOrthof(ScoreSequence.ortho2DLeft, ScoreSequence.ortho2DRight,
 				ScoreSequence.ortho2DBottom, ScoreSequence.ortho2DTop, -1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		int i = 1;
 		font.drawString(
 				(ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
@@ -803,7 +705,6 @@ public class AndroidGameView implements IGameView {
 				- font.getHeight(), "Press right to skip ", 1, -1,
 				ITrueTypeFont.ALIGN_RIGHT);
 		gl.glPopMatrix();
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -837,15 +738,12 @@ public class AndroidGameView implements IGameView {
 	@Override
 	public void drawLevelIndicators(String indicators,
 			ITrueTypeFont indicatorsFont) {
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1f);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glOrthof(0, viewPortWidth, 0, viewPortHeight, -1, 1);
 		gl.glTranslatef(0, viewPortHeight - indicatorsFont.getHeight(), 0);
 		indicatorsFont.drawString(indicators);
 		gl.glPopMatrix();
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override
@@ -872,12 +770,9 @@ public class AndroidGameView implements IGameView {
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		}
 
-		gl.glEnable(GL10.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.1F);
 		for (Button b : sequence.getButtons()) {
 			b.draw();
 		}
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 		gl.glPopMatrix();
 	}
 
@@ -1079,14 +974,9 @@ public class AndroidGameView implements IGameView {
 		Box box = (Box) platform.getShape();
 		Vector2f[] pts = box.getPoints(platform.getPosition(),
 				platform.getRotation());
-
-		gl.glEnable(GL10.GL_ALPHA_TEST); // allows alpha channels or
-											// transperancy
-		gl.glAlphaFunc(GL10.GL_GREATER, 0.0f); // sets aplha function
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
 		drawAnimationFrame(frame, vert);
-		gl.glDisable(GL10.GL_ALPHA_TEST);
 	}
 
 	@Override

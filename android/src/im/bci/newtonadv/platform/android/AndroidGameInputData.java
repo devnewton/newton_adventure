@@ -1,5 +1,7 @@
 package im.bci.newtonadv.platform.android;
 
+import net.phys2d.math.Vector2f;
+
 public class AndroidGameInputData {
 	public boolean keyJumpDown;
 	public boolean keyLeftDown;
@@ -16,10 +18,12 @@ public class AndroidGameInputData {
 	public boolean keyReturnDown;
 	public boolean keyUpDown;
 	public boolean keyCheatGotoNextBonusLevelDown;
+	public boolean mouseButtonDown;
+	public Vector2f mousePos;
 
 	public AndroidGameInputData() {
 	}
-	
+
 	public AndroidGameInputData(AndroidGameInputData other) {
 		this.keyJumpDown = other.keyJumpDown;
 		this.keyLeftDown = other.keyLeftDown;
@@ -36,5 +40,9 @@ public class AndroidGameInputData {
 		this.keyReturnDown = other.keyReturnDown;
 		this.keyUpDown = other.keyUpDown;
 		this.keyCheatGotoNextBonusLevelDown = other.keyCheatGotoNextBonusLevelDown;
+		this.mouseButtonDown = other.mouseButtonDown;
+		if (null != other.mousePos) {
+			this.mousePos = new Vector2f(other.mousePos);
+		}
 	}
 }

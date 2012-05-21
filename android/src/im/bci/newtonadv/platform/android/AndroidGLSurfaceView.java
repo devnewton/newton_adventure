@@ -31,16 +31,21 @@
  */
 package im.bci.newtonadv.platform.android;
 
+import net.phys2d.math.Vector2f;
 import im.bci.newtonadv.Game;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 
-public class AndroidGLSurfaceView extends GLSurfaceView {
+public class AndroidGLSurfaceView extends GLSurfaceView implements OnGestureListener {
 
 	private final AndroidGameRenderer renderer;
 	private final AndroidGameInput input;
 	private AndroidGameInputData data = new AndroidGameInputData();
+	private GestureDetector gestureDetector;
 
 	public AndroidGLSurfaceView(Context context, AndroidGameInput input) {
 		super(context);
@@ -56,6 +61,13 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 		this.setFocusable(true);
 		this.setFocusableInTouchMode(true);
 		this.requestFocus();
+		
+		gestureDetector = new GestureDetector(this.getContext(), this);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return gestureDetector.onTouchEvent(event);
 	}
 
 	@Override
@@ -138,5 +150,56 @@ public class AndroidGLSurfaceView extends GLSurfaceView {
 
 	public void setGame(Game game) {
 		renderer.setGame(game);
+	}
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+		return true;
+	}
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		data = new AndroidGameInputData(data);
+		data.mousePos = new Vector2f(e2.getX(), this.getHeight() - e2.getY());
+		input.dataBuffer.add(data);
+		data = new AndroidGameInputData(data);
+		data.mousePos = null;
+		input.dataBuffer.add(data);
+		return true;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent event) {
+		data = new AndroidGameInputData(data);
+		data.mouseButtonDown = true;
+		data.mousePos = new Vector2f(event.getX(), this.getHeight() - event.getY());
+		input.dataBuffer.add(data);
+		data = new AndroidGameInputData(data);
+		data.mouseButtonDown = false;
+		input.dataBuffer.add(data);
+		data = new AndroidGameInputData(data);
+		data.mousePos = null;
+		input.dataBuffer.add(data);
+		return true;
 	}
 }

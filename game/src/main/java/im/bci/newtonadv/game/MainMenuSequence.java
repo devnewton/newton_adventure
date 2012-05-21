@@ -36,138 +36,156 @@ import im.bci.newtonadv.game.special.occasion.SpecialOccasionFactory;
 import im.bci.newtonadv.game.special.occasion.SpecialOccasionLayer;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public strictfp class MainMenuSequence extends MenuSequence {
 
-    private Sequence playSequence, resumeSequence, helpSequence, quitSequence;
-    private final Button playButton;
-    private final Button resumeButton;
-    private final SpecialOccasionLayer specialOccasionLayer;
+	private Sequence playSequence, resumeSequence, helpSequence, quitSequence;
+	private final Button playButton;
+	private final Button resumeButton;
+	private final SpecialOccasionLayer specialOccasionLayer;
 	private Sequence optionsSequence;
 
-    @Override
-    public void draw() {
-    	game.getView().drawMainMenuSequence(this);
-        specialOccasionLayer.draw();
-    }
+	@Override
+	public void draw() {
+		game.getView().drawMainMenuSequence(this);
+		specialOccasionLayer.draw();
+	}
 
 	@Override
-    public void update() {
-        super.update();
-        specialOccasionLayer.update();
-    }
+	public void update() {
+		super.update();
+		specialOccasionLayer.update();
+	}
 
-    public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq, Sequence optSequence) {
-        super(game);
-        
-        specialOccasionLayer = SpecialOccasionFactory.createSpecialOccasionLayer(game.getView());
+	public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq,
+			Sequence optSequence) {
+		super(game);
 
-        this.playSequence = playSeq;
-        this.quitSequence = quitSeq;
-        this.optionsSequence = optSequence;
-        this.helpSequence = new StoryboardSequence(game, game.getData().getFile("help.jpg"), null, this);
+		specialOccasionLayer = SpecialOccasionFactory
+				.createSpecialOccasionLayer(game.getView());
 
-        setBackgroundImage(game.getData().getFile("main_menu/home.png"));
+		this.playSequence = playSeq;
+		this.quitSequence = quitSeq;
+		this.optionsSequence = optSequence;
+		this.helpSequence = new StoryboardSequence(game, game.getData()
+				.getFile("help.jpg"), null, this);
 
-        playButton = new Button() {
+		setBackgroundImage(game.getData().getFile("main_menu/home.png"));
 
-            @Override
-            void activate() throws Sequence.NormalTransitionException {
-            	resumeSequence = null;
-                throw new Sequence.NormalTransitionException(playSequence);
-            }
-        };
-        playButton.offTexture = game.getData().getFile("main_menu/bt-play-off.png");
-        playButton.currentTexture = playButton.onTexture = game.getData().getFile("main_menu/bt-play-on.png");
-        playButton.x = 480;
-        playButton.y = 267;
-        playButton.w = 312;
-        playButton.h = 90;
-        addButton(playButton);
+		playButton = new Button() {
 
-        resumeButton = new Button() {
+			@Override
+			void activate() throws Sequence.NormalTransitionException {
+				resumeSequence = null;
+				throw new Sequence.NormalTransitionException(playSequence);
+			}
+		};
+		playButton.offTexture = game.getData().getFile(
+				"main_menu/bt-play-off.png");
+		playButton.currentTexture = playButton.onTexture = game.getData()
+				.getFile("main_menu/bt-play-on.png");
+		playButton.x = 480;
+		playButton.y = 267;
+		playButton.w = 312;
+		playButton.h = 90;
+		addButton(playButton);
 
-            @Override
-            void activate() throws ResumeTransitionException {
-                if (resumeSequence != null) {
-                    ResumeTransitionException ex = new ResumeTransitionException(resumeSequence);
-                    resumeSequence = null;
-                    throw ex;
-                }
-            }
-        };
-        resumeButton.currentTexture = resumeButton.offTexture = game.getData().getFile("main_menu/bt-resume-off.png");
-        resumeButton.onTexture = game.getData().getFile("main_menu/bt-resume-on.png");
-        resumeButton.x = 480;
-        resumeButton.y = 371;
-        resumeButton.w = 312;
-        resumeButton.h = 90;
-        addButton(resumeButton);
-       
-        Button optionsButton = new Button() {
+		resumeButton = new Button() {
 
-            @Override
-            void activate() throws Sequence.NormalTransitionException {
-                throw new Sequence.NormalTransitionException(optionsSequence);
-            }
-        };
-        optionsButton.currentTexture = optionsButton.offTexture = game.getData().getFile("main_menu/bt-options-off.png");
-        optionsButton.onTexture = game.getData().getFile("main_menu/bt-options-on.png");
-        optionsButton.x = 480;
-        optionsButton.y = 475;
-        optionsButton.w = 312;
-        optionsButton.h = 90;
-        addButton(optionsButton);
+			@Override
+			void activate() throws ResumeTransitionException {
+				if (resumeSequence != null) {
+					ResumeTransitionException ex = new ResumeTransitionException(
+							resumeSequence);
+					resumeSequence = null;
+					throw ex;
+				}
+			}
+		};
+		resumeButton.currentTexture = resumeButton.offTexture = game.getData()
+				.getFile("main_menu/bt-resume-off.png");
+		resumeButton.onTexture = game.getData().getFile(
+				"main_menu/bt-resume-on.png");
+		resumeButton.x = 480;
+		resumeButton.y = 371;
+		resumeButton.w = 312;
+		resumeButton.h = 90;
+		addButton(resumeButton);
 
-        Button helpButton = new Button() {
+		Button optionsButton = new Button() {
 
-            @Override
-            void activate() throws NormalTransitionException {
-                if (helpSequence != null) {
-                    throw new Sequence.NormalTransitionException(helpSequence);
-                }
-            }
-        };
-        helpButton.currentTexture = helpButton.offTexture = game.getData().getFile("main_menu/bt-help-off.png");
-        helpButton.onTexture = game.getData().getFile("main_menu/bt-help-on.png");
-        helpButton.x = 480;
-        helpButton.y = 579;
-        helpButton.w = 312;
-        helpButton.h = 90;
-        addButton(helpButton);
-        
-        Button quitButton = new Button() {
+			@Override
+			void activate() throws Sequence.NormalTransitionException {
+				if (null != optionsSequence) {
+					throw new Sequence.NormalTransitionException(
+							optionsSequence);
+				}
+			}
+		};
+		optionsButton.currentTexture = optionsButton.offTexture = game
+				.getData().getFile("main_menu/bt-options-off.png");
+		optionsButton.onTexture = game.getData().getFile(
+				"main_menu/bt-options-on.png");
+		optionsButton.x = 480;
+		optionsButton.y = 475;
+		optionsButton.w = 312;
+		optionsButton.h = 90;
+		addButton(optionsButton);
 
-            @Override
-            void activate() throws Sequence.NormalTransitionException {
-                throw new Sequence.NormalTransitionException(quitSequence);
-            }
-        };
-        quitButton.currentTexture = quitButton.offTexture = game.getData().getFile("main_menu/bt-quit-off.png");
-        quitButton.onTexture = game.getData().getFile("main_menu/bt-quit-on.png");
-        quitButton.x = 480;
-        quitButton.y = 683;
-        quitButton.w = 312;
-        quitButton.h = 90;
-        addButton(quitButton);
-    }
+		Button helpButton = new Button() {
 
-    @Override
-    public void start() {
-        super.start();
-        if (resumeSequence instanceof LevelSequence ) {
-        	setCurrentButton(resumeButton);
-        } else {
-            setCurrentButton(playButton);
-            game.getSoundCache().playMusicIfEnabled(game.getData().getFile("lovelace_0.ogg"));
-        }
-    }
-    
-    public void setResumeSequence(Sequence s) {
-        this.resumeSequence = s;
-    }
+			@Override
+			void activate() throws NormalTransitionException {
+				if (helpSequence != null) {
+					throw new Sequence.NormalTransitionException(helpSequence);
+				}
+			}
+		};
+		helpButton.currentTexture = helpButton.offTexture = game.getData()
+				.getFile("main_menu/bt-help-off.png");
+		helpButton.onTexture = game.getData().getFile(
+				"main_menu/bt-help-on.png");
+		helpButton.x = 480;
+		helpButton.y = 579;
+		helpButton.w = 312;
+		helpButton.h = 90;
+		addButton(helpButton);
+
+		Button quitButton = new Button() {
+
+			@Override
+			void activate() throws Sequence.NormalTransitionException {
+				throw new Sequence.NormalTransitionException(quitSequence);
+			}
+		};
+		quitButton.currentTexture = quitButton.offTexture = game.getData()
+				.getFile("main_menu/bt-quit-off.png");
+		quitButton.onTexture = game.getData().getFile(
+				"main_menu/bt-quit-on.png");
+		quitButton.x = 480;
+		quitButton.y = 683;
+		quitButton.w = 312;
+		quitButton.h = 90;
+		addButton(quitButton);
+	}
+
+	@Override
+	public void start() {
+		super.start();
+		if (resumeSequence instanceof LevelSequence) {
+			setCurrentButton(resumeButton);
+		} else {
+			setCurrentButton(playButton);
+			game.getSoundCache().playMusicIfEnabled(
+					game.getData().getFile("lovelace_0.ogg"));
+		}
+	}
+
+	public void setResumeSequence(Sequence s) {
+		this.resumeSequence = s;
+	}
 
 	@Override
 	public void resume() {

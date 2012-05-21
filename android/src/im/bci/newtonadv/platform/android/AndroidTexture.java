@@ -16,6 +16,7 @@ public class AndroidTexture implements ITexture {
         id = ids[0];
         this.width = width;
         this.height = height;
+        this.alpha = alpha;
     }
 
     public int getId() {
