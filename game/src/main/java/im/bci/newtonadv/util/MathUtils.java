@@ -32,21 +32,25 @@
 package im.bci.newtonadv.util;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public class MathUtils {
 
-    static int getPowerOfTwoBiggerThan(int n) {
-        if (n < 0)
-            return 0;
-        --n;
-        n |= n >> 1;
-        n |= n >> 2;
-        n |= n >> 4;
-        n |= n >> 8;
-        n |= n >> 16;
-        return n+1;
-    }
-    
+	public static int getPowerOfTwoBiggerThan(int n) {
+		if (n < 0)
+			return 0;
+		--n;
+		n |= n >> 1;
+		n |= n >> 2;
+		n |= n >> 4;
+		n |= n >> 8;
+		n |= n >> 16;
+		return n + 1;
+	}
+
+	public static boolean isPowerOfTwo(int n) {
+		return ((n & (n - 1)) == 0) && n > 0;
+	}
+
 }

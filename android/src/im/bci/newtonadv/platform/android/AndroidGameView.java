@@ -519,7 +519,6 @@ public class AndroidGameView implements IGameView {
 		float vert[] = { pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x,
 				pts[2].y, pts[3].x, pts[3].y };
 		drawAnimationFrame(frame, vert);
-		gl.glPopMatrix();
 	}
 
 	@Override

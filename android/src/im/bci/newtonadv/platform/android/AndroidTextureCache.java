@@ -17,6 +17,7 @@ import im.bci.nanim.NanimParser.Nanim;
 import im.bci.nanim.NanimParser.PixelFormat;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import im.bci.newtonadv.util.MathUtils;
 
 public class AndroidTextureCache implements ITextureCache {
 
@@ -49,7 +50,8 @@ public class AndroidTextureCache implements ITextureCache {
 		return texture;
 	}
 
-	public ITexture getTexture(String questName, String levelName, tiled.core.Map map, tiled.core.Tile tile) {
+	public ITexture getTexture(String questName, String levelName,
+			tiled.core.Map map, tiled.core.Tile tile) {
 		String name = questName + "#" + levelName + "#tiled_" + tile.getGid();
 		TextureWeakReference textureRef = textures.get(name);
 		if (textureRef != null) {
@@ -60,11 +62,6 @@ public class AndroidTextureCache implements ITextureCache {
 				textures.remove(name);
 			}
 		}
-		if(tile.getImage().hasAlpha()) {
-			int bci;
-			bci = 0;
-		}
-		
 		AndroidTexture texture = convertImageToTexture(tile.getImage(), false);
 		textures.put(name, new TextureWeakReference(texture, referenceQueue));
 		return texture;
@@ -85,35 +82,37 @@ public class AndroidTextureCache implements ITextureCache {
 			}
 		}
 		Bitmap loaded = loadImage(name);
-		AndroidTexture texture = convertImageToTexture(loaded, usePowerOfTwoTexture);
+		AndroidTexture texture = convertImageToTexture(loaded,
+				usePowerOfTwoTexture);
 		textures.put(name, new TextureWeakReference(texture, referenceQueue));
 		return texture;
 	}
 
+	private static boolean useMipmapping = false;
 	private static AndroidTexture convertImageToTexture(Bitmap bitmap,
 			boolean usePowerOfTwoTexture) {
+		usePowerOfTwoTexture = true;
 		int texWidth;
 		int texHeight;
-		if (usePowerOfTwoTexture) {
-			texWidth = 2;
-			texHeight = 2;
+		boolean isSquarePowerOfTwo = bitmap.getWidth() == bitmap.getHeight()
+				&& MathUtils.isPowerOfTwo(bitmap.getWidth());
+		if (usePowerOfTwoTexture && !isSquarePowerOfTwo) {
+			texWidth = MathUtils.getPowerOfTwoBiggerThan(Math.min(
+					bitmap.getWidth(), bitmap.getHeight()));
+			texHeight = texWidth;
 
-			// find the closest power of 2 for the width and height
-			// of the produced texture
-			while (texWidth < bitmap.getWidth()) {
-				texWidth *= 2;
-			}
-			while (texHeight < bitmap.getHeight()) {
-				texHeight *= 2;
-			}
-			bitmap = Bitmap.createScaledBitmap(bitmap, texWidth, texHeight,
-					false);
+			Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, texWidth,
+					texHeight, false);
+			bitmap.recycle();
+			bitmap = newBitmap;
+			isSquarePowerOfTwo = true;
 		} else {
 			texWidth = bitmap.getWidth();
 			texHeight = bitmap.getHeight();
 		}
 
-		AndroidTexture texture = new AndroidTexture(texWidth, texHeight, bitmap.hasAlpha() && hasUsefullAlphaChannel(bitmap));
+		AndroidTexture texture = new AndroidTexture(texWidth, texHeight,
+				bitmap.hasAlpha() && hasUsefullAlphaChannel(bitmap));
 
 		// produce a texture from the byte buffer
 		GLES10.glBindTexture(GLES10.GL_TEXTURE_2D, texture.getId());
@@ -122,11 +121,27 @@ public class AndroidTextureCache implements ITextureCache {
 				GLES10.GL_CLAMP_TO_EDGE);
 		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_T,
 				GLES10.GL_CLAMP_TO_EDGE);
-		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D,
-				GLES10.GL_TEXTURE_MAG_FILTER, GLES10.GL_NEAREST);
-		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D,
-				GLES10.GL_TEXTURE_MIN_FILTER, GLES10.GL_NEAREST);
-		GLUtils.texImage2D(GLES10.GL_TEXTURE_2D, 0, bitmap, 0);
+
+		if (isSquarePowerOfTwo && useMipmapping) {
+			GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D,
+					GLES10.GL_TEXTURE_MAG_FILTER, GLES10.GL_LINEAR);
+			GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D,
+					GLES10.GL_TEXTURE_MIN_FILTER, GLES10.GL_LINEAR_MIPMAP_NEAREST);
+			for (int level = 0; bitmap != null && texWidth >= 1; ++level) {
+				GLUtils.texImage2D(GLES10.GL_TEXTURE_2D, level, bitmap, 0);
+				Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, texWidth,
+						texWidth, false);
+				bitmap.recycle();
+				bitmap = newBitmap;
+				texWidth /= 2;
+			}
+		} else {
+			GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D,
+					GLES10.GL_TEXTURE_MAG_FILTER, GLES10.GL_NEAREST);
+			GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D,
+					GLES10.GL_TEXTURE_MIN_FILTER, GLES10.GL_NEAREST);
+			GLUtils.texImage2D(GLES10.GL_TEXTURE_2D, 0, bitmap, 0);
+		}
 		GLES10.glTexEnvf(GLES10.GL_TEXTURE_ENV, GLES10.GL_TEXTURE_ENV_MODE,
 				GLES10.GL_MODULATE);
 		return texture;
@@ -138,7 +153,7 @@ public class AndroidTextureCache implements ITextureCache {
 		for (int y = 0; y < h; ++y) {
 			for (int x = 0; x < w; ++x) {
 				int alpha = image.getPixel(x, y) >>> 24;
-				if(alpha != 255) {
+				if (alpha != 255) {
 					return true;
 				}
 			}
@@ -155,7 +170,8 @@ public class AndroidTextureCache implements ITextureCache {
 		try {
 			return BitmapFactory.decodeStream(assets.open(filename));
 		} catch (Exception e) {
-			throw new RuntimeException("Impossible de charger la texture " + filename);
+			throw new RuntimeException("Impossible de charger la texture "
+					+ filename);
 		}
 	}
 
@@ -164,7 +180,8 @@ public class AndroidTextureCache implements ITextureCache {
 
 		int textureId;
 
-		TextureWeakReference(AndroidTexture texture, ReferenceQueue<AndroidTexture> queue) {
+		TextureWeakReference(AndroidTexture texture,
+				ReferenceQueue<AndroidTexture> queue) {
 			super(texture, queue);
 			textureId = texture.getId();
 		}
@@ -173,7 +190,7 @@ public class AndroidTextureCache implements ITextureCache {
 	public Map<String, ITexture> getTextures(String nanimName, Nanim nanim) {
 		String baseName = nanimName + "#nanim_";
 		Map<String, ITexture> nanimTextures = new HashMap<String, ITexture>();
-		for(im.bci.nanim.NanimParser.Image nimage : nanim.getImagesList()) {
+		for (im.bci.nanim.NanimParser.Image nimage : nanim.getImagesList()) {
 			String name = baseName + nimage.getName();
 			TextureWeakReference textureRef = textures.get(name);
 			if (textureRef != null) {
@@ -185,9 +202,10 @@ public class AndroidTextureCache implements ITextureCache {
 					textures.remove(nanimName);
 				}
 			}
-			
+
 			AndroidTexture texture = convertNImageToTexture(nimage);
-			textures.put(name, new TextureWeakReference(texture, referenceQueue));
+			textures.put(name,
+					new TextureWeakReference(texture, referenceQueue));
 			nanimTextures.put(nimage.getName(), texture);
 		}
 		return nanimTextures;
@@ -196,9 +214,11 @@ public class AndroidTextureCache implements ITextureCache {
 	private AndroidTexture convertNImageToTexture(Image nimage) {
 		int texWidth = nimage.getWidth();
 		int texHeight = nimage.getHeight();
-		AndroidTexture texture = new AndroidTexture(texWidth, texHeight, nimage.getFormat().equals(PixelFormat.RGBA_8888));
-		
-		ByteBuffer imageBuffer = ByteBuffer.allocateDirect(nimage.getPixels().size());
+		AndroidTexture texture = new AndroidTexture(texWidth, texHeight, nimage
+				.getFormat().equals(PixelFormat.RGBA_8888));
+
+		ByteBuffer imageBuffer = ByteBuffer.allocateDirect(nimage.getPixels()
+				.size());
 		imageBuffer.order(ByteOrder.nativeOrder());
 		imageBuffer.put(nimage.getPixels().asReadOnlyByteBuffer());
 		imageBuffer.flip();
@@ -210,10 +230,10 @@ public class AndroidTextureCache implements ITextureCache {
 				GLES10.GL_CLAMP_TO_EDGE);
 		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_T,
 				GLES10.GL_CLAMP_TO_EDGE);
-		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_MAG_FILTER,
-				GLES10.GL_NEAREST);
-		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_MIN_FILTER,
-				GLES10.GL_NEAREST);
+		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D,
+				GLES10.GL_TEXTURE_MAG_FILTER, GLES10.GL_NEAREST);
+		GLES10.glTexParameterx(GLES10.GL_TEXTURE_2D,
+				GLES10.GL_TEXTURE_MIN_FILTER, GLES10.GL_NEAREST);
 		GLES10.glTexEnvf(GLES10.GL_TEXTURE_ENV, GLES10.GL_TEXTURE_ENV_MODE,
 				GLES10.GL_MODULATE);
 		int pixelFormat = nimage.getFormat().equals(PixelFormat.RGBA_8888) ? GLES10.GL_RGBA
