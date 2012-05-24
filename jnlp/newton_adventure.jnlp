@@ -11,7 +11,7 @@
     </shortcut>
   </information>
   <resources>
-    <jar href="newton_adventure-1.4-SNAPSHOT.jar" main="true"/>
+    <jar href="newton_adventure-1.5-SNAPSHOT.jar" main="true"/>
     <jar href="lib/phys2d.jar"/>
     <jar href="lib/libtiled.jar"/>
     <jar href="lib/jorbis.jar"/>
