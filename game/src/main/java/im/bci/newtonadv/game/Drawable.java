@@ -36,7 +36,7 @@ package im.bci.newtonadv.game;
  * @author devnewton
  */
 public interface Drawable {
-    static DrawableComparator comparator = new DrawableComparator();
+	DrawableComparator comparator = new DrawableComparator();
 	void draw();
     int getZOrder();
 }

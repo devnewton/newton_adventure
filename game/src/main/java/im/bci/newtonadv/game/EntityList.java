@@ -32,35 +32,49 @@
 package im.bci.newtonadv.game;
 
 import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import im.bci.newtonadv.world.GameOverException;
 
 /**
- *
+ * 
  * @author devnewton
  */
-public class EntityList extends TreeSet<Entity> {
+public class EntityList {
 
-	private static final long serialVersionUID = -774329323255199905L;
-	
-	public EntityList() {
-		super(Drawable.comparator);
-	}
+	private TreeMap<Integer, List<Entity>> entities = new TreeMap<Integer, List<Entity>>();
 
 	public void draw() {
-        for (Entity e : this) {
-            e.draw();
-        }
-    }
+		for (Entry<Integer, List<Entity>> entry : entities.entrySet()) {
+			for (Entity e : entry.getValue()) {
+				e.draw();
+			}
+		}
+	}
 
-    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-        Iterator<Entity> it = iterator();
-        while( it.hasNext() ) {
-            Entity e = it.next();
-            e.update(frameTimeInfos);
-            if( e.isDead())
-                it.remove();
-        }
-    }
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		for (Entry<Integer, List<Entity>> entry : entities.entrySet()) {
+			Iterator<Entity> it = entry.getValue().iterator();
+			while (it.hasNext()) {
+				Entity e = it.next();
+				e.update(frameTimeInfos);
+				if (e.isDead())
+					it.remove();
+			}
+		}
+
+	}
+
+	public void add(Entity e) {
+		final int zOrder = e.getZOrder();
+		List<Entity> entitiesWithSameZ = entities.get(zOrder);
+		if(null == entitiesWithSameZ) {
+			entitiesWithSameZ = new LinkedList<Entity>();
+			entities.put(zOrder, entitiesWithSameZ);
+		}
+		entitiesWithSameZ.add(e);		
+	}
 }
