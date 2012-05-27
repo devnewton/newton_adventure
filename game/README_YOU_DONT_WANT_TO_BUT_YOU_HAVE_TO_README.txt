@@ -6,7 +6,7 @@ by default, but this can be configured with the options menu or in the
 ~/.config/newton_adventure/config.properties file ( '~' is your home directory).
 
 THE GAME WILL ONLY WORK IF:
- - YOU HAVE INSTALLED JAVA 1.5 OR HIGHER.
+ - YOU HAVE INSTALLED JAVA 1.5 OR HIGHER. (HEADLESS JAVA VERSION WONT WORK).
  - YOU HAVE AN OPENGL ENABLED COMPUTER. THAT MEANS A DECENT GRAPHIC CARD WITH
    DECENT DRIVER.
  - A SUPPORTED RESOLUTION BY YOUR GRAPHIC CARD AND YOUR SCREEN IS CHOSEN IN 
