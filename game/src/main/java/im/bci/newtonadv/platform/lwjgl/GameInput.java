@@ -350,6 +350,13 @@ public class GameInput implements IGameInput {
 
 	@Override
 	public boolean poll() {
-		return Keyboard.next() || Mouse.next();
+		boolean k = Keyboard.next();
+		boolean m = Mouse.next();
+		return k || m;
+	}
+
+	@Override
+	public boolean hasClicked() {
+		return Mouse.getEventButton() == 0 && Mouse.getEventButtonState();
 	}
 }

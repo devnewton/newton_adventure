@@ -60,7 +60,6 @@ public abstract class MenuSequence implements Sequence {
 	protected int verticalIncrement = 1;
 	protected Game game;
 	private String backgroundImage;
-	private boolean mouseActivateCurrentButton = false;
 	private Vector2f oldMousePos = new Vector2f();
 
 	public MenuSequence(Game game) {
@@ -160,10 +159,7 @@ public abstract class MenuSequence implements Sequence {
 							currentButtonIndex = buttons.indexOf(button);
 							button.setOn();
 						}
-						if (game.getInput().isMouseButtonDown()) {
-							mouseActivateCurrentButton = true;
-						} else if (mouseActivateCurrentButton) {
-							mouseActivateCurrentButton = false;
+						if(game.getInput().hasClicked()) {
 							button.activate();
 						}
 						break;

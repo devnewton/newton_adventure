@@ -135,4 +135,9 @@ public class AndroidGameInput implements IGameInput {
 			return false;
 		}
 	}
+
+	@Override
+	public boolean hasClicked() {
+		return data.mouseButtonDown;
+	}
 }

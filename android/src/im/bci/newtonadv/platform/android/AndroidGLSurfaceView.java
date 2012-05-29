@@ -179,6 +179,44 @@ public class AndroidGLSurfaceView extends GLSurfaceView implements OnGestureList
 		data = new AndroidGameInputData(data);
 		data.mousePos = null;
 		input.dataBuffer.add(data);
+		
+		float xdiff = e2.getX() - e1.getX();
+		float ydiff = e2.getY() - e1.getY();
+		if(Math.abs(xdiff) > Math.abs(ydiff)) {
+			
+			if(xdiff > 0 ) {
+				data = new AndroidGameInputData(data);
+				data.keyLeftDown = true;
+				input.dataBuffer.add(data);
+				data = new AndroidGameInputData(data);
+				data.keyLeftDown = false;
+				input.dataBuffer.add(data);
+			} else {
+				data = new AndroidGameInputData(data);
+				data.keyRightDown = true;
+				input.dataBuffer.add(data);
+				data = new AndroidGameInputData(data);
+				data.keyRightDown = false;
+				input.dataBuffer.add(data);
+			}
+			
+		} else {
+			if(ydiff > 0 ) {
+				data = new AndroidGameInputData(data);
+				data.keyUpDown = true;
+				input.dataBuffer.add(data);
+				data = new AndroidGameInputData(data);
+				data.keyUpDown = false;
+				input.dataBuffer.add(data);
+			} else {
+				data = new AndroidGameInputData(data);
+				data.keyDownDown = true;
+				input.dataBuffer.add(data);
+				data = new AndroidGameInputData(data);
+				data.keyDownDown = false;
+				input.dataBuffer.add(data);
+			}
+		}
 		return true;
 	}
 

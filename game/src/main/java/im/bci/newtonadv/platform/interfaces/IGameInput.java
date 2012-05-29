@@ -82,4 +82,6 @@ public interface IGameInput {
 
 	boolean poll();
 
+	boolean hasClicked();
+
 }

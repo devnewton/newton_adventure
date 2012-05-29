@@ -125,12 +125,12 @@ public strictfp class Game {
 				((CustomTickSequence) currentSequence).tick();
 			} else {
 				view.draw(currentSequence);
-				do {
+				while (input.poll()) {
 					processInputs();
 					if (!frameTimeInfos.paused) {
 						currentSequence.processInputs();
 					}
-				} while (input.poll());
+				}
 				if (!frameTimeInfos.paused) {
 					currentSequence.update();
 				}
