@@ -125,7 +125,7 @@ public strictfp class Game {
 				((CustomTickSequence) currentSequence).tick();
 			} else {
 				view.draw(currentSequence);
-				while (input.poll()) {
+				for (input.beginPoll(); input.poll();) {
 					processInputs();
 					if (!frameTimeInfos.paused) {
 						currentSequence.processInputs();

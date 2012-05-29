@@ -90,6 +90,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Controllers;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -305,6 +308,9 @@ public strictfp class GameView implements IGameView {
 		Display.update(false);
 		Display.sync(Game.FPS);
 		Display.processMessages();
+		Mouse.poll();
+		Keyboard.poll();
+		Controllers.poll();
 
 		// finally check if the user has requested that the display be
 		// shutdown

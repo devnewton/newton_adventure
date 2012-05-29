@@ -347,16 +347,19 @@ public class GameInput implements IGameInput {
 	public boolean isMouseButtonDown() {
 		return Mouse.isButtonDown(0);
 	}
+	
+	private static final int NB_POLL_PER_TICK = 1;
+	private int pollCount;
+	
+
+	@Override
+	public void beginPoll() {
+		pollCount = NB_POLL_PER_TICK;		
+	}
 
 	@Override
 	public boolean poll() {
-		boolean k = Keyboard.next();
-		boolean m = Mouse.next();
-		return k || m;
+		return pollCount-- > 0;
 	}
 
-	@Override
-	public boolean hasClicked() {
-		return Mouse.getEventButton() == 0 && Mouse.getEventButtonState();
-	}
 }

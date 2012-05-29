@@ -80,8 +80,7 @@ public interface IGameInput {
 
 	boolean isKeyCheatGetCompassDown();
 
+	void beginPoll();
+	
 	boolean poll();
-
-	boolean hasClicked();
-
 }
