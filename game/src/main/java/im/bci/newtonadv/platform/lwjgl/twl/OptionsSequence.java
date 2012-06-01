@@ -58,7 +58,8 @@ public class OptionsSequence implements IOptionsSequence {
 		LWJGLRenderer renderer;
 		try {
 			renderer = new LWJGLRenderer();
-			optionsGui = new OptionsGUI(view, input, scoreServer, soundCache);
+			optionsGui = new OptionsGUI(view, input, scoreServer, soundCache,
+					config.getProperty("data.dir"));
 			gui = new GUI(optionsGui, renderer);
 			ThemeManager themeManager = ThemeManager.createThemeManager(
 					getClass().getClassLoader().getResource("twl/theme.xml"),
@@ -260,6 +261,12 @@ public class OptionsSequence implements IOptionsSequence {
 		config.setProperty("scoreserver.secret", scoreServer.getSecret());
 		config.setProperty("sound.enabled", "" + soundCache.isSoundEnabled());
 		config.setProperty("music.enabled", "" + soundCache.isMusicEnabled());
+
+		if (optionsGui.dataDir.getText().isEmpty()) {
+			config.remove("data.dir");
+		} else {
+			config.setProperty("data.dir", optionsGui.dataDir.getText());
+		}
 	}
 
 	private String getJoypadAxisName(int joypadXAxis) {
@@ -298,7 +305,7 @@ public class OptionsSequence implements IOptionsSequence {
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -323,7 +330,7 @@ public class OptionsSequence implements IOptionsSequence {
 		if (Display.isCloseRequested()) {
 			System.exit(0);
 		}
-		
+
 		if (optionsGui.okPressed) {
 			try {
 				applyOptions();

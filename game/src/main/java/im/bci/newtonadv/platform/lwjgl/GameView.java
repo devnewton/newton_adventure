@@ -47,6 +47,7 @@ import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.ScoreSequence;
 import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.world.Axe;
@@ -121,9 +122,9 @@ public strictfp class GameView implements IGameView {
 	private TextureCache textureCache;
 	private ITrueTypeFont fpsFont;
 	private GameViewQuality quality = GameViewQuality.DEFAULT;
-	private final GameData data;
+	private final IGameData data;
 
-	public GameView(GameData data, Properties config) {
+	public GameView(IGameData data, Properties config) {
 		this.data = data;
 		initDisplay(config);
 	}
@@ -1335,8 +1336,10 @@ public strictfp class GameView implements IGameView {
 	}
 
 	private void drawWorldBackground(World world, float aspectRatio) {
+		ITexture backgroundTexture = world.getBackgroundTexture();
+		if(null != backgroundTexture) {
 		GL11.glPushMatrix();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, world.getBackgroundTexture()
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, backgroundTexture
 				.getId());
 
 		ROVector2f heroPos = world.getHero().getPosition();
@@ -1374,6 +1377,9 @@ public strictfp class GameView implements IGameView {
 		GL11.glVertex2f(staticBounds.x1, staticBounds.y1);
 		GL11.glEnd();
 		GL11.glPopMatrix();
+		} else {
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		}
 	}
 
 	@Override

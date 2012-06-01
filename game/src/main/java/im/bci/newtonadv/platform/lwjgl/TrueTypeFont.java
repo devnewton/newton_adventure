@@ -1,5 +1,6 @@
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import java.awt.Color;
 import java.awt.Font;
@@ -59,7 +60,7 @@ public class TrueTypeFont implements ITrueTypeFont {
 	private FontMetrics fontMetrics;
 	private int correctL = 9, correctR = 8;
 	private final Map<Character, String> specialCharacters;
-	private final GameData gameData;
+	private final IGameData gameData;
 
 	@Override
 	public void drawString(String msg) {
@@ -110,7 +111,7 @@ public class TrueTypeFont implements ITrueTypeFont {
 		public int storedY;
 	}
 
-	public TrueTypeFont(GameData gameData, Font font, boolean antiAlias,
+	public TrueTypeFont(IGameData gameData, Font font, boolean antiAlias,
 			char[] additionalChars, Map<Character, String> specialCharacters) {
 		this.gameData = gameData;
 		this.font = font;
@@ -126,23 +127,23 @@ public class TrueTypeFont implements ITrueTypeFont {
 		}
 	}
 
-	public TrueTypeFont(GameData gameData, Font font, boolean antiAlias,
+	public TrueTypeFont(IGameData gameData, Font font, boolean antiAlias,
 			Map<Character, String> specialCharacters) {
 		this(gameData, font, antiAlias, null, specialCharacters);
 	}
 
-	public TrueTypeFont(GameData gameData, Font font, boolean antiAlias) {
+	public TrueTypeFont(IGameData gameData, Font font, boolean antiAlias) {
 		this(gameData, font, antiAlias, null, Collections
 				.<Character, String> emptyMap());
 	}
 
-	public TrueTypeFont(GameData gameData,
+	public TrueTypeFont(IGameData gameData,
 			Map<Character, String> specialCharacters) {
 		this(gameData, new Font("monospaced", Font.PLAIN, 24), false,
 				specialCharacters);
 	}
 
-	public TrueTypeFont(GameData gameData) {
+	public TrueTypeFont(IGameData gameData) {
 		this(gameData, new Font("monospaced", Font.PLAIN, 24), false,
 				Collections.<Character, String> emptyMap());
 	}

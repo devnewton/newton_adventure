@@ -61,7 +61,7 @@ public class PlatformFactory implements IPlatformFactory {
 	private GameInput input;
 	private Properties config;
 	private ScoreServer scoreServer;
-	private GameData data;
+	private IGameData data;
 	private SoundCache soundCache;
 	private IOptionsSequence options;
 	
@@ -121,8 +121,14 @@ public class PlatformFactory implements IPlatformFactory {
 	}
 
 	private IGameData createGameData() {
-		if (data == null)
-			data = new GameData(config);
+		if (data == null) {
+			String dataDir = config.getProperty("data.dir");
+			if(null != dataDir) {
+				data = new FileGameData(dataDir);
+			} else {
+				data = new EmbeddedGameData();
+			}
+		}
 		return data;
 	}
 

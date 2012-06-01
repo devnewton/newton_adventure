@@ -119,7 +119,8 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	public static interface PostUpdateAction {
 
-		public void run() throws Sequence.NormalTransitionException, ResumableTransitionException;
+		public void run() throws Sequence.NormalTransitionException,
+				ResumableTransitionException;
 
 	}
 
@@ -280,13 +281,23 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public String getFileFromMap(tiled.core.Map map, String filePropertyName) {
+		String filename = getFileFromMapIfAvailable(map, filePropertyName);
+		if (filename != null) {
+			return filename;
+		} else {
+			throw new RuntimeException(
+					"error in tmx map file, cannot find property "
+							+ filePropertyName);
+		}
+	}
+
+	public String getFileFromMapIfAvailable(tiled.core.Map map,
+			String filePropertyName) {
 		String filename = map.getProperties().getProperty(filePropertyName);
 		if (filename == null) {
 			filename = defaultMapProperties.getProperty(filePropertyName);
 			if (filename == null) {
-				throw new RuntimeException(
-						"error in tmx map file, cannot find property "
-								+ filePropertyName);
+				return null;
 			}
 		}
 		return game.getData().getLevelFilePath(questName, levelName, filename);
@@ -311,50 +322,54 @@ public strictfp class World extends net.phys2d.raw.World {
 				getFileFromMap(map, "newton_adventure.mummy"));
 		batAnimation = game.getView().loadFromAnimation(
 				getFileFromMap(map, "newton_adventure.bat"));
-		appleIconTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.apple"));
-		coinTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.coin"));
-		worldMapTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.world_map"));
-		compassTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.compass"));
-		fireBallTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.fireball"));
-		keyTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.key"));
-		closedDoorTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.door"));
-		openDoorTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.door_open"));
-		closedDoorToBonusWorldTexture = game.getView().loadFromAnimation(getFileFromMap(
-				map, "newton_adventure.door_to_bonus_world"));
-		openDoorToBonusWorldTexture = game.getView().loadFromAnimation(getFileFromMap(
-				map, "newton_adventure.door_to_bonus_world_open"));
-		mobilePikesTexture = game.getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.mobilePikes"));
-		axeTexture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.axe"));
-		activator1OnTexture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.activator1.on"));
-		activator2OnTexture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.activator2.on"));
-		activator3OnTexture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.activator3.on"));
-		activator1OffTexture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.activator1.off"));
-		activator2OffTexture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.activator2.off"));
-		activator3OffTexture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.activator3.off"));
-		memoryActivatorHiddenTexture = getView().loadFromAnimation(getFileFromMap(
-				map, "newton_adventure.memory_activator.hidden"));
-		blocker1Texture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.blocker1"));
-		blocker2Texture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.blocker2"));
-		blocker3Texture = getView().loadFromAnimation(getFileFromMap(map,
-				"newton_adventure.blocker3"));
+		appleIconTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.apple"));
+		coinTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.coin"));
+		worldMapTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.world_map"));
+		compassTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.compass"));
+		fireBallTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.fireball"));
+		keyTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.key"));
+		closedDoorTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.door"));
+		openDoorTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.door_open"));
+		closedDoorToBonusWorldTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.door_to_bonus_world"));
+		openDoorToBonusWorldTexture = game.getView()
+				.loadFromAnimation(
+						getFileFromMap(map,
+								"newton_adventure.door_to_bonus_world_open"));
+		mobilePikesTexture = game.getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.mobilePikes"));
+		axeTexture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.axe"));
+		activator1OnTexture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.activator1.on"));
+		activator2OnTexture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.activator2.on"));
+		activator3OnTexture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.activator3.on"));
+		activator1OffTexture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.activator1.off"));
+		activator2OffTexture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.activator2.off"));
+		activator3OffTexture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.activator3.off"));
+		memoryActivatorHiddenTexture = getView()
+				.loadFromAnimation(
+						getFileFromMap(map,
+								"newton_adventure.memory_activator.hidden"));
+		blocker1Texture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.blocker1"));
+		blocker2Texture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.blocker2"));
+		blocker3Texture = getView().loadFromAnimation(
+				getFileFromMap(map, "newton_adventure.blocker3"));
 
 		int zorderBase = 0;
 		for (tiled.core.MapLayer layer : map.getLayers()) {
@@ -365,14 +380,20 @@ public strictfp class World extends net.phys2d.raw.World {
 						Tile tile = tileLayer.getTileAt(x, y);
 						if (null != tile) {
 							initFromTile(x - map.getWidth() / 2.0f,
-									-y + map.getHeight() / 2.0f, map, tile, zorderBase);
+									-y + map.getHeight() / 2.0f, map, tile,
+									zorderBase);
 						}
 					}
 				}
 			}
 			zorderBase += 1000000;
 		}
-		backgroundTexture = textureCache.getTexture(getFileFromMap(map,"newton_adventure.background"));
+
+		String backgroundTextureFile = getFileFromMapIfAvailable(map,
+				"newton_adventure.background");
+		if (null != backgroundTextureFile) {
+			backgroundTexture = textureCache.getTexture(backgroundTextureFile);
+		}
 		this.getHero().setAnimation(
 				game.getView().loadFromAnimation(
 						getFileFromMap(map, "newton_adventure.hero")));
@@ -413,10 +434,12 @@ public strictfp class World extends net.phys2d.raw.World {
 		ITextureCache textureCache = game.getView().getTextureCache();
 		String c = tile.getProperties().getProperty("newton_adventure.type",
 				"unknown");
-		
+
 		final float baseSize = 2.0f * World.distanceUnit;
-		final float tileWidthScale = (float)tile.getWidth() / (float)map.getTileWidth();
-		final float tileHeightScale = (float)tile.getHeight() / (float)map.getTileHeight();
+		final float tileWidthScale = (float) tile.getWidth()
+				/ (float) map.getTileWidth();
+		final float tileHeightScale = (float) tile.getHeight()
+				/ (float) map.getTileHeight();
 		final float tileWidth = baseSize * tileWidthScale;
 		final float tileHeight = baseSize * tileHeightScale;
 		final float tileX = x * baseSize + tileWidth / 2.0f;
@@ -430,28 +453,32 @@ public strictfp class World extends net.phys2d.raw.World {
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("up_right_half_platform")) {
-			UpRightHalfPlatform platform = new UpRightHalfPlatform(this, tileWidth, tileHeight);
+			UpRightHalfPlatform platform = new UpRightHalfPlatform(this,
+					tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("up_left_half_platform")) {
-			UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this, tileWidth, tileHeight);
+			UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this,
+					tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("down_left_half_platform")) {
-			DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this, tileWidth, tileHeight);
+			DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this,
+					tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("down_right_half_platform")) {
-			DownRightHalfPlatform platform = new DownRightHalfPlatform(this, tileWidth, tileHeight);
+			DownRightHalfPlatform platform = new DownRightHalfPlatform(this,
+					tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
@@ -511,7 +538,8 @@ public strictfp class World extends net.phys2d.raw.World {
 			door.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(door);
 		} else if (c.equals("door_to_bonus_world")) {
-			DoorToBonusWorld door = new DoorToBonusWorld(this, tileWidth, tileHeight);
+			DoorToBonusWorld door = new DoorToBonusWorld(this, tileWidth,
+					tileHeight);
 			door.setPosition(tileX, tileY);
 			door.setClosedTexture(closedDoorToBonusWorldTexture);
 			door.setOpenTexture(openDoorToBonusWorldTexture);
@@ -524,49 +552,57 @@ public strictfp class World extends net.phys2d.raw.World {
 			cloud.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cloud);
 		} else if (c.equals("pikes_up")) {
-			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP, tileWidth, tileHeight);
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP, tileWidth,
+					tileHeight);
 			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
 			pikes.setPosition(tileX, tileY);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(pikes);
 		} else if (c.equals("pikes_down")) {
-			Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN, tileWidth, tileHeight);
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN, tileWidth,
+					tileHeight);
 			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
 			pikes.setPosition(tileX, tileY);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(pikes);
 		} else if (c.equals("pikes_left")) {
-			Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT, tileWidth, tileHeight);
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT, tileWidth,
+					tileHeight);
 			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
 			pikes.setPosition(tileX, tileY);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(pikes);
 		} else if (c.equals("pikes_right")) {
-			Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT, tileWidth, tileHeight);
+			Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT, tileWidth,
+					tileHeight);
 			pikes.setTexture(getAnimationForTile(map, tile, textureCache));
 			pikes.setPosition(tileX, tileY);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(pikes);
 		} else if (c.equals("cannon_up")) {
-			Cannon cannon = new Cannon(this, Cannon.Orientation.UP, tileWidth, tileHeight);
+			Cannon cannon = new Cannon(this, Cannon.Orientation.UP, tileWidth,
+					tileHeight);
 			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
 			cannon.setPosition(tileX, tileY);
 			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cannon);
 		} else if (c.equals("cannon_down")) {
-			Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN, tileWidth, tileHeight);
+			Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN,
+					tileWidth, tileHeight);
 			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
 			cannon.setPosition(tileX, tileY);
 			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cannon);
 		} else if (c.equals("cannon_right")) {
-			Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT, tileWidth, tileHeight);
+			Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT,
+					tileWidth, tileHeight);
 			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
 			cannon.setPosition(tileX, tileY);
 			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(cannon);
 		} else if (c.equals("cannon_left")) {
-			Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT, tileWidth, tileHeight);
+			Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT,
+					tileWidth, tileHeight);
 			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
 			cannon.setPosition(tileX, tileY);
 			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
@@ -614,7 +650,8 @@ public strictfp class World extends net.phys2d.raw.World {
 			j.setRelaxation(0);
 			add(j);
 		} else if (c.equals("bounce_platform")) {
-			BouncePlatform platform = new BouncePlatform(this, tileWidth, tileHeight);
+			BouncePlatform platform = new BouncePlatform(this, tileWidth,
+					tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(tileX, tileY);
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
@@ -679,7 +716,8 @@ public strictfp class World extends net.phys2d.raw.World {
 		} else if (c.equals("moving_platform")) {
 			MovingPlatform platform = new MovingPlatform(this,
 					getAnimationForTile(map, tile, textureCache),
-					getMovingPlatformDestination(tile, x, y, baseSize), tileWidth, tileHeight);
+					getMovingPlatformDestination(tile, x, y, baseSize),
+					tileWidth, tileHeight);
 			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
@@ -688,7 +726,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			Teleporter teleporter = new Teleporter(this, tileWidth, tileHeight);
 			teleporter.setTexture(getAnimationForTile(map, tile, textureCache));
 			teleporter.setPosition(tileX, tileY);
-			teleporter.setZOrder(getTileZOrder(tile,zOrderBase,1));
+			teleporter.setZOrder(getTileZOrder(tile, zOrderBase, 1));
 			teleporter.setColor(tile.getProperties().getProperty(
 					"newton_adventure.teleporter.color"));
 			add(teleporter);
@@ -696,7 +734,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			KeyLock keylock = new KeyLock(this, tileWidth, tileHeight);
 			keylock.setTexture(getAnimationForTile(map, tile, textureCache));
 			keylock.setPosition(tileX, tileY);
-			keylock.setZOrder(getTileZOrder(tile,zOrderBase));
+			keylock.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(keylock);
 		} else if (c.equals("egyptian_boss")) {
 			EgyptianBoss boss = new EgyptianBoss(this, tileX, tileY);
@@ -704,9 +742,9 @@ public strictfp class World extends net.phys2d.raw.World {
 					"egyptian_boss_body.png")));
 			boss.setHandTexture(textureCache.getTexture(game.getData().getFile(
 					"egyptian_boss_hand.png")));
-			boss.setZOrder(getTileZOrder(tile,zOrderBase));
-			boss.getLeftHand().setZOrder(getTileZOrder(tile,zOrderBase+1));
-			boss.getRightHand().setZOrder(getTileZOrder(tile,zOrderBase+1));
+			boss.setZOrder(getTileZOrder(tile, zOrderBase));
+			boss.getLeftHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
+			boss.getRightHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
 			add(boss);
 			add(boss.getLeftHand());
 			add(boss.getRightHand());
@@ -715,33 +753,36 @@ public strictfp class World extends net.phys2d.raw.World {
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(tileX, tileY);
 			platform.setEnabled(false);
-			platform.setZOrder(getTileZOrder(tile,zOrderBase));
+			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		}
 	}
 
 	private AnimationCollection getAnimationForTile(tiled.core.Map map,
-			tiled.core.Tile tile, ITextureCache textureCache) throws FileNotFoundException, IOException {
+			tiled.core.Tile tile, ITextureCache textureCache)
+			throws FileNotFoundException, IOException {
 		AnimationCollection animation;
 		String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
-		if(null != gfx) {
-			animation = game.getView().loadFromAnimation(game.getData().getLevelFilePath(questName, levelName, gfx));
+		if (null != gfx) {
+			animation = game.getView().loadFromAnimation(
+					game.getData().getLevelFilePath(questName, levelName, gfx));
 		} else {
-			animation = new AnimationCollection(textureCache.getTexture(questName, levelName,
-					map, tile));
+			animation = new AnimationCollection(textureCache.getTexture(
+					questName, levelName, map, tile));
 		}
 		return animation;
 	}
-	
+
 	private ITexture getTextureForTile(tiled.core.Map map,
-			tiled.core.Tile tile, ITextureCache textureCache) throws FileNotFoundException, IOException {
+			tiled.core.Tile tile, ITextureCache textureCache)
+			throws FileNotFoundException, IOException {
 		ITexture texture;
 		String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
-		if(null != gfx) {
-			texture = textureCache.getTexture(game.getData().getLevelFilePath(questName, levelName, gfx));
+		if (null != gfx) {
+			texture = textureCache.getTexture(game.getData().getLevelFilePath(
+					questName, levelName, gfx));
 		} else {
-			texture = textureCache.getTexture(questName, levelName,
-					map, tile);
+			texture = textureCache.getTexture(questName, levelName, map, tile);
 		}
 		return texture;
 	}
@@ -772,7 +813,8 @@ public strictfp class World extends net.phys2d.raw.World {
 		getView().drawWorld(this);
 	}
 
-	public void update() throws GameOverException, NormalTransitionException, ResumableTransitionException {
+	public void update() throws GameOverException, NormalTransitionException,
+			ResumableTransitionException {
 		FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
 		for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {// copy
 																		// to
@@ -812,19 +854,18 @@ public strictfp class World extends net.phys2d.raw.World {
 		return Float.parseFloat(tile.getProperties().getProperty(
 				"newton_adventure.friction", "10"));
 	}
-	
+
 	private int getTileZOrder(Tile tile, int zOrderBase, int defaultZ) {
 		int z = zOrderBase;
 		String zprop = tile.getProperties().getProperty(
 				"newton_adventure.zorder");
-		if(null == zprop) {
+		if (null == zprop) {
 			z += defaultZ;
 		} else {
 			z += Integer.parseInt(zprop);
 		}
 		return z;
 	}
-	
 
 	private int getTileZOrder(Tile tile, int zOrderBase) {
 		return getTileZOrder(tile, zOrderBase, 0);

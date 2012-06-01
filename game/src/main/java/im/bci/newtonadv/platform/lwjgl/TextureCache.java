@@ -33,6 +33,7 @@ package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.nanim.NanimParser.Nanim;
 import im.bci.nanim.NanimParser.PixelFormat;
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import java.awt.Color;
@@ -69,7 +70,7 @@ public class TextureCache implements ITextureCache {
 
 	private HashMap<String/* name */, TextureWeakReference> textures = new HashMap<String, TextureWeakReference>();
 	private ReferenceQueue<Texture> referenceQueue = new ReferenceQueue<Texture>();
-	private final GameData data;
+	private final IGameData data;
 	/** The colour model including alpha for the GL image */
 	private static final ColorModel glAlphaColorModel = new ComponentColorModel(
 			ColorSpace.getInstance(ColorSpace.CS_sRGB),
@@ -81,7 +82,7 @@ public class TextureCache implements ITextureCache {
 			new int[] { 8, 8, 8, 0 }, false, false, ComponentColorModel.OPAQUE,
 			DataBuffer.TYPE_BYTE);
 
-	TextureCache(GameData data) {
+	TextureCache(IGameData data) {
 		this.data = data;
 	}
 

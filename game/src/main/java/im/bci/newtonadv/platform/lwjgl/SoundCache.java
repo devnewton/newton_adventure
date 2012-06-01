@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 
 import java.io.BufferedInputStream;
@@ -58,7 +59,7 @@ public class SoundCache implements ISoundCache {
 	private OggClip currentMusic;
 	private boolean soundEnabled;
 	private boolean musicEnabled;
-	private final GameData data;
+	private final IGameData data;
 
 
 	public static final class PlayableClipWrapper implements Playable {
@@ -93,7 +94,7 @@ public class SoundCache implements ISoundCache {
 		
 	}
 
-	public SoundCache(GameData data, Properties config) {
+	public SoundCache(IGameData data, Properties config) {
 		this.data = data;
 		this.soundEnabled = config.getProperty("sound.enabled").equals("true");
 		this.musicEnabled = config.getProperty("music.enabled").equals("true");

@@ -52,6 +52,7 @@ public class OptionsGUI extends Widget {
 	ComboBox<ControllerItem> joypad;
 	ComboBox<String> joypadXAxis;
 	ComboBox<String> joypadYAxis;
+	EditField dataDir;
 
 	private final ColumnLayout layout;
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
@@ -60,7 +61,7 @@ public class OptionsGUI extends Widget {
 	private SimpleChangableListModel<String> joyButtonModel = new SimpleChangableListModel<String>();
 
 	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
-			SoundCache soundCache) throws LWJGLException {
+			SoundCache soundCache, String dataDir) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
 		this.layout = new ColumnLayout();
 		layout.setSize(Display.getWidth(), Display.getHeight());
@@ -165,6 +166,12 @@ public class OptionsGUI extends Widget {
 		scoreSecret.setText(scoreServer.getSecret());
 		layout.addRow("label", "widget").addWithLabel("Player password",
 				scoreSecret);
+		
+		this.dataDir = new EditField();
+		this.dataDir.setText(null == dataDir ? "" : dataDir);
+		this.dataDir.setTooltipContent("Save and reload game to apply this option");
+		layout.addRow("label", "widget").addWithLabel("Data dir",
+				this.dataDir);		
 
 		Button ok = new Button("OK");
 		Button cancel = new Button("Cancel");
