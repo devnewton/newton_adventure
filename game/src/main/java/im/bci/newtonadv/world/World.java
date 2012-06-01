@@ -304,6 +304,14 @@ public strictfp class World extends net.phys2d.raw.World {
 		}
 		return game.getData().getLevelFilePath(questName, levelName, filename);
 	}
+	
+	private String getMapProperty(tiled.core.Map map, String prop) {
+		String value = map.getProperties().getProperty(prop);
+		if(null == value) {
+			return defaultMapProperties.getProperty(prop);
+		}
+		return value;
+	}
 
 	public void loadLevel() throws IOException, Exception {
 
@@ -405,7 +413,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		game.getSoundCache().playMusicIfEnabled(
 				getFileFromMap(map, "newton_adventure.music"));
 		
-		isRotateGravityPossible = "true".equals(map.getProperties().getProperty("newton_adventure.rotate_gravity_possible"));
+		isRotateGravityPossible = "true".equals(getMapProperty(map, "newton_adventure.rotate_gravity_possible"));
 	}
 
 	public float getGravityAngle() {
