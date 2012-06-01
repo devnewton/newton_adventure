@@ -116,6 +116,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	private ArrayList<Key> keys = new ArrayList<Key>();
 	private ArrayList<Runnable> postStepActions = new ArrayList<Runnable>();
 	private ArrayList<PostUpdateAction> postUpdateActions = new ArrayList<PostUpdateAction>();
+	private boolean isRotateGravityPossible = true;
 
 	public static interface PostUpdateAction {
 
@@ -278,6 +279,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		defaultMapProperties.put("newton_adventure.blocker2", "blocker2.png");
 		defaultMapProperties.put("newton_adventure.blocker3", "blocker3.png");
 		defaultMapProperties.put("newton_adventure.music", "hopnbop.ogg");
+		defaultMapProperties.put("newton_adventure.rotate_gravity_possible", "true");
 	}
 
 	public String getFileFromMap(tiled.core.Map map, String filePropertyName) {
@@ -402,7 +404,8 @@ public strictfp class World extends net.phys2d.raw.World {
 						game.getData().getFile("jump.wav")));
 		game.getSoundCache().playMusicIfEnabled(
 				getFileFromMap(map, "newton_adventure.music"));
-
+		
+		isRotateGravityPossible = "true".equals(map.getProperties().getProperty("newton_adventure.rotate_gravity_possible"));
 	}
 
 	public float getGravityAngle() {
@@ -410,18 +413,23 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public final void progressiveRotateGravity(float angle) {
-		gravityAngle += angle;
-		Matrix2f rot = new Matrix2f(gravityAngle);
-		this.gravityVector = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0,
-				-gravityForce));
-		setGravity(getGravityVector().x, getGravityVector().y);
+		if (isRotateGravityPossible ) {
+			gravityAngle += angle;
+			Matrix2f rot = new Matrix2f(gravityAngle);
+			this.gravityVector = net.phys2d.math.MathUtil.mul(rot,
+					new Vector2f(0, -gravityForce));
+			setGravity(getGravityVector().x, getGravityVector().y);
+		}
 	}
 
 	public void rotateGravity(float angle) {
-		if (!nonProgressiveGravityRotationActive) {
-			this.gravityAngleTarget = this.gravityAngle + angle;
-			this.nonProgressiveGravityRotationStep = 2.0f * angle / Game.FPSf;
-			this.nonProgressiveGravityRotationActive = true;
+		if (isRotateGravityPossible) {
+			if (!nonProgressiveGravityRotationActive) {
+				this.gravityAngleTarget = this.gravityAngle + angle;
+				this.nonProgressiveGravityRotationStep = 2.0f * angle
+						/ Game.FPSf;
+				this.nonProgressiveGravityRotationActive = true;
+			}
 		}
 	}
 

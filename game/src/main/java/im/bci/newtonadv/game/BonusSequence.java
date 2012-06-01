@@ -52,10 +52,6 @@ public strictfp class BonusSequence extends LevelSequence {
     }
 
     @Override
-    protected void processRotateInputs() {
-    }
-
-    @Override
     public strictfp void start() {
         super.start();
         endTime = game.getFrameTimeInfos().currentTime + 60000000000L;
