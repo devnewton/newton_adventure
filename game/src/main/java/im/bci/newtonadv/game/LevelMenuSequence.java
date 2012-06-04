@@ -61,9 +61,9 @@ public class LevelMenuSequence extends MenuSequence {
 
 	@Override
 	public void start() {
-		super.start();
 		levelNameFont = game.getView().createQuestNameFont();
 		loadLevels();
+		super.start();
 	}
 
 	@Override
@@ -105,13 +105,13 @@ public class LevelMenuSequence extends MenuSequence {
 						levelName);
 			}
 		};
-		questButton.currentTexture = questButton.offTexture = game.getData().getLevelFilePath(questSequence.getQuestName(),
+		questButton.offTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
 				levelName, "bt-level-off.jpg");
 		if(!isBlocked) {
-			questButton.onTexture = game.getData().getLevelFilePath(questSequence.getQuestName(),
+			questButton.onTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
 				levelName, "bt-level-on.jpg");
 		}else{
-			questButton.onTexture = game.getData().getFile("btn-blocked.png");
+			questButton.onTextureName = game.getData().getFile("btn-blocked.png");
 		}
 
 		questButton.x = LEVEL_MINIATURE_SPACING + i

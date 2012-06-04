@@ -33,6 +33,9 @@ package im.bci.newtonadv.game;
 
 import java.util.ArrayList;
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.platform.interfaces.ITexture;
+import im.bci.newtonadv.platform.interfaces.ITextureCache;
+
 import java.util.List;
 
 import net.phys2d.math.ROVector2f;
@@ -59,7 +62,8 @@ public abstract class MenuSequence implements Sequence {
 	protected int horizontalIncrement = 1;
 	protected int verticalIncrement = 1;
 	protected Game game;
-	private String backgroundImage;
+	private String backgroundTexturePath;
+	private ITexture backgroundTexture;
 	private Vector2f oldMousePos = new Vector2f();
 	private boolean mouseActivateCurrentButton;
 
@@ -67,14 +71,14 @@ public abstract class MenuSequence implements Sequence {
 		this.game = game;
 	}
 
-	public void setBackgroundImage(String backgroundImage) {
-		this.backgroundImage = backgroundImage;
+	public void setBackgroundTexturePath(String backgroundImage) {
+		this.backgroundTexturePath = backgroundImage;
 	}
 
 	public List<Button> getButtons() {
 		return buttons;
 	}
-	
+
 	protected void clearButtons() {
 		buttons.clear();
 	}
@@ -85,7 +89,8 @@ public abstract class MenuSequence implements Sequence {
 	}
 
 	@Override
-	public void processInputs() throws Sequence.NormalTransitionException, ResumeTransitionException {
+	public void processInputs() throws Sequence.NormalTransitionException,
+			ResumeTransitionException {
 		if (game.getInput().isKeyRightDown()) {
 			horizontalSelectNextButton = true;
 		} else if (horizontalSelectNextButton) {
@@ -160,9 +165,9 @@ public abstract class MenuSequence implements Sequence {
 							currentButtonIndex = buttons.indexOf(button);
 							button.setOn();
 						}
-						if(game.getInput().isMouseButtonDown()) {
+						if (game.getInput().isMouseButtonDown()) {
 							mouseActivateCurrentButton = true;
-						} else if(mouseActivateCurrentButton){
+						} else if (mouseActivateCurrentButton) {
 							button.activate();
 						}
 						break;
@@ -175,15 +180,29 @@ public abstract class MenuSequence implements Sequence {
 
 	@Override
 	public void start() {
+		final ITextureCache textureCache = game.getView().getTextureCache();
+		if (null != backgroundTexturePath) {
+			backgroundTexture = textureCache.getTexture(backgroundTexturePath);
+		}
 		currentButtonIndex = 0;
 		activateCurrentButton = false;
 		mouseActivateCurrentButton = false;
 		redraw = true;
 		setCurrentButton(buttons.isEmpty() ? null : buttons.get(0));
+		for (Button button : buttons) {
+			button.onTexture = textureCache.getTexture(button.onTextureName);
+			button.offTexture = textureCache.getTexture(button.offTextureName);
+		}
 	}
 
 	@Override
 	public void stop() {
+		// ensure that textures can be deleted
+		backgroundTexture = null;
+		for (Button button : buttons) {
+			button.onTexture = null;
+			button.offTexture = null;
+		}
 	}
 
 	@Override
@@ -217,29 +236,37 @@ public abstract class MenuSequence implements Sequence {
 		redraw = b;
 	}
 
-	public String getBackgroundImage() {
-		return backgroundImage;
+	public ITexture getBackgroundImage() {
+		return backgroundTexture;
 	}
 
 	public abstract class Button {
 
-		public String onTexture, offTexture, currentTexture = null;
+		String onTextureName, offTextureName;
 		public float x = 273, y;
 		public float w = -1.0f;
 		public float h = -1.0f;
+
+		private ITexture onTexture, offTexture;
+		private boolean on;
+
+		public ITexture getTexture() {
+			return on ? onTexture : offTexture;
+		}
 
 		public void draw() {
 			game.getView().drawButton(this);
 		}
 
 		void setOn() {
-			currentTexture = onTexture;
+			on = true;
 		}
 
 		void setOff() {
-			currentTexture = offTexture;
+			on = false;
 		}
 
-		abstract void activate() throws Sequence.NormalTransitionException, Sequence.ResumeTransitionException;
+		abstract void activate() throws Sequence.NormalTransitionException,
+				Sequence.ResumeTransitionException;
 	}
 }

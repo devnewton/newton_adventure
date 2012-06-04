@@ -1222,9 +1222,9 @@ public strictfp class GameView implements IGameView {
 			GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight,
 					MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
 
-			if (sequence.getBackgroundImage() != null) {
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache()
-						.getTexture(sequence.getBackgroundImage()).getId());
+			ITexture background = sequence.getBackgroundImage();
+			if (background != null) {
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, background.getId());
 				final float x1 = MenuSequence.ortho2DLeft;
 				final float x2 = MenuSequence.ortho2DRight;
 				final float y1 = MenuSequence.ortho2DBottom;
@@ -1259,9 +1259,8 @@ public strictfp class GameView implements IGameView {
 
 	@Override
 	public void drawButton(Button button) {
-		if (button.currentTexture != null) {
-			ITexture texture = getTextureCache().getTexture(
-					button.currentTexture);
+		ITexture texture = button.getTexture();
+		if (texture != null) {
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 			final float x1 = button.x;
 			final float x2 = button.x

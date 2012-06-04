@@ -103,8 +103,8 @@ public class QuestMenuSequence extends MenuSequence {
 			}
 			
 		};
-		returnToMenuButton.currentTexture = returnToMenuButton.offTexture = game.getData().getFile("quest_menu/bt-menu-off.png");
-		returnToMenuButton.onTexture = game.getData().getFile("quest_menu/bt-menu-on.png");
+		returnToMenuButton.offTextureName = game.getData().getFile("quest_menu/bt-menu-off.png");
+		returnToMenuButton.onTextureName = game.getData().getFile("quest_menu/bt-menu-on.png");
 		
 		returnToMenuButton.x = QUEST_MINIATURE_SPACING + i
 				* (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
@@ -139,9 +139,9 @@ public class QuestMenuSequence extends MenuSequence {
 						questName);
 			}
 		};
-		questButton.offTexture = game.getData().getQuestFile(questName,
+		questButton.offTextureName = game.getData().getQuestFile(questName,
 				"bt-quest-off.jpg");
-		questButton.onTexture = game.getData().getQuestFile(questName,
+		questButton.onTextureName = game.getData().getQuestFile(questName,
 				"bt-quest-on.jpg");
 
 		questButton.x = QUEST_MINIATURE_SPACING + i
