@@ -120,6 +120,11 @@ License: CC0
 Author: DItzyDM (http://opengameart.org/content/rpg-icons)
 License: CC-BY-SA
 
+* help signs in level0.tmx files
+
+Author: Nick Janssen (http://opengameart.org/content/sign-pack)
+License: CC-BY-SA
+
 * Other files
 
 License: CC-BY-SA 3.0
