@@ -226,7 +226,7 @@
     </data>
    </image>
   </tile>
-      <tile id="22">
+  <tile id="22">
    <properties>
     <property name="newton_adventure.type" value="world_map"/>
    </properties>
@@ -246,7 +246,16 @@
     </data>
    </image>
   </tile>
-  
+  <tile id="24">
+   <properties>
+    <property name="newton_adventure.type" value="help_sign"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACCklEQVR42uVWv0vDQBiN6a80TVpREEFEEUURFFw6uDgI4j+gm4M4OoiLCA7qKgiC4NTVRcFJcO0kiJvg5CLoJDg6n76rX3q53OVCbVrFwOMul0u+9733fUks6y8eW8u97HrPCwFrHSNQdWbZtG+FgLW2ZNYKViejc4zynKANfrLmpY5vq6IkcFHFWJex7lqcSuJ9Sl+TPDjuuiy1CtinrBciID5ILjTAFODey7GjeZ/VRwrsZtzhz8OINQB7jAQABNsuWuzFttjXbo59p0mC9h0ulPm1u6F8sA8BMYLMh90TrB8Me8kUoGwvcs3ghKVSVAkEuux3WL2SZ49ultXmSuypL8vOZ1w+vvoZ9jDQUMZIQCU7MpcJqOxYn6hordldrASqaQmI2Yu4zYQtINADT6se9xx7dkZ9bgEAJUgNwEhApQBlv+LqCxLSk0Kwguawg2oAc2MX6BTQgToGWcNfKIGMr6aKfE6VT/OWFDguNLKp5dUKiDYgOJ1vjpUDcqgNdACtxRKQSRCBDVf/PnjL2RyQGR3xXMjwc9jxXrR5F6AGEnWB3Io66cUXFoJQ26HdKCAVJgidDbrB/kQEWn0TyoA18ivbSCDt70FiBdL6ImoJyCqkAYqj/dUSId6gOo9D3L0//nWTrdIWVlqHqj46TkDuiK4oYOztTljQNQV+hQVdL0Jx/F8WtPP4BNiGxGbfAQObAAAAAElFTkSuQmCC
+    </data>
+   </image>
+  </tile>
  </tileset>
  <layer name="level" width="64" height="64">
   <data>
@@ -2712,7 +2721,7 @@
    <tile gid="18"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="25"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>

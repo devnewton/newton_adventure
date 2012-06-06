@@ -40,6 +40,7 @@ import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Sequence;
+import im.bci.newtonadv.game.Sequence.ResumeTransitionException;
 import im.bci.newtonadv.game.Sequence.NormalTransitionException;
 import im.bci.newtonadv.game.Sequence.ResumableTransitionException;
 import im.bci.newtonadv.game.Updatable;
@@ -121,7 +122,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	public static interface PostUpdateAction {
 
 		public void run() throws Sequence.NormalTransitionException,
-				ResumableTransitionException;
+				ResumableTransitionException, ResumeTransitionException;
 
 	}
 
@@ -752,6 +753,12 @@ public strictfp class World extends net.phys2d.raw.World {
 			keylock.setPosition(tileX, tileY);
 			keylock.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(keylock);
+		} else if (c.equals("help_sign")) {
+			HelpSign helpSign = new HelpSign(this, tileWidth, tileHeight);
+			helpSign.setTexture(getAnimationForTile(map, tile, textureCache));
+			helpSign.setPosition(tileX, tileY);
+			helpSign.setZOrder(getTileZOrder(tile, zOrderBase));
+			add(helpSign);
 		} else if (c.equals("egyptian_boss")) {
 			EgyptianBoss boss = new EgyptianBoss(this, tileX, tileY);
 			boss.setBodyTexture(textureCache.getTexture(game.getData().getFile(
@@ -830,7 +837,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public void update() throws GameOverException, NormalTransitionException,
-			ResumableTransitionException {
+			ResumableTransitionException, ResumeTransitionException {
 		FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
 		for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {// copy
 																		// to
@@ -1011,5 +1018,16 @@ public strictfp class World extends net.phys2d.raw.World {
 				((DoorToBonusWorld) body).close();
 			}
 		}
+	}
+
+	public void showHelp() {
+		
+		postUpdateActions.add(new PostUpdateAction() {
+
+			@Override
+			public void run() throws ResumableTransitionException {
+				game.showHelp();
+			}
+		});
 	}
 }

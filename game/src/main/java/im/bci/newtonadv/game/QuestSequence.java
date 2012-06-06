@@ -34,7 +34,6 @@ package im.bci.newtonadv.game;
 import java.util.ArrayList;
 import java.util.List;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.game.FadeSequence.FadeSequenceTransition;
 
 /**
  *
@@ -91,7 +90,7 @@ public class QuestSequence implements Sequence {
 
         if(lastSequence!=null) {
             scoreSequence = new ScoreSequence(game, questName, nextSequence);
-            StoryboardSequence completedSequence = new StoryboardSequence(game, game.getData().getQuestFile(questName,"completed.jpg"), game.getData().getFile("story_time.ogg"), scoreSequence);
+            StoryboardSequence completedSequence = new StoryboardSequence(game, game.getData().getQuestFile(questName,"completed.jpg"), game.getData().getFile("story_time.ogg"), new NormalTransitionException(scoreSequence));
             lastSequence.setNextSequence(completedSequence);
         }
     }
@@ -110,7 +109,7 @@ public class QuestSequence implements Sequence {
 	public void gotoLevel(String newLevelName) throws NormalTransitionException {
 		for(LevelSequence level: levels) {
 			if(level.getLevelName().equals(newLevelName)) {
-				throw new NormalTransitionException(new FadeSequence(this.game, level, 1, 1, 1, 1000000000L,FadeSequenceTransition.NORMAL));
+				throw new NormalTransitionException(new FadeSequence(this.game, new Sequence.NormalTransitionException(level), 1, 1, 1, 1000000000L));
 			}
 		}
 		

@@ -32,7 +32,6 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.game.FadeSequence.FadeSequenceTransition;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
@@ -116,7 +115,7 @@ strictfp public class LevelSequence implements Sequence {
 						world.getLevelScore());
 				game.unblockNextLevel(questName, levelName);
 				throw new NormalTransitionException(new FadeSequence(game,
-						nextSequence, 0, 0, 0, 1000000000L,FadeSequenceTransition.NORMAL));
+						new Sequence.NormalTransitionException(nextSequence), 0, 0, 0, 1000000000L));
 			}
 			if (cheatCodeGotoNextBonusLevel) {
 				game.goToNextBonusLevel(questName);

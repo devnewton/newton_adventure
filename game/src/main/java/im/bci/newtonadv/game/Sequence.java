@@ -49,41 +49,54 @@ public interface Sequence {
         public Sequence getNextSequence() {
             return nextSequence;
         }
+
+		public abstract void throwMe() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException;
     }
     
     static public class NormalTransitionException extends AbstractTransitionException {
+		private static final long serialVersionUID = 8455803096542664269L;
 
 		public NormalTransitionException(Sequence nextSequence) {
 			super(nextSequence);
 		}
 
-		private static final long serialVersionUID = 8455803096542664269L;
+		@Override
+		public void throwMe() throws NormalTransitionException {
+			throw this;
+		}
 
     }
     
     static public class ResumableTransitionException extends AbstractTransitionException {
-
+		private static final long serialVersionUID = -1975859829767781443L;
+		
 		public ResumableTransitionException(Sequence nextSequence) {
 			super(nextSequence);
 		}
-
-		private static final long serialVersionUID = -1975859829767781443L;
+		@Override
+		public void throwMe() throws ResumableTransitionException {
+			throw this;
+		}
 
 	}
     
     static public class ResumeTransitionException extends AbstractTransitionException {
+		private static final long serialVersionUID = -1654173561106215285L;
 
 		public ResumeTransitionException(Sequence nextSequence) {
 			super(nextSequence);
 		}
 
-		private static final long serialVersionUID = -1654173561106215285L;
+		@Override
+		public void throwMe() throws ResumeTransitionException {
+			throw this;
+		}
     }
 
     void start();
     void draw();
     void stop();
     void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
-    void processInputs() throws NormalTransitionException, ResumeTransitionException;
+    void processInputs() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
 	void resume();
 }

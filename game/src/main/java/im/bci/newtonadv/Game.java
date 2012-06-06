@@ -169,7 +169,7 @@ public strictfp class Game {
 
 	Sequence setupSequences() {
 		Sequence outroSequence = new StoryboardSequence(this,
-				data.getFile("outro.jpg"), data.getFile("The_End.ogg"), null);
+				data.getFile("outro.jpg"), data.getFile("The_End.ogg"), new Sequence.NormalTransitionException(null));
 		this.questMenuSequence = new QuestMenuSequence(this);
 		mainMenuSequence = new MainMenuSequence(this, questMenuSequence,
 				outroSequence, optionsSequence);
@@ -233,8 +233,7 @@ public strictfp class Game {
 			bonusSequence.setCurrentQuestName(currentQuestName);
 			bonusSequence.setNextSequence(currentSequence);
 			throw new Sequence.ResumableTransitionException(new FadeSequence(
-					this, bonusSequence, 1, 1, 1, 1000000000L,
-					FadeSequence.FadeSequenceTransition.NORMAL));
+					this, new Sequence.NormalTransitionException(bonusSequence), 1, 1, 1, 1000000000L));
 		}
 	}
 
@@ -249,8 +248,7 @@ public strictfp class Game {
 			lastBonusSequence.setCurrentQuestName(currentQuestName);
 			lastBonusSequence.setNextSequence(currentSequence);
 			throw new Sequence.ResumableTransitionException(new FadeSequence(
-					this, lastBonusSequence, 1, 1, 1, 1000000000L,
-					FadeSequence.FadeSequenceTransition.NORMAL));
+					this, new Sequence.NormalTransitionException(lastBonusSequence), 1, 1, 1, 1000000000L));
 		}
 	}
 
@@ -302,5 +300,10 @@ public strictfp class Game {
 		config.setProperty("game." + questName + "." + levelName + ".blocked",
 				"false");
 		platform.saveConfig();
+	}
+
+	public void showHelp() throws ResumableTransitionException {
+		throw new ResumableTransitionException(new StoryboardSequence(this, this.getData()
+				.getFile("help.jpg"), null, new Sequence.ResumeTransitionException(currentSequence)));
 	}
 }

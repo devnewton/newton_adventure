@@ -38,12 +38,12 @@ public class GameOverSequence extends StoryboardSequence {
     private LevelSequence level;
 
     GameOverSequence(Game game, LevelSequence level) {
-        super(game, game.getData().getFile("gameover.jpg"), game.getData().getFile("Game_Over.ogg"), game.getMainMenuSequence());
+        super(game, game.getData().getFile("gameover.jpg"), game.getData().getFile("Game_Over.ogg"), new NormalTransitionException(game.getMainMenuSequence()));
         this.level = level;
     }
 
     @Override
-    public void processInputs() throws NormalTransitionException {
+    public void processInputs() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException {
         if (game.getInput().isKeyUpDown()) {
             throw new Sequence.NormalTransitionException(level);
         }

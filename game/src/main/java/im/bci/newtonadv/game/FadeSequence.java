@@ -39,23 +39,15 @@ import im.bci.newtonadv.Game;
  * @author devnewton
  */
 public class FadeSequence implements Sequence {
-    private final Sequence nextSequence;
     private final float r, g, b;
     private float a;
     private final Game game;
     private final long duration;
     private long endTime;
-	private FadeSequenceTransition transition;
-    
-    public enum FadeSequenceTransition {
-    	NORMAL,
-    	RESUME,
-    	RESUMABLE
-    }
+	private AbstractTransitionException transition;
 
-    public FadeSequence(Game game, Sequence nextSequence, float r, float g, float b, long duration, FadeSequenceTransition transition) {
+    public FadeSequence(Game game, AbstractTransitionException transition, float r, float g, float b, long duration) {
         this.game = game;
-        this.nextSequence = nextSequence;
         this.r = r;
         this.g = g;
         this.b = b;
@@ -81,14 +73,7 @@ public class FadeSequence implements Sequence {
 	public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
         long remaining = endTime - game.getFrameTimeInfos().currentTime;
         if(remaining <= 0) {
-        	switch(transition) {
-        	case NORMAL:
-        		throw new NormalTransitionException(nextSequence);
-        	case RESUME:
-        		throw new ResumeTransitionException(nextSequence);
-        	case RESUMABLE:
-        		throw new ResumableTransitionException(nextSequence);
-        	}
+        	transition.throwMe();
         }
         a = 1.0f - (float)remaining / (float)duration;
     }

@@ -36,8 +36,7 @@ import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 
 public class StoryboardSequence implements Sequence {
 
-    Sequence nextSequence;
-    String texture;
+    private String texture;
     static public final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
     static public final float ortho2DLeft = 0;
     static public final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
@@ -46,12 +45,13 @@ public class StoryboardSequence implements Sequence {
     private final String music;
     private boolean redraw = true;
     protected ITrueTypeFont font;
+	private AbstractTransitionException transition;
 
-    public StoryboardSequence(Game game, String texture, String music, Sequence nextSequence) {
+    public StoryboardSequence(Game game, String texture, String music, AbstractTransitionException transition) {
         this.game = game;
         this.texture = texture;
-        this.nextSequence = nextSequence;
         this.music = music;
+        this.transition = transition;
     }
 
     @Override
@@ -66,11 +66,11 @@ public class StoryboardSequence implements Sequence {
     private boolean mustQuit;
 
     @Override
-    public void processInputs() throws NormalTransitionException {
+    public void processInputs() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException {
         if (game.getInput().isKeyReturnDown()) {
             mustQuit = true;
         } else if (mustQuit) {
-            throw new Sequence.NormalTransitionException(nextSequence);
+        	transition.throwMe();
         }
     }
 
@@ -87,10 +87,6 @@ public class StoryboardSequence implements Sequence {
     @Override
 	public void stop() {
         font.destroy();
-    }
-
-    void setNextSequence(Sequence nextSequence) {
-        this.nextSequence = nextSequence;
     }
 
     public boolean isDirty() {

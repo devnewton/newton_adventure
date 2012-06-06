@@ -29,52 +29,55 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.game;
+package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.Game;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
+import net.phys2d.raw.Body;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class BonusSequence extends LevelSequence {
+public strictfp class HelpSign extends Platform implements CollisionDetectionOnly, Updatable {
 
-    private long endTime;
-    private String currentQuestName;
+    private String color;
+    private boolean collideHero = false;
+    private static final long durationBeforeShowHelp = 2000000000L;
+    private long showHelpTime = -1;
 
-    public BonusSequence(Game game, String levelName) {
-        super(game, "bonus", levelName);
-    }
-
-    public void setCurrentQuestName(String currentQuestName) {
-        this.currentQuestName = currentQuestName;
-    }
-
-    @Override
-    public strictfp void start() {
-        super.start();
-        endTime = game.getFrameTimeInfos().currentTime + 60000000000L;
+    HelpSign(World world, float w, float h) {
+    	super(world, w, h);
     }
 
     @Override
-    public strictfp void update() throws ResumeTransitionException, NormalTransitionException, ResumableTransitionException {
-        super.update();
+    public strictfp void collided(Body body) {
+    	if(body instanceof Hero) {
+    		collideHero = true;
+    	}
 
-        if (game.getFrameTimeInfos().currentTime > endTime) {
-            game.getScore().setLevelScore(currentQuestName, levelName, world.getLevelScore());
-            throw new NormalTransitionException(new FadeSequence(game, new Sequence.ResumeTransitionException(nextSequence), 1, 1, 1, 1000000000L));
-        }
     }
 
-    @Override
-    protected strictfp void drawIndicators() {
-        StringBuilder b = new StringBuilder();
-        b.append(world.getHero().getNbApple());
-        b.append("$ ");
-        long seconds = (endTime - game.getFrameTimeInfos().currentTime) / 1000000000L;
-        b.append(seconds / 60);
-        b.append(":");
-        b.append(String.format("%02d", seconds % 60));
-        game.getView().drawLevelIndicators(b.toString(), indicatorsFont);
-    }
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		if(collideHero) {
+			if(showHelpTime < 0 )
+				showHelpTime = frameTimeInfos.currentTime + durationBeforeShowHelp;
+			else if(frameTimeInfos.currentTime > showHelpTime ) {
+				showHelpTime = -1;
+				world.showHelp();
+			}
+		} else {
+			showHelpTime = -1;
+		}
+		collideHero = false;		
+	}
 }
