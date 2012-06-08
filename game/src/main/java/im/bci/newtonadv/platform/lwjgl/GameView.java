@@ -1075,7 +1075,7 @@ public strictfp class GameView implements IGameView {
 		
 		font.drawString(StoryboardSequence.ortho2DRight,
 				StoryboardSequence.ortho2DBottom - font.getHeight(),
-				"Press enter to continue ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
+				"Click or press enter to continue ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
 		GL11.glPopAttrib();
 	}
 
@@ -1127,7 +1127,7 @@ public strictfp class GameView implements IGameView {
 					ITrueTypeFont.ALIGN_LEFT);
 			font.drawString(ScoreSequence.ortho2DRight,
 					ScoreSequence.ortho2DBottom - font.getHeight() * 2,
-					"Press enter to send score to server ", 1, -1,
+					"Click or press enter to send score to server ", 1, -1,
 					ITrueTypeFont.ALIGN_RIGHT);
 			font.drawString(ScoreSequence.ortho2DRight,
 					ScoreSequence.ortho2DBottom - font.getHeight(),

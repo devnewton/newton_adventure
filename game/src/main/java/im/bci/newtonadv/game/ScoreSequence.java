@@ -96,7 +96,7 @@ public class ScoreSequence implements Sequence {
 
     @Override
 	public void processInputs() throws Sequence.NormalTransitionException {
-        if (game.getInput().isKeyReturnDown()) {
+        if (game.getInput().isKeyReturnDown() || game.getInput().isMouseButtonDown()) {
             mustSendScoreQuit = true;
         } else if (mustSendScoreQuit) {
             scoreServer.sendScore(questScore.getQuestName(), questScore.computeScore());

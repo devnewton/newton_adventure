@@ -67,7 +67,7 @@ public class StoryboardSequence implements Sequence {
 
     @Override
     public void processInputs() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException {
-        if (game.getInput().isKeyReturnDown()) {
+        if (game.getInput().isKeyReturnDown() || game.getInput().isMouseButtonDown()) {
             mustQuit = true;
         } else if (mustQuit) {
         	transition.throwMe();
