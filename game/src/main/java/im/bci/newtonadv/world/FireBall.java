@@ -39,7 +39,7 @@ import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
-public strictfp class FireBall extends AbstractDrawableBody implements Updatable{
+public strictfp class FireBall extends AbstractDrawableBody implements Updatable, CollisionDetectionOnly{
     final float size;
     World world;
     private AnimationCollection texture;
