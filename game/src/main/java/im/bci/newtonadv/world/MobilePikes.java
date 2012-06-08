@@ -77,11 +77,12 @@ public strictfp class MobilePikes extends AbstractDrawableBody implements Updata
                 if (event.getBodyB() == hero) {
                     Vector2f normal = new Vector2f(event.getNormal());
                     hero.hurtByPike(normal/*.negate()*/);
+                    return;
                 } else if (event.getBodyA() == hero) {
                     Vector2f normal = new Vector2f(event.getNormal());
                     hero.hurtByPike(normal.negate());
+                    return;
                 }
-                return;
             }
         }
     }
