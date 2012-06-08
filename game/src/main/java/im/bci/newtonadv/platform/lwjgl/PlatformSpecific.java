@@ -35,7 +35,7 @@ import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
-import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 import im.bci.newtonadv.score.ScoreServer;
@@ -55,7 +55,7 @@ import java.util.logging.Logger;
  * 
  * @author devnewton
  */
-public class PlatformFactory implements IPlatformFactory {
+public class PlatformSpecific implements IPlatformSpecific {
 
 	private GameView view;
 	private GameInput input;
@@ -65,7 +65,7 @@ public class PlatformFactory implements IPlatformFactory {
 	private SoundCache soundCache;
 	private IOptionsSequence options;
 	
-	public PlatformFactory() throws Exception {
+	public PlatformSpecific() throws Exception {
         loadConfig();
 
         createGameData();
@@ -104,7 +104,7 @@ public class PlatformFactory implements IPlatformFactory {
 	private void loadConfig() {
 		try {
 			URL configFilePath = getUserOrDefaultConfigFilePath();
-			Logger.getLogger(PlatformFactory.class.getName()).log(Level.INFO,
+			Logger.getLogger(PlatformSpecific.class.getName()).log(Level.INFO,
 					"Load config from file {0}", configFilePath);
 
 			InputStream f = configFilePath.openStream();
@@ -115,7 +115,7 @@ public class PlatformFactory implements IPlatformFactory {
 				f.close();
 			}
 		} catch (IOException e) {
-			Logger.getLogger(PlatformFactory.class.getName()).log(Level.SEVERE,
+			Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE,
 					null, e);
 		}
 	}
@@ -154,7 +154,7 @@ public class PlatformFactory implements IPlatformFactory {
 	}
 
 	public static URL getDefaultConfigFilePath() {
-		return PlatformFactory.class.getClassLoader().getResource(
+		return PlatformSpecific.class.getClassLoader().getResource(
 				"config.properties");
 	}
 
@@ -193,7 +193,7 @@ public class PlatformFactory implements IPlatformFactory {
 		FileOutputStream os = new FileOutputStream(path);
 		try {
 			config.store(os, "Newton adventure configuration, see "
-					+ PlatformFactory.getDefaultConfigFilePath()
+					+ PlatformSpecific.getDefaultConfigFilePath()
 					+ " for example and documentation");
 		} finally {
 			os.close();
@@ -203,10 +203,10 @@ public class PlatformFactory implements IPlatformFactory {
 
 	@Override
 	public void saveConfig() {
-		File userConfigFile = new File(PlatformFactory.getUserConfigFilePath());
+		File userConfigFile = new File(PlatformSpecific.getUserConfigFilePath());
 
 		if (!userConfigFile.exists()) {
-			(new File(PlatformFactory.getUserConfigDirPath())).mkdirs();
+			(new File(PlatformSpecific.getUserConfigDirPath())).mkdirs();
 		}
 		try {
 			writeConfig(userConfigFile.getAbsolutePath());

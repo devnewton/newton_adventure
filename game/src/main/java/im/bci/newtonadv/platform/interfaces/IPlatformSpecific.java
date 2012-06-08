@@ -40,7 +40,7 @@ import java.util.Properties;
  *
  * @author devnewton
  */
-public interface IPlatformFactory {
+public interface IPlatformSpecific {
 	
 	Properties getConfig();
 

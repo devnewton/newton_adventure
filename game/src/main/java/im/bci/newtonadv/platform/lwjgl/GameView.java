@@ -236,7 +236,7 @@ public strictfp class GameView implements IGameView {
 		if (chosenMode == null) {
 			Sys.alert("Error",
 					"Unable to find appropriate display mode. Try to edit"
-							+ PlatformFactory.getUserOrDefaultConfigFilePath()
+							+ PlatformSpecific.getUserOrDefaultConfigFilePath()
 							+ ".\n" + getDisplayModeInfos());
 			System.exit(0);
 		}
@@ -266,7 +266,7 @@ public strictfp class GameView implements IGameView {
 			Display.setVSyncEnabled(true);
 		} catch (LWJGLException e) {
 			Sys.alert("Error", e + "\nUnable to create display. Try to edit "
-					+ PlatformFactory.getUserOrDefaultConfigFilePath() + ".\n"
+					+ PlatformSpecific.getUserOrDefaultConfigFilePath() + ".\n"
 					+ getDisplayModeInfos());
 			System.exit(0);
 		}

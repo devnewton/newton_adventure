@@ -18,7 +18,7 @@ import de.matthiasmann.twl.theme.ThemeManager;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
-import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
@@ -40,9 +40,9 @@ public class OptionsSequence implements IOptionsSequence {
 	private final Properties config;
 	private final ScoreServer scoreServer;
 	private final SoundCache soundCache;
-	private IPlatformFactory platform;
+	private IPlatformSpecific platform;
 
-	public OptionsSequence(IPlatformFactory platform, GameView view,
+	public OptionsSequence(IPlatformSpecific platform, GameView view,
 			GameInput input, ScoreServer scoreServer, SoundCache soundCache,
 			Properties config) {
 		this.platform = platform;

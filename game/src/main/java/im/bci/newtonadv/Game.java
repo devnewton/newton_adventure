@@ -37,7 +37,7 @@ import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
-import im.bci.newtonadv.platform.interfaces.IPlatformFactory;
+import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public strictfp class Game {
 	private BonusSequence lastBonusSequence;
 	private IOptionsSequence optionsSequence;
 	private QuestMenuSequence questMenuSequence;
-	private IPlatformFactory platform;
+	private IPlatformSpecific platform;
 
 	public Properties getConfig() {
 		return config;
@@ -98,7 +98,7 @@ public strictfp class Game {
 		return soundCache;
 	}
 
-	public Game(IPlatformFactory platform) throws Exception {
+	public Game(IPlatformSpecific platform) throws Exception {
 		this.config = platform.getConfig();
 		this.data = platform.getGameData();
 		this.soundCache = platform.getSoundCache();
