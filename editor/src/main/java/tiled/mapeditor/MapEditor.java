@@ -93,6 +93,7 @@ import tiled.mapeditor.actions.AddLayerAction;
 import tiled.mapeditor.actions.AddObjectGroupAction;
 import tiled.mapeditor.actions.CloneLayerAction;
 import tiled.mapeditor.actions.CloseMapAction;
+import tiled.mapeditor.actions.ConvertImageToTileLayerAction;
 import tiled.mapeditor.actions.DeleteLayerAction;
 import tiled.mapeditor.actions.ExitAction;
 import tiled.mapeditor.actions.MergeAllLayersAction;
@@ -237,6 +238,7 @@ public class MapEditor implements ActionListener, MouseListener,
     private final Action mergeLayerDownAction, mergeAllLayersAction;
     private final Action addObjectGroupAction;
     private final Action minimapAction;
+	private ConvertImageToTileLayerAction convertImageToTileLayerAction;
 
     private static final String IMPORT_ERROR_MSG = Resources.getString("dialog.newtileset.import.error.message");
 
@@ -310,6 +312,7 @@ public class MapEditor implements ActionListener, MouseListener,
         mergeAllLayersAction = new MergeAllLayersAction(this);
         addObjectGroupAction = new AddObjectGroupAction(this);
         minimapAction = new MinimapAction(this);
+        convertImageToTileLayerAction = new ConvertImageToTileLayerAction(this);
 
         // Create our frame
         appFrame = new JFrame(Resources.getString("dialog.main.title"));
@@ -595,6 +598,7 @@ public class MapEditor implements ActionListener, MouseListener,
 
         JMenu toolsMenu = new JMenu(Resources.getString("menu.tools"));
         toolsMenu.add(new TMenuItem(minimapAction));
+        toolsMenu.add(new TMenuItem(convertImageToTileLayerAction));
         
         JMenu helpMenu = new JMenu(Resources.getString("menu.help"));
         helpMenu.add(createMenuItem(Resources.getString("menu.help.plugins"), null,
@@ -943,7 +947,7 @@ public class MapEditor implements ActionListener, MouseListener,
      *
      * @return the frame of the main application
      */
-    public Frame getAppFrame() {
+    public JFrame getAppFrame() {
         return appFrame;
     }
 
@@ -2325,6 +2329,7 @@ public class MapEditor implements ActionListener, MouseListener,
         zoomNormalAction.setEnabled(mapLoaded && mapView.getZoomLevel() !=
                 MapView.ZOOM_NORMALSIZE);
         minimapAction.setEnabled(mapLoaded);
+        convertImageToTileLayerAction.setEnabled(mapLoaded);
 
         /*
         if (miniMap != null && currentMap != null) {

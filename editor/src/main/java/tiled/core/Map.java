@@ -167,8 +167,8 @@ public class Map extends MultilayerPlane
      *
      * @return The new TileLayer instance.
      */
-    public MapLayer addLayer() {
-        MapLayer layer = new TileLayer(this, bounds.width, bounds.height);
+    public TileLayer addLayer() {
+    	TileLayer layer = new TileLayer(this, bounds.width, bounds.height);
         layer.setName(Resources.getString("general.layer.layer") +
                       " " + super.getTotalLayers());
         super.addLayer(layer);
