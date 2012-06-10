@@ -44,100 +44,111 @@ import net.phys2d.raw.shapes.Box;
 import im.bci.newtonadv.util.Vector;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 
-    private AnimationCollection animation;
-    private static final float weight = 0.1f;
-    private static final float speed = 4.0f;
-    private static final long maxMoveStraightDuration = 1000000000L;
-    private long nextChangeDirectionTime = 0;
-    private boolean isDead = false;
-    private static final long dyingDuration = 1000000000L;
-    private long beginOfDyingDuration = -1;
-    private float scale = 1;
-    private World world;
-    private Vector2f directionVelocity;
+	private AnimationCollection animation;
+	private static final float weight = 0.1f;
+	private static final float speed = 4.0f;
+	private static final long maxMoveStraightDuration = 1000000000L;
+	private long nextChangeDirectionTime = 0;
+	private boolean isDead = false;
+	private static final long dyingDuration = 1000000000L;
+	private long beginOfDyingDuration = -1;
+	private float scale = 1;
+	private World world;
+	private Vector2f directionVelocity;
 
-    public Bat(World world) {
-        super(new Box(World.distanceUnit * 1.0f, World.distanceUnit * 0.5f), weight);
-        this.world = world;
-        this.animation = world.getBatAnimation();
-        setRotatable(false);
-        setGravityEffected(false);
-        this.animation.getFirst().start();
-    }
+	public Bat(World world) {
+		super(new Box(World.distanceUnit * 1.0f, World.distanceUnit * 0.5f),
+				weight);
+		this.world = world;
+		this.animation = world.getBatAnimation();
+		setRotatable(false);
+		setGravityEffected(false);
+		this.animation.getFirst().start();
+	}
 
-    public boolean isDead() {
-        return isDead;
-    }
+	public boolean isDead() {
+		return isDead;
+	}
 
-    @Override
-    public strictfp void collided(Body other) {
-        if (other instanceof Hero) {
-            CollisionEvent[] events = world.getContacts(this);
-            Hero hero = (Hero) other;
-            for (int i = 0; i < events.length; i++) {
-                CollisionEvent event = events[i];
-                if (event.getBodyB() == hero) {
-                    Vector2f normal = new Vector2f(event.getNormal());
-                    float angle = Vector.angle(normal, world.getGravityVector());
-                    if (angle < Math.PI / 4.0f) {
-                        hero.hurtByBat();
-                    } else {
-                        hero.killedBat();
-                        isDead = true;
-                    }
-                } else if (event.getBodyA() == hero) {
-                    Vector2f normal = new Vector2f(event.getNormal());
-                    float angle = Vector.angle(normal, world.getGravityVector());
-                    if (angle > Math.PI / 4.0f) {
-                        hero.hurtByBat();
-                    } else {
-                        hero.killedBat();
-                        isDead = true;
-                    }
-                }
-            }
-        }
-        if (isDead) {
-            setMoveable(false);
-        }
-    }
+	@Override
+	public strictfp void collided(Body other) {
+		if (!isDead) {
+			if (other instanceof Hero) {
+				CollisionEvent[] events = world.getContacts(this);
+				Hero hero = (Hero) other;
+				for (int i = 0; i < events.length; i++) {
+					CollisionEvent event = events[i];
+					if (event.getBodyB() == hero) {
+						Vector2f normal = new Vector2f(event.getNormal());
+						float angle = Vector.angle(normal,
+								world.getGravityVector());
+						if (angle < Math.PI / 4.0f) {
+							hero.hurtByBat();
+						} else {
+							hero.killedBat();
+							isDead = true;
+						}
+					} else if (event.getBodyA() == hero) {
+						Vector2f normal = new Vector2f(event.getNormal());
+						float angle = Vector.angle(normal,
+								world.getGravityVector());
+						if (angle > Math.PI / 4.0f) {
+							hero.hurtByBat();
+						} else {
+							hero.killedBat();
+							isDead = true;
+						}
+					}
+				}
+			}
+			if (isDead) {
+				setMoveable(false);
+			}
+		}
+	}
 
-    public Animation getAnimation() {
-        return animation.getFirst();
-    }
+	public Animation getAnimation() {
+		return animation.getFirst();
+	}
 
-    @Override
-    public void draw() {
-        world.getView().drawBat(this,scale,getAnimation().getCurrentFrame(), world);
-    }
+	@Override
+	public void draw() {
+		world.getView().drawBat(this, scale, getAnimation().getCurrentFrame(),
+				world);
+	}
 
-    @Override
-    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-        if (isDead) {
-            if (beginOfDyingDuration < 0) {
-                beginOfDyingDuration = frameTimeInfos.currentTime;
-            } else {
-                scale = 1.0f - (frameTimeInfos.currentTime - beginOfDyingDuration) / (float) dyingDuration;
-                if (scale <= 0) {
-                    world.remove(this);
-                }
-            }
-            return;
-        }
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		if (isDead) {
+			if (beginOfDyingDuration < 0) {
+				beginOfDyingDuration = frameTimeInfos.currentTime;
+			} else {
+				scale = 1.0f
+						- (frameTimeInfos.currentTime - beginOfDyingDuration)
+						/ (float) dyingDuration;
+				if (scale <= 0) {
+					world.remove(this);
+				}
+			}
+			return;
+		}
 
-        if (frameTimeInfos.currentTime > nextChangeDirectionTime) {
-            nextChangeDirectionTime = frameTimeInfos.currentTime + (long)(Math.random() * maxMoveStraightDuration);
+		if (frameTimeInfos.currentTime > nextChangeDirectionTime) {
+			nextChangeDirectionTime = frameTimeInfos.currentTime
+					+ (long) (Math.random() * maxMoveStraightDuration);
 
-            Matrix2f rot = new Matrix2f((float) (Math.random() * 2.0f * Math.PI));
-            directionVelocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(world.getGravityForce() * speed, 0));
-        } else {
-            adjustBiasedVelocity(directionVelocity);
-        }
-        getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
-    }
+			Matrix2f rot = new Matrix2f(
+					(float) (Math.random() * 2.0f * Math.PI));
+			directionVelocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(
+					world.getGravityForce() * speed, 0));
+		} else {
+			adjustBiasedVelocity(directionVelocity);
+		}
+		getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
+	}
 }

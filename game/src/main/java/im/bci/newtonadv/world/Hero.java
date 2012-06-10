@@ -99,7 +99,10 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 		}
 
 		this.nbApple -= nbAppleLose;
-		levelScore.addLosedApple(nbAppleLose);
+		if(nbAppleLose>0) {
+			levelScore.addLosedApple(nbAppleLose);
+		}
+		world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), nbAppleLose * levelScore.getLosedAppleValue()));
 		for (int i = 0; i < nbAppleLose; ++i) {
 			world.addTopLevelEntities(new LosedApple(world, this.getPosition()));
 		}
@@ -122,14 +125,17 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 
 	void killedMummy() {
 		levelScore.addKilledMummy();
+		world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), levelScore.getKilledMummyValue()));
 	}
 
 	void killedBat() {
 		levelScore.addKilledBat();
+		world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), levelScore.getKilledBatValue()));
 	}
 
 	void killedEgyptianBoss() {
 		levelScore.addKilledEgyptianBoss();
+		world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), levelScore.getKilledEgyptianBossValue()));
 	}
 
 	LevelScore getLevelScore() {
@@ -160,8 +166,10 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 		if (body instanceof Apple) {
 			++nbApple;
 			levelScore.addApple(1);
+			world.addTopLevelEntities(new ScoreVisualIndicator(world, body.getPosition(), levelScore.getAppleValue()));
 		} else if (body instanceof Coin) {
 			levelScore.addCoin(1);
+			world.addTopLevelEntities(new ScoreVisualIndicator(world, body.getPosition(), levelScore.getCoinValue()));
 		} else if (body instanceof WorldMap) {
 			hasMap = true;
 		} else if (body instanceof Compass) {

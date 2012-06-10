@@ -65,6 +65,7 @@ import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.Platform;
+import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
@@ -175,4 +176,8 @@ public interface IGameView {
 	void drawMinimap(World world, ITexture minimapTexture);
 
 	void drawKeyLock(KeyLock keyLock, float alpha);
+
+	void drawScoreVisualIndicator(World world, ScoreVisualIndicator scoreVisualIndicator);
+
+	ITrueTypeFont createScoreIndicatorFont(String questName, String levelName);
 }

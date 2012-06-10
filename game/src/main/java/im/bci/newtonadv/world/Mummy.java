@@ -44,162 +44,178 @@ import net.phys2d.raw.shapes.Circle;
 import im.bci.newtonadv.util.Vector;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 
-    private AnimationCollection animation;
-    private static final float weight = 1.0f;
-    private static final float horizontalSpeed = 4.0f;
-    private static final long moveStraightDuration = 4000000000L;
-    private long nextChangeDirectionTime = 0;
-    private boolean isDead = false;
-    private static final long dyingDuration = 1000000000L;
-    private long beginOfDyingDuration = -1;
-    private float scale = 1;
+	private AnimationCollection animation;
+	private static final float weight = 1.0f;
+	private static final float horizontalSpeed = 4.0f;
+	private static final long moveStraightDuration = 4000000000L;
+	private long nextChangeDirectionTime = 0;
+	private boolean isDead = false;
+	private static final long dyingDuration = 1000000000L;
+	private long beginOfDyingDuration = -1;
+	private float scale = 1;
 
-    public Movement getCurrentMovement() {
-        return currentMovement;
-    }
+	public Movement getCurrentMovement() {
+		return currentMovement;
+	}
 
-    public boolean isDead() {
-        return isDead;
-    }
+	public boolean isDead() {
+		return isDead;
+	}
 
-    private void setCurrentMovement(Movement currentMovement) {
-        if (this.currentMovement != currentMovement) {
-            this.previousMovement = this.currentMovement;
-            this.currentMovement = currentMovement;
-            if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
-                getAnimation().stop();
-            } else {
-                getAnimation().start();
-            }
-        }
-    }
+	private void setCurrentMovement(Movement currentMovement) {
+		if (this.currentMovement != currentMovement) {
+			this.previousMovement = this.currentMovement;
+			this.currentMovement = currentMovement;
+			if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
+				getAnimation().stop();
+			} else {
+				getAnimation().start();
+			}
+		}
+	}
 
-    public enum Movement {
+	public enum Movement {
 
-        GOING_LEFT,
-        GOING_RIGHT,
-        NOT_GOING_ANYWHERE
-    }
-    private Movement currentMovement = Movement.NOT_GOING_ANYWHERE;
-    Movement previousMovement = Movement.NOT_GOING_ANYWHERE;
-    private World world;
+		GOING_LEFT, GOING_RIGHT, NOT_GOING_ANYWHERE
+	}
 
-    public Mummy(World world) {
-        super(new Circle(World.distanceUnit), weight);
-        this.world = world;
-        this.animation = world.getMummyAnimation();
-        setRotatable(false);
-    }
+	private Movement currentMovement = Movement.NOT_GOING_ANYWHERE;
+	Movement previousMovement = Movement.NOT_GOING_ANYWHERE;
+	private World world;
 
-    @Override
-    public strictfp void collided(Body other) {
-        if (other instanceof Hero) {
-            CollisionEvent[] events = world.getContacts(this);
-            Hero hero = (Hero) other;
-            for (int i = 0; i < events.length; i++) {
-                CollisionEvent event = events[i];
-                if (event.getBodyB() == hero) {
-                    Vector2f normal = new Vector2f(event.getNormal());
-                    float angle = Vector.angle(normal, world.getGravityVector());
-                    if (angle < Math.PI / 4.0f) {
-                        hero.hurtByMummy();
-                    } else {
-                        isDead = true;
-                        hero.killedMummy();
-                    }
-                } else if (event.getBodyA() == hero) {
-                    Vector2f normal = new Vector2f(event.getNormal());
-                    float angle = Vector.angle(normal, world.getGravityVector());
-                    if (angle > Math.PI / 4.0f) {
-                        hero.hurtByMummy();
-                    } else {
-                        isDead = true;
-                        hero.killedMummy();
-                    }
-                }
-            }
-        }
-        if (isDead) {
-            setMoveable(false);
-        }
-    }
+	public Mummy(World world) {
+		super(new Circle(World.distanceUnit), weight);
+		this.world = world;
+		this.animation = world.getMummyAnimation();
+		setRotatable(false);
+	}
 
-    public boolean isLookingLeft() {
-        return isMovingLeft() || (isNotGoingAnywhere() && previousMovement == Movement.GOING_LEFT);
-    }
+	@Override
+	public strictfp void collided(Body other) {
+		if (!isDead) {
+			if (other instanceof Hero) {
+				CollisionEvent[] events = world.getContacts(this);
+				Hero hero = (Hero) other;
+				for (int i = 0; i < events.length; i++) {
+					CollisionEvent event = events[i];
+					if (event.getBodyB() == hero) {
+						Vector2f normal = new Vector2f(event.getNormal());
+						float angle = Vector.angle(normal,
+								world.getGravityVector());
+						if (angle < Math.PI / 4.0f) {
+							hero.hurtByMummy();
+						} else {
+							isDead = true;
+							hero.killedMummy();
+						}
+					} else if (event.getBodyA() == hero) {
+						Vector2f normal = new Vector2f(event.getNormal());
+						float angle = Vector.angle(normal,
+								world.getGravityVector());
+						if (angle > Math.PI / 4.0f) {
+							hero.hurtByMummy();
+						} else {
+							isDead = true;
+							hero.killedMummy();
+						}
+					}
+				}
+			}
+			if (isDead) {
+				setMoveable(false);
+			}
+		}
+	}
 
-    public boolean isMovingLeft() {
-        return getCurrentMovement() == Movement.GOING_LEFT;
-    }
+	public boolean isLookingLeft() {
+		return isMovingLeft()
+				|| (isNotGoingAnywhere() && previousMovement == Movement.GOING_LEFT);
+	}
 
-    public boolean isNotGoingAnywhere() {
-        return getCurrentMovement() == Movement.NOT_GOING_ANYWHERE;
-    }
+	public boolean isMovingLeft() {
+		return getCurrentMovement() == Movement.GOING_LEFT;
+	}
 
-    public void step() {
-        if (isResting()) {
-            setCurrentMovement(Movement.NOT_GOING_ANYWHERE);
-        }
-    }
+	public boolean isNotGoingAnywhere() {
+		return getCurrentMovement() == Movement.NOT_GOING_ANYWHERE;
+	}
 
-    public Animation getAnimation() {
-        return animation.getFirst();
-    }
+	public void step() {
+		if (isResting()) {
+			setCurrentMovement(Movement.NOT_GOING_ANYWHERE);
+		}
+	}
 
-    @Override
-    public void draw() {
-        world.getView().drawMummy(this,world,getAnimation().getCurrentFrame(),scale);
-    }
+	public Animation getAnimation() {
+		return animation.getFirst();
+	}
 
-    @Override
-    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-        if (isDead) {
-            if (beginOfDyingDuration < 0) {
-                beginOfDyingDuration = frameTimeInfos.currentTime;
-            } else {
-                scale = 1.0f - (frameTimeInfos.currentTime - beginOfDyingDuration) / (float) dyingDuration;
-                if (scale <= 0) {
-                    world.remove(this);
-                }
-            }
-            return;
-        }
+	@Override
+	public void draw() {
+		world.getView().drawMummy(this, world,
+				getAnimation().getCurrentFrame(), scale);
+	}
 
-        if (frameTimeInfos.currentTime > nextChangeDirectionTime) {
-            nextChangeDirectionTime = frameTimeInfos.currentTime + moveStraightDuration;
-            if (isMovingLeft()) {
-                moveRight(1.0f);
-            } else {
-                moveLeft(1.0f);
-            }
-        } else {
-            if (isMovingLeft()) {
-                moveLeft(1.0f);
-            } else {
-                moveRight(1.0f);
-            }
-        }
-        if (!isNotGoingAnywhere()) {
-            getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
-        }
-    }
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		if (isDead) {
+			if (beginOfDyingDuration < 0) {
+				beginOfDyingDuration = frameTimeInfos.currentTime;
+			} else {
+				scale = 1.0f
+						- (frameTimeInfos.currentTime - beginOfDyingDuration)
+						/ (float) dyingDuration;
+				if (scale <= 0) {
+					world.remove(this);
+				}
+			}
+			return;
+		}
 
-    private void moveLeft(float step) {
-        Matrix2f rot = new Matrix2f(world.getGravityAngle() /*+ (float) Math.PI / 4.0f*/);
-        Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step * -world.getGravityForce() * horizontalSpeed, 0.0f));
-        adjustBiasedVelocity(velocity);
-        setCurrentMovement(Mummy.Movement.GOING_LEFT);
-    }
+		if (frameTimeInfos.currentTime > nextChangeDirectionTime) {
+			nextChangeDirectionTime = frameTimeInfos.currentTime
+					+ moveStraightDuration;
+			if (isMovingLeft()) {
+				moveRight(1.0f);
+			} else {
+				moveLeft(1.0f);
+			}
+		} else {
+			if (isMovingLeft()) {
+				moveLeft(1.0f);
+			} else {
+				moveRight(1.0f);
+			}
+		}
+		if (!isNotGoingAnywhere()) {
+			getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
+		}
+	}
 
-    private void moveRight(float step) {
-        Matrix2f rot = new Matrix2f(world.getGravityAngle() /*+ (float) Math.PI / 4.0f*/);
-        Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step * world.getGravityForce() * horizontalSpeed, 0.0f));
-        adjustBiasedVelocity(velocity);
-        setCurrentMovement(Mummy.Movement.GOING_RIGHT);
-    }
+	private void moveLeft(float step) {
+		Matrix2f rot = new Matrix2f(world.getGravityAngle() /*
+															 * + (float) Math.PI
+															 * / 4.0f
+															 */);
+		Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step
+				* -world.getGravityForce() * horizontalSpeed, 0.0f));
+		adjustBiasedVelocity(velocity);
+		setCurrentMovement(Mummy.Movement.GOING_LEFT);
+	}
+
+	private void moveRight(float step) {
+		Matrix2f rot = new Matrix2f(world.getGravityAngle() /*
+															 * + (float) Math.PI
+															 * / 4.0f
+															 */);
+		Vector2f velocity = net.phys2d.math.MathUtil.mul(rot, new Vector2f(step
+				* world.getGravityForce() * horizontalSpeed, 0.0f));
+		adjustBiasedVelocity(velocity);
+		setCurrentMovement(Mummy.Movement.GOING_RIGHT);
+	}
 }

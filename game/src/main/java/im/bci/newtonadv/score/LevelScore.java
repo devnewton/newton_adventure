@@ -59,7 +59,13 @@ public class LevelScore {
                 return 0;
         }
     };
-    
+	private static final int appleValue = 1;
+	private static final int coinValue = 5;
+	private static final int losedAppleValue = -2;
+	private static final int killedBatValue = 4;
+	private static final int killedMummyValue = 3;
+	private static final int killedEgyptianBossValue = 10;
+	
     public void addKilledMummy() {
         ++nbKilledMummy;
     }
@@ -81,10 +87,34 @@ public class LevelScore {
     }
     
     public int computeScore() {
-        return nbKilledMummy * 3 + nbKilledBat * 4 + nbKilledEgyptianBoss * 10 + nbCoin * 5 +  nbApple - nbLosedApple * 2;
+        return nbKilledMummy * killedMummyValue + nbKilledBat * killedBatValue + nbKilledEgyptianBoss * killedEgyptianBossValue + nbCoin * coinValue +  nbApple * appleValue + nbLosedApple * losedAppleValue;
     }
 
     public void addCoin(int n) {
         this.nbCoin += n;
     }
+
+	public final int getAppleValue() {
+		return appleValue;
+	}
+
+	public int getCoinValue() {
+		return coinValue;
+	}
+
+	public int getKilledBatValue() {
+		return killedBatValue;
+	}
+
+	public int getKilledMummyValue() {
+		return killedMummyValue;
+	}
+
+	public int getKilledEgyptianBossValue() {
+		return killedEgyptianBossValue;
+	}
+
+	public int getLosedAppleValue() {
+		return losedAppleValue;
+	}
 }

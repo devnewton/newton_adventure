@@ -72,6 +72,7 @@ import im.bci.newtonadv.world.MovingPlatform;
 import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.Platform;
+import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
@@ -1570,5 +1571,34 @@ public strictfp class GameView implements IGameView {
 		drawPlatform(keyLock);
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GL11.glDisable(GL11.GL_BLEND);
+	}
+
+	@Override
+	public void drawScoreVisualIndicator(World world,
+			ScoreVisualIndicator scoreVisualIndicator) {
+		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+
+		ITrueTypeFont font = world.getScoreIndicatorFont();
+		String value = scoreVisualIndicator.getValue();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(scoreVisualIndicator.getPosition().getX(), scoreVisualIndicator.getPosition().getY(),
+				0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		GL11.glScalef(scoreVisualIndicator.getSize() * 0.1f, scoreVisualIndicator.getSize() * 0.1f, 1.0f);
+		GL11.glTranslatef(-font.getWidth(value) / 2.0f, -font.getHeight(value) / 2.0f,
+				0.0f);
+		font.drawString(value);
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
+		
+	}
+
+	@Override
+	public ITrueTypeFont createScoreIndicatorFont(String questName,
+			String levelName) {
+		return new TrueTypeFont(this.data, new Font("arial", Font.BOLD, 24), true);
 	}
 }

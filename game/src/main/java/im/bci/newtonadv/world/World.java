@@ -34,6 +34,7 @@ package im.bci.newtonadv.world;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.Entity;
@@ -118,6 +119,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	private ArrayList<Runnable> postStepActions = new ArrayList<Runnable>();
 	private ArrayList<PostUpdateAction> postUpdateActions = new ArrayList<PostUpdateAction>();
 	private boolean isRotateGravityPossible = true;
+	private ITrueTypeFont scoreIndicatorFont;
 
 	public static interface PostUpdateAction {
 
@@ -158,13 +160,14 @@ public strictfp class World extends net.phys2d.raw.World {
 		return hero;
 	}
 
-	public World(Game game, String questName, String levelName) {
+	public World(Game game, String questName, String levelName, ITrueTypeFont scoreIndicatorFont) {
 		super(new Vector2f(0.0f, -gravityForce), 2,
 				new StaticQuadSpaceStrategy(20, 5));
 		this.game = game;
 		progressiveRotateGravity(0.0f);
 		this.questName = questName;
 		this.levelName = levelName;
+		this.scoreIndicatorFont = scoreIndicatorFont;
 	}
 
 	public AbsoluteAABox getStaticBounds() {
@@ -1029,5 +1032,9 @@ public strictfp class World extends net.phys2d.raw.World {
 				game.showHelp();
 			}
 		});
+	}
+
+	public ITrueTypeFont getScoreIndicatorFont() {
+		return scoreIndicatorFont;
 	}
 }

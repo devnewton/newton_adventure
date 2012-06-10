@@ -58,6 +58,7 @@ strictfp public class LevelSequence implements Sequence {
 	private boolean cheatCodeGotoNextLevel = false;
 	private boolean cheatCodeGotoNextBonusLevel = false;
 	private ITexture minimapTexture;
+	private ITrueTypeFont scoreIndicatorsFont;
 
 	public LevelSequence(Game game, String questName, String levelName) {
 		this.game = game;
@@ -71,7 +72,8 @@ strictfp public class LevelSequence implements Sequence {
             cheatCodeGotoNextLevel = false;
             cheatCodeGotoNextBonusLevel = false;
             indicatorsFont = game.getView().createAppleFont(questName,levelName);
-            world = new World(game, questName, levelName);
+            scoreIndicatorsFont = game.getView().createScoreIndicatorFont(questName,levelName);
+            world = new World(game, questName, levelName,scoreIndicatorsFont);
             frameTimeInfos = game.getFrameTimeInfos();
             world.loadLevel();
             
@@ -89,6 +91,8 @@ strictfp public class LevelSequence implements Sequence {
 	@Override
 	public void stop() {
 		indicatorsFont.destroy();
+		scoreIndicatorsFont.destroy();
+		scoreIndicatorsFont = null;
 		indicatorsFont = null;
 		world = null;
 	}
