@@ -1,5 +1,7 @@
 package tiled.mapeditor.dialogs;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -51,13 +53,15 @@ public class ConvertImageToTileLayerDialog extends PropertiesDialog {
 		int tileHeight = tileHeightSpinner.intValue();
 		int xTileIncrement = Math.max(1, tileWidth / map.getTileWidth());
 		int yTileIncrement = Math.max(1, tileHeight / map.getTileHeight());
+		
+		adjustImage(tileWidth, tileHeight);
 
 		TileLayer layer = map.addLayer();
 		TileSet tileset = new TileSet();
 		tileset.setName(layer.getName());
 		map.addTileset(tileset);
 		for (int x = 0, ximg = 0; x < map.getWidth(); x += xTileIncrement, ximg += tileWidth) {
-			for (int y = xTileIncrement / 2, yimg = 0; y < map.getHeight(); y += yTileIncrement, yimg += tileHeight) {
+			for (int y = xTileIncrement - 1, yimg = 0; y < map.getHeight(); y += yTileIncrement, yimg += tileHeight) {
 				BufferedImage tileImage = getSubimage(ximg, yimg, tileWidth, tileHeight);
 				if (hasContent(tileImage)) {
 					Tile tile = new Tile();
@@ -68,6 +72,18 @@ public class ConvertImageToTileLayerDialog extends PropertiesDialog {
 				}
 			}
 		}
+	}
+
+	private void adjustImage(int tileWidth, int tileHeight) {
+		int adjustedImageWidth = Math.round((float)image.getTileWidth() / (float)tileWidth) * tileWidth;
+		int adjustedImageHeight = Math.round((float)image.getTileHeight() / (float)tileHeight) * tileHeight;
+		BufferedImage adjustedImage = new BufferedImage(adjustedImageWidth, adjustedImageHeight, image.getType());
+		Graphics2D g = adjustedImage.createGraphics();
+		g.setBackground(new Color(0, 0, 0, 0));
+		g.clearRect(0, 0, adjustedImageWidth, adjustedImageHeight);
+		g.drawImage(image, 0, 0, null);
+		g.dispose();
+		image = adjustedImage;
 	}
 
 	private BufferedImage getSubimage(int x, int y, int w, int h) {
