@@ -40,6 +40,8 @@ import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 /**
  * 
  * @author devnewton
@@ -48,9 +50,9 @@ public class Main {
 
 	static void setupLibraryPath() {
 		if (System.getProperty("javawebstart.version") != null) {
-	        return;
+			return;
 		}
-		
+
 		String libraryPath = System.getProperty("java.library.path");
 		if (libraryPath != null && libraryPath.contains("native"))
 			return;
@@ -102,14 +104,38 @@ public class Main {
 	public static void main(String[] args) throws IOException,
 			ClassNotFoundException, Exception {
 
-		setupLibraryPath();
+		Game game;
+		try {
+			setupLibraryPath();
 
-		final IPlatformSpecific platform = new PlatformSpecific();
-		final Game game = new Game(platform);
-		game.start();
-		while (game.isRunning()) {
+			final IPlatformSpecific platform = new PlatformSpecific();
+			game = new Game(platform);
+			game.start();
 			game.tick();
+		} catch (Throwable e) {
+			handleError(e, "Unexpected error during newton adventure startup. Check your java version and your opengl driver.\n");
+			return;
 		}
-		System.exit(0);
+
+		try {
+			while (game.isRunning()) {
+				game.tick();
+			}
+		} catch (Throwable e) {
+			handleError(e, "Unexpected error during newton adventure execution.\n");
+			return;
+		}
+	}
+
+	private static void handleError(Throwable e, final String defaultMessage) {
+		Logger.getLogger(Main.class.getName()).log(Level.SEVERE,
+				defaultMessage, e);
+		JOptionPane.showMessageDialog(null,
+				defaultMessage
+						+ "\n"
+						+ e.getMessage()
+						+ (e.getCause() != null ? "\nCause: "
+								+ e.getCause().getMessage() : ""), "Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 }
