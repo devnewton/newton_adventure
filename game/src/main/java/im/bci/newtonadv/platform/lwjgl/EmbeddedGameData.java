@@ -84,4 +84,5 @@ class EmbeddedGameData extends AbstractGameData {
 	public InputStream openFile(String path) throws FileNotFoundException {
 		return getClass().getClassLoader().getResourceAsStream(path);
 	}
+
 }

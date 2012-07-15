@@ -31,6 +31,13 @@ abstract class AbstractGameData implements IGameData {
 						+ "/" + levelName + ".tmx";
 				return openFile(path);
 			}
+	@Override
+	public InputStream openLevelNal(String questName, String levelName) throws Exception {
+		String path = dataDir + "quests/" + questName + "/levels/" + levelName
+				+ "/" + levelName + ".nal";
+		return openFile(path);
+	}
+
 
 	@Override
 	public String getLevelFilePath(String questName, String levelName, String filename) {

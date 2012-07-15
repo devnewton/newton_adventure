@@ -14,11 +14,13 @@ public interface IGameData {
 
     List<String> listQuestLevels(String questName);
 
-    InputStream openLevelTmx(String questName, String levelName)  throws Exception;
+    InputStream openLevelTmx(String questName, String levelName) throws Exception;
 
 	String getLevelFilePath(String questName, String levelName, String filename);
 
 	InputStream openFile(String path) throws IOException;
 
 	boolean fileExists(String minimapPath);
+
+	InputStream openLevelNal(String questName, String levelName) throws Exception;
 }

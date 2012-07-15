@@ -42,6 +42,7 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.Shape;
 
 /**
  *
@@ -65,6 +66,16 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements Upd
         this.w = w;
         this.h = h;
     }
+    
+    Platform(World world, Shape shp) {
+        super(shp);
+        setFriction(10.0f);
+        addBit(World.STATIC_BODY_COLLIDE_BIT);
+        this.world = world;
+        this.w = shp.getBounds().getWidth();
+        this.h = shp.getBounds().getHeight();
+    }
+  
     
     @Override
 	public  void setPosition(float x, float y) {

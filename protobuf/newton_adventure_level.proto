@@ -1,0 +1,210 @@
+package im.bci.newtonadv;
+
+option java_outer_classname = "NewtonAdventureLevelParser";
+
+message AnimationReference {
+    required string file = 1;
+    optional string name = 2;
+}
+
+message Circle {
+    required float size = 1;
+}
+
+message Rectangle {
+    required float width = 1;
+    required float height = 2;
+}
+
+message Vertex {
+    required float x = 1;
+    required float y = 2;
+}
+
+message ConvexPolygon {
+    repeated Vertex vertices = 1;
+}
+
+message Shape {
+    optional Circle circle = 1;
+    optional Rectangle rectangle = 2;
+    optional ConvexPolygon polygon = 3;
+}
+
+message Position {
+    required float x = 1;
+    required float y = 2;
+}
+
+message Path {
+    repeated Position positions = 1;
+}
+
+message Pikes {
+    enum DangerousSide {
+            UP = 1;
+            DOWN = 2;
+            LEFT = 3;
+            RIGHT = 4;
+    }
+    required DangerousSide dangerous_side = 1;
+    optional AnimationReference animation = 2;
+}
+
+message Platform {
+    required bool enabled = 1;
+    optional float friction = 2;
+    optional AnimationReference animation = 3;
+}
+
+message BouncePlatform {
+    optional AnimationReference animation = 1;
+}
+
+message Cannon {
+    enum Orientation {
+            UP = 1;
+            DOWN = 2;
+            LEFT = 3;
+            RIGHT = 4;
+    }
+    required Orientation orientation = 1;
+    optional AnimationReference animation = 2;
+}
+
+message Mummy {
+    required AnimationReference animation = 1;
+}
+
+
+message Bat {
+    required AnimationReference animation = 1;
+}
+
+message Apple {
+    required AnimationReference animation = 1;
+}
+
+message Coin {
+    required AnimationReference animation = 1;
+}
+
+message Key {
+    required AnimationReference animation = 1;
+}
+
+message Door {
+    required AnimationReference animation = 1;
+}
+
+message DoorToBonusWorld {
+    required AnimationReference animation = 1;
+}
+
+message Cloud {
+    required AnimationReference animation = 1;
+}
+
+message WorldMap {
+    required AnimationReference animation = 1;
+}
+
+message Compass {
+    required AnimationReference animation = 1;
+}
+
+message MobilePikeAnchor {
+    required AnimationReference animation = 1;
+    required AnimationReference mobile_pikes_animation = 2;
+}
+
+message AxeAnchor {
+    required AnimationReference animation = 1;
+    required AnimationReference axe_animation = 2;
+}
+
+message Activator {
+    required int32 activableId = 1;
+    required AnimationReference on_animation = 2;
+    required AnimationReference off_animation = 3;
+}
+
+message MemoryActivator {
+    required int32 activableId = 1;
+    required AnimationReference on_animation = 2;
+    required AnimationReference off_animation = 3;
+    required AnimationReference hide_animation = 4;
+}
+
+message Blocker {
+    required int32 activableId = 1;
+    required AnimationReference on_animation = 2;
+    required AnimationReference off_animation = 3;
+}
+
+message MovingPlatform {
+    required AnimationReference animation = 1;
+    required Path path = 2;
+}
+
+message Teleporter {
+    required AnimationReference animation = 1;
+    required string color = 2;
+}
+
+message KeyLock {
+    required AnimationReference animation = 1;
+}
+
+message HelpSign {
+    required AnimationReference animation = 1;
+}
+
+message EgyptianBoss {
+    required AnimationReference body_animation = 1;
+    required AnimationReference hand_animation = 2;
+}
+
+message Hero {
+    required AnimationReference animation = 1;
+}
+
+message EntityType {
+    required string name = 1;
+    required Shape shape = 2;
+    optional Pikes pikes = 3;
+    optional Platform platform = 4;
+    optional BouncePlatform bounce_platform = 5;
+    optional Cannon cannon = 6;
+    optional Mummy mummy = 7;
+    optional Bat bat = 8;
+    optional Apple apple = 9;
+    optional Coin coin = 10;
+    optional Key key = 11;
+    optional Door door = 12;
+    optional DoorToBonusWorld door_to_bonus_world = 13;
+    optional Cloud cloud = 14;
+    optional WorldMap world_map = 15;
+    optional Compass compass = 16;
+    optional MobilePikeAnchor mobile_pike_anchor = 17;
+    optional AxeAnchor axe_anchor = 18;
+    optional Activator activator = 19;
+    optional MemoryActivator memory_activator = 20;
+    optional MovingPlatform moving_platform = 21;
+    optional Teleporter teleporter = 22;
+    optional KeyLock keyLock = 23;
+    optional HelpSign help_sign = 24;
+    optional EgyptianBoss egyptian_boss = 25;
+    optional Hero hero = 26;
+}
+
+message Entity {
+    required string type = 1;
+    required Position position = 2;
+    required int32 zorder = 3;
+}
+
+message Level {
+    repeated EntityType entity_types = 1;
+    repeated Entity entities = 2;
+}

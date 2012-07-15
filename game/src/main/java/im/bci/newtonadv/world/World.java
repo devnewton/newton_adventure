@@ -56,6 +56,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
+
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.BasicJoint;
@@ -70,6 +72,7 @@ import tiled.io.TMXMapReader;
  */
 public strictfp class World extends net.phys2d.raw.World {
 
+	private static final Logger LOGGER = Logger.getLogger(World.class.getName());
 	static final int STATIC_BODY_COLLIDE_BIT = 1;
 	boolean mustDrawContacts = false;
 	boolean mustDrawNormals = false;
@@ -160,7 +163,8 @@ public strictfp class World extends net.phys2d.raw.World {
 		return hero;
 	}
 
-	public World(Game game, String questName, String levelName, ITrueTypeFont scoreIndicatorFont) {
+	public World(Game game, String questName, String levelName,
+			ITrueTypeFont scoreIndicatorFont) {
 		super(new Vector2f(0.0f, -gravityForce), 2,
 				new StaticQuadSpaceStrategy(20, 5));
 		this.game = game;
@@ -283,7 +287,8 @@ public strictfp class World extends net.phys2d.raw.World {
 		defaultMapProperties.put("newton_adventure.blocker2", "blocker2.png");
 		defaultMapProperties.put("newton_adventure.blocker3", "blocker3.png");
 		defaultMapProperties.put("newton_adventure.music", "hopnbop.ogg");
-		defaultMapProperties.put("newton_adventure.rotate_gravity_possible", "true");
+		defaultMapProperties.put("newton_adventure.rotate_gravity_possible",
+				"true");
 	}
 
 	public String getFileFromMap(tiled.core.Map map, String filePropertyName) {
@@ -308,116 +313,144 @@ public strictfp class World extends net.phys2d.raw.World {
 		}
 		return game.getData().getLevelFilePath(questName, levelName, filename);
 	}
-	
+
 	private String getMapProperty(tiled.core.Map map, String prop) {
 		String value = map.getProperties().getProperty(prop);
-		if(null == value) {
+		if (null == value) {
 			return defaultMapProperties.getProperty(prop);
 		}
 		return value;
 	}
 
-	public void loadLevel() throws IOException, Exception {
-
-		TMXMapReader mapReader = new TMXMapReader();
-		tiled.core.Map map;
-		InputStream mapInputStream = game.getData().openLevelTmx(questName,
-				levelName);
+	private boolean loadNalLevel() {
 		try {
-			map = mapReader.readMap(mapInputStream);
-		} finally {
-			mapInputStream.close();
+		InputStream input = game.getData().openLevelNal(questName, levelName);
+		NalLoader loader = new NalLoader(this, input);
+		loader.load();
+		} catch(Exception e) {
+			
 		}
+		return true;
+	}
 
-		final ITextureCache textureCache = game.getView().getTextureCache();
-		explosionAnimation = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.explosion"));
-		mummyAnimation = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.mummy"));
-		batAnimation = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.bat"));
-		appleIconTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.apple"));
-		coinTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.coin"));
-		worldMapTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.world_map"));
-		compassTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.compass"));
-		fireBallTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.fireball"));
-		keyTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.key"));
-		closedDoorTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.door"));
-		openDoorTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.door_open"));
-		closedDoorToBonusWorldTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.door_to_bonus_world"));
-		openDoorToBonusWorldTexture = game.getView()
-				.loadFromAnimation(
-						getFileFromMap(map,
-								"newton_adventure.door_to_bonus_world_open"));
-		mobilePikesTexture = game.getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.mobilePikes"));
-		axeTexture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.axe"));
-		activator1OnTexture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.activator1.on"));
-		activator2OnTexture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.activator2.on"));
-		activator3OnTexture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.activator3.on"));
-		activator1OffTexture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.activator1.off"));
-		activator2OffTexture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.activator2.off"));
-		activator3OffTexture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.activator3.off"));
-		memoryActivatorHiddenTexture = getView()
-				.loadFromAnimation(
-						getFileFromMap(map,
-								"newton_adventure.memory_activator.hidden"));
-		blocker1Texture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.blocker1"));
-		blocker2Texture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.blocker2"));
-		blocker3Texture = getView().loadFromAnimation(
-				getFileFromMap(map, "newton_adventure.blocker3"));
+	public boolean loadLevel() {
+		return loadTmxLevel() || loadNalLevel();
+	}
 
-		int zorderBase = 0;
-		for (tiled.core.MapLayer layer : map.getLayers()) {
-			if (layer instanceof tiled.core.TileLayer) {
-				tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
-				for (int x = 0; x < tileLayer.getWidth(); ++x) {
-					for (int y = 0; y < tileLayer.getHeight(); ++y) {
-						Tile tile = tileLayer.getTileAt(x, y);
-						if (null != tile) {
-							initFromTile(x - map.getWidth() / 2.0f,
-									-y + map.getHeight() / 2.0f, map, tile,
-									zorderBase);
+	private boolean loadTmxLevel() {
+		try {
+			TMXMapReader mapReader = new TMXMapReader();
+			tiled.core.Map map;
+			InputStream mapInputStream = game.getData().openLevelTmx(questName,
+					levelName);
+			if (null == mapInputStream) {
+				return false;
+			}
+			try {
+				map = mapReader.readMap(mapInputStream);
+			} finally {
+				mapInputStream.close();
+			}
+
+			final ITextureCache textureCache = game.getView().getTextureCache();
+			explosionAnimation = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.explosion"));
+			mummyAnimation = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.mummy"));
+			batAnimation = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.bat"));
+			appleIconTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.apple"));
+			coinTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.coin"));
+			worldMapTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.world_map"));
+			compassTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.compass"));
+			fireBallTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.fireball"));
+			keyTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.key"));
+			closedDoorTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.door"));
+			openDoorTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.door_open"));
+			closedDoorToBonusWorldTexture = game.getView()
+					.loadFromAnimation(
+							getFileFromMap(map,
+									"newton_adventure.door_to_bonus_world"));
+			openDoorToBonusWorldTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map,
+							"newton_adventure.door_to_bonus_world_open"));
+			mobilePikesTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.mobilePikes"));
+			axeTexture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.axe"));
+			activator1OnTexture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.activator1.on"));
+			activator2OnTexture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.activator2.on"));
+			activator3OnTexture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.activator3.on"));
+			activator1OffTexture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.activator1.off"));
+			activator2OffTexture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.activator2.off"));
+			activator3OffTexture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.activator3.off"));
+			memoryActivatorHiddenTexture = getView().loadFromAnimation(
+					getFileFromMap(map,
+							"newton_adventure.memory_activator.hidden"));
+			blocker1Texture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.blocker1"));
+			blocker2Texture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.blocker2"));
+			blocker3Texture = getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.blocker3"));
+
+			int zorderBase = 0;
+			for (tiled.core.MapLayer layer : map.getLayers()) {
+				if (layer instanceof tiled.core.TileLayer) {
+					tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
+					for (int x = 0; x < tileLayer.getWidth(); ++x) {
+						for (int y = 0; y < tileLayer.getHeight(); ++y) {
+							Tile tile = tileLayer.getTileAt(x, y);
+							if (null != tile) {
+								initFromTile(x - map.getWidth() / 2.0f, -y
+										+ map.getHeight() / 2.0f, map, tile,
+										zorderBase);
+							}
 						}
 					}
 				}
+				zorderBase += 1000000;
 			}
-			zorderBase += 1000000;
-		}
 
-		String backgroundTextureFile = getFileFromMapIfAvailable(map,
-				"newton_adventure.background");
-		if (null != backgroundTextureFile) {
-			backgroundTexture = textureCache.getTexture(backgroundTextureFile);
+			String backgroundTextureFile = getFileFromMapIfAvailable(map,
+					"newton_adventure.background");
+			if (null != backgroundTextureFile) {
+				backgroundTexture = textureCache
+						.getTexture(backgroundTextureFile);
+			}
+			this.getHero().setAnimation(
+					game.getView().loadFromAnimation(
+							getFileFromMap(map, "newton_adventure.hero")));
+			this.getHero().setJumpSound(
+					game.getSoundCache().getSoundIfEnabled(
+							game.getData().getFile("jump.wav")));
+			game.getSoundCache().playMusicIfEnabled(
+					getFileFromMap(map, "newton_adventure.music"));
+
+			isRotateGravityPossible = "true".equals(getMapProperty(map,
+					"newton_adventure.rotate_gravity_possible"));
+			return true;
+		} catch (Exception e) {
+			LOGGER
+					.warning(
+							"Cannot load level " + levelName + " in quest "
+									+ questName);
+			return false;
 		}
-		this.getHero().setAnimation(
-				game.getView().loadFromAnimation(
-						getFileFromMap(map, "newton_adventure.hero")));
-		this.getHero().setJumpSound(
-				game.getSoundCache().getSoundIfEnabled(
-						game.getData().getFile("jump.wav")));
-		game.getSoundCache().playMusicIfEnabled(
-				getFileFromMap(map, "newton_adventure.music"));
-		
-		isRotateGravityPossible = "true".equals(getMapProperty(map, "newton_adventure.rotate_gravity_possible"));
 	}
 
 	public float getGravityAngle() {
@@ -425,7 +458,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public final void progressiveRotateGravity(float angle) {
-		if (isRotateGravityPossible ) {
+		if (isRotateGravityPossible) {
 			gravityAngle += angle;
 			Matrix2f rot = new Matrix2f(gravityAngle);
 			this.gravityVector = net.phys2d.math.MathUtil.mul(rot,
@@ -1024,7 +1057,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public void showHelp() {
-		
+
 		postUpdateActions.add(new PostUpdateAction() {
 
 			@Override
