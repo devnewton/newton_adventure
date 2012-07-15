@@ -31,13 +31,15 @@
  */
 package im.bci.newtonadv.world;
 
+import net.phys2d.raw.shapes.Shape;
+
 /**
  *
  * @author devnewton
  */
 public strictfp class WorldMap extends PickableObject {
     
-    WorldMap(World world) {
-        super(world);
+    WorldMap(World world, Shape shape) {
+        super(world, shape);
     } 
 }

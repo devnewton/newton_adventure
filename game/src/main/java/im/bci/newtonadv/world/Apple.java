@@ -31,14 +31,16 @@
  */
 package im.bci.newtonadv.world;
 
+import net.phys2d.raw.shapes.Shape;
+
 /**
  *
  * @author devnewton
  */
 public strictfp class Apple extends PickableObject {
     
-    Apple(World world) {
-        super(world);
+    Apple(World world, Shape shape) {
+        super(world, shape);
     }
     
     @Override

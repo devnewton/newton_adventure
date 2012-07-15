@@ -40,7 +40,7 @@ import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
-import net.phys2d.raw.shapes.Circle;
+import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.util.Vector;
 
 /**
@@ -88,10 +88,10 @@ public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 	Movement previousMovement = Movement.NOT_GOING_ANYWHERE;
 	private World world;
 
-	public Mummy(World world) {
-		super(new Circle(World.distanceUnit), weight);
+	public Mummy(World world, Shape shape, AnimationCollection animation) {
+		super(shape, weight);
 		this.world = world;
-		this.animation = world.getMummyAnimation();
+		this.animation = animation;
 		setRotatable(false);
 	}
 

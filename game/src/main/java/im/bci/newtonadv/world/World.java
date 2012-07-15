@@ -63,6 +63,8 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.BasicJoint;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
+import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.Circle;
 import tiled.core.Tile;
 import tiled.io.TMXMapReader;
 
@@ -145,14 +147,6 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	public AnimationCollection getFireBallTexture() {
 		return fireBallTexture;
-	}
-
-	AnimationCollection getMummyAnimation() {
-		return mummyAnimation;
-	}
-
-	AnimationCollection getBatAnimation() {
-		return batAnimation;
 	}
 
 	AnimationCollection getExplosionAnimation() {
@@ -481,6 +475,10 @@ public strictfp class World extends net.phys2d.raw.World {
 	float getGravityForce() {
 		return gravityForce;
 	}
+	
+
+    static final float defaultPickableObjectSize = 2.0f * World.distanceUnit;
+	private static final Circle defaultPickableObjectShape = new Circle(defaultPickableObjectSize / 2.0f);
 
 	private void initFromTile(float x, float y, tiled.core.Map map,
 			tiled.core.Tile tile, int zOrderBase) throws IOException {
@@ -542,36 +540,35 @@ public strictfp class World extends net.phys2d.raw.World {
 			hero.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(hero);
 		} else if (c.equals("mummy")) {
-			Mummy mummy = new Mummy(this);
+			Mummy mummy = new Mummy(this, new Circle(distanceUnit), mummyAnimation);
 			mummy.setPosition(tileX, tileY);
 			mummy.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(mummy);
 		} else if (c.equals("bat")) {
-			Bat bat = new Bat(this);
+			Bat bat = new Bat(this, new Box(distanceUnit * 1.0f, distanceUnit * 0.5f), batAnimation);
 			bat.setPosition(tileX, tileY);
 			bat.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(bat);
 		} else if (c.equals("apple")) {
-			Apple apple = new Apple(this);
-			++nbCollectableApple;
+			Apple apple = new Apple(this, defaultPickableObjectShape);
 			apple.setPosition(tileX, tileY);
 			apple.setTexture(appleIconTexture);
 			apple.setZOrder(getTileZOrder(tile, zOrderBase));
-			add(apple);
+			addApple(apple);
 		} else if (c.equals("coin")) {
-			Coin coin = new Coin(this);
+			Coin coin = new Coin(this, defaultPickableObjectShape);
 			coin.setPosition(tileX, tileY);
 			coin.setTexture(coinTexture);
 			coin.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(coin);
 		} else if (c.equals("world_map")) {
-			WorldMap worldMap = new WorldMap(this);
+			WorldMap worldMap = new WorldMap(this, defaultPickableObjectShape);
 			worldMap.setPosition(tileX, tileY);
 			worldMap.setTexture(worldMapTexture);
 			worldMap.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(worldMap);
 		} else if (c.equals("compass")) {
-			Compass compass = new Compass(this);
+			Compass compass = new Compass(this, defaultPickableObjectShape);
 			compass.setPosition(tileX, tileY);
 			compass.setTexture(compassTexture);
 			compass.setZOrder(getTileZOrder(tile, zOrderBase));
@@ -1069,5 +1066,10 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	public ITrueTypeFont getScoreIndicatorFont() {
 		return scoreIndicatorFont;
+	}
+
+	public void addApple(im.bci.newtonadv.world.Apple apple) {
+		++nbCollectableApple;
+		add(apple);
 	}
 }

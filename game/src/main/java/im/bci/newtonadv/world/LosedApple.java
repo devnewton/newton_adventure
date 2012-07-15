@@ -45,7 +45,7 @@ import net.phys2d.math.Vector2f;
  */
 public strictfp class LosedApple extends AbstractEntity {
 
-    float size = Apple.size / 2.0f;
+    private final float size;
     private World world;
     private AnimationFrame texture;
     private Vector2f position;
@@ -55,11 +55,12 @@ public strictfp class LosedApple extends AbstractEntity {
     private static final long livingDuration = 1000000000L;
     private float alpha = 1.0f;
 
-    LosedApple(World world, ROVector2f position) {
+    LosedApple(World world, ROVector2f position, float size) {
         this.world = world;
         this.texture = world.getAppleIconTexture();
         this.position = new Vector2f(position);
         this.direction = net.phys2d.math.MathUtil.mul(new Matrix2f((float) (Math.random() * Math.PI * 2.0)), new Vector2f(1, 0));
+        this.size = size;
     }
 
     @Override

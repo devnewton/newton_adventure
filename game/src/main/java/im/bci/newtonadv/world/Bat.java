@@ -40,7 +40,7 @@ import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
-import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.util.Vector;
 
 /**
@@ -61,11 +61,11 @@ public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 	private World world;
 	private Vector2f directionVelocity;
 
-	public Bat(World world) {
-		super(new Box(World.distanceUnit * 1.0f, World.distanceUnit * 0.5f),
+	public Bat(World world, Shape shape, AnimationCollection animation) {
+		super(shape,
 				weight);
 		this.world = world;
-		this.animation = world.getBatAnimation();
+		this.animation = animation;
 		setRotatable(false);
 		setGravityEffected(false);
 		this.animation.getFirst().start();

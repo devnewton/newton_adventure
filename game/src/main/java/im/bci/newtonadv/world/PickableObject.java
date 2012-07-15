@@ -37,7 +37,7 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.StaticBody;
-import net.phys2d.raw.shapes.Circle;
+import net.phys2d.raw.shapes.Shape;
 
 /**
  *
@@ -45,13 +45,12 @@ import net.phys2d.raw.shapes.Circle;
  */
 public abstract strictfp class PickableObject extends StaticBody implements Drawable, CollisionDetectionOnly, Updatable{
     
-    static final float size = 2.0f * World.distanceUnit;
     protected AnimationCollection texture;
     protected World world;
     private int zOrder = 0;
 
-    PickableObject(World world) {
-        super(new Circle(size / 2.0f));
+    PickableObject(World world, Shape shape) {
+        super(shape);
         this.world = world;
          addBit(World.STATIC_BODY_COLLIDE_BIT);
     }
@@ -60,7 +59,7 @@ public abstract strictfp class PickableObject extends StaticBody implements Draw
     public void collided(Body body) {
         if( body instanceof Hero) {
             removeFromWorld();
-            world.addTopLevelEntities( new PickedUpObject(world, texture.getFirst().getCurrentFrame(), getPosition(),size));
+            world.addTopLevelEntities( new PickedUpObject(world, texture.getFirst().getCurrentFrame(), getPosition(),getShape().getBounds().getWidth()));
         }
     }
 

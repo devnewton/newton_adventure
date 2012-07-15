@@ -31,13 +31,15 @@
  */
 package im.bci.newtonadv.world;
 
+import net.phys2d.raw.shapes.Shape;
+
 /**
  *
  * @author devnewton
  */
 public strictfp class Compass extends PickableObject {
     
-    Compass(World world) {
-        super(world);
+    Compass(World world, Shape shape) {
+        super(world, shape);
     } 
 }

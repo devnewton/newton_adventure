@@ -103,8 +103,9 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 			levelScore.addLosedApple(nbAppleLose);
 		}
 		world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), nbAppleLose * levelScore.getLosedAppleValue()));
+		final float losedAppleSize = getShape().getBounds().getWidth() / 4.0f;
 		for (int i = 0; i < nbAppleLose; ++i) {
-			world.addTopLevelEntities(new LosedApple(world, this.getPosition()));
+			world.addTopLevelEntities(new LosedApple(world, this.getPosition(), losedAppleSize));
 		}
 
 		this.isHurt = true;
