@@ -36,6 +36,7 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
+import net.phys2d.raw.shapes.Shape;
 
 class MemoryActivator extends Platform implements Updatable {
 	private final int activableId;
@@ -51,6 +52,18 @@ class MemoryActivator extends Platform implements Updatable {
 	MemoryActivator(World world, int activableId, AnimationCollection onTexture,
 			AnimationCollection offTexture, AnimationCollection hiddenTexture, float w, float h) {
 		super(world, w, h);
+		this.activableId = activableId;
+		this.offTexture = offTexture;
+		this.onTexture = onTexture;
+		this.hiddenTexture = hiddenTexture;
+		this.setTexture(hiddenTexture);
+	}
+
+	public MemoryActivator(World world, int activableId,
+			AnimationCollection onTexture,
+			AnimationCollection offTexture,
+			AnimationCollection hiddenTexture, Shape shape) {
+		super(world, shape);
 		this.activableId = activableId;
 		this.offTexture = offTexture;
 		this.onTexture = onTexture;

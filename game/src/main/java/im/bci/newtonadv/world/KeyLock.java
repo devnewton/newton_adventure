@@ -32,6 +32,7 @@
 
 package im.bci.newtonadv.world;
 
+import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
@@ -43,6 +44,10 @@ public class KeyLock extends Platform implements Updatable {
 
 	public KeyLock(World world, float w, float h) {
 		super(world, w, h);
+	}
+
+	public KeyLock(World world, Shape shape) {
+		super(world, shape);
 	}
 
 	@Override

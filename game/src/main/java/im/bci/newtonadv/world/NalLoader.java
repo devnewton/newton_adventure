@@ -9,6 +9,7 @@ import im.bci.newtonadv.NewtonAdventureLevelParser.Bat;
 import im.bci.newtonadv.NewtonAdventureLevelParser.Entity;
 import im.bci.newtonadv.NewtonAdventureLevelParser.EntityType;
 import im.bci.newtonadv.NewtonAdventureLevelParser.Level;
+import im.bci.newtonadv.NewtonAdventureLevelParser.Pikes.DangerousSide;
 import im.bci.newtonadv.NewtonAdventureLevelParser.Position;
 import im.bci.newtonadv.anim.AnimationCollection;
 
@@ -133,17 +134,44 @@ class NalLoader {
 	}
 
 	private void loadActivator(Entity entity, EntityType type,
-			Activator activator) {
-		// TODO Auto-generated method stub
-
+			Activator activatorType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.Activator activator = new im.bci.newtonadv.world.Activator(world, activatorType.getActivableId(), getOrLoadAnimation(activatorType.getOnAnimation()), getOrLoadAnimation(activatorType.getOffAnimation()), shape);
+			Vector2f pos = getPos(entity);
+			activator.setPosition(pos.getX(), pos.getY());
+			activator.setZOrder(entity.getZorder());
+			world.add(activator);
+		}
 	}
 
 	private void loadPikes(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Pikes pikes) {
-		// TODO Auto-generated method stub
+			im.bci.newtonadv.NewtonAdventureLevelParser.Pikes pikesType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.Pikes pikes = new im.bci.newtonadv.world.Pikes(world, convertDangerousSide(pikesType.getDangerousSide()), shape);
+			pikes.setTexture(getOrLoadAnimation(pikesType.getAnimation()));
+			Vector2f pos = getPos(entity);
+			pikes.setPosition(pos.getX(), pos.getY());
+			pikes.setZOrder(entity.getZorder());
+			world.add(pikes);
+		}
+	}
 
+	private im.bci.newtonadv.world.Pikes.DangerousSide convertDangerousSide(DangerousSide dangerousSide) {
+		switch(dangerousSide) {
+		case DOWN:
+			return im.bci.newtonadv.world.Pikes.DangerousSide.DOWN;
+		case LEFT:
+			return im.bci.newtonadv.world.Pikes.DangerousSide.LEFT;
+		case RIGHT:
+			return im.bci.newtonadv.world.Pikes.DangerousSide.RIGHT;
+		case UP:
+			return im.bci.newtonadv.world.Pikes.DangerousSide.UP;
+		}
+		return null;
 	}
 
 	private void loadMummy(
@@ -180,24 +208,44 @@ class NalLoader {
 	private void loadMemoryActivator(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.MemoryActivator memoryActivator) {
-		// TODO Auto-generated method stub
-
+			im.bci.newtonadv.NewtonAdventureLevelParser.MemoryActivator memoryActivatorType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.MemoryActivator activator = new im.bci.newtonadv.world.MemoryActivator(world, memoryActivatorType.getActivableId(), getOrLoadAnimation(memoryActivatorType.getOnAnimation()), getOrLoadAnimation(memoryActivatorType.getOffAnimation()), getOrLoadAnimation(memoryActivatorType.getHideAnimation()), shape);
+			Vector2f pos = getPos(entity);
+			activator.setPosition(pos.getX(), pos.getY());
+			activator.setZOrder(entity.getZorder());
+			world.add(activator);
+		}
 	}
 
 	private void loadKeyLock(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.KeyLock keyLock) {
-		// TODO Auto-generated method stub
-
+			im.bci.newtonadv.NewtonAdventureLevelParser.KeyLock keyLockType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.KeyLock keyLock = new im.bci.newtonadv.world.KeyLock(world, shape);
+			Vector2f pos = getPos(entity);
+			keyLock.setPosition(pos.getX(), pos.getY());
+			keyLock.setZOrder(entity.getZorder());
+			keyLock.setTexture(getOrLoadAnimation(keyLockType.getAnimation()));
+			world.add(keyLock);
+		}
 	}
 
 	private void loadKey(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
-			EntityType type, im.bci.newtonadv.NewtonAdventureLevelParser.Key key) {
-		// TODO Auto-generated method stub
-
+			EntityType type, im.bci.newtonadv.NewtonAdventureLevelParser.Key keyType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.Key key = new im.bci.newtonadv.world.Key(world, shape);
+			Vector2f pos = getPos(entity);
+			key.setPosition(pos.getX(), pos.getY());
+			key.setZOrder(entity.getZorder());
+			key.setTexture(getOrLoadAnimation(keyType.getAnimation()));
+			world.add(key);
+		}
 	}
 
 	private void loadHero(
@@ -211,9 +259,16 @@ class NalLoader {
 	private void loadHelpSign(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.HelpSign helpSign) {
-		// TODO Auto-generated method stub
-
+			im.bci.newtonadv.NewtonAdventureLevelParser.HelpSign helpSignType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.HelpSign helpSign = new im.bci.newtonadv.world.HelpSign(world, shape);
+			Vector2f pos = getPos(entity);
+			helpSign.setPosition(pos.getX(), pos.getY());
+			helpSign.setZOrder(entity.getZorder());
+			helpSign.setTexture(getOrLoadAnimation(helpSignType.getAnimation()));
+			world.add(helpSign);
+		}
 	}
 
 	private void loadEgyptianBoss(

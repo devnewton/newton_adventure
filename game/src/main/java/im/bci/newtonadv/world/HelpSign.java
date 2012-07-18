@@ -34,6 +34,7 @@ package im.bci.newtonadv.world;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.Body;
+import net.phys2d.raw.shapes.Shape;
 
 /**
  *
@@ -50,7 +51,11 @@ public strictfp class HelpSign extends Platform implements CollisionDetectionOnl
     	super(world, w, h);
     }
 
-    @Override
+    public HelpSign(World world, Shape shape) {
+    	super(world, shape);
+	}
+
+	@Override
     public strictfp void collided(Body body) {
     	if(body instanceof Hero) {
     		collideHero = true;

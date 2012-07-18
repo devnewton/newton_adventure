@@ -38,6 +38,7 @@ import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.shapes.Circle;
+import net.phys2d.raw.shapes.Shape;
 
 /**
  *
@@ -55,7 +56,13 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
         setRotatable(false);
     }
 
-    @Override
+    Key(World world, Shape shape) {
+        super(shape, 1.0f);
+        this.world = world;
+        setRotatable(false);
+	}
+
+	@Override
     public void draw() {
         world.getView().drawKey(this, texture.getFirst().getCurrentFrame(), world);
     }
