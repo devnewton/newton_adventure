@@ -32,6 +32,7 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.raw.Body;
+import net.phys2d.raw.shapes.Shape;
 
 /**
  *
@@ -43,7 +44,11 @@ public strictfp class DoorToBonusWorld extends Door {
         super(world, w, h);
     }
 
-    @Override
+    public DoorToBonusWorld(World world, Shape shape) {
+    	super(world, shape);
+	}
+
+	@Override
     public void collided(Body body) {
         if (!isClose && body instanceof Hero) {
             world.goToBonusWorld();

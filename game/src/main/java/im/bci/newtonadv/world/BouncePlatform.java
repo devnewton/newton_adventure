@@ -34,10 +34,12 @@ package im.bci.newtonadv.world;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
+import net.phys2d.raw.shapes.Shape;
 
 /**
+ * 
+ * @author devnewton
  *
- * @author bci
  */
 public strictfp class BouncePlatform extends Platform {
 
@@ -45,7 +47,11 @@ public strictfp class BouncePlatform extends Platform {
         super(world, w, h);
     }
 
-    @Override
+    public BouncePlatform(World world, Shape shape) {
+    	super(world, shape);
+	}
+
+	@Override
     public void collided(Body other) {
         if (other instanceof Hero) {
             Hero hero = (Hero) other;

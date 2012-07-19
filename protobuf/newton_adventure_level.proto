@@ -94,11 +94,13 @@ message Key {
 }
 
 message Door {
-    required AnimationReference animation = 1;
+    required AnimationReference open_animation = 1;
+    required AnimationReference closed_animation = 2;
 }
 
 message DoorToBonusWorld {
-    required AnimationReference animation = 1;
+    required AnimationReference open_animation = 1;
+    required AnimationReference closed_animation = 2;
 }
 
 message Cloud {

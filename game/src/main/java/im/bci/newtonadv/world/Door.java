@@ -38,6 +38,7 @@ import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.Shape;
 
 /**
  * 
@@ -53,6 +54,12 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	Door(World world, float w, float h) {
 		super(new Box(w, h));
+		this.world = world;
+		addBit(World.STATIC_BODY_COLLIDE_BIT);
+	}
+
+	public Door(World world, Shape shape) {
+		super(shape);
 		this.world = world;
 		addBit(World.STATIC_BODY_COLLIDE_BIT);
 	}

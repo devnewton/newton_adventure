@@ -8303,10 +8303,15 @@ public final class NewtonAdventureLevelParser {
   public interface DoorOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required .im.bci.newtonadv.AnimationReference animation = 1;
-    boolean hasAnimation();
-    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getAnimation();
-    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getAnimationOrBuilder();
+    // required .im.bci.newtonadv.AnimationReference open_animation = 1;
+    boolean hasOpenAnimation();
+    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getOpenAnimation();
+    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getOpenAnimationOrBuilder();
+    
+    // required .im.bci.newtonadv.AnimationReference closed_animation = 2;
+    boolean hasClosedAnimation();
+    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getClosedAnimation();
+    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getClosedAnimationOrBuilder();
   }
   public static final class Door extends
       com.google.protobuf.GeneratedMessage
@@ -8337,32 +8342,54 @@ public final class NewtonAdventureLevelParser {
     }
     
     private int bitField0_;
-    // required .im.bci.newtonadv.AnimationReference animation = 1;
-    public static final int ANIMATION_FIELD_NUMBER = 1;
-    private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference animation_;
-    public boolean hasAnimation() {
+    // required .im.bci.newtonadv.AnimationReference open_animation = 1;
+    public static final int OPEN_ANIMATION_FIELD_NUMBER = 1;
+    private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference openAnimation_;
+    public boolean hasOpenAnimation() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getAnimation() {
-      return animation_;
+    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getOpenAnimation() {
+      return openAnimation_;
     }
-    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getAnimationOrBuilder() {
-      return animation_;
+    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getOpenAnimationOrBuilder() {
+      return openAnimation_;
+    }
+    
+    // required .im.bci.newtonadv.AnimationReference closed_animation = 2;
+    public static final int CLOSED_ANIMATION_FIELD_NUMBER = 2;
+    private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference closedAnimation_;
+    public boolean hasClosedAnimation() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getClosedAnimation() {
+      return closedAnimation_;
+    }
+    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getClosedAnimationOrBuilder() {
+      return closedAnimation_;
     }
     
     private void initFields() {
-      animation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      openAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      closedAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
-      if (!hasAnimation()) {
+      if (!hasOpenAnimation()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getAnimation().isInitialized()) {
+      if (!hasClosedAnimation()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getOpenAnimation().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getClosedAnimation().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -8374,7 +8401,10 @@ public final class NewtonAdventureLevelParser {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, animation_);
+        output.writeMessage(1, openAnimation_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, closedAnimation_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -8387,7 +8417,11 @@ public final class NewtonAdventureLevelParser {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, animation_);
+          .computeMessageSize(1, openAnimation_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, closedAnimation_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8505,7 +8539,8 @@ public final class NewtonAdventureLevelParser {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getAnimationFieldBuilder();
+          getOpenAnimationFieldBuilder();
+          getClosedAnimationFieldBuilder();
         }
       }
       private static Builder create() {
@@ -8514,12 +8549,18 @@ public final class NewtonAdventureLevelParser {
       
       public Builder clear() {
         super.clear();
-        if (animationBuilder_ == null) {
-          animation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+        if (openAnimationBuilder_ == null) {
+          openAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
         } else {
-          animationBuilder_.clear();
+          openAnimationBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
+        if (closedAnimationBuilder_ == null) {
+          closedAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+        } else {
+          closedAnimationBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       
@@ -8561,10 +8602,18 @@ public final class NewtonAdventureLevelParser {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        if (animationBuilder_ == null) {
-          result.animation_ = animation_;
+        if (openAnimationBuilder_ == null) {
+          result.openAnimation_ = openAnimation_;
         } else {
-          result.animation_ = animationBuilder_.build();
+          result.openAnimation_ = openAnimationBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (closedAnimationBuilder_ == null) {
+          result.closedAnimation_ = closedAnimation_;
+        } else {
+          result.closedAnimation_ = closedAnimationBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -8582,19 +8631,30 @@ public final class NewtonAdventureLevelParser {
       
       public Builder mergeFrom(im.bci.newtonadv.NewtonAdventureLevelParser.Door other) {
         if (other == im.bci.newtonadv.NewtonAdventureLevelParser.Door.getDefaultInstance()) return this;
-        if (other.hasAnimation()) {
-          mergeAnimation(other.getAnimation());
+        if (other.hasOpenAnimation()) {
+          mergeOpenAnimation(other.getOpenAnimation());
+        }
+        if (other.hasClosedAnimation()) {
+          mergeClosedAnimation(other.getClosedAnimation());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
       
       public final boolean isInitialized() {
-        if (!hasAnimation()) {
+        if (!hasOpenAnimation()) {
           
           return false;
         }
-        if (!getAnimation().isInitialized()) {
+        if (!hasClosedAnimation()) {
+          
+          return false;
+        }
+        if (!getOpenAnimation().isInitialized()) {
+          
+          return false;
+        }
+        if (!getClosedAnimation().isInitialized()) {
           
           return false;
         }
@@ -8626,11 +8686,20 @@ public final class NewtonAdventureLevelParser {
             }
             case 10: {
               im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder subBuilder = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder();
-              if (hasAnimation()) {
-                subBuilder.mergeFrom(getAnimation());
+              if (hasOpenAnimation()) {
+                subBuilder.mergeFrom(getOpenAnimation());
               }
               input.readMessage(subBuilder, extensionRegistry);
-              setAnimation(subBuilder.buildPartial());
+              setOpenAnimation(subBuilder.buildPartial());
+              break;
+            }
+            case 18: {
+              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder subBuilder = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder();
+              if (hasClosedAnimation()) {
+                subBuilder.mergeFrom(getClosedAnimation());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setClosedAnimation(subBuilder.buildPartial());
               break;
             }
           }
@@ -8639,94 +8708,184 @@ public final class NewtonAdventureLevelParser {
       
       private int bitField0_;
       
-      // required .im.bci.newtonadv.AnimationReference animation = 1;
-      private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference animation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      // required .im.bci.newtonadv.AnimationReference open_animation = 1;
+      private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference openAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> animationBuilder_;
-      public boolean hasAnimation() {
+          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> openAnimationBuilder_;
+      public boolean hasOpenAnimation() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getAnimation() {
-        if (animationBuilder_ == null) {
-          return animation_;
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getOpenAnimation() {
+        if (openAnimationBuilder_ == null) {
+          return openAnimation_;
         } else {
-          return animationBuilder_.getMessage();
+          return openAnimationBuilder_.getMessage();
         }
       }
-      public Builder setAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
-        if (animationBuilder_ == null) {
+      public Builder setOpenAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
+        if (openAnimationBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          animation_ = value;
+          openAnimation_ = value;
           onChanged();
         } else {
-          animationBuilder_.setMessage(value);
+          openAnimationBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder setAnimation(
+      public Builder setOpenAnimation(
           im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder builderForValue) {
-        if (animationBuilder_ == null) {
-          animation_ = builderForValue.build();
+        if (openAnimationBuilder_ == null) {
+          openAnimation_ = builderForValue.build();
           onChanged();
         } else {
-          animationBuilder_.setMessage(builderForValue.build());
+          openAnimationBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergeAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
-        if (animationBuilder_ == null) {
+      public Builder mergeOpenAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
+        if (openAnimationBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              animation_ != im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance()) {
-            animation_ =
-              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder(animation_).mergeFrom(value).buildPartial();
+              openAnimation_ != im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance()) {
+            openAnimation_ =
+              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder(openAnimation_).mergeFrom(value).buildPartial();
           } else {
-            animation_ = value;
+            openAnimation_ = value;
           }
           onChanged();
         } else {
-          animationBuilder_.mergeFrom(value);
+          openAnimationBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder clearAnimation() {
-        if (animationBuilder_ == null) {
-          animation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      public Builder clearOpenAnimation() {
+        if (openAnimationBuilder_ == null) {
+          openAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
           onChanged();
         } else {
-          animationBuilder_.clear();
+          openAnimationBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder getAnimationBuilder() {
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder getOpenAnimationBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
-        return getAnimationFieldBuilder().getBuilder();
+        return getOpenAnimationFieldBuilder().getBuilder();
       }
-      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getAnimationOrBuilder() {
-        if (animationBuilder_ != null) {
-          return animationBuilder_.getMessageOrBuilder();
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getOpenAnimationOrBuilder() {
+        if (openAnimationBuilder_ != null) {
+          return openAnimationBuilder_.getMessageOrBuilder();
         } else {
-          return animation_;
+          return openAnimation_;
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
           im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> 
-          getAnimationFieldBuilder() {
-        if (animationBuilder_ == null) {
-          animationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          getOpenAnimationFieldBuilder() {
+        if (openAnimationBuilder_ == null) {
+          openAnimationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder>(
-                  animation_,
+                  openAnimation_,
                   getParentForChildren(),
                   isClean());
-          animation_ = null;
+          openAnimation_ = null;
         }
-        return animationBuilder_;
+        return openAnimationBuilder_;
+      }
+      
+      // required .im.bci.newtonadv.AnimationReference closed_animation = 2;
+      private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference closedAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> closedAnimationBuilder_;
+      public boolean hasClosedAnimation() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getClosedAnimation() {
+        if (closedAnimationBuilder_ == null) {
+          return closedAnimation_;
+        } else {
+          return closedAnimationBuilder_.getMessage();
+        }
+      }
+      public Builder setClosedAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
+        if (closedAnimationBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          closedAnimation_ = value;
+          onChanged();
+        } else {
+          closedAnimationBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder setClosedAnimation(
+          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder builderForValue) {
+        if (closedAnimationBuilder_ == null) {
+          closedAnimation_ = builderForValue.build();
+          onChanged();
+        } else {
+          closedAnimationBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder mergeClosedAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
+        if (closedAnimationBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              closedAnimation_ != im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance()) {
+            closedAnimation_ =
+              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder(closedAnimation_).mergeFrom(value).buildPartial();
+          } else {
+            closedAnimation_ = value;
+          }
+          onChanged();
+        } else {
+          closedAnimationBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder clearClosedAnimation() {
+        if (closedAnimationBuilder_ == null) {
+          closedAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+          onChanged();
+        } else {
+          closedAnimationBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder getClosedAnimationBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getClosedAnimationFieldBuilder().getBuilder();
+      }
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getClosedAnimationOrBuilder() {
+        if (closedAnimationBuilder_ != null) {
+          return closedAnimationBuilder_.getMessageOrBuilder();
+        } else {
+          return closedAnimation_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> 
+          getClosedAnimationFieldBuilder() {
+        if (closedAnimationBuilder_ == null) {
+          closedAnimationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder>(
+                  closedAnimation_,
+                  getParentForChildren(),
+                  isClean());
+          closedAnimation_ = null;
+        }
+        return closedAnimationBuilder_;
       }
       
       // @@protoc_insertion_point(builder_scope:im.bci.newtonadv.Door)
@@ -8743,10 +8902,15 @@ public final class NewtonAdventureLevelParser {
   public interface DoorToBonusWorldOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required .im.bci.newtonadv.AnimationReference animation = 1;
-    boolean hasAnimation();
-    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getAnimation();
-    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getAnimationOrBuilder();
+    // required .im.bci.newtonadv.AnimationReference open_animation = 1;
+    boolean hasOpenAnimation();
+    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getOpenAnimation();
+    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getOpenAnimationOrBuilder();
+    
+    // required .im.bci.newtonadv.AnimationReference closed_animation = 2;
+    boolean hasClosedAnimation();
+    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getClosedAnimation();
+    im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getClosedAnimationOrBuilder();
   }
   public static final class DoorToBonusWorld extends
       com.google.protobuf.GeneratedMessage
@@ -8777,32 +8941,54 @@ public final class NewtonAdventureLevelParser {
     }
     
     private int bitField0_;
-    // required .im.bci.newtonadv.AnimationReference animation = 1;
-    public static final int ANIMATION_FIELD_NUMBER = 1;
-    private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference animation_;
-    public boolean hasAnimation() {
+    // required .im.bci.newtonadv.AnimationReference open_animation = 1;
+    public static final int OPEN_ANIMATION_FIELD_NUMBER = 1;
+    private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference openAnimation_;
+    public boolean hasOpenAnimation() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getAnimation() {
-      return animation_;
+    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getOpenAnimation() {
+      return openAnimation_;
     }
-    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getAnimationOrBuilder() {
-      return animation_;
+    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getOpenAnimationOrBuilder() {
+      return openAnimation_;
+    }
+    
+    // required .im.bci.newtonadv.AnimationReference closed_animation = 2;
+    public static final int CLOSED_ANIMATION_FIELD_NUMBER = 2;
+    private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference closedAnimation_;
+    public boolean hasClosedAnimation() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getClosedAnimation() {
+      return closedAnimation_;
+    }
+    public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getClosedAnimationOrBuilder() {
+      return closedAnimation_;
     }
     
     private void initFields() {
-      animation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      openAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      closedAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
-      if (!hasAnimation()) {
+      if (!hasOpenAnimation()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getAnimation().isInitialized()) {
+      if (!hasClosedAnimation()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getOpenAnimation().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getClosedAnimation().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -8814,7 +9000,10 @@ public final class NewtonAdventureLevelParser {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, animation_);
+        output.writeMessage(1, openAnimation_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, closedAnimation_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -8827,7 +9016,11 @@ public final class NewtonAdventureLevelParser {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, animation_);
+          .computeMessageSize(1, openAnimation_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, closedAnimation_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8945,7 +9138,8 @@ public final class NewtonAdventureLevelParser {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getAnimationFieldBuilder();
+          getOpenAnimationFieldBuilder();
+          getClosedAnimationFieldBuilder();
         }
       }
       private static Builder create() {
@@ -8954,12 +9148,18 @@ public final class NewtonAdventureLevelParser {
       
       public Builder clear() {
         super.clear();
-        if (animationBuilder_ == null) {
-          animation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+        if (openAnimationBuilder_ == null) {
+          openAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
         } else {
-          animationBuilder_.clear();
+          openAnimationBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
+        if (closedAnimationBuilder_ == null) {
+          closedAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+        } else {
+          closedAnimationBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       
@@ -9001,10 +9201,18 @@ public final class NewtonAdventureLevelParser {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        if (animationBuilder_ == null) {
-          result.animation_ = animation_;
+        if (openAnimationBuilder_ == null) {
+          result.openAnimation_ = openAnimation_;
         } else {
-          result.animation_ = animationBuilder_.build();
+          result.openAnimation_ = openAnimationBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (closedAnimationBuilder_ == null) {
+          result.closedAnimation_ = closedAnimation_;
+        } else {
+          result.closedAnimation_ = closedAnimationBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -9022,19 +9230,30 @@ public final class NewtonAdventureLevelParser {
       
       public Builder mergeFrom(im.bci.newtonadv.NewtonAdventureLevelParser.DoorToBonusWorld other) {
         if (other == im.bci.newtonadv.NewtonAdventureLevelParser.DoorToBonusWorld.getDefaultInstance()) return this;
-        if (other.hasAnimation()) {
-          mergeAnimation(other.getAnimation());
+        if (other.hasOpenAnimation()) {
+          mergeOpenAnimation(other.getOpenAnimation());
+        }
+        if (other.hasClosedAnimation()) {
+          mergeClosedAnimation(other.getClosedAnimation());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
       
       public final boolean isInitialized() {
-        if (!hasAnimation()) {
+        if (!hasOpenAnimation()) {
           
           return false;
         }
-        if (!getAnimation().isInitialized()) {
+        if (!hasClosedAnimation()) {
+          
+          return false;
+        }
+        if (!getOpenAnimation().isInitialized()) {
+          
+          return false;
+        }
+        if (!getClosedAnimation().isInitialized()) {
           
           return false;
         }
@@ -9066,11 +9285,20 @@ public final class NewtonAdventureLevelParser {
             }
             case 10: {
               im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder subBuilder = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder();
-              if (hasAnimation()) {
-                subBuilder.mergeFrom(getAnimation());
+              if (hasOpenAnimation()) {
+                subBuilder.mergeFrom(getOpenAnimation());
               }
               input.readMessage(subBuilder, extensionRegistry);
-              setAnimation(subBuilder.buildPartial());
+              setOpenAnimation(subBuilder.buildPartial());
+              break;
+            }
+            case 18: {
+              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder subBuilder = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder();
+              if (hasClosedAnimation()) {
+                subBuilder.mergeFrom(getClosedAnimation());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setClosedAnimation(subBuilder.buildPartial());
               break;
             }
           }
@@ -9079,94 +9307,184 @@ public final class NewtonAdventureLevelParser {
       
       private int bitField0_;
       
-      // required .im.bci.newtonadv.AnimationReference animation = 1;
-      private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference animation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      // required .im.bci.newtonadv.AnimationReference open_animation = 1;
+      private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference openAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> animationBuilder_;
-      public boolean hasAnimation() {
+          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> openAnimationBuilder_;
+      public boolean hasOpenAnimation() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getAnimation() {
-        if (animationBuilder_ == null) {
-          return animation_;
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getOpenAnimation() {
+        if (openAnimationBuilder_ == null) {
+          return openAnimation_;
         } else {
-          return animationBuilder_.getMessage();
+          return openAnimationBuilder_.getMessage();
         }
       }
-      public Builder setAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
-        if (animationBuilder_ == null) {
+      public Builder setOpenAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
+        if (openAnimationBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          animation_ = value;
+          openAnimation_ = value;
           onChanged();
         } else {
-          animationBuilder_.setMessage(value);
+          openAnimationBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder setAnimation(
+      public Builder setOpenAnimation(
           im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder builderForValue) {
-        if (animationBuilder_ == null) {
-          animation_ = builderForValue.build();
+        if (openAnimationBuilder_ == null) {
+          openAnimation_ = builderForValue.build();
           onChanged();
         } else {
-          animationBuilder_.setMessage(builderForValue.build());
+          openAnimationBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergeAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
-        if (animationBuilder_ == null) {
+      public Builder mergeOpenAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
+        if (openAnimationBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              animation_ != im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance()) {
-            animation_ =
-              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder(animation_).mergeFrom(value).buildPartial();
+              openAnimation_ != im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance()) {
+            openAnimation_ =
+              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder(openAnimation_).mergeFrom(value).buildPartial();
           } else {
-            animation_ = value;
+            openAnimation_ = value;
           }
           onChanged();
         } else {
-          animationBuilder_.mergeFrom(value);
+          openAnimationBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder clearAnimation() {
-        if (animationBuilder_ == null) {
-          animation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      public Builder clearOpenAnimation() {
+        if (openAnimationBuilder_ == null) {
+          openAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
           onChanged();
         } else {
-          animationBuilder_.clear();
+          openAnimationBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder getAnimationBuilder() {
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder getOpenAnimationBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
-        return getAnimationFieldBuilder().getBuilder();
+        return getOpenAnimationFieldBuilder().getBuilder();
       }
-      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getAnimationOrBuilder() {
-        if (animationBuilder_ != null) {
-          return animationBuilder_.getMessageOrBuilder();
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getOpenAnimationOrBuilder() {
+        if (openAnimationBuilder_ != null) {
+          return openAnimationBuilder_.getMessageOrBuilder();
         } else {
-          return animation_;
+          return openAnimation_;
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
           im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> 
-          getAnimationFieldBuilder() {
-        if (animationBuilder_ == null) {
-          animationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          getOpenAnimationFieldBuilder() {
+        if (openAnimationBuilder_ == null) {
+          openAnimationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder>(
-                  animation_,
+                  openAnimation_,
                   getParentForChildren(),
                   isClean());
-          animation_ = null;
+          openAnimation_ = null;
         }
-        return animationBuilder_;
+        return openAnimationBuilder_;
+      }
+      
+      // required .im.bci.newtonadv.AnimationReference closed_animation = 2;
+      private im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference closedAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> closedAnimationBuilder_;
+      public boolean hasClosedAnimation() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference getClosedAnimation() {
+        if (closedAnimationBuilder_ == null) {
+          return closedAnimation_;
+        } else {
+          return closedAnimationBuilder_.getMessage();
+        }
+      }
+      public Builder setClosedAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
+        if (closedAnimationBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          closedAnimation_ = value;
+          onChanged();
+        } else {
+          closedAnimationBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder setClosedAnimation(
+          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder builderForValue) {
+        if (closedAnimationBuilder_ == null) {
+          closedAnimation_ = builderForValue.build();
+          onChanged();
+        } else {
+          closedAnimationBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder mergeClosedAnimation(im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference value) {
+        if (closedAnimationBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              closedAnimation_ != im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance()) {
+            closedAnimation_ =
+              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.newBuilder(closedAnimation_).mergeFrom(value).buildPartial();
+          } else {
+            closedAnimation_ = value;
+          }
+          onChanged();
+        } else {
+          closedAnimationBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder clearClosedAnimation() {
+        if (closedAnimationBuilder_ == null) {
+          closedAnimation_ = im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.getDefaultInstance();
+          onChanged();
+        } else {
+          closedAnimationBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder getClosedAnimationBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getClosedAnimationFieldBuilder().getBuilder();
+      }
+      public im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder getClosedAnimationOrBuilder() {
+        if (closedAnimationBuilder_ != null) {
+          return closedAnimationBuilder_.getMessageOrBuilder();
+        } else {
+          return closedAnimation_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder> 
+          getClosedAnimationFieldBuilder() {
+        if (closedAnimationBuilder_ == null) {
+          closedAnimationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference.Builder, im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReferenceOrBuilder>(
+                  closedAnimation_,
+                  getParentForChildren(),
+                  isClean());
+          closedAnimation_ = null;
+        }
+        return closedAnimationBuilder_;
       }
       
       // @@protoc_insertion_point(builder_scope:im.bci.newtonadv.DoorToBonusWorld)
@@ -22849,85 +23167,88 @@ public final class NewtonAdventureLevelParser {
       "\"?\n\004Coin\0227\n\tanimation\030\001 \002(\0132$.im.bci.new" +
       "tonadv.AnimationReference\">\n\003Key\0227\n\tanim" +
       "ation\030\001 \002(\0132$.im.bci.newtonadv.Animation" +
-      "Reference\"?\n\004Door\0227\n\tanimation\030\001 \002(\0132$.i" +
-      "m.bci.newtonadv.AnimationReference\"K\n\020Do" +
-      "orToBonusWorld\0227\n\tanimation\030\001 \002(\0132$.im.b" +
-      "ci.newtonadv.AnimationReference\"@\n\005Cloud" +
-      "\0227\n\tanimation\030\001 \002(\0132$.im.bci.newtonadv.A" +
-      "nimationReference\"C\n\010WorldMap\0227\n\tanimati",
-      "on\030\001 \002(\0132$.im.bci.newtonadv.AnimationRef" +
-      "erence\"B\n\007Compass\0227\n\tanimation\030\001 \002(\0132$.i" +
-      "m.bci.newtonadv.AnimationReference\"\221\001\n\020M" +
-      "obilePikeAnchor\0227\n\tanimation\030\001 \002(\0132$.im." +
-      "bci.newtonadv.AnimationReference\022D\n\026mobi" +
-      "le_pikes_animation\030\002 \002(\0132$.im.bci.newton" +
-      "adv.AnimationReference\"\201\001\n\tAxeAnchor\0227\n\t" +
-      "animation\030\001 \002(\0132$.im.bci.newtonadv.Anima" +
-      "tionReference\022;\n\raxe_animation\030\002 \002(\0132$.i" +
-      "m.bci.newtonadv.AnimationReference\"\231\001\n\tA",
-      "ctivator\022\023\n\013activableId\030\001 \002(\005\022:\n\014on_anim" +
-      "ation\030\002 \002(\0132$.im.bci.newtonadv.Animation" +
-      "Reference\022;\n\roff_animation\030\003 \002(\0132$.im.bc" +
-      "i.newtonadv.AnimationReference\"\335\001\n\017Memor" +
-      "yActivator\022\023\n\013activableId\030\001 \002(\005\022:\n\014on_an" +
+      "Reference\"\204\001\n\004Door\022<\n\016open_animation\030\001 \002" +
+      "(\0132$.im.bci.newtonadv.AnimationReference" +
+      "\022>\n\020closed_animation\030\002 \002(\0132$.im.bci.newt" +
+      "onadv.AnimationReference\"\220\001\n\020DoorToBonus" +
+      "World\022<\n\016open_animation\030\001 \002(\0132$.im.bci.n" +
+      "ewtonadv.AnimationReference\022>\n\020closed_an",
       "imation\030\002 \002(\0132$.im.bci.newtonadv.Animati" +
-      "onReference\022;\n\roff_animation\030\003 \002(\0132$.im." +
-      "bci.newtonadv.AnimationReference\022<\n\016hide" +
-      "_animation\030\004 \002(\0132$.im.bci.newtonadv.Anim" +
-      "ationReference\"\227\001\n\007Blocker\022\023\n\013activableI",
-      "d\030\001 \002(\005\022:\n\014on_animation\030\002 \002(\0132$.im.bci.n" +
-      "ewtonadv.AnimationReference\022;\n\roff_anima" +
-      "tion\030\003 \002(\0132$.im.bci.newtonadv.AnimationR" +
-      "eference\"o\n\016MovingPlatform\0227\n\tanimation\030" +
+      "onReference\"@\n\005Cloud\0227\n\tanimation\030\001 \002(\0132" +
+      "$.im.bci.newtonadv.AnimationReference\"C\n" +
+      "\010WorldMap\0227\n\tanimation\030\001 \002(\0132$.im.bci.ne" +
+      "wtonadv.AnimationReference\"B\n\007Compass\0227\n" +
+      "\tanimation\030\001 \002(\0132$.im.bci.newtonadv.Anim" +
+      "ationReference\"\221\001\n\020MobilePikeAnchor\0227\n\ta" +
+      "nimation\030\001 \002(\0132$.im.bci.newtonadv.Animat" +
+      "ionReference\022D\n\026mobile_pikes_animation\030\002" +
+      " \002(\0132$.im.bci.newtonadv.AnimationReferen",
+      "ce\"\201\001\n\tAxeAnchor\0227\n\tanimation\030\001 \002(\0132$.im" +
+      ".bci.newtonadv.AnimationReference\022;\n\raxe" +
+      "_animation\030\002 \002(\0132$.im.bci.newtonadv.Anim" +
+      "ationReference\"\231\001\n\tActivator\022\023\n\013activabl" +
+      "eId\030\001 \002(\005\022:\n\014on_animation\030\002 \002(\0132$.im.bci" +
+      ".newtonadv.AnimationReference\022;\n\roff_ani" +
+      "mation\030\003 \002(\0132$.im.bci.newtonadv.Animatio" +
+      "nReference\"\335\001\n\017MemoryActivator\022\023\n\013activa" +
+      "bleId\030\001 \002(\005\022:\n\014on_animation\030\002 \002(\0132$.im.b" +
+      "ci.newtonadv.AnimationReference\022;\n\roff_a",
+      "nimation\030\003 \002(\0132$.im.bci.newtonadv.Animat" +
+      "ionReference\022<\n\016hide_animation\030\004 \002(\0132$.i" +
+      "m.bci.newtonadv.AnimationReference\"\227\001\n\007B" +
+      "locker\022\023\n\013activableId\030\001 \002(\005\022:\n\014on_animat" +
+      "ion\030\002 \002(\0132$.im.bci.newtonadv.AnimationRe" +
+      "ference\022;\n\roff_animation\030\003 \002(\0132$.im.bci." +
+      "newtonadv.AnimationReference\"o\n\016MovingPl" +
+      "atform\0227\n\tanimation\030\001 \002(\0132$.im.bci.newto" +
+      "nadv.AnimationReference\022$\n\004path\030\002 \002(\0132\026." +
+      "im.bci.newtonadv.Path\"T\n\nTeleporter\0227\n\ta",
+      "nimation\030\001 \002(\0132$.im.bci.newtonadv.Animat" +
+      "ionReference\022\r\n\005color\030\002 \002(\t\"B\n\007KeyLock\0227" +
+      "\n\tanimation\030\001 \002(\0132$.im.bci.newtonadv.Ani" +
+      "mationReference\"C\n\010HelpSign\0227\n\tanimation" +
+      "\030\001 \002(\0132$.im.bci.newtonadv.AnimationRefer" +
+      "ence\"\212\001\n\014EgyptianBoss\022<\n\016body_animation\030" +
       "\001 \002(\0132$.im.bci.newtonadv.AnimationRefere" +
-      "nce\022$\n\004path\030\002 \002(\0132\026.im.bci.newtonadv.Pat" +
-      "h\"T\n\nTeleporter\0227\n\tanimation\030\001 \002(\0132$.im." +
-      "bci.newtonadv.AnimationReference\022\r\n\005colo" +
-      "r\030\002 \002(\t\"B\n\007KeyLock\0227\n\tanimation\030\001 \002(\0132$." +
-      "im.bci.newtonadv.AnimationReference\"C\n\010H",
-      "elpSign\0227\n\tanimation\030\001 \002(\0132$.im.bci.newt" +
-      "onadv.AnimationReference\"\212\001\n\014EgyptianBos" +
-      "s\022<\n\016body_animation\030\001 \002(\0132$.im.bci.newto" +
-      "nadv.AnimationReference\022<\n\016hand_animatio" +
-      "n\030\002 \002(\0132$.im.bci.newtonadv.AnimationRefe" +
-      "rence\"?\n\004Hero\0227\n\tanimation\030\001 \002(\0132$.im.bc" +
-      "i.newtonadv.AnimationReference\"\250\t\n\nEntit" +
-      "yType\022\014\n\004name\030\001 \002(\t\022&\n\005shape\030\002 \002(\0132\027.im." +
-      "bci.newtonadv.Shape\022&\n\005pikes\030\003 \001(\0132\027.im." +
-      "bci.newtonadv.Pikes\022,\n\010platform\030\004 \001(\0132\032.",
-      "im.bci.newtonadv.Platform\0229\n\017bounce_plat" +
-      "form\030\005 \001(\0132 .im.bci.newtonadv.BouncePlat" +
-      "form\022(\n\006cannon\030\006 \001(\0132\030.im.bci.newtonadv." +
-      "Cannon\022&\n\005mummy\030\007 \001(\0132\027.im.bci.newtonadv" +
-      ".Mummy\022\"\n\003bat\030\010 \001(\0132\025.im.bci.newtonadv.B" +
-      "at\022&\n\005apple\030\t \001(\0132\027.im.bci.newtonadv.App" +
-      "le\022$\n\004coin\030\n \001(\0132\026.im.bci.newtonadv.Coin" +
-      "\022\"\n\003key\030\013 \001(\0132\025.im.bci.newtonadv.Key\022$\n\004" +
-      "door\030\014 \001(\0132\026.im.bci.newtonadv.Door\022?\n\023do" +
-      "or_to_bonus_world\030\r \001(\0132\".im.bci.newtona",
-      "dv.DoorToBonusWorld\022&\n\005cloud\030\016 \001(\0132\027.im." +
-      "bci.newtonadv.Cloud\022-\n\tworld_map\030\017 \001(\0132\032" +
-      ".im.bci.newtonadv.WorldMap\022*\n\007compass\030\020 " +
-      "\001(\0132\031.im.bci.newtonadv.Compass\022>\n\022mobile" +
-      "_pike_anchor\030\021 \001(\0132\".im.bci.newtonadv.Mo" +
-      "bilePikeAnchor\022/\n\naxe_anchor\030\022 \001(\0132\033.im." +
-      "bci.newtonadv.AxeAnchor\022.\n\tactivator\030\023 \001" +
-      "(\0132\033.im.bci.newtonadv.Activator\022;\n\020memor" +
-      "y_activator\030\024 \001(\0132!.im.bci.newtonadv.Mem" +
-      "oryActivator\0229\n\017moving_platform\030\025 \001(\0132 .",
-      "im.bci.newtonadv.MovingPlatform\0220\n\ntelep" +
-      "orter\030\026 \001(\0132\034.im.bci.newtonadv.Teleporte" +
-      "r\022*\n\007keyLock\030\027 \001(\0132\031.im.bci.newtonadv.Ke" +
-      "yLock\022-\n\thelp_sign\030\030 \001(\0132\032.im.bci.newton" +
-      "adv.HelpSign\0225\n\regyptian_boss\030\031 \001(\0132\036.im" +
-      ".bci.newtonadv.EgyptianBoss\022$\n\004hero\030\032 \001(" +
-      "\0132\026.im.bci.newtonadv.Hero\"T\n\006Entity\022\014\n\004t" +
-      "ype\030\001 \002(\t\022,\n\010position\030\002 \002(\0132\032.im.bci.new" +
-      "tonadv.Position\022\016\n\006zorder\030\003 \002(\005\"g\n\005Level" +
-      "\0222\n\014entity_types\030\001 \003(\0132\034.im.bci.newtonad",
-      "v.EntityType\022*\n\010entities\030\002 \003(\0132\030.im.bci." +
-      "newtonadv.EntityB\034B\032NewtonAdventureLevel" +
-      "Parser"
+      "nce\022<\n\016hand_animation\030\002 \002(\0132$.im.bci.new" +
+      "tonadv.AnimationReference\"?\n\004Hero\0227\n\tani" +
+      "mation\030\001 \002(\0132$.im.bci.newtonadv.Animatio",
+      "nReference\"\250\t\n\nEntityType\022\014\n\004name\030\001 \002(\t\022" +
+      "&\n\005shape\030\002 \002(\0132\027.im.bci.newtonadv.Shape\022" +
+      "&\n\005pikes\030\003 \001(\0132\027.im.bci.newtonadv.Pikes\022" +
+      ",\n\010platform\030\004 \001(\0132\032.im.bci.newtonadv.Pla" +
+      "tform\0229\n\017bounce_platform\030\005 \001(\0132 .im.bci." +
+      "newtonadv.BouncePlatform\022(\n\006cannon\030\006 \001(\013" +
+      "2\030.im.bci.newtonadv.Cannon\022&\n\005mummy\030\007 \001(" +
+      "\0132\027.im.bci.newtonadv.Mummy\022\"\n\003bat\030\010 \001(\0132" +
+      "\025.im.bci.newtonadv.Bat\022&\n\005apple\030\t \001(\0132\027." +
+      "im.bci.newtonadv.Apple\022$\n\004coin\030\n \001(\0132\026.i",
+      "m.bci.newtonadv.Coin\022\"\n\003key\030\013 \001(\0132\025.im.b" +
+      "ci.newtonadv.Key\022$\n\004door\030\014 \001(\0132\026.im.bci." +
+      "newtonadv.Door\022?\n\023door_to_bonus_world\030\r " +
+      "\001(\0132\".im.bci.newtonadv.DoorToBonusWorld\022" +
+      "&\n\005cloud\030\016 \001(\0132\027.im.bci.newtonadv.Cloud\022" +
+      "-\n\tworld_map\030\017 \001(\0132\032.im.bci.newtonadv.Wo" +
+      "rldMap\022*\n\007compass\030\020 \001(\0132\031.im.bci.newtona" +
+      "dv.Compass\022>\n\022mobile_pike_anchor\030\021 \001(\0132\"" +
+      ".im.bci.newtonadv.MobilePikeAnchor\022/\n\nax" +
+      "e_anchor\030\022 \001(\0132\033.im.bci.newtonadv.AxeAnc",
+      "hor\022.\n\tactivator\030\023 \001(\0132\033.im.bci.newtonad" +
+      "v.Activator\022;\n\020memory_activator\030\024 \001(\0132!." +
+      "im.bci.newtonadv.MemoryActivator\0229\n\017movi" +
+      "ng_platform\030\025 \001(\0132 .im.bci.newtonadv.Mov" +
+      "ingPlatform\0220\n\nteleporter\030\026 \001(\0132\034.im.bci" +
+      ".newtonadv.Teleporter\022*\n\007keyLock\030\027 \001(\0132\031" +
+      ".im.bci.newtonadv.KeyLock\022-\n\thelp_sign\030\030" +
+      " \001(\0132\032.im.bci.newtonadv.HelpSign\0225\n\regyp" +
+      "tian_boss\030\031 \001(\0132\036.im.bci.newtonadv.Egypt" +
+      "ianBoss\022$\n\004hero\030\032 \001(\0132\026.im.bci.newtonadv",
+      ".Hero\"T\n\006Entity\022\014\n\004type\030\001 \002(\t\022,\n\010positio" +
+      "n\030\002 \002(\0132\032.im.bci.newtonadv.Position\022\016\n\006z" +
+      "order\030\003 \002(\005\"g\n\005Level\0222\n\014entity_types\030\001 \003" +
+      "(\0132\034.im.bci.newtonadv.EntityType\022*\n\010enti" +
+      "ties\030\002 \003(\0132\030.im.bci.newtonadv.EntityB\034B\032" +
+      "NewtonAdventureLevelParser"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -23075,7 +23396,7 @@ public final class NewtonAdventureLevelParser {
           internal_static_im_bci_newtonadv_Door_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_im_bci_newtonadv_Door_descriptor,
-              new java.lang.String[] { "Animation", },
+              new java.lang.String[] { "OpenAnimation", "ClosedAnimation", },
               im.bci.newtonadv.NewtonAdventureLevelParser.Door.class,
               im.bci.newtonadv.NewtonAdventureLevelParser.Door.Builder.class);
           internal_static_im_bci_newtonadv_DoorToBonusWorld_descriptor =
@@ -23083,7 +23404,7 @@ public final class NewtonAdventureLevelParser {
           internal_static_im_bci_newtonadv_DoorToBonusWorld_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_im_bci_newtonadv_DoorToBonusWorld_descriptor,
-              new java.lang.String[] { "Animation", },
+              new java.lang.String[] { "OpenAnimation", "ClosedAnimation", },
               im.bci.newtonadv.NewtonAdventureLevelParser.DoorToBonusWorld.class,
               im.bci.newtonadv.NewtonAdventureLevelParser.DoorToBonusWorld.Builder.class);
           internal_static_im_bci_newtonadv_Cloud_descriptor =

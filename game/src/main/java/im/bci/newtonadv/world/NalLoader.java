@@ -282,41 +282,79 @@ class NalLoader {
 	private void loadDoorToBonusWorld(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.DoorToBonusWorld doorToBonusWorld) {
-		// TODO Auto-generated method stub
+			im.bci.newtonadv.NewtonAdventureLevelParser.DoorToBonusWorld doorToBonusWorldType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.DoorToBonusWorld door = new im.bci.newtonadv.world.DoorToBonusWorld(world, shape);
+			Vector2f pos = getPos(entity);
+			door.setPosition(pos.getX(), pos.getY());
+			door.setZOrder(entity.getZorder());
+			door.setOpenTexture(getOrLoadAnimation(doorToBonusWorldType.getOpenAnimation()));
+			door.setClosedTexture(getOrLoadAnimation(doorToBonusWorldType.getClosedAnimation()));
+			world.add(door);
+		}
 
 	}
 
 	private void loadDoor(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Door door) {
-		// TODO Auto-generated method stub
-
+			im.bci.newtonadv.NewtonAdventureLevelParser.Door doorType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.Door door = new im.bci.newtonadv.world.Door(world, shape);
+			Vector2f pos = getPos(entity);
+			door.setPosition(pos.getX(), pos.getY());
+			door.setZOrder(entity.getZorder());
+			door.setOpenTexture(getOrLoadAnimation(doorType.getOpenAnimation()));
+			door.setClosedTexture(getOrLoadAnimation(doorType.getClosedAnimation()));
+			world.add(door);
+		}
 	}
 
 	private void loadCompass(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Compass compass) {
-		// TODO Auto-generated method stub
-
+			im.bci.newtonadv.NewtonAdventureLevelParser.Compass compassType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.Compass compass = new im.bci.newtonadv.world.Compass(world, shape);
+			Vector2f pos = getPos(entity);
+			compass.setPosition(pos.getX(), pos.getY());
+			compass.setZOrder(entity.getZorder());
+			compass.setTexture(getOrLoadAnimation(compassType.getAnimation()));
+			world.add(compass);
+		}
 	}
 
 	private void loadCoin(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Coin coin) {
-		// TODO Auto-generated method stub
-
+			im.bci.newtonadv.NewtonAdventureLevelParser.Coin coinType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.Coin coin = new im.bci.newtonadv.world.Coin(world, shape);
+			Vector2f pos = getPos(entity);
+			coin.setPosition(pos.getX(), pos.getY());
+			coin.setZOrder(entity.getZorder());
+			coin.setTexture(getOrLoadAnimation(coinType.getAnimation()));
+			world.add(coin);
+		}
 	}
 
 	private void loadCloud(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Cloud cloud) {
-		// TODO Auto-generated method stub
-
+			im.bci.newtonadv.NewtonAdventureLevelParser.Cloud cloudType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.Cloud cloud = new im.bci.newtonadv.world.Cloud(world, shape);
+			Vector2f pos = getPos(entity);
+			cloud.setPosition(pos.getX(), pos.getY());
+			cloud.setZOrder(entity.getZorder());
+			cloud.setTexture(getOrLoadAnimation(cloudType.getAnimation()));
+			world.add(cloud);
+		}
 	}
 
 	private void loadCannon(
@@ -330,9 +368,16 @@ class NalLoader {
 	private void loadBouncePlatform(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.BouncePlatform bouncePlatform) {
-		// TODO Auto-generated method stub
-
+			im.bci.newtonadv.NewtonAdventureLevelParser.BouncePlatform bouncePlatformType) {
+		Shape shape = loadShape(type.getShape());
+		if(null != shape) {
+			im.bci.newtonadv.world.BouncePlatform platform = new im.bci.newtonadv.world.BouncePlatform(world, shape);
+			Vector2f pos = getPos(entity);
+			platform.setPosition(pos.getX(), pos.getY());
+			platform.setZOrder(entity.getZorder());
+			platform.setTexture(getOrLoadAnimation(bouncePlatformType.getAnimation()));
+			world.add(platform);
+		}
 	}
 
 	private void loadPlatform(

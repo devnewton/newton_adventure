@@ -32,6 +32,7 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.raw.Body;
+import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
@@ -46,7 +47,11 @@ public strictfp class Cloud extends Platform implements Updatable {
         super(world, w, h);
     }
     
-    @Override
+    public Cloud(World world, Shape shape) {
+    	super(world, shape);
+	}
+
+	@Override
     public void collided(Body body) {
         if( body instanceof Hero ) {
             touched = true;
