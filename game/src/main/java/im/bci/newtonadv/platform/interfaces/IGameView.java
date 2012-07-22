@@ -85,7 +85,7 @@ public interface IGameView {
 
     void drawAxe(Axe axe, AnimationFrame texture);
 
-    void drawAxeAnchor(AxeAnchor axeAnchor, float radius, ITexture texture);
+    void drawAxeAnchor(AxeAnchor axeAnchor, float radius, AnimationFrame texture);
 
     void drawBat(Bat bat, float scale, AnimationFrame frame, World world);
 
@@ -123,7 +123,7 @@ public interface IGameView {
 
     void drawMenuSequence(MenuSequence sequence);
 
-    void drawMobilePikeAnchor(MobilePikeAnchor anchor, ITexture texture);
+    void drawMobilePikeAnchor(MobilePikeAnchor anchor, AnimationFrame texture);
 
     void drawMobilePikes(MobilePikes pikes, AnimationFrame texture);
 

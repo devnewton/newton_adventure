@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
+import net.phys2d.raw.BasicJoint;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.ConvexPolygon;
@@ -115,9 +116,32 @@ class NalLoader {
 	}
 
 	private void loadAxeAnchor(Entity entity, EntityType type,
-			AxeAnchor axeAnchor) {
-		// TODO Auto-generated method stub
+			AxeAnchor axeAnchorType) {
+		Shape shape = loadShape(type.getShape());
+		if (null != shape) {
+			im.bci.newtonadv.world.AxeAnchor anchor = new im.bci.newtonadv.world.AxeAnchor(
+					world, shape);
+			anchor.setTexture(getOrLoadAnimation(axeAnchorType.getAnimation()));
+			Vector2f pos = getPos(entity);
+			anchor.setPosition(pos.getX(), pos.getY());
+			anchor.setZOrder(entity.getZorder());
+			world.add(anchor);
 
+			Axe axe = new Axe(world);
+			axe.setTexture(getOrLoadAnimation(axeAnchorType.getAxeAnimation()));
+			axe.setPosition(anchor.getPosition().getX(), anchor.getPosition()
+					.getY()
+					- MobilePikes.height
+					/ 2.0f
+					- anchor.getShape().getBounds().getHeight() / 2.0f);
+			axe.setZOrder(entity.getZorder());
+			world.add(axe);
+
+			BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(
+					anchor.getPosition()));
+			j.setRelaxation(0);
+			world.add(j);
+		}
 	}
 
 	private void loadApple(Entity entity, EntityType type, Apple appleType) {
@@ -136,8 +160,11 @@ class NalLoader {
 	private void loadActivator(Entity entity, EntityType type,
 			Activator activatorType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.Activator activator = new im.bci.newtonadv.world.Activator(world, activatorType.getActivableId(), getOrLoadAnimation(activatorType.getOnAnimation()), getOrLoadAnimation(activatorType.getOffAnimation()), shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.Activator activator = new im.bci.newtonadv.world.Activator(
+					world, activatorType.getActivableId(),
+					getOrLoadAnimation(activatorType.getOnAnimation()),
+					getOrLoadAnimation(activatorType.getOffAnimation()), shape);
 			Vector2f pos = getPos(entity);
 			activator.setPosition(pos.getX(), pos.getY());
 			activator.setZOrder(entity.getZorder());
@@ -150,8 +177,10 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.Pikes pikesType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.Pikes pikes = new im.bci.newtonadv.world.Pikes(world, convertDangerousSide(pikesType.getDangerousSide()), shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.Pikes pikes = new im.bci.newtonadv.world.Pikes(
+					world, convertDangerousSide(pikesType.getDangerousSide()),
+					shape);
 			pikes.setTexture(getOrLoadAnimation(pikesType.getAnimation()));
 			Vector2f pos = getPos(entity);
 			pikes.setPosition(pos.getX(), pos.getY());
@@ -160,8 +189,9 @@ class NalLoader {
 		}
 	}
 
-	private im.bci.newtonadv.world.Pikes.DangerousSide convertDangerousSide(DangerousSide dangerousSide) {
-		switch(dangerousSide) {
+	private im.bci.newtonadv.world.Pikes.DangerousSide convertDangerousSide(
+			DangerousSide dangerousSide) {
+		switch (dangerousSide) {
 		case DOWN:
 			return im.bci.newtonadv.world.Pikes.DangerousSide.DOWN;
 		case LEFT:
@@ -200,9 +230,32 @@ class NalLoader {
 	private void loadMobilePikeAnchor(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.MobilePikeAnchor mobilePikeAnchor) {
-		// TODO Auto-generated method stub
+			im.bci.newtonadv.NewtonAdventureLevelParser.MobilePikeAnchor mobilePikeAnchorType) {
+		Shape shape = loadShape(type.getShape());
+		if (null != shape) {
+			im.bci.newtonadv.world.MobilePikeAnchor anchor = new im.bci.newtonadv.world.MobilePikeAnchor(
+					world, shape);
+			anchor.setTexture(getOrLoadAnimation(mobilePikeAnchorType.getAnimation()));
+			Vector2f pos = getPos(entity);
+			anchor.setPosition(pos.getX(), pos.getY());
+			anchor.setZOrder(entity.getZorder());
+			world.add(anchor);
 
+			MobilePikes mobilePikes = new MobilePikes(world);
+			mobilePikes.setTexture(getOrLoadAnimation(mobilePikeAnchorType.getMobilePikesAnimation()));
+			mobilePikes.setPosition(anchor.getPosition().getX(), anchor.getPosition()
+					.getY()
+					- MobilePikes.height
+					/ 2.0f
+					- anchor.getShape().getBounds().getHeight() / 2.0f);
+			mobilePikes.setZOrder(entity.getZorder());
+			world.add(mobilePikes);
+
+			BasicJoint j = new BasicJoint(anchor, mobilePikes, new Vector2f(
+					anchor.getPosition()));
+			j.setRelaxation(0);
+			world.add(j);
+		}
 	}
 
 	private void loadMemoryActivator(
@@ -210,8 +263,13 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.MemoryActivator memoryActivatorType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.MemoryActivator activator = new im.bci.newtonadv.world.MemoryActivator(world, memoryActivatorType.getActivableId(), getOrLoadAnimation(memoryActivatorType.getOnAnimation()), getOrLoadAnimation(memoryActivatorType.getOffAnimation()), getOrLoadAnimation(memoryActivatorType.getHideAnimation()), shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.MemoryActivator activator = new im.bci.newtonadv.world.MemoryActivator(
+					world, memoryActivatorType.getActivableId(),
+					getOrLoadAnimation(memoryActivatorType.getOnAnimation()),
+					getOrLoadAnimation(memoryActivatorType.getOffAnimation()),
+					getOrLoadAnimation(memoryActivatorType.getHideAnimation()),
+					shape);
 			Vector2f pos = getPos(entity);
 			activator.setPosition(pos.getX(), pos.getY());
 			activator.setZOrder(entity.getZorder());
@@ -224,8 +282,9 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.KeyLock keyLockType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.KeyLock keyLock = new im.bci.newtonadv.world.KeyLock(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.KeyLock keyLock = new im.bci.newtonadv.world.KeyLock(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			keyLock.setPosition(pos.getX(), pos.getY());
 			keyLock.setZOrder(entity.getZorder());
@@ -236,10 +295,12 @@ class NalLoader {
 
 	private void loadKey(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
-			EntityType type, im.bci.newtonadv.NewtonAdventureLevelParser.Key keyType) {
+			EntityType type,
+			im.bci.newtonadv.NewtonAdventureLevelParser.Key keyType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.Key key = new im.bci.newtonadv.world.Key(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.Key key = new im.bci.newtonadv.world.Key(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			key.setPosition(pos.getX(), pos.getY());
 			key.setZOrder(entity.getZorder());
@@ -261,8 +322,9 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.HelpSign helpSignType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.HelpSign helpSign = new im.bci.newtonadv.world.HelpSign(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.HelpSign helpSign = new im.bci.newtonadv.world.HelpSign(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			helpSign.setPosition(pos.getX(), pos.getY());
 			helpSign.setZOrder(entity.getZorder());
@@ -284,13 +346,16 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.DoorToBonusWorld doorToBonusWorldType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.DoorToBonusWorld door = new im.bci.newtonadv.world.DoorToBonusWorld(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.DoorToBonusWorld door = new im.bci.newtonadv.world.DoorToBonusWorld(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			door.setPosition(pos.getX(), pos.getY());
 			door.setZOrder(entity.getZorder());
-			door.setOpenTexture(getOrLoadAnimation(doorToBonusWorldType.getOpenAnimation()));
-			door.setClosedTexture(getOrLoadAnimation(doorToBonusWorldType.getClosedAnimation()));
+			door.setOpenTexture(getOrLoadAnimation(doorToBonusWorldType
+					.getOpenAnimation()));
+			door.setClosedTexture(getOrLoadAnimation(doorToBonusWorldType
+					.getClosedAnimation()));
 			world.add(door);
 		}
 
@@ -301,13 +366,15 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.Door doorType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.Door door = new im.bci.newtonadv.world.Door(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.Door door = new im.bci.newtonadv.world.Door(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			door.setPosition(pos.getX(), pos.getY());
 			door.setZOrder(entity.getZorder());
 			door.setOpenTexture(getOrLoadAnimation(doorType.getOpenAnimation()));
-			door.setClosedTexture(getOrLoadAnimation(doorType.getClosedAnimation()));
+			door.setClosedTexture(getOrLoadAnimation(doorType
+					.getClosedAnimation()));
 			world.add(door);
 		}
 	}
@@ -317,8 +384,9 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.Compass compassType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.Compass compass = new im.bci.newtonadv.world.Compass(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.Compass compass = new im.bci.newtonadv.world.Compass(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			compass.setPosition(pos.getX(), pos.getY());
 			compass.setZOrder(entity.getZorder());
@@ -332,8 +400,9 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.Coin coinType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.Coin coin = new im.bci.newtonadv.world.Coin(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.Coin coin = new im.bci.newtonadv.world.Coin(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			coin.setPosition(pos.getX(), pos.getY());
 			coin.setZOrder(entity.getZorder());
@@ -347,8 +416,9 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.Cloud cloudType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.Cloud cloud = new im.bci.newtonadv.world.Cloud(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.Cloud cloud = new im.bci.newtonadv.world.Cloud(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			cloud.setPosition(pos.getX(), pos.getY());
 			cloud.setZOrder(entity.getZorder());
@@ -370,12 +440,14 @@ class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.NewtonAdventureLevelParser.BouncePlatform bouncePlatformType) {
 		Shape shape = loadShape(type.getShape());
-		if(null != shape) {
-			im.bci.newtonadv.world.BouncePlatform platform = new im.bci.newtonadv.world.BouncePlatform(world, shape);
+		if (null != shape) {
+			im.bci.newtonadv.world.BouncePlatform platform = new im.bci.newtonadv.world.BouncePlatform(
+					world, shape);
 			Vector2f pos = getPos(entity);
 			platform.setPosition(pos.getX(), pos.getY());
 			platform.setZOrder(entity.getZorder());
-			platform.setTexture(getOrLoadAnimation(bouncePlatformType.getAnimation()));
+			platform.setTexture(getOrLoadAnimation(bouncePlatformType
+					.getAnimation()));
 			world.add(platform);
 		}
 	}

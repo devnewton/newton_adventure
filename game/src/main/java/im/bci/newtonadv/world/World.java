@@ -659,7 +659,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(cannon);
 		} else if (c.equals("mobile_pike_anchor")) {
 			MobilePikeAnchor anchor = new MobilePikeAnchor(this);
-			anchor.setTexture(getTextureForTile(map, tile, textureCache));
+			anchor.setTexture(getAnimationForTile(map, tile, textureCache));
 			anchor.setPosition(tileX, tileY);
 			anchor.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(anchor);
@@ -670,7 +670,7 @@ public strictfp class World extends net.phys2d.raw.World {
 					.getY()
 					- MobilePikes.height
 					/ 2.0f
-					- MobilePikeAnchor.radius);
+					- anchor.getShape().getBounds().getHeight()/2.0f);
 			add(pikes);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 
@@ -680,7 +680,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(j);
 		} else if (c.equals("axe_anchor")) {
 			AxeAnchor anchor = new AxeAnchor(this);
-			anchor.setTexture(getTextureForTile(map, tile, textureCache));
+			anchor.setTexture(getAnimationForTile(map, tile, textureCache));
 			anchor.setPosition(tileX, tileY);
 			anchor.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(anchor);
@@ -691,7 +691,7 @@ public strictfp class World extends net.phys2d.raw.World {
 					.getY()
 					- MobilePikes.height
 					/ 2.0f
-					- MobilePikeAnchor.radius);
+					- anchor.getShape().getBounds().getHeight()/2.0f);
 			axe.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(axe);
 
@@ -827,20 +827,6 @@ public strictfp class World extends net.phys2d.raw.World {
 					questName, levelName, map, tile));
 		}
 		return animation;
-	}
-
-	private ITexture getTextureForTile(tiled.core.Map map,
-			tiled.core.Tile tile, ITextureCache textureCache)
-			throws FileNotFoundException, IOException {
-		ITexture texture;
-		String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
-		if (null != gfx) {
-			texture = textureCache.getTexture(game.getData().getLevelFilePath(
-					questName, levelName, gfx));
-		} else {
-			texture = textureCache.getTexture(questName, levelName, map, tile);
-		}
-		return texture;
 	}
 
 	public Vector2f getGravityVector() {

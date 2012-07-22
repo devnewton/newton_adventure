@@ -406,7 +406,8 @@ public strictfp class GameView implements IGameView {
 
 	@Override
 	public void drawAxeAnchor(AxeAnchor axeAnchor, float radius,
-			ITexture texture) {
+			AnimationFrame frame) {
+		ITexture texture = frame.getImage();
 		GL11.glPushMatrix();
 		GL11.glTranslatef(axeAnchor.getPosition().getX(), axeAnchor
 				.getPosition().getY(), 0.0f);
@@ -808,14 +809,16 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawMobilePikeAnchor(MobilePikeAnchor anchor, ITexture texture) {
+	public void drawMobilePikeAnchor(MobilePikeAnchor anchor, AnimationFrame frame) {
+		ITexture texture = frame.getImage();
 		GL11.glPushMatrix();
 		GL11.glTranslatef(anchor.getPosition().getX(), anchor.getPosition()
 				.getY(), 0.0f);
-		final float x1 = -anchor.getRadius();
-		final float x2 = anchor.getRadius();
-		final float y1 = -anchor.getRadius();
-		final float y2 = anchor.getRadius();
+		AABox bounds = anchor.getShape().getBounds();
+		final float x1 = -bounds.getWidth() / 2.0f;
+		final float x2 = bounds.getWidth() / 2.0f;
+		final float y1 = -bounds.getHeight() / 2.0f;
+		final float y2 = bounds.getHeight() / 2.0f;
 
 		if (texture.hasAlpha()) {
 			GL11.glEnable(GL11.GL_BLEND);
