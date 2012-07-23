@@ -32,6 +32,7 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.math.Vector2f;
+import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
@@ -56,6 +57,12 @@ public strictfp class Cannon extends Platform implements Updatable {
 
     public Cannon(World world, Orientation orientation, float w, float h) {
         super(world, w, h);
+        this.orientation = orientation;
+        setEnabled(false);
+    }
+    
+    public Cannon(World world, Orientation orientation, Shape shape) {
+        super(world, shape);
         this.orientation = orientation;
         setEnabled(false);
     }

@@ -44,6 +44,7 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.Circle;
+import net.phys2d.raw.shapes.Shape;
 
 /**
  * 
@@ -156,7 +157,11 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 	private boolean hasCompass;
 
 	public Hero(World world) {
-		super(new Circle(World.distanceUnit), weight);
+		this(world, new Circle(World.distanceUnit));
+	}
+
+	public Hero(World world, Shape shape) {
+		super(shape, weight);
 		this.world = world;
 		setRotatable(false);
 		levelScore.addApple(this.nbApple);

@@ -6,6 +6,7 @@ import im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference;
 import im.bci.newtonadv.NewtonAdventureLevelParser.Apple;
 import im.bci.newtonadv.NewtonAdventureLevelParser.AxeAnchor;
 import im.bci.newtonadv.NewtonAdventureLevelParser.Bat;
+import im.bci.newtonadv.NewtonAdventureLevelParser.Cannon.Orientation;
 import im.bci.newtonadv.NewtonAdventureLevelParser.Entity;
 import im.bci.newtonadv.NewtonAdventureLevelParser.EntityType;
 import im.bci.newtonadv.NewtonAdventureLevelParser.Level;
@@ -27,12 +28,16 @@ import net.phys2d.raw.shapes.Shape;
 
 class NalLoader {
 	private final World world;
-	Level level;
-	final Logger logger = Logger.getLogger(NalLoader.class.getName());
+	private final String questName, levelName;
+	private im.bci.newtonadv.world.Hero hero;
+	private Level level;
+	private static final Logger LOGGER = Logger.getLogger(NalLoader.class.getName());
 
-	NalLoader(World world, InputStream input) throws IOException {
+	NalLoader(World world, String questName, String levelName, InputStream input) throws IOException {
 		this.world = world;
 		this.level = NewtonAdventureLevelParser.Level.parseFrom(input);
+		this.questName = questName;
+		this.levelName = levelName;
 	}
 
 	public void load() {
@@ -91,8 +96,7 @@ class NalLoader {
 		} else if (type.hasPlatform()) {
 			loadPlatform(entity, type, type.getPlatform());
 		} else {
-			logger.log(
-					java.util.logging.Level.WARNING,
+			LOGGER.warning(
 					"no entity type record found, entity type name: "
 							+ type.getName());
 		}
@@ -312,8 +316,21 @@ class NalLoader {
 	private void loadHero(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Hero hero) {
-		// TODO Auto-generated method stub
+			im.bci.newtonadv.NewtonAdventureLevelParser.Hero heroType) {
+		Shape shape = loadShape(type.getShape());
+		if (null != shape) {
+			if (null == hero) {
+				hero = new im.bci.newtonadv.world.Hero(world,shape);
+				hero.setAnimation(getOrLoadAnimation(heroType.getAnimation()));
+				Vector2f pos = getPos(entity);
+				hero.setPosition(pos.getX(), pos.getY());
+				hero.setZOrder(entity.getZorder());
+				world.setHero(hero);
+			} else {
+				LOGGER.warning("One hero is enough for level " + levelName
+						+ " in quest " + questName);
+			}
+		}
 
 	}
 
@@ -430,9 +447,33 @@ class NalLoader {
 	private void loadCannon(
 			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Cannon cannon) {
-		// TODO Auto-generated method stub
+			im.bci.newtonadv.NewtonAdventureLevelParser.Cannon cannonType) {
+		Shape shape = loadShape(type.getShape());
+		if (null != shape) {
+			im.bci.newtonadv.world.Cannon cannon = new im.bci.newtonadv.world.Cannon(
+					world, convertOrientation(cannonType.getOrientation()), shape);
+			cannon.setTexture(getOrLoadAnimation(cannonType.getAnimation()));
+			Vector2f pos = getPos(entity);
+			cannon.setPosition(pos.getX(), pos.getY());
+			cannon.setZOrder(entity.getZorder());
+			world.add(cannon);
+		}
 
+	}
+
+	private im.bci.newtonadv.world.Cannon.Orientation convertOrientation(
+			Orientation orientation) {
+		switch(orientation) {
+		case DOWN:
+			return im.bci.newtonadv.world.Cannon.Orientation.DOWN;
+		case LEFT:
+			return im.bci.newtonadv.world.Cannon.Orientation.LEFT;
+		case RIGHT:
+			return im.bci.newtonadv.world.Cannon.Orientation.RIGHT;
+		case UP:
+			return im.bci.newtonadv.world.Cannon.Orientation.RIGHT;
+		}
+		return null;
 	}
 
 	private void loadBouncePlatform(
@@ -484,7 +525,7 @@ class NalLoader {
 			}
 			return new ConvexPolygon(vertices);
 		}
-		logger.log(java.util.logging.Level.WARNING, "unknow shape type");
+		LOGGER.warning("unknow shape type");
 		return null;
 	}
 
@@ -499,8 +540,7 @@ class NalLoader {
 				return entityType;
 			}
 		}
-		logger.log(java.util.logging.Level.WARNING, "cannot find entity type "
-				+ type);
+		LOGGER.warning("cannot find entity type "+ type);
 		return null;
 	}
 }

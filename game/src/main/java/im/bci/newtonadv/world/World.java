@@ -74,13 +74,14 @@ import tiled.io.TMXMapReader;
  */
 public strictfp class World extends net.phys2d.raw.World {
 
-	private static final Logger LOGGER = Logger.getLogger(World.class.getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(World.class.getName());
 	static final int STATIC_BODY_COLLIDE_BIT = 1;
 	boolean mustDrawContacts = false;
 	boolean mustDrawNormals = false;
 	boolean mustDrawJoints = false;
 	static public final float distanceUnit = 1.0f;
-	Hero hero = new Hero(this);
+	private Hero hero;
 	private float gravityAngle = 0.0f;
 	private boolean nonProgressiveGravityRotationActive = false;
 	private float gravityAngleTarget;
@@ -318,11 +319,13 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	private boolean loadNalLevel() {
 		try {
-		InputStream input = game.getData().openLevelNal(questName, levelName);
-		NalLoader loader = new NalLoader(this, input);
-		loader.load();
-		} catch(Exception e) {
-			
+			InputStream input = game.getData().openLevelNal(questName,
+					levelName);
+			NalLoader loader = new NalLoader(this, questName,
+					levelName, input);
+			loader.load();
+		} catch (Exception e) {
+
 		}
 		return true;
 	}
@@ -439,10 +442,8 @@ public strictfp class World extends net.phys2d.raw.World {
 					"newton_adventure.rotate_gravity_possible"));
 			return true;
 		} catch (Exception e) {
-			LOGGER
-					.warning(
-							"Cannot load level " + levelName + " in quest "
-									+ questName);
+			LOGGER.warning("Cannot load level " + levelName + " in quest "
+					+ questName);
 			return false;
 		}
 	}
@@ -475,10 +476,10 @@ public strictfp class World extends net.phys2d.raw.World {
 	float getGravityForce() {
 		return gravityForce;
 	}
-	
 
-    static final float defaultPickableObjectSize = 2.0f * World.distanceUnit;
-	private static final Circle defaultPickableObjectShape = new Circle(defaultPickableObjectSize / 2.0f);
+	static final float defaultPickableObjectSize = 2.0f * World.distanceUnit;
+	private static final Circle defaultPickableObjectShape = new Circle(
+			defaultPickableObjectSize / 2.0f);
 
 	private void initFromTile(float x, float y, tiled.core.Map map,
 			tiled.core.Tile tile, int zOrderBase) throws IOException {
@@ -536,16 +537,24 @@ public strictfp class World extends net.phys2d.raw.World {
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
 		} else if (c.equals("hero")) {
-			hero.setPosition(tileX, tileY);
-			hero.setZOrder(getTileZOrder(tile, zOrderBase));
-			add(hero);
+			if (null == hero) {
+				hero = new Hero(this);
+				hero.setPosition(tileX, tileY);
+				hero.setZOrder(getTileZOrder(tile, zOrderBase));
+				add(hero);
+			} else {
+				LOGGER.warning("One hero is enough for level " + levelName
+						+ " in quest " + questName);
+			}
 		} else if (c.equals("mummy")) {
-			Mummy mummy = new Mummy(this, new Circle(distanceUnit), mummyAnimation);
+			Mummy mummy = new Mummy(this, new Circle(distanceUnit),
+					mummyAnimation);
 			mummy.setPosition(tileX, tileY);
 			mummy.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(mummy);
 		} else if (c.equals("bat")) {
-			Bat bat = new Bat(this, new Box(distanceUnit * 1.0f, distanceUnit * 0.5f), batAnimation);
+			Bat bat = new Bat(this, new Box(distanceUnit * 1.0f,
+					distanceUnit * 0.5f), batAnimation);
 			bat.setPosition(tileX, tileY);
 			bat.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(bat);
@@ -670,7 +679,7 @@ public strictfp class World extends net.phys2d.raw.World {
 					.getY()
 					- MobilePikes.height
 					/ 2.0f
-					- anchor.getShape().getBounds().getHeight()/2.0f);
+					- anchor.getShape().getBounds().getHeight() / 2.0f);
 			add(pikes);
 			pikes.setZOrder(getTileZOrder(tile, zOrderBase));
 
@@ -691,7 +700,7 @@ public strictfp class World extends net.phys2d.raw.World {
 					.getY()
 					- MobilePikes.height
 					/ 2.0f
-					- anchor.getShape().getBounds().getHeight()/2.0f);
+					- anchor.getShape().getBounds().getHeight() / 2.0f);
 			axe.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(axe);
 
@@ -1057,5 +1066,10 @@ public strictfp class World extends net.phys2d.raw.World {
 	public void addApple(im.bci.newtonadv.world.Apple apple) {
 		++nbCollectableApple;
 		add(apple);
+	}
+
+	public void setHero(Hero hero) {
+		this.hero = hero;
+		add(hero);		
 	}
 }
