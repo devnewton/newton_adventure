@@ -970,7 +970,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawEgyptianBoss(EgyptianBoss boss, ITexture texture,
+	public void drawEgyptianBoss(EgyptianBoss boss, AnimationFrame texture,
 			boolean isHurtBlinkState) {
 		AABox bounds = boss.getShape().getBounds();
 
@@ -983,7 +983,7 @@ public strictfp class GameView implements IGameView {
 		float y2 = bounds.getHeight() / 2.0f;
 
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
 		if (isHurtBlinkState) {
 			GL11.glColor3f(1, 0, 0);
@@ -1009,7 +1009,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawEgyptianBossHand(EgyptianBossHand hand, ITexture texture) {
+	public void drawEgyptianBossHand(EgyptianBossHand hand, AnimationFrame texture) {
 		AABox bounds = hand.getShape().getBounds();
 
 		GL11.glPushMatrix();
@@ -1021,7 +1021,7 @@ public strictfp class GameView implements IGameView {
 		float y2 = bounds.getHeight() / 2.0f;
 
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
 		final float u1 = 1, u2 = 0;
 		GL11.glBegin(GL11.GL_QUADS);

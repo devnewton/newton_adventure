@@ -37,6 +37,7 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.Shape;
 
 /**
  *
@@ -44,19 +45,19 @@ import net.phys2d.raw.shapes.Box;
  */
 public strictfp class MovingPlatform extends AbstractDrawableBody implements Updatable {
 
-    private final Destinations destinations;
-
-    public static class Destinations {
-
-        Vector2f a = new Vector2f(), b = new Vector2f();
-    }
+    private final Vector2f[] destinations;
+    private int currentDestination = 0;
     private static final float weight = 10000.0f;
     final World world;
     final AnimationCollection texture;
     final Vector2f f = new Vector2f();
 
-    public MovingPlatform(World world, AnimationCollection texture, Destinations destinations, float w, float h) {
-        super(new Box(w, h), weight);
+    public MovingPlatform(World world, AnimationCollection texture, Vector2f[] destinations, float w, float h) {
+        this(world, texture, destinations, new Box(w, h));
+    }
+    
+    public MovingPlatform(World world, AnimationCollection texture, Vector2f[] destinations, Shape shape) {
+        super(shape, weight);
         this.world = world;
         this.texture = texture;
         this.destinations = destinations;
@@ -72,15 +73,19 @@ public strictfp class MovingPlatform extends AbstractDrawableBody implements Upd
 
     @Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-        if (this.getPosition().distance(destinations.a) < 1f) {
-            Vector2f swap = destinations.a;
-            destinations.a = destinations.b;
-            destinations.b = swap;
-        }
-        f.set(destinations.a);
-        f.sub(this.getPosition());
-        f.normalise();
-        f.scale(world.getGravityForce());
-        this.adjustBiasedVelocity(f);
+    	if(destinations.length>0) {
+    		Vector2f destinationPos = destinations[currentDestination];
+	        if (this.getPosition().distance(destinationPos) < 1f) {
+	            ++currentDestination;
+	            if(currentDestination>=destinations.length) {
+	            	currentDestination = 0;
+	            }
+	        }
+	        f.set(destinationPos);
+	        f.sub(this.getPosition());
+	        f.normalise();
+	        f.scale(world.getGravityForce());
+	        this.adjustBiasedVelocity(f);
+    	}
     }
 }

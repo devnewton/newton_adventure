@@ -31,8 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.raw.BodyList;
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -58,7 +58,7 @@ public strictfp class EgyptianBoss extends AbstractDrawableBody implements Updat
         return rightHand;
     }
 
-    private ITexture bodyTexture;
+    private AnimationCollection bodyTexture;
     private static final float weight = 10.0f;
     static final float normalSpeed = 1.0f;
     float speed = normalSpeed;
@@ -102,11 +102,12 @@ public strictfp class EgyptianBoss extends AbstractDrawableBody implements Updat
         return pos;
     }
 
-    public void setBodyTexture(ITexture bodyTexture) {
+    public void setBodyTexture(AnimationCollection bodyTexture) {
         this.bodyTexture = bodyTexture;
+        bodyTexture.getFirst().start();
     }
 
-    public void setHandTexture(ITexture handTexture) {
+    public void setHandTexture(AnimationCollection handTexture) {
         leftHand.setTexture(handTexture);
         rightHand.setTexture(handTexture);
     }
@@ -178,11 +179,12 @@ public strictfp class EgyptianBoss extends AbstractDrawableBody implements Updat
         } else {
             isHurtBlinkState = false;
         }
-        world.getView().drawEgyptianBoss(this,this.bodyTexture,isHurtBlinkState);
+        world.getView().drawEgyptianBoss(this,this.bodyTexture.getFirst().getCurrentFrame(),isHurtBlinkState);
     }
 
     @Override
     public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+    	bodyTexture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
         if (isDead()) {
             if (endOfDyingDuration < 0) {
                 world.remove(leftHand);

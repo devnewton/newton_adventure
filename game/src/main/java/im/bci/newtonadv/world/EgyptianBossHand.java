@@ -31,8 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
 import net.phys2d.math.ROVector2f;
+import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -62,7 +62,7 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
     }
     private static final float weight = 5.0f;
     private EgyptianBoss boss;
-    private ITexture texture;
+    private AnimationCollection texture;
     private Side side;
     private State state = State.MOVING_TO_BOSS;
 
@@ -76,7 +76,7 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
         addExcludedBody(boss);
     }
 
-    public void setTexture(ITexture t) {
+    public void setTexture(AnimationCollection t) {
         this.texture = t;
     }
 
@@ -94,7 +94,7 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
 
     @Override
     public void draw() {
-        world.getView().drawEgyptianBossHand(this, texture);
+        world.getView().drawEgyptianBossHand(this, texture.getFirst().getCurrentFrame());
     }
 
     @Override

@@ -321,7 +321,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		try {
 			InputStream input = game.getData().openLevelNal(questName,
 					levelName);
-			NalLoader loader = new NalLoader(this, questName,
+			NalLoader loader = new NalLoader(game, this, questName,
 					levelName, input);
 			loader.load();
 		} catch (Exception e) {
@@ -429,12 +429,6 @@ public strictfp class World extends net.phys2d.raw.World {
 				backgroundTexture = textureCache
 						.getTexture(backgroundTextureFile);
 			}
-			this.getHero().setAnimation(
-					game.getView().loadFromAnimation(
-							getFileFromMap(map, "newton_adventure.hero")));
-			this.getHero().setJumpSound(
-					game.getSoundCache().getSoundIfEnabled(
-							game.getData().getFile("jump.wav")));
 			game.getSoundCache().playMusicIfEnabled(
 					getFileFromMap(map, "newton_adventure.music"));
 
@@ -442,8 +436,8 @@ public strictfp class World extends net.phys2d.raw.World {
 					"newton_adventure.rotate_gravity_possible"));
 			return true;
 		} catch (Exception e) {
-			LOGGER.warning("Cannot load level " + levelName + " in quest "
-					+ questName);
+			LOGGER.log(java.util.logging.Level.WARNING, "Cannot load level " + levelName + " in quest "
+					+ questName, e);
 			return false;
 		}
 	}
@@ -541,6 +535,12 @@ public strictfp class World extends net.phys2d.raw.World {
 				hero = new Hero(this);
 				hero.setPosition(tileX, tileY);
 				hero.setZOrder(getTileZOrder(tile, zOrderBase));
+				hero.setAnimation(
+						game.getView().loadFromAnimation(
+								getFileFromMap(map, "newton_adventure.hero")));
+				hero.setJumpSound(
+						game.getSoundCache().getSoundIfEnabled(
+								game.getData().getFile("jump.wav")));
 				add(hero);
 			} else {
 				LOGGER.warning("One hero is enough for level " + levelName
@@ -775,7 +775,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		} else if (c.equals("moving_platform")) {
 			MovingPlatform platform = new MovingPlatform(this,
 					getAnimationForTile(map, tile, textureCache),
-					getMovingPlatformDestination(tile, x, y, baseSize),
+					getMovingPlatformPath(tile, x, y, baseSize),
 					tileWidth, tileHeight);
 			platform.setPosition(tileX, tileY);
 			platform.setFriction(getTileFriction(tile));
@@ -803,10 +803,10 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(helpSign);
 		} else if (c.equals("egyptian_boss")) {
 			EgyptianBoss boss = new EgyptianBoss(this, tileX, tileY);
-			boss.setBodyTexture(textureCache.getTexture(game.getData().getFile(
-					"egyptian_boss_body.png")));
-			boss.setHandTexture(textureCache.getTexture(game.getData().getFile(
-					"egyptian_boss_hand.png")));
+			boss.setBodyTexture(new AnimationCollection(textureCache.getTexture(game.getData().getFile(
+					"egyptian_boss_body.png"))));
+			boss.setHandTexture(new AnimationCollection(textureCache.getTexture(game.getData().getFile(
+					"egyptian_boss_hand.png"))));
 			boss.setZOrder(getTileZOrder(tile, zOrderBase));
 			boss.getLeftHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
 			boss.getRightHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
@@ -922,9 +922,9 @@ public strictfp class World extends net.phys2d.raw.World {
 		return getTileZOrder(tile, zOrderBase, 0);
 	}
 
-	private MovingPlatform.Destinations getMovingPlatformDestination(Tile tile,
+	private Vector2f[] getMovingPlatformPath(Tile tile,
 			float x, float y, float baseSize) {
-		MovingPlatform.Destinations dest = new MovingPlatform.Destinations();
+		Vector2f[] dest = new Vector2f[2];
 		float ax = Float.parseFloat(tile.getProperties().getProperty(
 				"newton_adventure.moving_platform.a.x", "-1"));
 		float ay = Float.parseFloat(tile.getProperties().getProperty(
@@ -944,9 +944,8 @@ public strictfp class World extends net.phys2d.raw.World {
 		ay *= baseSize;
 		by *= baseSize;
 
-		dest.a.set(ax, ay);
-		dest.b.set(bx, by);
-
+		dest[0] = new Vector2f(ax, ay);
+		dest[1] = new Vector2f(bx, by);
 		return dest;
 	}
 

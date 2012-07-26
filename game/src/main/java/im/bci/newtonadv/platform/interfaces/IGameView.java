@@ -101,9 +101,9 @@ public interface IGameView {
 
     void drawDownRightHalfPlatform(DownRightHalfPlatform platform, AnimationFrame texture);
 
-    void drawEgyptianBoss(EgyptianBoss boss, ITexture bodyTexture, boolean isHurtBlinkState);
+    void drawEgyptianBoss(EgyptianBoss boss, AnimationFrame bodyTexture, boolean isHurtBlinkState);
 
-    void drawEgyptianBossHand(EgyptianBossHand hand, ITexture texture);
+    void drawEgyptianBossHand(EgyptianBossHand hand, AnimationFrame texture);
 
     void drawExplosion(Explosion explosion, AnimationFrame texture, World world);
 
