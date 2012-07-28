@@ -576,8 +576,8 @@ class NalLoader {
 
 	private AnimationCollection getOrLoadAnimation(AnimationReference animation) throws CannotLoadAnimation {
 		try {
-		return game.getView().loadFromAnimation(
-				game.getData().getLevelFilePath(questName, levelName, animation.getName()));
+		return game.getView().loadSomeAnimations(
+				game.getData().getLevelFilePath(questName, levelName, animation.getFile()), animation.getName());
 		} catch(Exception e) {
 			throw new CannotLoadAnimation(animation, e);
 		}

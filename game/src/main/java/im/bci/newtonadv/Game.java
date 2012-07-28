@@ -143,15 +143,19 @@ public strictfp class Game {
 				stopGame();
 			} else {
 				currentSequence.start();
+				collectGarbage();
 			}
 		} catch (Sequence.ResumeTransitionException ex) {
 			currentSequence.stop();
 			currentSequence = ex.getNextSequence();
 			collectGarbage();
 			currentSequence.resume();
+			collectGarbage();
 		} catch (ResumableTransitionException e) {
 			currentSequence = e.getNextSequence();
+			collectGarbage();
 			currentSequence.start();
+			collectGarbage();
 		}
 	}
 

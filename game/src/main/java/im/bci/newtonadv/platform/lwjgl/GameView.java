@@ -1411,37 +1411,70 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public AnimationCollection loadFromAnimation(String name)
+	public AnimationCollection loadFromAnimation(String filename)
 			throws IOException {
-		if (name.endsWith("gif")) {
-			GifDecoder d = new GifDecoder();
-			d.read(data.openFile(name));
-			Animation animation = new Animation();
-			int n = d.getFrameCount();
-			for (int i = 0; i < n; i++) {
-				BufferedImage frameImage = d.getFrame(i); // frame i
-				int t = d.getDelay(i); // display duration of frame in
-										// milliseconds
-				animation.addFrame(
-						textureCache.createTexture(name + '#' + i, frameImage),
-						t);
-			}
-			AnimationCollection collection = new AnimationCollection();
-			collection.addAnimation(animation);
-			return collection;
-		} else if (name.endsWith("nanim")) {
-			InputStream is = data.openFile(name);
-			try {
-				Nanim nanim = NanimParser.Nanim.parseFrom(is);
-				Map<String, ITexture> textures = textureCache.getTextures(name,
-						nanim);
-				return new AnimationCollection(nanim, textures);
-			} finally {
-				is.close();
-			}
+		if (filename.endsWith("gif")) {
+			return loadGif(filename);
+		} else if (filename.endsWith("nanim")) {
+			return loadNanim(filename);
 		} else {
-			return new AnimationCollection(textureCache.getTexture(name));
+			return new AnimationCollection(textureCache.getTexture(filename));
 		}
+	}
+
+	private AnimationCollection loadNanim(String filename) throws IOException {
+		InputStream is = data.openFile(filename);
+		try {
+			Nanim nanim = NanimParser.Nanim.parseFrom(is);
+			Map<String, ITexture> textures = textureCache.getTextures(filename,
+					nanim);
+			return new AnimationCollection(nanim, textures);
+		} finally {
+			is.close();
+		}
+	}
+	
+	@Override
+	public AnimationCollection loadSomeAnimations(String filename,
+			String... animationNames) throws IOException {
+		if (filename.endsWith("gif")) {
+			return loadGif(filename);
+		} else if (filename.endsWith("nanim")) {
+			return loadNanim(filename, animationNames);
+		} else {
+			return new AnimationCollection(textureCache.getTexture(filename));
+		}
+	}
+	
+	private AnimationCollection loadNanim(String filename,
+			String[] animationNames) throws IOException {
+		InputStream is = data.openFile(filename);
+		try {
+			Nanim nanim = NanimParser.Nanim.parseFrom(is);
+			Map<String, ITexture> textures = textureCache.getTextures(filename,
+					nanim);
+			return new AnimationCollection(nanim, textures, animationNames);
+		} finally {
+			is.close();
+		}
+	}
+
+	private AnimationCollection loadGif(String filename) throws IOException {
+		GifDecoder d = new GifDecoder();
+		d.read(data.openFile(filename));
+		Animation animation = new Animation();
+		int n = d.getFrameCount();
+		for (int i = 0; i < n; i++) {
+			BufferedImage frameImage = d.getFrame(i); // frame i
+			int t = d.getDelay(i); // display duration of frame in
+									// milliseconds
+			animation.addFrame(
+					textureCache.createTexture(filename + '#' + i, frameImage),
+					t);
+		}
+		AnimationCollection collection = new AnimationCollection();
+		collection.addAnimation(animation);
+		return collection;
 	}
 
 	@Override

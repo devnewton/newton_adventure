@@ -4,6 +4,8 @@ import im.bci.nanim.NanimParser.Nanim;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
 public class AnimationCollection {
@@ -14,6 +16,17 @@ public class AnimationCollection {
 		animations = new ArrayList<Animation>(nanim.getAnimationsCount());
 		for(im.bci.nanim.NanimParser.Animation nanimation : nanim.getAnimationsList()) {
 			animations.add(new Animation(nanimation,textures));
+		}
+	}
+	
+	public AnimationCollection(Nanim nanim, Map<String, ITexture> textures,
+			String... animationNames) {
+		HashSet<String> animationNamesSet = new HashSet<String>(Arrays.asList(animationNames));
+		animations = new ArrayList<Animation>(nanim.getAnimationsCount());
+		for(im.bci.nanim.NanimParser.Animation nanimation : nanim.getAnimationsList()) {
+			if(animationNamesSet.contains(nanimation.getName())) {
+				animations.add(new Animation(nanimation,textures));
+			}
 		}
 	}
 	

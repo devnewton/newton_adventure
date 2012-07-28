@@ -162,6 +162,9 @@ public interface IGameView {
     public ITrueTypeFont createScoreSequenceFont();
 
     public AnimationCollection loadFromAnimation(String name) throws FileNotFoundException, IOException;
+    
+	AnimationCollection loadSomeAnimations(String file, String... animationNames)
+			throws IOException;
 
     public void drawFadeSequence(float r, float g, float b, float a);
 
