@@ -28,7 +28,7 @@ import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.ConvexPolygon;
 import net.phys2d.raw.shapes.Shape;
 
-class NalLoader {
+strictfp class NalLoader {
 	private final World world;
 	private final String questName, levelName;
 	private final Level level;
@@ -534,8 +534,8 @@ class NalLoader {
 		if (null != shape) {
 			Platform platform = new Platform(this.world, shape);
 			platform.setTexture(getOrLoadAnimation(platformField.getAnimation()));
-			platform.setPosition(entity.getPosition().getX(), entity
-					.getPosition().getY());
+			Vector2f pos = getPos(entity);
+			platform.setPosition(pos.getX(), pos.getY());
 			platform.setFriction(platformField.getFriction());
 			platform.setZOrder(entity.getZorder());
 			this.world.add(platform);

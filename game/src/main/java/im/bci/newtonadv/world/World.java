@@ -321,6 +321,9 @@ public strictfp class World extends net.phys2d.raw.World {
 		try {
 			InputStream input = game.getData().openLevelNal(questName,
 					levelName);
+			if(null == input) {
+				return false;
+			}
 			NalLoader loader = new NalLoader(game, this, questName,
 					levelName, input);
 			loader.load();
@@ -331,7 +334,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public boolean loadLevel() {
-		return loadTmxLevel() || loadNalLevel();
+		return loadNalLevel() || loadTmxLevel();
 	}
 
 	private boolean loadTmxLevel() {
