@@ -193,7 +193,9 @@ strictfp class NalLoader {
 			im.bci.newtonadv.world.Pikes pikes = new im.bci.newtonadv.world.Pikes(
 					world, convertDangerousSide(pikesType.getDangerousSide()),
 					shape);
-			pikes.setTexture(getOrLoadAnimation(pikesType.getAnimation()));
+			if(pikesType.hasAnimation()) {
+				pikes.setTexture(getOrLoadAnimation(pikesType.getAnimation()));
+			}
 			Vector2f pos = getPos(entity);
 			pikes.setPosition(pos.getX(), pos.getY());
 			pikes.setZOrder(entity.getZorder());
@@ -485,7 +487,9 @@ strictfp class NalLoader {
 		if (null != shape) {
 			im.bci.newtonadv.world.Cannon cannon = new im.bci.newtonadv.world.Cannon(
 					world, convertOrientation(cannonType.getOrientation()), shape);
-			cannon.setTexture(getOrLoadAnimation(cannonType.getAnimation()));
+			if(cannonType.hasAnimation()) {
+				cannon.setTexture(getOrLoadAnimation(cannonType.getAnimation()));
+			}
 			Vector2f pos = getPos(entity);
 			cannon.setPosition(pos.getX(), pos.getY());
 			cannon.setZOrder(entity.getZorder());
@@ -520,8 +524,10 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			platform.setPosition(pos.getX(), pos.getY());
 			platform.setZOrder(entity.getZorder());
-			platform.setTexture(getOrLoadAnimation(bouncePlatformType
+			if(bouncePlatformType.hasAnimation()) {
+				platform.setTexture(getOrLoadAnimation(bouncePlatformType
 					.getAnimation()));
+			}
 			world.add(platform);
 		}
 	}
@@ -533,7 +539,9 @@ strictfp class NalLoader {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			Platform platform = new Platform(this.world, shape);
-			platform.setTexture(getOrLoadAnimation(platformField.getAnimation()));
+			if(platformField.hasAnimation()) {
+				platform.setTexture(getOrLoadAnimation(platformField.getAnimation()));
+			}
 			Vector2f pos = getPos(entity);
 			platform.setPosition(pos.getX(), pos.getY());
 			platform.setFriction(platformField.getFriction());

@@ -45,82 +45,87 @@ import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Shape;
 
 /**
- *
+ * 
  * @author devnewton
  */
-public strictfp class Platform extends AbstractDrawableStaticBody implements Updatable {
+public strictfp class Platform extends AbstractDrawableStaticBody implements
+		Updatable {
 
-    private AnimationCollection texture;
-    protected final World world;
-    protected float w;
-    protected float h;
-    public FloatBuffer vertices = ByteBuffer.allocateDirect(2 * 4 * Float.SIZE / 8).order(ByteOrder.nativeOrder()).asFloatBuffer();
-	public FloatBuffer texCoords = ByteBuffer.allocateDirect(2 * 4 * Float.SIZE / 8).order(ByteOrder.nativeOrder()).asFloatBuffer();
+	private AnimationCollection texture;
+	protected final World world;
+	protected float w;
+	protected float h;
+	public FloatBuffer vertices = ByteBuffer
+			.allocateDirect(2 * 4 * Float.SIZE / 8)
+			.order(ByteOrder.nativeOrder()).asFloatBuffer();
+	public FloatBuffer texCoords = ByteBuffer
+			.allocateDirect(2 * 4 * Float.SIZE / 8)
+			.order(ByteOrder.nativeOrder()).asFloatBuffer();
 	public AnimationFrame frame;
 
-    Platform(World world, float w, float h) {
-        super(new Box(w, h));
-        setFriction(10.0f);
-        addBit(World.STATIC_BODY_COLLIDE_BIT);
-        this.world = world;
-        this.w = w;
-        this.h = h;
-    }
-    
-    Platform(World world, Shape shp) {
-        super(shp);
-        setFriction(10.0f);
-        addBit(World.STATIC_BODY_COLLIDE_BIT);
-        this.world = world;
-        this.w = shp.getBounds().getWidth();
-        this.h = shp.getBounds().getHeight();
-    }
-  
-    
-    @Override
-	public  void setPosition(float x, float y) {
+	Platform(World world, float w, float h) {
+		super(new Box(w, h));
+		setFriction(10.0f);
+		addBit(World.STATIC_BODY_COLLIDE_BIT);
+		this.world = world;
+		this.w = w;
+		this.h = h;
+	}
+
+	Platform(World world, Shape shp) {
+		super(shp);
+		setFriction(10.0f);
+		addBit(World.STATIC_BODY_COLLIDE_BIT);
+		this.world = world;
+		this.w = shp.getBounds().getWidth();
+		this.h = shp.getBounds().getHeight();
+	}
+
+	@Override
+	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-		
+
 		Box box = (Box) getShape();
-	    Vector2f[] points = box.getPoints(getPosition(),
-				getRotation());
-	    for(int i=0; i<4; ++i) {
-	    	vertices.put(points[i].x);
-	    	vertices.put(points[i].y);
-	    }
-	    vertices.flip();
+		Vector2f[] points = box.getPoints(getPosition(), getRotation());
+		for (int i = 0; i < 4; ++i) {
+			vertices.put(points[i].x);
+			vertices.put(points[i].y);
+		}
+		vertices.flip();
 	}
 
 	public void setTexture(AnimationCollection texture) {
-        this.texture = texture;
-        texture.getFirst().start();
-        setAnimationFrame(texture.getFirst().getCurrentFrame());
-    }
+		this.texture = texture;
+		texture.getFirst().start();
+		setAnimationFrame(texture.getFirst().getCurrentFrame());
+	}
 
-    private void setAnimationFrame(AnimationFrame currentFrame) {
-    	if(this.frame != currentFrame) {
-    		this.frame = currentFrame;
-    		texCoords.put(frame.getU1());
-    		texCoords.put(frame.getV2());
-    		texCoords.put(frame.getU2());
-    		texCoords.put(frame.getV2());
-    		texCoords.put(frame.getU2());
-    		texCoords.put(frame.getV1());
-    		texCoords.put(frame.getU1());
-    		texCoords.put(frame.getV1());
-    		texCoords.flip();    		
-    	}
-		
+	private void setAnimationFrame(AnimationFrame currentFrame) {
+		if (this.frame != currentFrame) {
+			this.frame = currentFrame;
+			texCoords.put(frame.getU1());
+			texCoords.put(frame.getV2());
+			texCoords.put(frame.getU2());
+			texCoords.put(frame.getV2());
+			texCoords.put(frame.getU2());
+			texCoords.put(frame.getV1());
+			texCoords.put(frame.getU1());
+			texCoords.put(frame.getV1());
+			texCoords.flip();
+		}
+
 	}
 
 	@Override
-    public void draw() {
-		setAnimationFrame(texture.getFirst().getCurrentFrame());
-        world.getView().drawPlatform(this);
-    }
+	public void draw() {
+		if (null != texture) {
+			setAnimationFrame(texture.getFirst().getCurrentFrame());
+			world.getView().drawPlatform(this);
+		}
+	}
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
 	}
 }
