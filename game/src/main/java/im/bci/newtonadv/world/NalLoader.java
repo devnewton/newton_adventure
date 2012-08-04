@@ -1,20 +1,20 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.NewtonAdventureLevelParser;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Activator;
-import im.bci.newtonadv.NewtonAdventureLevelParser.AnimationReference;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Apple;
-import im.bci.newtonadv.NewtonAdventureLevelParser.AxeAnchor;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Bat;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Cannon.Orientation;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Entity;
-import im.bci.newtonadv.NewtonAdventureLevelParser.EntityType;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Level;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Path;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Pikes.DangerousSide;
-import im.bci.newtonadv.NewtonAdventureLevelParser.Position;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Activator;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.AnimationReference;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Apple;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.AxeAnchor;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Bat;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.EntityType;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Level;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Path;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Position;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Cannon.Orientation;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Pikes.DangerousSide;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -185,9 +185,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadPikes(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Pikes pikesType)  throws CannotLoadAnimation{
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Pikes pikesType)  throws CannotLoadAnimation{
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.Pikes pikes = new im.bci.newtonadv.world.Pikes(
@@ -217,9 +217,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadMummy(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Mummy mummyType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Mummy mummyType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.Mummy mummy = new im.bci.newtonadv.world.Mummy(
@@ -232,9 +232,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadMovingPlatform(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.MovingPlatform movingPlatformType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.MovingPlatform movingPlatformType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.MovingPlatform movingPlatform = new im.bci.newtonadv.world.MovingPlatform(world, getOrLoadAnimation(movingPlatformType.getAnimation()), convertPath(movingPlatformType.getPath()), shape);
@@ -256,9 +256,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadMobilePikeAnchor(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.MobilePikeAnchor mobilePikeAnchorType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.MobilePikeAnchor mobilePikeAnchorType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.MobilePikeAnchor anchor = new im.bci.newtonadv.world.MobilePikeAnchor(
@@ -287,9 +287,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadMemoryActivator(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.MemoryActivator memoryActivatorType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.MemoryActivator memoryActivatorType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.MemoryActivator activator = new im.bci.newtonadv.world.MemoryActivator(
@@ -306,9 +306,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadKeyLock(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.KeyLock keyLockType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.KeyLock keyLockType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.KeyLock keyLock = new im.bci.newtonadv.world.KeyLock(
@@ -322,9 +322,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadKey(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Key keyType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Key keyType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.Key key = new im.bci.newtonadv.world.Key(
@@ -338,9 +338,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadHero(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Hero heroType)  throws CannotLoadAnimation{
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Hero heroType)  throws CannotLoadAnimation{
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			if (null == hero) {
@@ -359,9 +359,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadHelpSign(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.HelpSign helpSignType)  throws CannotLoadAnimation{
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.HelpSign helpSignType)  throws CannotLoadAnimation{
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.HelpSign helpSign = new im.bci.newtonadv.world.HelpSign(
@@ -375,9 +375,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadEgyptianBoss(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.EgyptianBoss egyptianBossType)  throws CannotLoadAnimation{
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.EgyptianBoss egyptianBossType)  throws CannotLoadAnimation{
 		Vector2f pos = getPos(entity);
 		im.bci.newtonadv.world.EgyptianBoss boss = new EgyptianBoss(world, pos.getX(), pos.getY());
 		boss.setBodyTexture(getOrLoadAnimation(egyptianBossType.getBodyAnimation()));
@@ -392,9 +392,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadDoorToBonusWorld(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.DoorToBonusWorld doorToBonusWorldType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.DoorToBonusWorld doorToBonusWorldType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.DoorToBonusWorld door = new im.bci.newtonadv.world.DoorToBonusWorld(
@@ -412,9 +412,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadDoor(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Door doorType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Door doorType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.Door door = new im.bci.newtonadv.world.Door(
@@ -430,9 +430,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadCompass(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Compass compassType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Compass compassType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.Compass compass = new im.bci.newtonadv.world.Compass(
@@ -446,9 +446,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadCoin(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Coin coinType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Coin coinType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.Coin coin = new im.bci.newtonadv.world.Coin(
@@ -462,9 +462,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadCloud(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Cloud cloudType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Cloud cloudType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.Cloud cloud = new im.bci.newtonadv.world.Cloud(
@@ -478,9 +478,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadCannon(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Cannon cannonType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Cannon cannonType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.Cannon cannon = new im.bci.newtonadv.world.Cannon(
@@ -510,9 +510,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadBouncePlatform(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.BouncePlatform bouncePlatformType) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.BouncePlatform bouncePlatformType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			im.bci.newtonadv.world.BouncePlatform platform = new im.bci.newtonadv.world.BouncePlatform(
@@ -527,9 +527,9 @@ strictfp class NalLoader {
 	}
 
 	private void loadPlatform(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Entity entity,
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.NewtonAdventureLevelParser.Platform platformField) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Platform platformField) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			Platform platform = new Platform(this.world, shape);
@@ -543,7 +543,7 @@ strictfp class NalLoader {
 	}
 
 	private net.phys2d.raw.shapes.Shape loadShape(
-			im.bci.newtonadv.NewtonAdventureLevelParser.Shape shape) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Shape shape) throws CannotLoadAnimation {
 		if (shape.hasCircle()) {
 			return new Circle(shape.getCircle().getSize());
 		} else if (shape.hasRectangle()) {
