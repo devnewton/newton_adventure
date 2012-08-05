@@ -318,18 +318,20 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	private boolean loadNalLevel() {
+		NalLoader loader = null;
 		try {
 			InputStream input = game.getData().openLevelNal(questName,
 					levelName);
 			if(null == input) {
 				return false;
 			}
-			NalLoader loader = new NalLoader(game, this, questName,
+			loader = new NalLoader(game, this, questName,
 					levelName, input);
-			loader.load();
 		} catch (Exception e) {
-
+			LOGGER.log(java.util.logging.Level.WARNING, "Cannot load nal file for quest " + questName + " and level " + levelName, e);
+			return false;
 		}
+		loader.load();
 		return true;
 	}
 

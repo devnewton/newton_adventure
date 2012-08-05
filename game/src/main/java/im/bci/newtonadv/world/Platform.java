@@ -40,8 +40,11 @@ import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.util.ShapeUtils;
+import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.ConvexPolygon;
 import net.phys2d.raw.shapes.Shape;
 
 /**
@@ -84,12 +87,14 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements
 	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-
-		Box box = (Box) getShape();
-		Vector2f[] points = box.getPoints(getPosition(), getRotation());
-		for (int i = 0; i < 4; ++i) {
-			vertices.put(points[i].x);
-			vertices.put(points[i].y);
+		
+		Shape shape = getShape();
+		Vector2f[] points = ShapeUtils.getVertices(shape, getPosition(), getRotation());
+		int nbPoints = Math.min(points.length, vertices.capacity());
+		for(int i = 0; i<nbPoints; ++i){
+			Vector2f point = points[i];
+			vertices.put(point.x);
+			vertices.put(point.y);
 		}
 		vertices.flip();
 	}

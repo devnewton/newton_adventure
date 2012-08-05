@@ -494,7 +494,8 @@ public strictfp class GameView implements IGameView {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, platform.frame.getImage().getId());
 		GL11.glTexCoordPointer(2, 0, platform.texCoords);
 		GL11.glVertexPointer(2, 0, platform.vertices);
-		GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+		int nbVertices = platform.vertices.limit() / 2;
+		GL11.glDrawArrays((nbVertices % 4) == 0 ? GL11.GL_QUADS : GL11.GL_TRIANGLES, 0, nbVertices);
 		if (platform.frame.getImage().hasAlpha()) {
 			GL11.glPopAttrib();
 		}

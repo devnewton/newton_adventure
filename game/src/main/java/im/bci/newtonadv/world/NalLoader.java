@@ -551,7 +551,7 @@ strictfp class NalLoader {
 	}
 
 	private net.phys2d.raw.shapes.Shape loadShape(
-			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Shape shape) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Shape shape) {
 		if (shape.hasCircle()) {
 			return new Circle(shape.getCircle().getSize());
 		} else if (shape.hasRectangle()) {
@@ -560,7 +560,16 @@ strictfp class NalLoader {
 		} else if (shape.hasPolygon()) {
 			ROVector2f[] vertices = new ROVector2f[shape.getPolygon()
 					.getVerticesCount()];
-			for (int i = 0; i < vertices.length; ++i) {
+			if(vertices.length < 3) {
+				LOGGER.warning("Invalid polygon (less than 3 vertices)");
+				return null;
+			}
+			if(vertices.length > 4) {
+				LOGGER.warning("Newton Adventure does not handle polygon with more than 4 vertices");
+				return null;
+			}
+			int nbVertices = Math.min(4, vertices.length);
+			for (int i = 0; i < nbVertices; ++i) {
 				vertices[i] = new Vector2f(shape.getPolygon().getVertices(i)
 						.getX(), shape.getPolygon().getVertices(i).getY());
 			}
