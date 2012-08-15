@@ -134,17 +134,29 @@ message Compass {
 }
 
 message MobilePikeAnchor {
-    required AnimationReference animation = 1;
-    required AnimationReference mobile_pikes_animation = 2;
-    optional Phys2dBodyParameters phys2d_anchor = 3;
-    optional Phys2dBodyParameters phys2d_pike = 4;
+    message Anchor {
+        required AnimationReference animation = 1;
+        optional Phys2dBodyParameters phys2d = 2;
+    }
+    message Mobile {
+        required AnimationReference animation = 1;
+        optional Phys2dBodyParameters phys2d = 2;
+    }
+    required Anchor anchor = 1;
+    required Mobile mobile = 2;
 }
 
 message AxeAnchor {
-    required AnimationReference animation = 1;
-    required AnimationReference axe_animation = 2;
-    optional Phys2dBodyParameters phys2d_anchor = 3;
-    optional Phys2dBodyParameters phys2d_axe = 4;
+    message Anchor {
+        required AnimationReference animation = 1;
+        optional Phys2dBodyParameters phys2d = 2;
+    }
+    message Mobile {
+        required AnimationReference animation = 1;
+        optional Phys2dBodyParameters phys2d = 2;
+    }
+    required Anchor anchor = 1;
+    required Mobile mobile = 2;
 }
 
 message Activator {
@@ -164,9 +176,8 @@ message MemoryActivator {
 
 message Blocker {
     required int32 activableId = 1;
-    required AnimationReference on_animation = 2;
-    required AnimationReference off_animation = 3;
-    optional Phys2dBodyParameters phys2d = 4;
+    required AnimationReference animation = 2;
+    optional Phys2dBodyParameters phys2d = 3;
 }
 
 message MovingPlatform {
@@ -192,7 +203,6 @@ message HelpSign {
 message EgyptianBoss {
     required AnimationReference body_animation = 1;
     required AnimationReference hand_animation = 2;
-    optional Phys2dBodyParameters phys2d = 3;
 }
 
 message Hero {
@@ -227,6 +237,7 @@ message EntityType {
     optional HelpSign help_sign = 24;
     optional EgyptianBoss egyptian_boss = 25;
     optional Hero hero = 26;
+    optional Blocker blocker = 27;
 }
 
 message Entity {

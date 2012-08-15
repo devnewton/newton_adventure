@@ -32,6 +32,7 @@
 
 package im.bci.newtonadv.world;
 
+import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
@@ -44,11 +45,16 @@ public class Blocker extends Platform implements Updatable {
     private static final long disappearDuration = 1000000000L;
 
     public Blocker(World world, int activableId, float w, float h) {
-        super(world, w , h);
-        this.activableId = activableId;
+    	super(world, w, h);
+    	this.activableId = activableId;
     }
 
-    public int getActivableId() {
+    public Blocker(World world, int activableId, Shape shape) {
+    	super(world, shape);
+        this.activableId = activableId;
+	}
+
+	public int getActivableId() {
         return activableId;
     }
 

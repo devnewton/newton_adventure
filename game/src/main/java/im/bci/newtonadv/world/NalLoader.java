@@ -8,6 +8,7 @@ import im.bci.newtonadv.nal.NewtonAdventureLevelParser.AnimationReference;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Apple;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.AxeAnchor;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Bat;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Blocker;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.EntityType;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Level;
@@ -105,6 +106,8 @@ strictfp class NalLoader {
 			loadPikes(entity, type, type.getPikes());
 		} else if (type.hasPlatform()) {
 			loadPlatform(entity, type, type.getPlatform());
+		} else if(type.hasBlocker()) {
+			loadBlocker(entity, type, type.getBlocker());
 		} else {
 			LOGGER.warning(
 					"no entity type record found, entity type name: "
@@ -138,25 +141,25 @@ strictfp class NalLoader {
 		if (null != shape) {
 			im.bci.newtonadv.world.AxeAnchor anchor = new im.bci.newtonadv.world.AxeAnchor(
 					world, shape);
-			anchor.setTexture(getOrLoadAnimation(axeAnchorType.getAnimation()));
+			anchor.setTexture(getOrLoadAnimation(axeAnchorType.getAnchor().getAnimation()));
 			Vector2f pos = getPos(entity);
 			anchor.setPosition(pos.getX(), pos.getY());
 			anchor.setZOrder(entity.getZorder());
-			if(axeAnchorType.hasPhys2DAnchor()) {
-				loadBody(anchor, axeAnchorType.getPhys2DAnchor());
+			if(axeAnchorType.getAnchor().hasPhys2D()) {
+				loadBody(anchor, axeAnchorType.getAnchor().getPhys2D());
 			}
 			world.add(anchor);
 
 			Axe axe = new Axe(world);
-			axe.setTexture(getOrLoadAnimation(axeAnchorType.getAxeAnimation()));
+			axe.setTexture(getOrLoadAnimation(axeAnchorType.getMobile().getAnimation()));
 			axe.setPosition(anchor.getPosition().getX(), anchor.getPosition()
 					.getY()
 					- MobilePikes.height
 					/ 2.0f
 					- anchor.getShape().getBounds().getHeight() / 2.0f);
 			axe.setZOrder(entity.getZorder());
-			if(axeAnchorType.hasPhys2DAxe()) {
-				loadBody(axe, axeAnchorType.getPhys2DAxe());
+			if(axeAnchorType.getMobile().hasPhys2D()) {
+				loadBody(axe, axeAnchorType.getMobile().getPhys2D());
 			}
 			world.add(axe);
 
@@ -195,6 +198,25 @@ strictfp class NalLoader {
 				loadBody(activator, activatorType.getPhys2D());
 			}
 			world.add(activator);
+		}
+	}
+	
+	private void loadBlocker(Entity entity, EntityType type,
+			Blocker blockerType)  throws CannotLoadAnimation{
+		Shape shape = loadShape(type.getShape());
+		if (null != shape) {
+			im.bci.newtonadv.world.Blocker blocker = new im.bci.newtonadv.world.Blocker(
+					world, blockerType.getActivableId(), shape);
+			if(blockerType.hasAnimation()) {
+				blocker.setTexture(getOrLoadAnimation(blockerType.getAnimation()));
+			}
+			Vector2f pos = getPos(entity);
+			blocker.setPosition(pos.getX(), pos.getY());
+			blocker.setZOrder(entity.getZorder());
+			if(blockerType.hasPhys2D()) {
+				loadBody(blocker, blockerType.getPhys2D());
+			}
+			world.add(blocker);
 		}
 	}
 
@@ -319,25 +341,25 @@ strictfp class NalLoader {
 		if (null != shape) {
 			im.bci.newtonadv.world.MobilePikeAnchor anchor = new im.bci.newtonadv.world.MobilePikeAnchor(
 					world, shape);
-			anchor.setTexture(getOrLoadAnimation(mobilePikeAnchorType.getAnimation()));
+			anchor.setTexture(getOrLoadAnimation(mobilePikeAnchorType.getAnchor().getAnimation()));
 			Vector2f pos = getPos(entity);
 			anchor.setPosition(pos.getX(), pos.getY());
 			anchor.setZOrder(entity.getZorder());
-			if(mobilePikeAnchorType.hasPhys2DAnchor()) {
-				loadBody(anchor, mobilePikeAnchorType.getPhys2DAnchor());
+			if(mobilePikeAnchorType.getAnchor().hasPhys2D()) {
+				loadBody(anchor, mobilePikeAnchorType.getAnchor().getPhys2D());
 			}
 			world.add(anchor);
 
 			MobilePikes mobilePikes = new MobilePikes(world);
-			mobilePikes.setTexture(getOrLoadAnimation(mobilePikeAnchorType.getMobilePikesAnimation()));
+			mobilePikes.setTexture(getOrLoadAnimation(mobilePikeAnchorType.getMobile().getAnimation()));
 			mobilePikes.setPosition(anchor.getPosition().getX(), anchor.getPosition()
 					.getY()
 					- MobilePikes.height
 					/ 2.0f
 					- anchor.getShape().getBounds().getHeight() / 2.0f);
 			mobilePikes.setZOrder(entity.getZorder());
-			if(mobilePikeAnchorType.hasPhys2DPike()) {
-				loadBody(mobilePikes, mobilePikeAnchorType.getPhys2DPike());
+			if(mobilePikeAnchorType.getMobile().hasPhys2D()) {
+				loadBody(mobilePikes, mobilePikeAnchorType.getMobile().getPhys2D());
 			}
 			world.add(mobilePikes);
 
