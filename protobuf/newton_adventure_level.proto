@@ -40,6 +40,19 @@ message Path {
     repeated Position positions = 1;
 }
 
+message Phys2dBodyParameters {
+    optional bool enabled = 1;
+    optional bool rotatable = 2;
+    optional bool moveable = 3;
+    optional bool can_rest = 4;
+    optional bool gravity_effected = 5;
+    optional float mass = 6;
+    optional float restitution = 7;
+    optional float friction = 8;
+    optional float damping = 9;
+    optional float rot_damping = 10;
+}
+
 message Pikes {
     enum DangerousSide {
             UP = 1;
@@ -49,16 +62,17 @@ message Pikes {
     }
     required DangerousSide dangerous_side = 1;
     optional AnimationReference animation = 2;
+    optional Phys2dBodyParameters phys2d = 3;
 }
 
 message Platform {
-    required bool enabled = 1;
-    optional float friction = 2;
-    optional AnimationReference animation = 3;
+    optional AnimationReference animation = 1;
+    optional Phys2dBodyParameters phys2d = 2;
 }
 
 message BouncePlatform {
     optional AnimationReference animation = 1;
+    optional Phys2dBodyParameters phys2d = 2;
 }
 
 message Cannon {
@@ -74,11 +88,13 @@ message Cannon {
 
 message Mummy {
     required AnimationReference animation = 1;
+    optional Phys2dBodyParameters phys2d = 2;
 }
 
 
 message Bat {
     required AnimationReference animation = 1;
+    optional Phys2dBodyParameters phys2d = 2;
 }
 
 message Apple {
@@ -91,6 +107,7 @@ message Coin {
 
 message Key {
     required AnimationReference animation = 1;
+    optional Phys2dBodyParameters phys2d = 2;
 }
 
 message Door {
@@ -105,6 +122,7 @@ message DoorToBonusWorld {
 
 message Cloud {
     required AnimationReference animation = 1;
+    optional Phys2dBodyParameters phys2d = 2;
 }
 
 message WorldMap {
@@ -118,17 +136,22 @@ message Compass {
 message MobilePikeAnchor {
     required AnimationReference animation = 1;
     required AnimationReference mobile_pikes_animation = 2;
+    optional Phys2dBodyParameters phys2d_anchor = 3;
+    optional Phys2dBodyParameters phys2d_pike = 4;
 }
 
 message AxeAnchor {
     required AnimationReference animation = 1;
     required AnimationReference axe_animation = 2;
+    optional Phys2dBodyParameters phys2d_anchor = 3;
+    optional Phys2dBodyParameters phys2d_axe = 4;
 }
 
 message Activator {
     required int32 activableId = 1;
     required AnimationReference on_animation = 2;
     required AnimationReference off_animation = 3;
+    optional Phys2dBodyParameters phys2d = 4;
 }
 
 message MemoryActivator {
@@ -136,17 +159,20 @@ message MemoryActivator {
     required AnimationReference on_animation = 2;
     required AnimationReference off_animation = 3;
     required AnimationReference hide_animation = 4;
+    optional Phys2dBodyParameters phys2d = 5;
 }
 
 message Blocker {
     required int32 activableId = 1;
     required AnimationReference on_animation = 2;
     required AnimationReference off_animation = 3;
+    optional Phys2dBodyParameters phys2d = 4;
 }
 
 message MovingPlatform {
     required AnimationReference animation = 1;
     required Path path = 2;
+    optional Phys2dBodyParameters phys2d = 3;
 }
 
 message Teleporter {
@@ -156,6 +182,7 @@ message Teleporter {
 
 message KeyLock {
     required AnimationReference animation = 1;
+    optional Phys2dBodyParameters phys2d = 2;
 }
 
 message HelpSign {
@@ -165,10 +192,12 @@ message HelpSign {
 message EgyptianBoss {
     required AnimationReference body_animation = 1;
     required AnimationReference hand_animation = 2;
+    optional Phys2dBodyParameters phys2d = 3;
 }
 
 message Hero {
     required AnimationReference animation = 1;
+    optional Phys2dBodyParameters phys2d = 2;
 }
 
 message EntityType {

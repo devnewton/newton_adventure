@@ -41,10 +41,8 @@ import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.util.ShapeUtils;
-import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Box;
-import net.phys2d.raw.shapes.ConvexPolygon;
 import net.phys2d.raw.shapes.Shape;
 
 /**

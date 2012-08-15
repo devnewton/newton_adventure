@@ -12,6 +12,7 @@ import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.EntityType;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Level;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Path;
+import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Phys2dBodyParameters;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Position;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Cannon.Orientation;
 import im.bci.newtonadv.nal.NewtonAdventureLevelParser.Pikes.DangerousSide;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.BasicJoint;
+import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.ConvexPolygon;
@@ -137,6 +139,7 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			anchor.setPosition(pos.getX(), pos.getY());
 			anchor.setZOrder(entity.getZorder());
+			loadBody(anchor, axeAnchorType.getPhys2DAnchor());
 			world.add(anchor);
 
 			Axe axe = new Axe(world);
@@ -147,6 +150,7 @@ strictfp class NalLoader {
 					/ 2.0f
 					- anchor.getShape().getBounds().getHeight() / 2.0f);
 			axe.setZOrder(entity.getZorder());
+			loadBody(axe, axeAnchorType.getPhys2DAxe());
 			world.add(axe);
 
 			BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(
@@ -180,8 +184,40 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			activator.setPosition(pos.getX(), pos.getY());
 			activator.setZOrder(entity.getZorder());
+			loadBody(activator, activatorType.getPhys2D());
 			world.add(activator);
 		}
+	}
+
+	private void loadBody(Body body,
+			Phys2dBodyParameters p) {
+			if(p.hasCanRest()) {
+				body.setCanRest(p.getCanRest());
+			}
+			if(p.hasDamping()) {
+				body.setDamping(p.getDamping());
+			}
+			if(p.hasEnabled()) {
+				body.setEnabled(p.getEnabled());
+			}
+			if(p.hasFriction()) {
+				body.setFriction(p.getFriction());
+			}
+			if(p.hasGravityEffected()) {
+				body.setGravityEffected(p.getGravityEffected());
+			}
+			if(p.hasMoveable()) {
+				body.setMoveable(p.getMoveable());
+			}
+			if(p.hasRestitution()) {
+				body.setRestitution(p.getRestitution());
+			}
+			if(p.hasRotatable()) {
+				body.setRotatable(p.getRotatable());
+			}
+			if(p.hasRotDamping()) {
+				body.setRotDamping(p.getRotDamping());
+			}
 	}
 
 	private void loadPikes(
@@ -544,7 +580,6 @@ strictfp class NalLoader {
 			}
 			Vector2f pos = getPos(entity);
 			platform.setPosition(pos.getX(), pos.getY());
-			platform.setFriction(platformField.getFriction());
 			platform.setZOrder(entity.getZorder());
 			this.world.add(platform);
 		}
