@@ -125,6 +125,9 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			bat.setPosition(pos.getX(), pos.getY());
 			bat.setZOrder(entity.getZorder());
+			if(batType.hasPhys2D()) {
+				loadBody(bat, batType.getPhys2D());
+			}
 			world.add(bat);
 		}
 	}
@@ -139,7 +142,9 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			anchor.setPosition(pos.getX(), pos.getY());
 			anchor.setZOrder(entity.getZorder());
-			loadBody(anchor, axeAnchorType.getPhys2DAnchor());
+			if(axeAnchorType.hasPhys2DAnchor()) {
+				loadBody(anchor, axeAnchorType.getPhys2DAnchor());
+			}
 			world.add(anchor);
 
 			Axe axe = new Axe(world);
@@ -150,7 +155,9 @@ strictfp class NalLoader {
 					/ 2.0f
 					- anchor.getShape().getBounds().getHeight() / 2.0f);
 			axe.setZOrder(entity.getZorder());
-			loadBody(axe, axeAnchorType.getPhys2DAxe());
+			if(axeAnchorType.hasPhys2DAxe()) {
+				loadBody(axe, axeAnchorType.getPhys2DAxe());
+			}
 			world.add(axe);
 
 			BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(
@@ -184,7 +191,9 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			activator.setPosition(pos.getX(), pos.getY());
 			activator.setZOrder(entity.getZorder());
-			loadBody(activator, activatorType.getPhys2D());
+			if(activatorType.hasPhys2D()) {
+				loadBody(activator, activatorType.getPhys2D());
+			}
 			world.add(activator);
 		}
 	}
@@ -235,6 +244,9 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			pikes.setPosition(pos.getX(), pos.getY());
 			pikes.setZOrder(entity.getZorder());
+			if(pikesType.hasPhys2D()) {
+				loadBody(pikes, pikesType.getPhys2D());
+			}
 			world.add(pikes);
 		}
 	}
@@ -265,6 +277,9 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			mummy.setPosition(pos.getX(), pos.getY());
 			mummy.setZOrder(entity.getZorder());
+			if(mummyType.hasPhys2D()) {
+				loadBody(mummy, mummyType.getPhys2D());
+			}
 			world.add(mummy);
 		}
 	}
@@ -279,6 +294,9 @@ strictfp class NalLoader {
 			movingPlatform.setPosition(entity.getPosition().getX(), entity
 					.getPosition().getY());
 			movingPlatform.setZOrder(entity.getZorder());
+			if(movingPlatformType.hasPhys2D()) {
+				loadBody(movingPlatform, movingPlatformType.getPhys2D());
+			}
 			world.add(movingPlatform);			
 		}
 
@@ -305,6 +323,9 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			anchor.setPosition(pos.getX(), pos.getY());
 			anchor.setZOrder(entity.getZorder());
+			if(mobilePikeAnchorType.hasPhys2DAnchor()) {
+				loadBody(anchor, mobilePikeAnchorType.getPhys2DAnchor());
+			}
 			world.add(anchor);
 
 			MobilePikes mobilePikes = new MobilePikes(world);
@@ -315,6 +336,9 @@ strictfp class NalLoader {
 					/ 2.0f
 					- anchor.getShape().getBounds().getHeight() / 2.0f);
 			mobilePikes.setZOrder(entity.getZorder());
+			if(mobilePikeAnchorType.hasPhys2DPike()) {
+				loadBody(mobilePikes, mobilePikeAnchorType.getPhys2DPike());
+			}
 			world.add(mobilePikes);
 
 			BasicJoint j = new BasicJoint(anchor, mobilePikes, new Vector2f(
@@ -339,6 +363,9 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			activator.setPosition(pos.getX(), pos.getY());
 			activator.setZOrder(entity.getZorder());
+			if(memoryActivatorType.hasPhys2D()) {
+				loadBody(activator, memoryActivatorType.getPhys2D());
+			}
 			world.add(activator);
 		}
 	}
@@ -355,6 +382,9 @@ strictfp class NalLoader {
 			keyLock.setPosition(pos.getX(), pos.getY());
 			keyLock.setZOrder(entity.getZorder());
 			keyLock.setTexture(getOrLoadAnimation(keyLockType.getAnimation()));
+			if(keyLockType.hasPhys2D()) {
+				loadBody(keyLock, keyLockType.getPhys2D());
+			}
 			world.add(keyLock);
 		}
 	}
@@ -371,6 +401,9 @@ strictfp class NalLoader {
 			key.setPosition(pos.getX(), pos.getY());
 			key.setZOrder(entity.getZorder());
 			key.setTexture(getOrLoadAnimation(keyType.getAnimation()));
+			if(keyType.hasPhys2D()) {
+				loadBody(key, keyType.getPhys2D());
+			}
 			world.add(key);
 		}
 	}
@@ -387,6 +420,9 @@ strictfp class NalLoader {
 				Vector2f pos = getPos(entity);
 				hero.setPosition(pos.getX(), pos.getY());
 				hero.setZOrder(entity.getZorder());
+				if(heroType.hasPhys2D()) {
+					loadBody(hero, heroType.getPhys2D());
+				}
 				world.setHero(hero);
 			} else {
 				LOGGER.warning("One hero is enough for level " + levelName
@@ -511,6 +547,9 @@ strictfp class NalLoader {
 			cloud.setPosition(pos.getX(), pos.getY());
 			cloud.setZOrder(entity.getZorder());
 			cloud.setTexture(getOrLoadAnimation(cloudType.getAnimation()));
+			if(cloudType.hasPhys2D()) {
+				loadBody(cloud, cloudType.getPhys2D());
+			}
 			world.add(cloud);
 		}
 	}
@@ -564,6 +603,9 @@ strictfp class NalLoader {
 				platform.setTexture(getOrLoadAnimation(bouncePlatformType
 					.getAnimation()));
 			}
+			if(bouncePlatformType.hasPhys2D()) {
+				loadBody(platform, bouncePlatformType.getPhys2D());
+			}
 			world.add(platform);
 		}
 	}
@@ -571,16 +613,19 @@ strictfp class NalLoader {
 	private void loadPlatform(
 			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Entity entity,
 			EntityType type,
-			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Platform platformField) throws CannotLoadAnimation {
+			im.bci.newtonadv.nal.NewtonAdventureLevelParser.Platform platformType) throws CannotLoadAnimation {
 		Shape shape = loadShape(type.getShape());
 		if (null != shape) {
 			Platform platform = new Platform(this.world, shape);
-			if(platformField.hasAnimation()) {
-				platform.setTexture(getOrLoadAnimation(platformField.getAnimation()));
+			if(platformType.hasAnimation()) {
+				platform.setTexture(getOrLoadAnimation(platformType.getAnimation()));
 			}
 			Vector2f pos = getPos(entity);
 			platform.setPosition(pos.getX(), pos.getY());
 			platform.setZOrder(entity.getZorder());
+			if(platformType.hasPhys2D()) {
+				loadBody(platform, platformType.getPhys2D());
+			}
 			this.world.add(platform);
 		}
 	}
