@@ -45,20 +45,27 @@ public class QuestMenuSequence extends MenuSequence {
 
 	List<QuestSequence> quests;
 	ITrueTypeFont questNameFont;
-	static final int QUEST_MINIATURE_ON_X = 2;
-	static final int QUEST_MINIATURE_ON_Y = 3;
-	static final float QUEST_MINIATURE_SPACING = 60;
-	static final float QUEST_MINIATURE_WIDTH = (ortho2DRight - QUEST_MINIATURE_SPACING
-			* (QUEST_MINIATURE_ON_X + 1))
-			/ QUEST_MINIATURE_ON_X;
+	private static final int NB_BUTTONS_ON_X = 2;
+	private static final int NB_BUTTONS_ON_Y = 3;
+	private static final float QUEST_MINIATURE_SPACING = 60;
+	private static final float QUEST_MINIATURE_WIDTH = (ortho2DRight - QUEST_MINIATURE_SPACING
+			* (NB_BUTTONS_ON_X + 1))
+			/ NB_BUTTONS_ON_X;
 	public static final float QUEST_MINIATURE_HEIGHT = (ortho2DBottom - QUEST_MINIATURE_SPACING
-			* (QUEST_MINIATURE_ON_Y + 1))
-			/ QUEST_MINIATURE_ON_Y;
+			* (NB_BUTTONS_ON_Y + 1))
+			/ NB_BUTTONS_ON_Y;
 
 	public QuestMenuSequence(Game game) {
 		super(game);
-		verticalIncrement = QUEST_MINIATURE_ON_X;
-		loadQuests();
+		verticalIncrement = NB_BUTTONS_ON_X;
+		loadQuests(game.getData().listQuests()
+				.iterator(), null);
+	}
+	
+	public QuestMenuSequence(Game game, QuestMenuSequence previousSequence, Iterator<String> questNamesIterator) {
+		super(game);
+		verticalIncrement = NB_BUTTONS_ON_X;		
+		loadQuests(questNamesIterator,previousSequence);
 	}
 
 	@Override
@@ -73,26 +80,58 @@ public class QuestMenuSequence extends MenuSequence {
 		questNameFont.destroy();
 	}
 
-	private void loadQuests() {
+	private void loadQuests(Iterator<String> questNamesIterator, QuestMenuSequence previousSequence) {
 		quests = new ArrayList<QuestSequence>();
-
-		Iterator<String> questNamesIterator = game.getData().listQuests()
-				.iterator();
-
-		for (int j = 0; j < QUEST_MINIATURE_ON_Y; ++j) {
-			for (int i = 0; i < QUEST_MINIATURE_ON_X; ++i) {
-				if (!questNamesIterator.hasNext()) {
+		
+		int nbQuestButtonCreated = 0;
+		final int maxQuestButtons = NB_BUTTONS_ON_X * NB_BUTTONS_ON_Y - (null == previousSequence ? 1 : 2);
+		for (int j = 0; j < NB_BUTTONS_ON_Y; ++j) {
+			for (int i = 0; i < NB_BUTTONS_ON_X; ++i) {
+				if (questNamesIterator.hasNext() && nbQuestButtonCreated < maxQuestButtons) {
+					String questName = questNamesIterator.next();
+					QuestSequence questSequence = new QuestSequence(game, questName);
+					quests.add(questSequence);
+					createQuestButton(i, j, questName, questSequence);
+					++nbQuestButtonCreated;
+				} else if(null != previousSequence){
+					createNavigateButton(i, j, previousSequence, "bt-previous");
+					previousSequence = null;
+				} else if(questNamesIterator.hasNext()) {
+					QuestMenuSequence nextQuestMenu = new QuestMenuSequence(game, this, questNamesIterator);
+					createNavigateButton(i, j, nextQuestMenu, "bt-next");
+					return;
+				} else {
 					createReturnToMenuButton(i, j);
 					return;
 				}
-				String questName = questNamesIterator.next();
-				QuestSequence questSequence = new QuestSequence(game, questName);
-				quests.add(questSequence);
-				createQuestButton(i, j, questName, questSequence);
 			}
 		}
 	}
-	
+
+	private void createNavigateButton(int i, int j,
+			final QuestMenuSequence sequence, String textureBaseName) {
+		Button button = new Button() {
+
+			@Override
+			void activate() throws NormalTransitionException,
+					ResumeTransitionException {
+				throw new NormalTransitionException(sequence);				
+			}
+			
+		};
+		button.offTextureName = game.getData().getFile("quest_menu/" + textureBaseName + "-off.png");
+		button.onTextureName = game.getData().getFile("quest_menu/" + textureBaseName + "-on.png");
+		
+		button.x = QUEST_MINIATURE_SPACING + i
+				* (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
+		button.y = QUEST_MINIATURE_SPACING + j
+				* (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);
+		button.w = QUEST_MINIATURE_WIDTH;
+		button.h = QUEST_MINIATURE_HEIGHT;
+		
+		addButton(button);
+	}
+
 	private void createReturnToMenuButton(int i, int j) {
 		Button returnToMenuButton = new Button() {
 
