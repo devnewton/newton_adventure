@@ -60,12 +60,15 @@ public class Animation {
     private long currentTime;//milliseconds
     private PlayMode mode = PlayMode.LOOP;
     private State state = State.STOPPED;
+    private final String name;
 
-	public Animation() {
+	public Animation(String name) {
+		this.name = name;
 	}
 	
     public Animation(im.bci.nanim.NanimParser.Animation nanimation,
 			Map<String, ITexture> textures) {
+    	name = nanimation.getName();
     	frames.ensureCapacity(nanimation.getFramesCount());
 		for(Frame nframe : nanimation.getFramesList()) {
 			AnimationFrame frame = addFrame(textures.get(nframe.getImageName()), nframe.getDuration());
@@ -137,4 +140,8 @@ public class Animation {
             ++currentFrameIndex;
         }
     }
+
+	public String getName() {
+		return name;
+	}
 }

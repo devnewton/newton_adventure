@@ -54,6 +54,7 @@ import im.bci.newtonadv.world.Axe;
 import im.bci.newtonadv.world.AxeAnchor;
 import im.bci.newtonadv.world.Bat;
 import im.bci.newtonadv.world.Blocker;
+import im.bci.newtonadv.world.Bomb;
 import im.bci.newtonadv.world.Cloud;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
@@ -772,7 +773,6 @@ public strictfp class GameView implements IGameView {
 		GL11.glEnd();
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-
 	}
 
 	@Override
@@ -1463,7 +1463,7 @@ public strictfp class GameView implements IGameView {
 	private AnimationCollection loadGif(String filename) throws IOException {
 		GifDecoder d = new GifDecoder();
 		d.read(data.openFile(filename));
-		Animation animation = new Animation();
+		Animation animation = new Animation(filename);
 		int n = d.getFrameCount();
 		for (int i = 0; i < n; i++) {
 			BufferedImage frameImage = d.getFrame(i); // frame i
@@ -1637,5 +1637,39 @@ public strictfp class GameView implements IGameView {
 	public ITrueTypeFont createScoreIndicatorFont(String questName,
 			String levelName) {
 		return new TrueTypeFont(this.data, new Font("arial", Font.BOLD, 24), true);
+	}
+
+	@Override
+	public void drawBomb(Bomb bomb, AnimationFrame texture, World world) {
+		AABox bounds = bomb.getShape().getBounds();
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(bomb.getPosition().getX(), bomb.getPosition().getY(),
+				0.0f);
+		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
+				1.0f);
+		final float x1 = -bounds.getWidth() / 2.0f;
+		final float x2 = bounds.getWidth() / 2.0f;
+		final float y1 = -bounds.getHeight() / 2.0f;
+		final float y2 = bounds.getHeight() / 2.0f;
+
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
+
+		final float u1 = texture.getU1(), u2 = texture.getU2();
+		final float v1 = texture.getU1(), v2 = texture.getU2();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(u1, v1);
+		GL11.glVertex2f(x1, y2);
+		GL11.glTexCoord2f(u2, v1);
+		GL11.glVertex2f(x2, y2);
+		GL11.glTexCoord2f(u2, v2);
+		GL11.glVertex2f(x2, y1);
+		GL11.glTexCoord2f(u1, v2);
+		GL11.glVertex2f(x1, y1);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
+	
 	}
 }

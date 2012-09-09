@@ -46,6 +46,7 @@ import im.bci.newtonadv.world.Axe;
 import im.bci.newtonadv.world.AxeAnchor;
 import im.bci.newtonadv.world.Bat;
 import im.bci.newtonadv.world.Blocker;
+import im.bci.newtonadv.world.Bomb;
 import im.bci.newtonadv.world.Cloud;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
@@ -183,4 +184,6 @@ public interface IGameView {
 	void drawScoreVisualIndicator(World world, ScoreVisualIndicator scoreVisualIndicator);
 
 	ITrueTypeFont createScoreIndicatorFont(String questName, String levelName);
+
+	void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
 }
