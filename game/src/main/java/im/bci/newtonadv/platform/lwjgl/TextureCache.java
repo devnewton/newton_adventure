@@ -48,6 +48,7 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.PixelGrabber;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -309,7 +310,7 @@ public class TextureCache implements ITextureCache {
 		try {
 			InputStream is = data.openFile(filename);
 			try {
-				return ImageIO.read(is);
+				return ImageIO.read(new BufferedInputStream(is));
 			} finally {
 				is.close();
 			}
