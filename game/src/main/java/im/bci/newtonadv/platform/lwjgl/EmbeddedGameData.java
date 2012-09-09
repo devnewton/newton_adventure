@@ -49,7 +49,7 @@ class EmbeddedGameData extends AbstractGameData {
 
 	static {
 		quests = Arrays.asList("jungle", "vatican", "arctic", "volcano",
-				"egypt");
+				"egypt", "bridge");
 		questLevels = new HashMap<String, List<String>>();
 		questLevels.put("jungle", Arrays.asList("level0", "level0.5", "level1",
 				"level2", "level3", "level4"));
@@ -61,6 +61,7 @@ class EmbeddedGameData extends AbstractGameData {
 				"level3", "level4", "level5"));
 		questLevels.put("volcano", Arrays.asList("level0", "level0.5",
 				"level1", "level2", "level3", "level4"));
+		questLevels.put("bridge", Arrays.asList("level0"));
 		questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
 				"bonus_level3", "bonus_level4", "bonus_level5"));
 
