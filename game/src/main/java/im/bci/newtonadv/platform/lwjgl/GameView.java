@@ -1648,6 +1648,8 @@ public strictfp class GameView implements IGameView {
 				0.0f);
 		GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
 				1.0f);
+		GL11.glRotatef((float) Math.toDegrees(bomb.getRotation()), 0, 0,
+				1.0f);
 		final float x1 = -bounds.getWidth() / 2.0f;
 		final float x2 = bounds.getWidth() / 2.0f;
 		final float y1 = -bounds.getHeight() / 2.0f;

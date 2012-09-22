@@ -806,6 +806,12 @@ public strictfp class World extends net.phys2d.raw.World {
 			helpSign.setPosition(tileX, tileY);
 			helpSign.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(helpSign);
+		} else if (c.equals("bomb")) {
+			Bomb cannon = new Bomb(this);
+			cannon.setTexture(getAnimationForTile(map, tile, textureCache));
+			cannon.setPosition(tileX, tileY);
+			cannon.setZOrder(getTileZOrder(tile, zOrderBase));
+			add(cannon);
 		} else if (c.equals("egyptian_boss")) {
 			EgyptianBoss boss = new EgyptianBoss(this, tileX, tileY);
 			boss.setBodyTexture(new AnimationCollection(textureCache.getTexture(game.getData().getFile(

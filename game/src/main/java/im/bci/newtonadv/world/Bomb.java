@@ -55,12 +55,11 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 	private boolean triggered;
 	private long explodeTime = -1;
 	private static final float explosionForce = 10000.0f;
-	private static final long triggerDuration = 1000000000L;
+	private static final long triggerDuration = 2000000000L;
 
     Bomb(World world) {
         super(new Circle(size / 2.0f), 1.0f);
         this.world = world;
-        setRotatable(false);
     }
 
     Bomb(World world, Shape shape) {
@@ -82,9 +81,12 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 
     @Override
     public strictfp void collided(Body body) {
-        if (body instanceof Hero) {
-        	currentAnimation = texture.getAnimationByName("bomb_about_to_explode");
-        	triggered = true;
+        if (body instanceof Hero || body instanceof FireBall) {
+        	if(!triggered) {
+        		currentAnimation = texture.getAnimationByName("bomb_about_to_explode");
+        		currentAnimation.start();
+        		triggered = true;
+        	}
         }
     }
 
