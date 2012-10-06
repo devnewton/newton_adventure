@@ -202,11 +202,13 @@ public class OptionsGUI extends Widget {
 		joyButtonModel.clear();
 
 		if (null != controller) {
+			joyAxisModel.addElement("");
 			for (int i = 0, n = controller.getAxisCount(); i < n; ++i) {
 				joyAxisModel.addElement(controller.getAxisName(i));
 			}
+			joyButtonModel.addElement("");
 			for (int i = 0, n = controller.getButtonCount(); i < n; ++i) {
-				joyButtonModel.addElement(controller.getButtonName(i));
+				joyButtonModel.addElement(i + ". " + controller.getButtonName(i));
 			}
 		}
 	}
@@ -258,6 +260,7 @@ public class OptionsGUI extends Widget {
 
 	private InputChoice addInputChoice(ColumnLayout layout, String label,
 			int key, int button) {
+		++button;
 		InputChoice choice = new InputChoice();
 		choice.key = new ComboBox<String>(keyModel);
 		choice.joyButton = new ComboBox<String>(joyButtonModel);

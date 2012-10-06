@@ -170,6 +170,7 @@ public class OptionsSequence implements IOptionsSequence {
 						.getNumEntries()) {
 			String buttonName = joyButton.getModel().getEntry(
 					joyButton.getSelected());
+			buttonName = buttonName.replaceFirst("\\A\\d*\\.\\s", "");
 			return GameInput.findJoypadButtonByName(controller, buttonName);
 		} else {
 			return -1;
