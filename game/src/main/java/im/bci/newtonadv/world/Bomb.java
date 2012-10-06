@@ -56,10 +56,12 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 	private long explodeTime = -1;
 	private static final float explosionForce = 10000.0f;
 	private static final long triggerDuration = 2000000000L;
+	private BombHole parentHole;
 
     Bomb(World world) {
         super(new Circle(size / 2.0f), 1.0f);
         this.world = world;
+        setTexture(world.getBombTexture());
     }
 
     Bomb(World world, Shape shape) {
@@ -73,7 +75,7 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
         world.getView().drawBomb(this, currentAnimation.getCurrentFrame(), world);
     }
 
-    void setTexture(AnimationCollection texture) {
+    private void setTexture(AnimationCollection texture) {
         this.texture = texture;
         this.currentAnimation = texture.getAnimationByName("bomb_inactive");
         this.currentAnimation.start();
@@ -107,6 +109,9 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 	}
 
 	private void explode() {
+		if(null != parentHole) {
+			parentHole.bombExploded();
+		}
 		world.remove(this);
 		throwFireball(1, 1);
 		throwFireball(-1, -1);
@@ -123,4 +128,8 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
         world.add(fireBall);
         fireBall.addForce(new Vector2f(dx * explosionForce, dy * explosionForce));
     }
+
+	public void setParentHole(BombHole parentHole) {
+		this.parentHole = parentHole;
+	}
 }

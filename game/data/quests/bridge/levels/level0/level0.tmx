@@ -419,12 +419,21 @@
   </tile>
   <tile id="41">
    <properties>
-    <property name="newton_adventure.gfx" value="bomb.nanim"/>
     <property name="newton_adventure.type" value="bomb"/>
    </properties>
    <image format="png">
     <data encoding="base64">
      iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAm0lEQVR42u2XQQrAIAwE864e+q2e+/IUD4IHxY1kk5YaCPSiMxtQqshPSuvHfYiWXt0E7dE6aUUY4GlbJ6CkTgNDEsNFpSIkuuBUeNT4o5JjAkS4wnCigG6BLZB5BD8iQLwFcQHvvuTMEyjwNIEOXEN/QmbpqQJoeopEhSPpXSVasBUuRLjpMeI5cjPcLOKVellikNgF7vE2fHc9y4FAdQiuHFMAAAAASUVORK5CYII=
+    </data>
+   </image>
+  </tile>
+  <tile id="42">
+   <properties>
+    <property name="newton_adventure.type" value="bomb_hole"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADKElEQVR42sVXTYvUQBCdnsnk+3syX7vrsgcPguAeREEvooKXBQVBQQ8KevVHCZ78lbX1euxsp9M9ycyIHopkkkm9V6+qq6snP3/9pv9lk8mEJrj58v2H0z58/kYvXt/Qw+unBxm+wbf7fHcI2Ii8evO2dXjz7tMoM4nAh+lXYTkVAPMnz152wA9VQDf4sqlhJfD+41e6fvzcCj4mr/cfPLKSgE/43ksALG3gcNoWzYDtIwLfuhI9AjbZzy6uRoObRPCtLR1WAmbB4braXPTAhRB8FZRmBVWLNSV8nc08Jwn4cBVmSwCyDEWuQISYMvCKNttLmk6n/HxGnufz/UwSG6sEMFsCap27cr49v+KIc5rPfQnqeXMJhquyKEqorBonCbMmgNkSMKPv5VyIXhqiOGl/J0kuwbOspOXqzJkOU4UOgX0VLzhqncTm7JKW6/M2JZA/yyoKw4Sa5ZYWzcZKAnkfJNAvOs6z1y+yXRru/qNSEQQxq5NSEMZMKJb1If6QP4pAEIRU1Q3Nfb/zHLVwdz/j9wElaU5xkkkCSEtdr2TxltWyQwA1NZpAwg4hN9KgIsFVtCkRUgFEXDLRvKgkkTQt2HIOIJLvQPgoAnrEQovaNBDyWS0QQI8oippipIKfYani/UkEbKuhS3Am0wQSyH1VL6ksF1KBLC+PT0FfcrcCOUddLZZSfkSPZVkUi7aIT1IAxVSUtRMctt7eo2a12SnB5hmr5+QUqKUHuVF4KMAp5xf1ITskd8ooSajmVg2yu/8cSGBo60Wk83nQyooriOE57hcNNyJuRvgNINXKBwno5iKgpEZlq8YDNVB4iDbNC1l02AFdXVCBdwiYQ+c+FSB1GEZUN2sKo0guOTShgJ9hP0DPCKO4B642I0Wgsxnp27Ey1yCyS4Evo4+TVDYdVD9A82K37HZb8x242o716DvbsTmQKLMNJDCfI0aXw1qHgQTSYJNdDSQ6eG8gsY1kQ0rAoVlkJrg+iCgCzpHMNpSaNTFmNlS+9AFEgQ8Opbax3CSy76RjA9bBB8dy18HkGNNzPupgMnQ00yMaYycdzf7p4fTQA8fftltnvzXgzEGLZQAAAABJRU5ErkJggg==
     </data>
    </image>
   </tile>
@@ -1360,7 +1369,7 @@
    <tile gid="0"/>
    <tile gid="32"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="43"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
