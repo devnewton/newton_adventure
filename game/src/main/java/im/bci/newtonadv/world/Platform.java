@@ -35,6 +35,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import im.bci.newtonadv.anim.Animation;
+import im.bci.newtonadv.anim.Animation.PlayMode;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
@@ -53,6 +55,7 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements
 		Updatable {
 
 	private AnimationCollection texture;
+	protected Animation currentAnimation;
 	protected final World world;
 	protected float w;
 	protected float h;
@@ -99,8 +102,17 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements
 
 	public void setTexture(AnimationCollection texture) {
 		this.texture = texture;
-		texture.getFirst().start();
-		setAnimationFrame(texture.getFirst().getCurrentFrame());
+		this.currentAnimation = texture.getFirst();
+		this.currentAnimation.start();
+		setAnimationFrame(currentAnimation.getCurrentFrame());
+	}
+	
+	protected void changeAnimation(String animationName, PlayMode mode) {
+		if(null != texture) {
+			this.currentAnimation = texture.getAnimationByName(animationName);
+			this.currentAnimation.start(mode);
+			setAnimationFrame(currentAnimation.getCurrentFrame());
+		}
 	}
 
 	private void setAnimationFrame(AnimationFrame currentFrame) {
@@ -121,14 +133,14 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements
 
 	@Override
 	public void draw() {
-		if (null != texture) {
-			setAnimationFrame(texture.getFirst().getCurrentFrame());
+		if (null != currentAnimation) {
+			setAnimationFrame(currentAnimation.getCurrentFrame());
 			world.getView().drawPlatform(this);
 		}
 	}
 
 	@Override
-	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
+	public void update(FrameTimeInfos frameTimeInfos) {
+		currentAnimation.update(frameTimeInfos.elapsedTime / 1000000);
 	}
 }

@@ -118,7 +118,7 @@ class MemoryActivator extends Platform implements Updatable {
 	}
 
 	@Override
-	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+	public void update(FrameTimeInfos frameTimeInfos) {
 		if (state == State.SHOW) {
 			if (showEndTime < 0)
 				showEndTime = frameTimeInfos.currentTime + showDuration;

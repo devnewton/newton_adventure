@@ -68,7 +68,7 @@ public strictfp class Cannon extends Platform implements Updatable {
     }
 
     @Override
-	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+	public void update(FrameTimeInfos frameTimeInfos) {
         if( frameTimeInfos.currentTime > nextFireballTime) {
             throwFireball();
             nextFireballTime = frameTimeInfos.currentTime + durationBetweenFireballGeneration;

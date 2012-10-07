@@ -31,58 +31,44 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.game.FrameTimeInfos;
-import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Shape;
+import im.bci.newtonadv.anim.Animation.PlayMode;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.Updatable;
 
-/**
- *
- * @author devnewton
- */
-public strictfp class HelpSign extends Platform implements CollisionDetectionOnly, Updatable {
+public strictfp class Crate extends Platform implements Updatable {
 
-    private String color;
-    private boolean collideHero = false;
-    private static final long durationBeforeShowHelp = 2000000000L;
-    private long showHelpTime = -1;
+	private boolean touched = false;
 
-    HelpSign(World world, float w, float h) {
-    	super(world, w, h);
-    }
+	public Crate(World world, float w, float h) {
+		super(world, w, h);
+		setTexture(world.getCrateTexture());
+		changeAnimation("crate", PlayMode.LOOP);
+	}
 
-    public HelpSign(World world, Shape shape) {
-    	super(world, shape);
+	public Crate(World world, Shape shape) {
+		super(world, shape);
+		setTexture(world.getCrateTexture());
+		changeAnimation("crate", PlayMode.LOOP);
 	}
 
 	@Override
-    public strictfp void collided(Body body) {
-    	if(body instanceof Hero) {
-    		collideHero = true;
-    	}
-
-    }
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
+	public void collided(Body body) {
+		if (body instanceof FireBall) {
+			if(!touched) {
+				touched = true;
+				changeAnimation("burning_crate", PlayMode.ONCE);
+			}
+		}
 	}
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) {
-		if(collideHero) {
-			if(showHelpTime < 0 )
-				showHelpTime = frameTimeInfos.currentTime + durationBeforeShowHelp;
-			else if(frameTimeInfos.currentTime > showHelpTime ) {
-				showHelpTime = -1;
-				world.showHelp();
-			}
-		} else {
-			showHelpTime = -1;
+		super.update(frameTimeInfos);
+		if (touched && currentAnimation.isStopped()) {
+			world.remove(this);
 		}
-		collideHero = false;		
 	}
+
 }

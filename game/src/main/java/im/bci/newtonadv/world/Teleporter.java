@@ -67,7 +67,7 @@ public strictfp class Teleporter extends Platform implements CollisionDetectionO
 	}
 
 	@Override
-	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+	public void update(FrameTimeInfos frameTimeInfos) {
 		if(collideHero) {
 			if(teleportTime < 0 )
 				teleportTime = frameTimeInfos.currentTime + durationBeforeTeleport;

@@ -437,6 +437,16 @@
     </data>
    </image>
   </tile>
+  <tile id="43">
+   <properties>
+    <property name="newton_adventure.type" value="crate"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABmklEQVR42sWXu21DMQxF30LeIF3gKhukTZO02cCA60yQNhukzQCZygENXOOK4k9PClzQH1oWj+hLmtpeHw+Xe9omDz/nl6v9fp6uzo/nh8vX2/Fm3+9PnU/M8kVrZW+JIbHE1wCIgyFWA+jgDQAHtCBmAbzgTQbkWb4sxhDwyaZ4Hfm03wveZYANCwExY97JuwwINYTC6UN28HnVvOB6TSNCnSIAAKKqgSjtOk4DIF/mksF7D2JE7d5aF4CpIUwWqwUQnXwXANIJZetM8KZZ2ncD6BQyBGcq+80ZgPc1RWi1Yk+YVcFNA+gSBUBVcEsAdBezgutWbAnWBfA0oDeN0v7vAFlvrwAMVwFrwAvO//HLACrtVXdMXTFLADK16+rgipnSQLW98qnRtlkTu8uw2l55Q27b3n9BCWCkvWJDq21HwgzngdH2qgVrQYQizGa40aFUQ1jTljkTZjPcqDFEeDGJTo5TVUyv5TmQM9HMhNlvzu2VBTdyL2CI7l6QCW4WIKqOrgqyu+FeAEuYN4BsgFx1ObVa+Hbv6/kfzoToT/e5SO4AAAAASUVORK5CYII=
+    </data>
+   </image>
+  </tile>
  </tileset>
  <layer name="level" width="64" height="64">
   <data>
@@ -1367,7 +1377,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="32"/>
+   <tile gid="44"/>
    <tile gid="0"/>
    <tile gid="43"/>
    <tile gid="0"/>
@@ -1431,7 +1441,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="32"/>
+   <tile gid="44"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1495,7 +1505,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="32"/>
+   <tile gid="44"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1559,7 +1569,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="32"/>
+   <tile gid="44"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1623,7 +1633,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="32"/>
+   <tile gid="44"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1687,7 +1697,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="32"/>
+   <tile gid="44"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="2"/>

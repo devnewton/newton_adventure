@@ -76,7 +76,15 @@ public class Animation {
 			frame.v1 = nframe.getV1();
 			frame.u2 = nframe.getU2();
 			frame.v2 = nframe.getV2();
-			frames.add(frame);
+		}
+	}
+
+	public Animation(Animation otherAnimation) {
+		name = otherAnimation.name;
+		totalDuration = otherAnimation.totalDuration;
+		frames.ensureCapacity(otherAnimation.frames.size());
+		for(AnimationFrame otherFrame : otherAnimation.frames) {
+			frames.add(new AnimationFrame(otherFrame));
 		}
 	}
 
@@ -139,6 +147,8 @@ public class Animation {
         while (currentTime > frames.get(currentFrameIndex).endTime) {
             ++currentFrameIndex;
         }
+        if("burning_crate".equals(this.name))
+        		System.out.println(currentFrameIndex);
     }
 
 	public String getName() {

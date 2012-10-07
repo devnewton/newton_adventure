@@ -97,6 +97,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	private AnimationCollection compassTexture;
 	private AnimationCollection fireBallTexture;
 	private AnimationCollection bombTexture;
+	private AnimationCollection crateTexture;
 	private boolean objectivesCompleted = false;
 	private float nonProgressiveGravityRotationStep;
 	private AnimationCollection explosionAnimation;
@@ -155,8 +156,12 @@ public strictfp class World extends net.phys2d.raw.World {
 		return explosionAnimation;
 	}
 	
-	public AnimationCollection getBombTexture() {
+	AnimationCollection getBombTexture() {
 		return bombTexture;
+	}
+	
+	AnimationCollection getCrateTexture() {
+		return new AnimationCollection(crateTexture);
 	}
 
 
@@ -256,6 +261,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		defaultMapProperties.put("newton_adventure.explosion", "explosion.gif");
 		defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
 		defaultMapProperties.put("newton_adventure.bomb", "bomb.nanim");
+		defaultMapProperties.put("newton_adventure.crate", "crate.nanim");
 		defaultMapProperties.put("newton_adventure.axe", "axe.png");
 		defaultMapProperties.put("newton_adventure.mobilePikes",
 				"mobile_pikes.png");
@@ -380,6 +386,8 @@ public strictfp class World extends net.phys2d.raw.World {
 					getFileFromMap(map, "newton_adventure.fireball"));
 			bombTexture = game.getView().loadFromAnimation(
 					getFileFromMap(map, "newton_adventure.bomb"));
+			crateTexture = game.getView().loadFromAnimation(
+					getFileFromMap(map, "newton_adventure.crate"));
 			keyTexture = game.getView().loadFromAnimation(
 					getFileFromMap(map, "newton_adventure.key"));
 			closedDoorTexture = game.getView().loadFromAnimation(
@@ -826,6 +834,11 @@ public strictfp class World extends net.phys2d.raw.World {
 			bombHole.setPosition(tileX, tileY);
 			bombHole.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(bombHole);
+		} else if (c.equals("crate")) {
+			Crate crate = new Crate(this, tileWidth, tileHeight);
+			crate.setPosition(tileX, tileY);
+			crate.setZOrder(getTileZOrder(tile, zOrderBase));
+			add(crate);
 		} else if (c.equals("egyptian_boss")) {
 			EgyptianBoss boss = new EgyptianBoss(this, tileX, tileY);
 			boss.setBodyTexture(new AnimationCollection(textureCache.getTexture(game.getData().getFile(

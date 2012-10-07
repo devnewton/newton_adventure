@@ -55,7 +55,7 @@ public strictfp class BombHole extends Platform implements Updatable {
 	}
 
 	@Override
-	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+	public void update(FrameTimeInfos frameTimeInfos) {
 		if (canThrowBomb) {
 			canThrowBomb = false;
 			throwBomb();
