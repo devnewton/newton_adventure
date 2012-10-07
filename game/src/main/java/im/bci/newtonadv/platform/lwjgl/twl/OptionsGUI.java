@@ -58,7 +58,7 @@ public class OptionsGUI extends Widget {
 	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
 	private SimpleChangableListModel<ControllerItem> controllerModel = buildControllerListModel();
 	private SimpleChangableListModel<String> joyAxisModel = new SimpleChangableListModel<String>();
-	private SimpleChangableListModel<String> joyButtonModel = new SimpleChangableListModel<String>();
+	private SimpleChangableListModel<JoyButtonItem> joyButtonModel = new SimpleChangableListModel<JoyButtonItem>();
 
 	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
 			SoundCache soundCache, String dataDir) throws LWJGLException {
@@ -195,6 +195,16 @@ public class OptionsGUI extends Widget {
 				cancelPressed = true;
 			}
 		});
+		
+		joypad.addCallback(new Runnable() {
+
+			@Override
+			public void run() {
+				ControllerItem item = joypad.getModel().getEntry(
+						joypad.getSelected());
+				presetControllers(item.getController());
+			}
+		});
 	}
 
 	private void controllerSelected(Controller controller) {
@@ -206,11 +216,39 @@ public class OptionsGUI extends Widget {
 			for (int i = 0, n = controller.getAxisCount(); i < n; ++i) {
 				joyAxisModel.addElement(controller.getAxisName(i));
 			}
-			joyButtonModel.addElement("");
+			joyButtonModel.addElement(new JoyButtonItem());
 			for (int i = 0, n = controller.getButtonCount(); i < n; ++i) {
-				joyButtonModel.addElement(i + ". " + controller.getButtonName(i));
+				joyButtonModel.addElement(new JoyButtonItem(i,controller.getButtonName(i)));
 			}
 		}
+	}
+
+	private void presetControllers(Controller controller) {
+		if(null != controller) {
+			if("Mega World USB Game Controllers".equals(controller.getName())) {
+				presetMegaWorlUSBGameControllers();
+			} else {
+				presetUnknowControllers();
+			}
+		}		
+	}
+
+	private void presetMegaWorlUSBGameControllers() {
+		joypadXAxis.setSelected(joyAxisModel.findElement("x"));
+		joypadYAxis.setSelected(joyAxisModel.findElement("y"));
+		keyJump.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Trigger")));
+		keyRotateCounterClockwise.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Top 2")));
+		keyRotateClockwise.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Base")));
+		keyReturnToMenu.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Base 3")));
+		keyReturn.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Base 4")));		
+	}
+	
+	private void presetUnknowControllers() {
+		joypadXAxis.setSelected(1);
+		joypadYAxis.setSelected(2);
+		keyJump.joyButton.setSelected(1);
+		keyRotateCounterClockwise.joyButton.setSelected(2);
+		keyRotateClockwise.joyButton.setSelected(3);		
 	}
 
 	public static class ControllerItem {
@@ -220,6 +258,9 @@ public class OptionsGUI extends Widget {
 			this.controller = controller;
 		}
 
+		public ControllerItem() {
+		}
+
 		public Controller getController() {
 			return controller;
 		}
@@ -227,7 +268,12 @@ public class OptionsGUI extends Widget {
 		@Override
 		public boolean equals(Object o) {
 			if (o instanceof ControllerItem) {
-				return controller.equals(((ControllerItem) o).getController());
+				Controller otherController = ((ControllerItem) o).getController();
+				if(null == controller) {
+					return null == otherController;				
+				} else {
+					return controller.equals(otherController);
+				}
 			} else {
 				return super.equals(o);
 			}
@@ -235,12 +281,56 @@ public class OptionsGUI extends Widget {
 
 		@Override
 		public String toString() {
+			if(null != controller) {
 			return controller.getName();
+			} else {
+				return "";
+			}
+		}
+	}
+	
+	public static class JoyButtonItem {
+		private final int buttonIndex;
+		private final String buttonName;
+
+		JoyButtonItem(int buttonIndex, String buttonName) {
+			this.buttonIndex = buttonIndex;
+			this.buttonName = buttonName;
+		}
+
+		public JoyButtonItem() {
+			buttonIndex = -1;
+			buttonName = "";
+		}
+		
+		//used only for searching...
+		public JoyButtonItem(String name) {
+			buttonIndex = -42;
+			buttonName = name;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof JoyButtonItem) {
+				return buttonName.equals(((JoyButtonItem) o).buttonName);
+			} else {
+				return super.equals(o);
+			}
+		}
+
+		@Override
+		public String toString() {
+			return buttonName;
+		}
+
+		public int getButtonIndex() {
+			return buttonIndex;
 		}
 	}
 
 	private SimpleChangableListModel<ControllerItem> buildControllerListModel() {
 		SimpleChangableListModel<ControllerItem> model = new SimpleChangableListModel<ControllerItem>();
+		model.addElement(new ControllerItem());
 		for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
 			model.addElement(new ControllerItem(Controllers.getController(i)));
 		}
@@ -255,7 +345,7 @@ public class OptionsGUI extends Widget {
 
 	public class InputChoice {
 		ComboBox<String> key;
-		ComboBox<String> joyButton;
+		ComboBox<JoyButtonItem> joyButton;
 	}
 
 	private InputChoice addInputChoice(ColumnLayout layout, String label,
@@ -263,7 +353,7 @@ public class OptionsGUI extends Widget {
 		++button;
 		InputChoice choice = new InputChoice();
 		choice.key = new ComboBox<String>(keyModel);
-		choice.joyButton = new ComboBox<String>(joyButtonModel);
+		choice.joyButton = new ComboBox<JoyButtonItem>(joyButtonModel);
 		Row rowKeys = layout.addRow("label", "key", "joyButton");
 		rowKeys.addLabel(label).add(choice.key).add(choice.joyButton);
 		choice.key

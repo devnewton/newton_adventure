@@ -25,6 +25,7 @@ import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 import im.bci.newtonadv.platform.lwjgl.SoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
+import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.JoyButtonItem;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.lang.reflect.Field;
@@ -164,14 +165,13 @@ public class OptionsSequence implements IOptionsSequence {
 
 	private static int findJoypadButtonIndex(Controller controller,
 			InputChoice c) {
-		ComboBox<String> joyButton = c.joyButton;
+		ComboBox<JoyButtonItem> joyButton = c.joyButton;
 		if (joyButton.getSelected() >= 0
 				&& joyButton.getSelected() < joyButton.getModel()
 						.getNumEntries()) {
-			String buttonName = joyButton.getModel().getEntry(
+			JoyButtonItem buttonItem = joyButton.getModel().getEntry(
 					joyButton.getSelected());
-			buttonName = buttonName.replaceFirst("\\A\\d*\\.\\s", "");
-			return GameInput.findJoypadButtonByName(controller, buttonName);
+			return buttonItem.getButtonIndex();
 		} else {
 			return -1;
 		}
