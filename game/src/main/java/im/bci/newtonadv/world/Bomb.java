@@ -51,7 +51,7 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
     static final float size = 2.0f * World.distanceUnit;
     private World world;
     private AnimationCollection texture;
-	private Animation currentAnimation;
+	private Animation.Play play;
 	private boolean triggered;
 	private long explodeTime = -1;
 	private static final float explosionForce = 10000.0f;
@@ -72,21 +72,19 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 
 	@Override
     public void draw() {
-        world.getView().drawBomb(this, currentAnimation.getCurrentFrame(), world);
+        world.getView().drawBomb(this, play.getCurrentFrame(), world);
     }
 
     private void setTexture(AnimationCollection texture) {
         this.texture = texture;
-        this.currentAnimation = texture.getAnimationByName("bomb_inactive");
-        this.currentAnimation.start();
+        this.play = texture.getAnimationByName("bomb_inactive").start();
     }
 
     @Override
     public strictfp void collided(Body body) {
         if (body instanceof Hero || body instanceof FireBall) {
         	if(!triggered) {
-        		currentAnimation = texture.getAnimationByName("bomb_about_to_explode");
-        		currentAnimation.start();
+        		play = texture.getAnimationByName("bomb_about_to_explode").start();
         		triggered = true;
         	}
         }
@@ -98,7 +96,7 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		currentAnimation.update(frameTimeInfos.elapsedTime / 1000000);
+		play.update(frameTimeInfos.elapsedTime / 1000000);
 	       if(triggered) {
 	           if( explodeTime < 0 )
 	               explodeTime = frameTimeInfos.currentTime + triggerDuration;

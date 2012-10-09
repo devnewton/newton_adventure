@@ -33,6 +33,7 @@ package im.bci.newtonadv.world;
 
 import net.phys2d.math.ROVector2f;
 
+import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -47,8 +48,8 @@ import net.phys2d.raw.shapes.ConvexPolygon;
 public class DownLeftHalfPlatform extends AbstractDrawableStaticBody implements Updatable {
 
     static final float size = 2.0f * World.distanceUnit;
-    private AnimationCollection texture;
     private final World world;
+	private Play play;
 
     DownLeftHalfPlatform(World world, float w, float h) {
         super(new ConvexPolygon(computeVertices(w,h)));
@@ -62,17 +63,16 @@ public class DownLeftHalfPlatform extends AbstractDrawableStaticBody implements 
 	}
 
     public void setTexture(AnimationCollection texture) {
-        this.texture = texture;
-        texture.getFirst().start();
+        play = texture.getFirst().start();
     }
 
     @Override
     public void draw() {
-        world.getView().drawDownLeftHalfPlatform(this,texture.getFirst().getCurrentFrame());
+        world.getView().drawDownLeftHalfPlatform(this,play.getCurrentFrame());
     }
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		texture.getFirst().update(frameTimeInfos.elapsedTime/ 1000000 );
+		play.update(frameTimeInfos.elapsedTime/ 1000000 );
 	}
 }

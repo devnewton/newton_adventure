@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -45,7 +46,7 @@ import net.phys2d.raw.shapes.Shape;
 public class MobilePikeAnchor extends AbstractDrawableStaticBody implements Updatable {
 
     private static final float radius = World.distanceUnit;
-    private AnimationCollection texture;
+    private Animation.Play play;
     private final World world;
 
     MobilePikeAnchor(World world) {
@@ -60,16 +61,16 @@ public class MobilePikeAnchor extends AbstractDrawableStaticBody implements Upda
 	}
 
 	public void setTexture(AnimationCollection texture) {
-        this.texture = texture;
+        this.play = texture.getFirst().start();
     }
 
     @Override
     public void draw() {
-        world.getView().drawMobilePikeAnchor(this,texture.getFirst().getCurrentFrame());
+        world.getView().drawMobilePikeAnchor(this,play.getCurrentFrame());
     }
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+		play.update(frameTimeInfos.elapsedTime / 1000000);		
 	}
 }

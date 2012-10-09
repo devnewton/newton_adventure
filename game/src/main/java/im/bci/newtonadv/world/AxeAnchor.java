@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -39,38 +40,37 @@ import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.Shape;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public class AxeAnchor extends AbstractDrawableStaticBody implements Updatable {
 
-    static final float radius = World.distanceUnit;
-    private AnimationCollection texture;
-    private final World world;
+	static final float radius = World.distanceUnit;
+	private Animation.Play play;
+	private final World world;
 
-    AxeAnchor(World world) {
-        this(world, new Circle(radius));
-    }
+	AxeAnchor(World world) {
+		this(world, new Circle(radius));
+	}
 
-    public AxeAnchor(World world, Shape shape) {
-        super(shape);
-        setFriction(10.0f);
-        addBit(World.STATIC_BODY_COLLIDE_BIT);
-        this.world = world;
+	public AxeAnchor(World world, Shape shape) {
+		super(shape);
+		setFriction(10.0f);
+		addBit(World.STATIC_BODY_COLLIDE_BIT);
+		this.world = world;
 	}
 
 	public void setTexture(AnimationCollection texture) {
-        this.texture = texture;
-        texture.getFirst().start();
-    }
+		play = texture.getFirst().start();
+	}
 
-    @Override
-    public void draw() {
-        world.getView().drawAxeAnchor(this,radius, texture.getFirst().getCurrentFrame());
-    }
+	@Override
+	public void draw() {
+		world.getView().drawAxeAnchor(this, radius, play.getCurrentFrame());
+	}
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
+		play.update(frameTimeInfos.elapsedTime / 1000000);
 	}
 }

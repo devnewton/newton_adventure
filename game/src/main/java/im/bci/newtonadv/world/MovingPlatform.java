@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -40,52 +41,55 @@ import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Shape;
 
 /**
- *
+ * 
  * @author devnewton
  */
-public strictfp class MovingPlatform extends AbstractDrawableBody implements Updatable {
+public strictfp class MovingPlatform extends AbstractDrawableBody implements
+		Updatable {
 
-    private final Vector2f[] destinations;
-    private int currentDestination = 0;
-    private static final float weight = 10000.0f;
-    final World world;
-    final AnimationCollection texture;
-    final Vector2f f = new Vector2f();
+	private final Vector2f[] destinations;
+	private int currentDestination = 0;
+	private static final float weight = 10000.0f;
+	final World world;
+	final Animation.Play play;
+	final Vector2f f = new Vector2f();
 
-    public MovingPlatform(World world, AnimationCollection texture, Vector2f[] destinations, float w, float h) {
-        this(world, texture, destinations, new Box(w, h));
-    }
-    
-    public MovingPlatform(World world, AnimationCollection texture, Vector2f[] destinations, Shape shape) {
-        super(shape, weight);
-        this.world = world;
-        this.texture = texture;
-        this.destinations = destinations;
-        this.setGravityEffected(false);
-        this.setRotatable(false);
-        texture.getFirst().start();
-    }
+	public MovingPlatform(World world, AnimationCollection texture,
+			Vector2f[] destinations, float w, float h) {
+		this(world, texture, destinations, new Box(w, h));
+	}
 
-    @Override
+	public MovingPlatform(World world, AnimationCollection texture,
+			Vector2f[] destinations, Shape shape) {
+		super(shape, weight);
+		this.world = world;
+		play = texture.getFirst().start();
+		this.destinations = destinations;
+		this.setGravityEffected(false);
+		this.setRotatable(false);
+		texture.getFirst().start();
+	}
+
+	@Override
 	public void draw() {
-        world.getView().drawMovingPlatform(this, texture.getFirst().getCurrentFrame());
-    }
+		world.getView().drawMovingPlatform(this, play.getCurrentFrame());
+	}
 
-    @Override
+	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-    	if(destinations.length>0) {
-    		Vector2f destinationPos = destinations[currentDestination];
-	        if (this.getPosition().distance(destinationPos) < 1f) {
-	            ++currentDestination;
-	            if(currentDestination>=destinations.length) {
-	            	currentDestination = 0;
-	            }
-	        }
-	        f.set(destinationPos);
-	        f.sub(this.getPosition());
-	        f.normalise();
-	        f.scale(world.getGravityForce());
-	        this.adjustBiasedVelocity(f);
-    	}
-    }
+		if (destinations.length > 0) {
+			Vector2f destinationPos = destinations[currentDestination];
+			if (this.getPosition().distance(destinationPos) < 1f) {
+				++currentDestination;
+				if (currentDestination >= destinations.length) {
+					currentDestination = 0;
+				}
+			}
+			f.set(destinationPos);
+			f.sub(this.getPosition());
+			f.normalise();
+			f.scale(world.getGravityForce());
+			this.adjustBiasedVelocity(f);
+		}
+	}
 }

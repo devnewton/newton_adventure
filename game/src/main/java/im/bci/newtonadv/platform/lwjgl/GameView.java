@@ -1558,8 +1558,8 @@ public strictfp class GameView implements IGameView {
 			drawMinimapIcon(world, world.getHero().getPosition(), world
 					.getHero().getAnimation().getCurrentFrame());
 			for (Key key : world.getKeys())
-				drawMinimapIcon(world, key.getPosition(), key.getTexture()
-						.getFirst().getCurrentFrame());
+				drawMinimapIcon(world, key.getPosition(), key.getAnimation()
+						.getCurrentFrame());
 		}
 		GL11.glPopMatrix();
 		GL11.glPopAttrib();

@@ -35,6 +35,7 @@ import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.Entity;
@@ -92,6 +93,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	private List<Updatable> updatableBodies = new LinkedList<Updatable>();
 	protected EntityList topLevelEntities = new EntityList();
 	private AnimationCollection appleIconTexture;
+	private Animation.Play appleIconPlay;
 	private AnimationCollection coinTexture;
 	private AnimationCollection worldMapTexture;
 	private AnimationCollection compassTexture;
@@ -145,7 +147,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 
 	public AnimationFrame getAppleIconTexture() {
-		return appleIconTexture.getFirst().getCurrentFrame();
+		return appleIconPlay.getCurrentFrame();
 	}
 
 	public AnimationCollection getFireBallTexture() {
@@ -161,7 +163,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	}
 	
 	AnimationCollection getCrateTexture() {
-		return new AnimationCollection(crateTexture);
+		return crateTexture;
 	}
 
 
@@ -376,6 +378,7 @@ public strictfp class World extends net.phys2d.raw.World {
 					getFileFromMap(map, "newton_adventure.bat"));
 			appleIconTexture = game.getView().loadFromAnimation(
 					getFileFromMap(map, "newton_adventure.apple"));
+			appleIconPlay = appleIconTexture.getFirst().start();
 			coinTexture = game.getView().loadFromAnimation(
 					getFileFromMap(map, "newton_adventure.coin"));
 			worldMapTexture = game.getView().loadFromAnimation(
@@ -905,6 +908,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	public void update() throws GameOverException, NormalTransitionException,
 			ResumableTransitionException, ResumeTransitionException {
 		FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
+		appleIconPlay.update(frameTimeInfos.elapsedTime / 1000000);
 		for (Updatable u : new ArrayList<Updatable>(updatableBodies)) {// copy
 																		// to
 																		// allow

@@ -34,51 +34,53 @@ package im.bci.newtonadv.world;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Circle;
 
+import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
-public strictfp class FireBall extends AbstractDrawableBody implements Updatable, CollisionDetectionOnly{
-    final float size;
-    World world;
-    private AnimationCollection texture;
-    FireBall(World world, float size) {
-        super(new Circle(size/2.0f), 40.0f);
-        this.size = size;
-        this.world = world;
-    }
+public strictfp class FireBall extends AbstractDrawableBody implements
+		Updatable, CollisionDetectionOnly {
+	final float size;
+	World world;
+	private Play play;
 
-    void setTexture(AnimationCollection texture) {
-        this.texture = texture;
-        texture.getFirst().start();
-    }
+	FireBall(World world, float size) {
+		super(new Circle(size / 2.0f), 40.0f);
+		this.size = size;
+		this.world = world;
+	}
 
-    @Override
-    public strictfp void collided(Body other) {
-        if (other instanceof Hero) {
-            Hero hero = (Hero) other;
-            if (hero.isInvincible()) {
-                return;
-            }
-            hero.hurtByFireBall();
-        }
-        world.remove(this);
-        world.addTopLevelEntities(new Explosion(world, this.getPosition()));
-    }
-    
-    @Override
+	void setTexture(AnimationCollection texture) {
+		play = texture.getFirst().start();
+	}
+
+	@Override
+	public strictfp void collided(Body other) {
+		if (other instanceof Hero) {
+			Hero hero = (Hero) other;
+			if (hero.isInvincible()) {
+				return;
+			}
+			hero.hurtByFireBall();
+		}
+		world.remove(this);
+		world.addTopLevelEntities(new Explosion(world, this.getPosition()));
+	}
+
+	@Override
 	public void draw() {
-        world.getView().drawFireBall(this,texture.getFirst().getCurrentFrame(),world);
-    }
+		world.getView().drawFireBall(this, play.getCurrentFrame(), world);
+	}
 
-    public float getSize() {
-        return size;
-    }
-    
+	public float getSize() {
+		return size;
+	}
+
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+		play.update(frameTimeInfos.elapsedTime / 1000000);
 	}
-    
+
 }

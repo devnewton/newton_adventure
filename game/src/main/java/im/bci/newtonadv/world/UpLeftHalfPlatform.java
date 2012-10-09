@@ -33,6 +33,7 @@ package im.bci.newtonadv.world;
 
 import net.phys2d.math.ROVector2f;
 
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -41,38 +42,40 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.ConvexPolygon;
 
 /**
- *
+ * 
  * @author devnewton
  */
-public class UpLeftHalfPlatform extends AbstractDrawableStaticBody implements Updatable {
+public class UpLeftHalfPlatform extends AbstractDrawableStaticBody implements
+		Updatable {
 
-    static final float size = 2.0f * World.distanceUnit;
-    private AnimationCollection texture;
-    private final World world;
+	static final float size = 2.0f * World.distanceUnit;
+	private Animation.Play play;
+	private final World world;
 
-    UpLeftHalfPlatform(World world, float w, float h) {
-        super(new ConvexPolygon(computeVertices(w, h)));
-        setFriction(10.0f);
-        addBit(World.STATIC_BODY_COLLIDE_BIT);
-        this.world = world;
-    }
+	UpLeftHalfPlatform(World world, float w, float h) {
+		super(new ConvexPolygon(computeVertices(w, h)));
+		setFriction(10.0f);
+		addBit(World.STATIC_BODY_COLLIDE_BIT);
+		this.world = world;
+	}
 
-    private static ROVector2f[] computeVertices(float w, float h) {
-		return new ROVector2f[] { new Vector2f(-w/2.0f, h/2.0f), new Vector2f(-w/2.0f, -h/2.0f), new Vector2f(w/2.0f, h/2.0f) };
+	private static ROVector2f[] computeVertices(float w, float h) {
+		return new ROVector2f[] { new Vector2f(-w / 2.0f, h / 2.0f),
+				new Vector2f(-w / 2.0f, -h / 2.0f),
+				new Vector2f(w / 2.0f, h / 2.0f) };
 	}
 
 	public void setTexture(AnimationCollection texture) {
-        this.texture = texture;
-        texture.getFirst().start();
-    }
+		play = texture.getFirst().start();
+	}
 
-    @Override
-    public void draw() {
-        world.getView().drawUpLeftHalfPlatform(this, texture.getFirst().getCurrentFrame());
-    }
+	@Override
+	public void draw() {
+		world.getView().drawUpLeftHalfPlatform(this, play.getCurrentFrame());
+	}
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+		play.update(frameTimeInfos.elapsedTime / 1000000);
 	}
 }

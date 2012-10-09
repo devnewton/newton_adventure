@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -41,59 +42,59 @@ import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.Box;
 
 /**
- *
+ * 
  * @author devnewton
  */
-public strictfp class MobilePikes extends AbstractDrawableBody implements Updatable {
+public strictfp class MobilePikes extends AbstractDrawableBody implements
+		Updatable {
 
-    private static final float weight = 10.0f;
-    static final float width = World.distanceUnit;
-    static final float height = 3.9f * World.distanceUnit;
-    private AnimationCollection texture;
-    private World world;
+	private static final float weight = 10.0f;
+	static final float width = World.distanceUnit;
+	static final float height = 3.9f * World.distanceUnit;
+	private Animation.Play play;
+	private World world;
 
-    MobilePikes(World world) {
-        super(new Box(width, height), weight);
-        this.world = world;
-        setDamping(0.02f);
-    }
+	MobilePikes(World world) {
+		super(new Box(width, height), weight);
+		this.world = world;
+		setDamping(0.02f);
+	}
 
-    public void setTexture(AnimationCollection texture) {
-        this.texture = texture;
-        texture.getFirst().start();
-    }
+	public void setTexture(AnimationCollection texture) {
+		play = texture.getFirst().start();
+	}
 
-    @Override
-    public strictfp void collided(Body other) {
-        if (other instanceof Hero) {
-            Hero hero = (Hero) other;
-            if (hero.isInvincible()) {
-                return;
-            }
+	@Override
+	public strictfp void collided(Body other) {
+		if (other instanceof Hero) {
+			Hero hero = (Hero) other;
+			if (hero.isInvincible()) {
+				return;
+			}
 
-            CollisionEvent[] events = world.getContacts(this);
+			CollisionEvent[] events = world.getContacts(this);
 
-            for (CollisionEvent event : events) {
-                if (event.getBodyB() == hero) {
-                    Vector2f normal = new Vector2f(event.getNormal());
-                    hero.hurtByPike(normal/*.negate()*/);
-                    return;
-                } else if (event.getBodyA() == hero) {
-                    Vector2f normal = new Vector2f(event.getNormal());
-                    hero.hurtByPike(normal.negate());
-                    return;
-                }
-            }
-        }
-    }
+			for (CollisionEvent event : events) {
+				if (event.getBodyB() == hero) {
+					Vector2f normal = new Vector2f(event.getNormal());
+					hero.hurtByPike(normal/* .negate() */);
+					return;
+				} else if (event.getBodyA() == hero) {
+					Vector2f normal = new Vector2f(event.getNormal());
+					hero.hurtByPike(normal.negate());
+					return;
+				}
+			}
+		}
+	}
 
-    @Override
-    public void draw() {
-        world.getView().drawMobilePikes(this,texture.getFirst().getCurrentFrame());
-    }
+	@Override
+	public void draw() {
+		world.getView().drawMobilePikes(this, play.getCurrentFrame());
+	}
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);		
+		play.update(frameTimeInfos.elapsedTime / 1000000);
 	}
 }

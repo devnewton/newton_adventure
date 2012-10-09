@@ -49,7 +49,7 @@ import im.bci.newtonadv.util.Vector;
  */
 public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 
-	private AnimationCollection animation;
+	private Animation.Play play;
 	private static final float weight = 1.0f;
 	private static final float horizontalSpeed = 4.0f;
 	private static final long moveStraightDuration = 4000000000L;
@@ -72,9 +72,9 @@ public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 			this.previousMovement = this.currentMovement;
 			this.currentMovement = currentMovement;
 			if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
-				getAnimation().stop();
+				play.stop();
 			} else {
-				getAnimation().start();
+				play.start();
 			}
 		}
 	}
@@ -91,7 +91,7 @@ public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 	public Mummy(World world, Shape shape, AnimationCollection animation) {
 		super(shape, weight);
 		this.world = world;
-		this.animation = animation;
+		this.play = animation.getFirst().start();
 		setRotatable(false);
 	}
 
@@ -151,14 +151,10 @@ public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 		}
 	}
 
-	public Animation getAnimation() {
-		return animation.getFirst();
-	}
-
 	@Override
 	public void draw() {
 		world.getView().drawMummy(this, world,
-				getAnimation().getCurrentFrame(), scale);
+				play.getCurrentFrame(), scale);
 	}
 
 	@Override
@@ -193,7 +189,7 @@ public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 			}
 		}
 		if (!isNotGoingAnywhere()) {
-			getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
+			play.update(frameTimeInfos.elapsedTime / 1000000);
 		}
 	}
 

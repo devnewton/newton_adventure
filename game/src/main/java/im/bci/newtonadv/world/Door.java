@@ -33,6 +33,7 @@ package im.bci.newtonadv.world;
 
 import net.phys2d.raw.Body;
 
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -50,6 +51,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 	protected final World world;
 	private AnimationCollection closedTexture;
 	private AnimationCollection openTexture;
+	private Animation.Play play;
 	protected boolean isClose = true;
 
 	Door(World world, float w, float h) {
@@ -66,17 +68,18 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	@Override
 	public void draw() {
-		world.getView().drawDoor(this, isClose ? closedTexture.getFirst().getCurrentFrame() : openTexture.getFirst().getCurrentFrame());
+		world.getView().drawDoor(
+				this,
+				play.getCurrentFrame());
 	}
 
 	void setOpenTexture(AnimationCollection texture) {
 		this.openTexture = texture;
-		openTexture.getFirst().start();
+		play = openTexture.getFirst().start();
 	}
 
 	void setClosedTexture(AnimationCollection texture) {
 		this.closedTexture = texture;
-		closedTexture.getFirst().start();
 	}
 
 	@Override
@@ -89,6 +92,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	void open() {
 		isClose = false;
+		play = closedTexture.getFirst().start();
 	}
 
 	public boolean isOpenableWithKey() {
@@ -97,12 +101,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		if (isClose) {
-			closedTexture.getFirst()
-					.update(frameTimeInfos.elapsedTime / 1000000);
-		} else {
-			openTexture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
-		}
+		play.update(frameTimeInfos.elapsedTime / 1000000);
 
 	}
 }

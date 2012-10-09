@@ -11,13 +11,6 @@ import java.util.Map;
 public class AnimationCollection {
 	
 	LinkedHashMap<String/*animation name*/, Animation> animations;
-	
-	public AnimationCollection(AnimationCollection other) {
-		animations = new LinkedHashMap<String, Animation>(other.animations.size());
-		for(Animation otherAnimation : other.animations.values()) {
-			addAnimation(new Animation(otherAnimation));
-		}
-	}
 
 	public AnimationCollection(Nanim nanim, Map<String, ITexture> textures) {
 		animations = new LinkedHashMap<String, Animation>(nanim.getAnimationsCount());

@@ -36,7 +36,6 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import im.bci.newtonadv.anim.Animation;
-import im.bci.newtonadv.anim.AnimationCollection;
 
 /**
  *
@@ -46,29 +45,28 @@ public strictfp class Explosion extends AbstractEntity {
     
     float size = World.distanceUnit * 2.0f;
     private World world;
-    private AnimationCollection animation;
+    private Animation.Play play;
     private Vector2f position;
 
     Explosion(World world, ROVector2f position) {
         this.world = world;
         this.position = new Vector2f(position);
-        this.animation = world.getExplosionAnimation();
-        this.animation.getFirst().start(Animation.PlayMode.ONCE);
+        this.play = world.getExplosionAnimation().getFirst().start(Animation.PlayMode.ONCE);
     }
 
     @Override
     public void draw() {
-        world.getView().drawExplosion(this,animation.getFirst().getCurrentFrame(),world);
+        world.getView().drawExplosion(this,play.getCurrentFrame(),world);
     }
 
     @Override
     public void update(FrameTimeInfos frameTimeInfos) {
-        animation.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
+    	play.update(frameTimeInfos.elapsedTime / 1000000);
     }
 
     @Override
     public boolean isDead() {
-        return animation.getFirst().isStopped();
+        return play.isStopped();
     }
 
     public Vector2f getPosition() {

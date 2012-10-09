@@ -55,7 +55,7 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements
 		Updatable {
 
 	private AnimationCollection texture;
-	protected Animation currentAnimation;
+	protected Animation.Play play;
 	protected final World world;
 	protected float w;
 	protected float h;
@@ -102,16 +102,15 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements
 
 	public void setTexture(AnimationCollection texture) {
 		this.texture = texture;
-		this.currentAnimation = texture.getFirst();
-		this.currentAnimation.start();
-		setAnimationFrame(currentAnimation.getCurrentFrame());
+		this.play = texture.getFirst().start();
+		setAnimationFrame(play.getCurrentFrame());
 	}
 	
 	protected void changeAnimation(String animationName, PlayMode mode) {
 		if(null != texture) {
-			this.currentAnimation = texture.getAnimationByName(animationName);
-			this.currentAnimation.start(mode);
-			setAnimationFrame(currentAnimation.getCurrentFrame());
+			this.play = texture.getAnimationByName(animationName).start(mode);
+			this.play.start(mode);
+			setAnimationFrame(play.getCurrentFrame());
 		}
 	}
 
@@ -133,14 +132,14 @@ public strictfp class Platform extends AbstractDrawableStaticBody implements
 
 	@Override
 	public void draw() {
-		if (null != currentAnimation) {
-			setAnimationFrame(currentAnimation.getCurrentFrame());
+		if (null != play) {
+			setAnimationFrame(play.getCurrentFrame());
 			world.getView().drawPlatform(this);
 		}
 	}
 
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) {
-		currentAnimation.update(frameTimeInfos.elapsedTime / 1000000);
+		play.update(frameTimeInfos.elapsedTime / 1000000);
 	}
 }

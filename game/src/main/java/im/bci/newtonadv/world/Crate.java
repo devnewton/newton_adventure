@@ -66,7 +66,7 @@ public strictfp class Crate extends Platform implements Updatable {
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) {
 		super.update(frameTimeInfos);
-		if (touched && currentAnimation.isStopped()) {
+		if (touched && play.isStopped()) {
 			world.remove(this);
 		}
 	}

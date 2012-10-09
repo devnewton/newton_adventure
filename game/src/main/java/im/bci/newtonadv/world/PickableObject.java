@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -40,56 +41,58 @@ import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Shape;
 
 /**
- *
+ * 
  * @author devnewton
  */
-public abstract strictfp class PickableObject extends StaticBody implements Drawable, CollisionDetectionOnly, Updatable{
-    
-    protected AnimationCollection texture;
-    protected World world;
-    private int zOrder = 0;
+public abstract strictfp class PickableObject extends StaticBody implements
+		Drawable, CollisionDetectionOnly, Updatable {
 
-    PickableObject(World world, Shape shape) {
-        super(shape);
-        this.world = world;
-         addBit(World.STATIC_BODY_COLLIDE_BIT);
-    }
+	protected Animation.Play play;
+	protected World world;
+	private int zOrder = 0;
 
-    @Override
-    public void collided(Body body) {
-        if( body instanceof Hero) {
-            removeFromWorld();
-            world.addTopLevelEntities( new PickedUpObject(world, texture.getFirst().getCurrentFrame(), getPosition(),getShape().getBounds().getWidth()));
-        }
-    }
+	PickableObject(World world, Shape shape) {
+		super(shape);
+		this.world = world;
+		addBit(World.STATIC_BODY_COLLIDE_BIT);
+	}
+
+	@Override
+	public void collided(Body body) {
+		if (body instanceof Hero) {
+			removeFromWorld();
+			world.addTopLevelEntities(new PickedUpObject(world, play
+					.getCurrentFrame(), getPosition(), getShape().getBounds()
+					.getWidth()));
+		}
+	}
 
 	protected void removeFromWorld() {
 		world.remove(this);
 	}
 
-    public void setTexture(AnimationCollection texture) {
-        this.texture = texture;
-        texture.getFirst().start();
-    }
+	public void setTexture(AnimationCollection texture) {
+		this.play = texture.getFirst().start();
+	}
 
-    @Override
-    public void draw() {
-        world.getView().drawPickableObject(this, texture.getFirst().getCurrentFrame(), world);
-    }
+	@Override
+	public void draw() {
+		world.getView().drawPickableObject(this,
+				play.getCurrentFrame(), world);
+	}
 
-    @Override
+	@Override
 	public int getZOrder() {
 		return zOrder;
 	}
-    
-    @Override
-    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-    	texture.getFirst().update(frameTimeInfos.elapsedTime / 1000000);
-    };
+
+	@Override
+	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+		play.update(frameTimeInfos.elapsedTime / 1000000);
+	};
 
 	public void setZOrder(int zOrder) {
 		this.zOrder = zOrder;
-	} 
-    
-    
+	}
+
 }

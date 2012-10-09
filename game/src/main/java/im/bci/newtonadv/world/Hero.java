@@ -34,6 +34,7 @@ package im.bci.newtonadv.world;
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.ROVector2f;
 import im.bci.newtonadv.anim.Animation;
+import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -69,6 +70,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 	private long beginOfDyingDuration = -1;
 	private float scale = 1;
 	private LevelScore levelScore = new LevelScore();
+	private Play play;
 
 	public void setJumpSound(ISoundCache.Playable jumpSound) {
 		this.jumpSound = jumpSound;
@@ -118,9 +120,9 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 			this.previousMovement = this.currentMovement;
 			this.currentMovement = currentMovement;
 			if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
-				getAnimation().stop();
+				play.stop();
 			} else {
-				getAnimation().start();
+				play.start();
 			}
 		}
 	}
@@ -211,12 +213,14 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 		}
 	}
 
-	public Animation getAnimation() {
-		return animations.getFirst();
+	public Animation.Play getAnimation() {
+		return play;
 	}
 
 	public void setAnimation(AnimationCollection heroAnimation) {
 		this.animations = heroAnimation;
+		play = animations.getFirst().start();
+		play.stop();
 	}
 
 	@Override

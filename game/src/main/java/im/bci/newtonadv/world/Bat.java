@@ -49,7 +49,7 @@ import im.bci.newtonadv.util.Vector;
  */
 public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 
-	private AnimationCollection animation;
+	private Animation.Play play;
 	private static final float weight = 0.1f;
 	private static final float speed = 4.0f;
 	private static final long maxMoveStraightDuration = 1000000000L;
@@ -65,10 +65,9 @@ public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 		super(shape,
 				weight);
 		this.world = world;
-		this.animation = animation;
 		setRotatable(false);
 		setGravityEffected(false);
-		this.animation.getFirst().start();
+		play = animation.getFirst().start();
 	}
 
 	public boolean isDead() {
@@ -112,13 +111,9 @@ public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 		}
 	}
 
-	public Animation getAnimation() {
-		return animation.getFirst();
-	}
-
 	@Override
 	public void draw() {
-		world.getView().drawBat(this, scale, getAnimation().getCurrentFrame(),
+		world.getView().drawBat(this, scale, play.getCurrentFrame(),
 				world);
 	}
 
@@ -149,6 +144,6 @@ public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 		} else {
 			adjustBiasedVelocity(directionVelocity);
 		}
-		getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
+		play.update(frameTimeInfos.elapsedTime / 1000000);
 	}
 }

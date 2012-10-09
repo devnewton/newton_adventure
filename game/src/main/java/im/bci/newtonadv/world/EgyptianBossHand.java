@@ -32,6 +32,7 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.math.ROVector2f;
+import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -62,7 +63,7 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
     }
     private static final float weight = 5.0f;
     private EgyptianBoss boss;
-    private AnimationCollection texture;
+    private Animation.Play play;
     private Side side;
     private State state = State.MOVING_TO_BOSS;
 
@@ -77,7 +78,7 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
     }
 
     public void setTexture(AnimationCollection t) {
-        this.texture = t;
+        this.play = t.getFirst().start();
     }
 
     @Override
@@ -94,11 +95,12 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
 
     @Override
     public void draw() {
-        world.getView().drawEgyptianBossHand(this, texture.getFirst().getCurrentFrame());
+        world.getView().drawEgyptianBossHand(this, play.getCurrentFrame());
     }
 
     @Override
     public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+    	play.update(frameTimeInfos.elapsedTime / 1000000);
         if (state == State.MOVING_TO_BOSS) {
             final Vector2f handPosition = boss.getHandPosition(side);
             Vector2f directionVelocity = new Vector2f(handPosition);

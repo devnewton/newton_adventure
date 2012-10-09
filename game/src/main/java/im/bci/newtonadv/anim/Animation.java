@@ -38,40 +38,94 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- *
+ * 
  * @author devnewton
  */
 public class Animation {
 
-    public enum PlayMode {
+	public class Play {
+		public int currentFrameIndex;
+		public long currentTime;
+		public PlayMode mode = PlayMode.LOOP;
+		public State state = State.STOPPED;
 
-        ONCE,
-        LOOP
-    }
+		public AnimationFrame getCurrentFrame() {
+			return frames.get(currentFrameIndex);
+		}
+		
+		public void start() {
+			start(PlayMode.LOOP);
+		}
 
-    enum State {
+		public void start(PlayMode mode) {
+			this.state = State.STARTED;
+			this.mode = mode;
+			this.currentTime = 0;
+			this.currentFrameIndex = 0;
+		}
 
-        STARTED,
-        STOPPED
-    }
-    private ArrayList<AnimationFrame> frames = new ArrayList<AnimationFrame>();
-    private long totalDuration;//milliseconds
-    private int currentFrameIndex;
-    private long currentTime;//milliseconds
-    private PlayMode mode = PlayMode.LOOP;
-    private State state = State.STOPPED;
-    private final String name;
+		public void stop() {
+			state = State.STOPPED;
+			currentTime = 0;
+			currentFrameIndex = 0;
+		}
+
+		public boolean isStopped() {
+			return state == State.STOPPED;
+		}
+
+		public void update(long elapsedTime) {
+
+			if (state == State.STOPPED) {
+				return;
+			}
+
+			this.currentTime += elapsedTime;
+			if (currentTime >= totalDuration) {
+
+				switch (mode) {
+				case ONCE:
+					currentFrameIndex = frames.size() - 1;
+					state = State.STOPPED;
+					return;
+				case LOOP:
+					currentTime %= totalDuration;
+					currentFrameIndex = 0;
+					break;
+				}
+			}
+
+			while (currentTime > frames.get(currentFrameIndex).endTime) {
+				++this.currentFrameIndex;
+			}
+		}
+	}
+
+	public enum PlayMode {
+
+		ONCE, LOOP
+	}
+
+	enum State {
+
+		STARTED, STOPPED
+	}
+
+	private ArrayList<AnimationFrame> frames = new ArrayList<AnimationFrame>();
+	private long totalDuration;// milliseconds
+	private final String name;
 
 	public Animation(String name) {
 		this.name = name;
 	}
-	
-    public Animation(im.bci.nanim.NanimParser.Animation nanimation,
+
+	public Animation(im.bci.nanim.NanimParser.Animation nanimation,
 			Map<String, ITexture> textures) {
-    	name = nanimation.getName();
-    	frames.ensureCapacity(nanimation.getFramesCount());
-		for(Frame nframe : nanimation.getFramesList()) {
-			AnimationFrame frame = addFrame(textures.get(nframe.getImageName()), nframe.getDuration());
+		name = nanimation.getName();
+		frames.ensureCapacity(nanimation.getFramesCount());
+		for (Frame nframe : nanimation.getFramesList()) {
+			AnimationFrame frame = addFrame(
+					textures.get(nframe.getImageName()), nframe.getDuration());
 			frame.u1 = nframe.getU1();
 			frame.v1 = nframe.getV1();
 			frame.u2 = nframe.getU2();
@@ -79,77 +133,37 @@ public class Animation {
 		}
 	}
 
-	public Animation(Animation otherAnimation) {
-		name = otherAnimation.name;
-		totalDuration = otherAnimation.totalDuration;
-		frames.ensureCapacity(otherAnimation.frames.size());
-		for(AnimationFrame otherFrame : otherAnimation.frames) {
-			frames.add(new AnimationFrame(otherFrame));
-		}
+	public AnimationFrame addFrame(ITexture image, long duration) {
+		final AnimationFrame frame = new AnimationFrame(image, duration);
+		frames.add(frame);
+		totalDuration += duration;
+		frame.endTime = totalDuration;
+		return frame;
 	}
 
-	public AnimationFrame getCurrentFrame() {
-        return frames.get(currentFrameIndex);
-    }
+	public Play start() {
+		return start(PlayMode.LOOP);
+	}
 
-    public AnimationFrame addFrame(ITexture image, long duration) {
-        final AnimationFrame frame = new AnimationFrame(image, duration);
-        frames.add(frame);
-        totalDuration += duration;
-        frame.endTime = totalDuration;
-		return frame;
-    }
-    
-    public void stop() {
-        state = State.STOPPED;
-        currentTime = 0;
-        currentFrameIndex = 0;
-    }
-
-    public void start() {
-        start(PlayMode.LOOP);
-    }
-
-    public void start(PlayMode mode) {
-        state = State.STARTED;
-        this.mode = mode;
-        currentTime = 0;
-        currentFrameIndex = 0;
-    }
-
-    public boolean isStopped() {
-        return state == State.STOPPED;
-    }
-
-    public void update(long elapsedTime) {
-
-        if (state == State.STOPPED) {
-            return;
-        }
-
-        assert !frames.isEmpty();
-
-        currentTime += elapsedTime;
-        if (currentTime >= totalDuration) {
-
-            switch (mode) {
-                case ONCE:
-                    currentFrameIndex = frames.size() - 1;
-                    state = State.STOPPED;
-                    return;
-                case LOOP:
-                    currentTime %= totalDuration;
-                    currentFrameIndex = 0;
-                    break;
-            }
-        }
-
-        while (currentTime > frames.get(currentFrameIndex).endTime) {
-            ++currentFrameIndex;
-        }
-        if("burning_crate".equals(this.name))
-        		System.out.println(currentFrameIndex);
-    }
+	public Play start(PlayMode mode) {
+		if (!frames.isEmpty()) {
+			Play play = new Play();
+			play.start(mode);
+			return play;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Call play.stop
+	 * @param play
+	 */
+	public void stop(Play play) {
+		if(null != play) {
+			play.stop();
+		}
+	}
 
 	public String getName() {
 		return name;

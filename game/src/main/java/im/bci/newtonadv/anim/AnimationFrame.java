@@ -53,16 +53,6 @@ public class AnimationFrame {
         this.duration = duration;
     }
 
-    public AnimationFrame(AnimationFrame other) {
-        this.image = other.image;
-        this.duration = other.duration;
-        this.endTime = other.endTime;
-        this.u1 = other.u1;
-        this.v1 = other.v1;
-        this.u2 = other.u2;
-        this.v2 = other.v2;
-	}
-
 	public long getDuration() {
         return duration;
     }
