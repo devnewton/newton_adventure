@@ -66,6 +66,7 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Circle;
+import net.phys2d.raw.shapes.Line;
 import tiled.core.Tile;
 import tiled.io.TMXMapReader;
 
@@ -520,6 +521,22 @@ public strictfp class World extends net.phys2d.raw.World {
 			Platform platform = new Platform(this, tileWidth, tileHeight);
 			platform.setTexture(getAnimationForTile(map, tile, textureCache));
 			platform.setPosition(tileX, tileY);
+			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile, zOrderBase));
+			add(platform);
+		} else if (c.equals("slash_platform")) {
+			Platform platform = new Platform(this, tileWidth, tileHeight);
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
+			platform.setPosition(tileX, tileY);
+			platform.setShape(new Line(-tileWidth/2.0f, -tileHeight/2.0f, tileWidth/2.0f, tileHeight/2.0f));
+			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile, zOrderBase));
+			add(platform);
+		} else if (c.equals("antislash_platform")) {
+			Platform platform = new Platform(this, tileWidth, tileHeight);
+			platform.setTexture(getAnimationForTile(map, tile, textureCache));
+			platform.setPosition(tileX, tileY);
+			platform.setShape(new Line(-tileWidth/2.0f, tileHeight/2.0f, tileWidth/2.0f, -tileHeight/2.0f));
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
