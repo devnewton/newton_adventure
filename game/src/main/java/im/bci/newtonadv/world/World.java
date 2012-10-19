@@ -49,6 +49,7 @@ import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
+import im.bci.newtonadv.util.NewtonColor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -831,6 +832,14 @@ public strictfp class World extends net.phys2d.raw.World {
 			teleporter.setColor(tile.getProperties().getProperty(
 					"newton_adventure.teleporter.color"));
 			add(teleporter);
+		} else if (c.equals("colorizer")) {
+			Colorizer colorizer = new Colorizer(this, tileWidth, tileHeight);
+			colorizer.setTexture(getAnimationForTile(map, tile, textureCache));
+			colorizer.setPosition(tileX, tileY);
+			colorizer.setZOrder(getTileZOrder(tile, zOrderBase, 1));
+			colorizer.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.colorizer.color")));
+			add(colorizer);
 		} else if (c.equals("keylock")) {
 			KeyLock keylock = new KeyLock(this, tileWidth, tileHeight);
 			keylock.setTexture(getAnimationForTile(map, tile, textureCache));

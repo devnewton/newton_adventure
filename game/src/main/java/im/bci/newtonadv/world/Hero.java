@@ -41,6 +41,7 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.LevelScore;
+import im.bci.newtonadv.util.NewtonColor;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
@@ -157,6 +158,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 	private World world;
 	private boolean hasMap;
 	private boolean hasCompass;
+	private NewtonColor color = NewtonColor.white;
 
 	public Hero(World world) {
 		this(world, new Circle(World.distanceUnit));
@@ -390,5 +392,13 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 
 	public void setHasCompass(boolean b) {
 		hasCompass = b;
+	}
+	
+	public NewtonColor getColor() {
+		return color;
+	}
+
+	public void setColor(NewtonColor color) {
+		this.color = color;
 	}
 }

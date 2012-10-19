@@ -88,6 +88,7 @@ import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
+import im.bci.newtonadv.util.NewtonColor;
 import im.bci.newtonadv.world.PickableObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -728,6 +729,8 @@ public strictfp class GameView implements IGameView {
 			u2 = frame.getU2();
 		}
 
+		NewtonColor color = hero.getColor();
+		GL11.glColor3f(color.r, color.g, color.b);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(u1, v1);
 		GL11.glVertex2f(x1, y2);
@@ -738,6 +741,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glTexCoord2f(u1, v2);
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
+		GL11.glColor3f(1f, 1f, 1f);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glPopMatrix();
 	}
