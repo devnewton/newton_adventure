@@ -31,59 +31,19 @@
  */
 package im.bci.newtonadv.world;
 
-import net.phys2d.raw.Body;
-import net.phys2d.raw.shapes.Shape;
-import im.bci.newtonadv.game.FrameTimeInfos;
-import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.util.NewtonColor;
 
-public strictfp class Cloud extends Platform implements Updatable {
+/**
+ *
+ * @author devnewton
+ */
+public strictfp class ColoredPlatform extends Platform {
 
-    private boolean touched = false;
-    private long disappearEndTime = -1;
-    private float alpha = 1.0f;
-	private NewtonColor color;
-    private static final long disappearDuration = 1000000000L;
-
-    public Cloud(World world, float w, float h) {
-        super(world, w, h);
-    }
-    
-    public Cloud(World world, Shape shape) {
-    	super(world, shape);
-	}
-
-	@Override
-    public void collided(Body body) {
-        if( body instanceof Hero && checkColor((Hero)body) ) {
-            touched = true;
-        }
+    ColoredPlatform(World world, float w, float h) {
+    	super(world, w, h);
     }
 
-    private boolean checkColor(Hero hero) {
-		return null == color || hero.getColor() == color;
-	}
-
-	@Override
-    public void draw() {
-        world.getView().drawCloud(this,alpha);       
-    }
-
-    @Override
-    public void update(FrameTimeInfos frameTimeInfos) {
-       if( touched) {
-           if( disappearEndTime < 0 )
-               disappearEndTime = frameTimeInfos.currentTime + disappearDuration;
-           else if( frameTimeInfos.currentTime  < disappearEndTime ) {
-               alpha =  (disappearEndTime -  frameTimeInfos.currentTime) / (float)disappearDuration;
-           } else {
-               world.remove(this);
-           }
-       }
-    }
-    
 	public void setColor(NewtonColor color) {
-		this.color  = color;
+		this.addBit(color.collisionBitmask);
 	}
-    
 }

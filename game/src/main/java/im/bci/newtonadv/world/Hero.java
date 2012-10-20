@@ -31,6 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
+import java.util.EnumSet;
+
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.ROVector2f;
 import im.bci.newtonadv.anim.Animation;
@@ -400,5 +402,9 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 
 	public void setColor(NewtonColor color) {
 		this.color = color;
+		for(NewtonColor c : EnumSet.complementOf(EnumSet.of(color))) {
+			this.removeBit(c.collisionBitmask);
+		}
+		this.addBit(color.collisionBitmask);
 	}
 }

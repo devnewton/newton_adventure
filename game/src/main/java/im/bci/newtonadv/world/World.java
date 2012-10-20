@@ -652,6 +652,8 @@ public strictfp class World extends net.phys2d.raw.World {
 			cloud.setTexture(getAnimationForTile(map, tile, textureCache));
 			cloud.setPosition(tileX, tileY);
 			cloud.setZOrder(getTileZOrder(tile, zOrderBase));
+			cloud.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.color")));
 			add(cloud);
 		} else if (c.equals("pikes_up")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP, tileWidth,
@@ -840,7 +842,15 @@ public strictfp class World extends net.phys2d.raw.World {
 			colorizer.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
 					"newton_adventure.color")));
 			add(colorizer);
-		} else if (c.equals("keylock")) {
+		} else if (c.equals("colored_platform")) {
+			ColoredPlatform colored = new ColoredPlatform(this, tileWidth, tileHeight);
+			colored.setTexture(getAnimationForTile(map, tile, textureCache));
+			colored.setPosition(tileX, tileY);
+			colored.setZOrder(getTileZOrder(tile, zOrderBase, 1));
+			colored.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.color")));
+			add(colored);
+		}else if (c.equals("keylock")) {
 			KeyLock keylock = new KeyLock(this, tileWidth, tileHeight);
 			keylock.setTexture(getAnimationForTile(map, tile, textureCache));
 			keylock.setPosition(tileX, tileY);
