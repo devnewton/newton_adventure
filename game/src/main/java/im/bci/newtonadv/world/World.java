@@ -838,7 +838,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			colorizer.setPosition(tileX, tileY);
 			colorizer.setZOrder(getTileZOrder(tile, zOrderBase, 1));
 			colorizer.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-					"newton_adventure.colorizer.color")));
+					"newton_adventure.color")));
 			add(colorizer);
 		} else if (c.equals("keylock")) {
 			KeyLock keylock = new KeyLock(this, tileWidth, tileHeight);
