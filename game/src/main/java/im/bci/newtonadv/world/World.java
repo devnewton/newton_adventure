@@ -653,7 +653,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			cloud.setPosition(tileX, tileY);
 			cloud.setZOrder(getTileZOrder(tile, zOrderBase));
 			cloud.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-					"newton_adventure.color")));
+					"newton_adventure.color", "white")));
 			add(cloud);
 		} else if (c.equals("pikes_up")) {
 			Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP, tileWidth,
@@ -840,7 +840,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			colorizer.setPosition(tileX, tileY);
 			colorizer.setZOrder(getTileZOrder(tile, zOrderBase, 1));
 			colorizer.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-					"newton_adventure.color")));
+					"newton_adventure.color", "white")));
 			add(colorizer);
 		} else if (c.equals("colored_platform")) {
 			ColoredPlatform colored = new ColoredPlatform(this, tileWidth, tileHeight);
