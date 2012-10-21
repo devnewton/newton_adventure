@@ -75,24 +75,24 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	void setOpenTexture(AnimationCollection texture) {
 		this.openTexture = texture;
-		play = openTexture.getFirst().start();
 	}
 
 	void setClosedTexture(AnimationCollection texture) {
 		this.closedTexture = texture;
+		play = closedTexture.getFirst().start();
 	}
 
 	@Override
 	public strictfp void collided(Body body) {
 		if (body instanceof Key) {
-			isClose = false;
+			open();
 		} else if (body instanceof Hero && !isClose)
 			world.setObjectivesCompleted(true);
 	}
 
 	void open() {
 		isClose = false;
-		play = closedTexture.getFirst().start();
+		play = openTexture.getFirst().start();
 	}
 
 	public boolean isOpenableWithKey() {
