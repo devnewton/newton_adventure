@@ -60,6 +60,7 @@ public class SoundCache implements ISoundCache {
 	private boolean soundEnabled;
 	private boolean musicEnabled;
 	private final IGameData data;
+	private static final Logger logger = Logger.getLogger(SoundCache.class.getName());
 
 
 	public static final class PlayableClipWrapper implements Playable {
@@ -102,10 +103,14 @@ public class SoundCache implements ISoundCache {
 
 	@Override
 	public void stopMusic() {
-		currentMusicName = null;
-		if (null != currentMusic) {
-			currentMusic.stop();
-			currentMusic.close();
+		try {
+			currentMusicName = null;
+			if (null != currentMusic) {
+				currentMusic.stop();
+				currentMusic.close();
+			}
+		} catch( Exception ex) {
+			logger.log(Level.SEVERE,"Cannot stop music ", ex);
 		}
 	}
 
@@ -127,8 +132,7 @@ public class SoundCache implements ISoundCache {
 				currentMusicName = name;
 			}
 		} catch (Exception ex) {
-			Logger.getLogger(SoundCache.class.getName()).log(Level.SEVERE,
-					null, ex);
+			logger.log(Level.SEVERE,"Cannot play music " + name, ex);
 		}
 	}
 
@@ -206,7 +210,7 @@ public class SoundCache implements ISoundCache {
 			OggClip clip = new OggClip(data.openFile(filename));
 			return clip;
 		} catch (Exception e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+			logger.log(Level.SEVERE,
 					"Impossible de charger la musique " + filename, e);
 			return null;
 		}
