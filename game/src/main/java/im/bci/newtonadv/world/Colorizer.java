@@ -50,7 +50,9 @@ public strictfp class Colorizer extends Platform implements CollisionDetectionOn
     @Override
     public strictfp void collided(Body body) {
     	if(body instanceof Hero) {
-    		world.getHero().setColor(color);
+    		((Hero)body).setColor(color);
+    	} else if(body instanceof Key) {
+    		((Key)body).setColor(color);
     	}
 
     }

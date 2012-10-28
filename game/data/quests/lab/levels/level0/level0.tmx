@@ -169,6 +169,7 @@
   </tile>
   <tile id="16">
    <properties>
+    <property name="newton_adventure.friction" value="0"/>
     <property name="newton_adventure.type" value="slash_platform"/>
    </properties>
    <image format="png">
@@ -179,6 +180,7 @@
   </tile>
   <tile id="17">
    <properties>
+    <property name="newton_adventure.friction" value="0"/>
     <property name="newton_adventure.type" value="antislash_platform"/>
    </properties>
    <image format="png">
@@ -189,6 +191,7 @@
   </tile>
   <tile id="18">
    <properties>
+    <property name="newton_adventure.friction" value="0"/>
     <property name="newton_adventure.type" value="slash_platform"/>
    </properties>
    <image format="png">
@@ -199,6 +202,7 @@
   </tile>
   <tile id="19">
    <properties>
+    <property name="newton_adventure.friction" value="0"/>
     <property name="newton_adventure.type" value="antislash_platform"/>
    </properties>
    <image format="png">
@@ -18760,7 +18764,7 @@
    <tile gid="0"/>
    <tile gid="34"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="4"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
