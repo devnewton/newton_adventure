@@ -763,6 +763,9 @@ public strictfp class GameView implements IGameView {
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
+		NewtonColor color = key.getColor();
+		GL11.glColor3f(color.r, color.g, color.b);
+		
 		final float u1 = texture.getU1(), u2 = texture.getU2();
 		final float v1 = texture.getU1(), v2 = texture.getU2();
 		GL11.glBegin(GL11.GL_QUADS);
@@ -777,6 +780,7 @@ public strictfp class GameView implements IGameView {
 		GL11.glEnd();
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GL11.glColor3f(1f, 1f, 1f);
 	}
 
 	@Override

@@ -630,6 +630,8 @@ public strictfp class World extends net.phys2d.raw.World {
 			key.setPosition(tileX, tileY);
 			key.setTexture(keyTexture);
 			key.setZOrder(getTileZOrder(tile, zOrderBase));
+			key.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.color", "white")));
 			add(key);
 			keys.add(key);
 		} else if (c.equals("door")) {
@@ -638,6 +640,8 @@ public strictfp class World extends net.phys2d.raw.World {
 			door.setClosedTexture(closedDoorTexture);
 			door.setOpenTexture(openDoorTexture);
 			door.setZOrder(getTileZOrder(tile, zOrderBase));
+			door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.color", "white")));
 			add(door);
 		} else if (c.equals("door_to_bonus_world")) {
 			DoorToBonusWorld door = new DoorToBonusWorld(this, tileWidth,
@@ -646,6 +650,8 @@ public strictfp class World extends net.phys2d.raw.World {
 			door.setClosedTexture(closedDoorToBonusWorldTexture);
 			door.setOpenTexture(openDoorToBonusWorldTexture);
 			door.setZOrder(getTileZOrder(tile, zOrderBase));
+			door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.color", "white")));
 			add(door);
 		} else if (c.equals("cloud")) {
 			Cloud cloud = new Cloud(this, tileWidth, tileHeight);
@@ -868,6 +874,8 @@ public strictfp class World extends net.phys2d.raw.World {
 			keylock.setTexture(getAnimationForTile(map, tile, textureCache));
 			keylock.setPosition(tileX, tileY);
 			keylock.setZOrder(getTileZOrder(tile, zOrderBase));
+			keylock.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.color", "white")));
 			add(keylock);
 		} else if (c.equals("help_sign")) {
 			HelpSign helpSign = new HelpSign(this, tileWidth, tileHeight);

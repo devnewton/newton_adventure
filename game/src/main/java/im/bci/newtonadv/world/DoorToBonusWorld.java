@@ -56,7 +56,7 @@ public strictfp class DoorToBonusWorld extends Door {
     }
     
     @Override
-	public boolean isOpenableWithKey() {
+	public boolean isOpenableWithKey(Key key) {
 		return false;
 	}
 

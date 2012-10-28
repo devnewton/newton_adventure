@@ -31,6 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
+import java.util.EnumSet;
+
 import net.phys2d.raw.Body;
 
 import im.bci.newtonadv.anim.Animation;
@@ -38,6 +40,7 @@ import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.util.NewtonColor;
 import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.Shape;
 
@@ -50,6 +53,7 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
     static final float size = 2.0f * World.distanceUnit;
     private World world;
     private Animation.Play play;
+    private NewtonColor color = NewtonColor.white;
 
     Key(World world) {
         super(new Circle(size / 2.0f), 1.0f);
@@ -76,11 +80,11 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
     public strictfp void collided(Body body) {
         if (body instanceof Door) {
         	Door door = (Door) body;
-        	if(door.isOpenableWithKey())
+        	if(door.isOpenableWithKey(this))
         		use();
         } else if(body instanceof KeyLock) {
         	KeyLock keyLock = (KeyLock) body;
-        	if(!keyLock.isOpened()) {
+        	if(keyLock.isOpenableWithKey(this)) {
         		keyLock.open();
                 use();
         	}
@@ -99,5 +103,17 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
 	@Override
 	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
 		play.update(frameTimeInfos.elapsedTime / 1000000);		
+	}
+	
+	public NewtonColor getColor() {
+		return color;
+	}
+
+	public void setColor(NewtonColor color) {
+		this.color = color;
+		for(NewtonColor c : EnumSet.complementOf(EnumSet.of(color))) {
+			this.removeBit(c.collisionBitmask);
+		}
+		this.addBit(color.collisionBitmask);
 	}
 }

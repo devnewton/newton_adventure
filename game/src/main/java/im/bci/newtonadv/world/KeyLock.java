@@ -35,11 +35,13 @@ package im.bci.newtonadv.world;
 import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.util.NewtonColor;
 
 public class KeyLock extends Platform implements Updatable {
 	private boolean opened = false;
 	private long disappearEndTime = -1;
 	private float alpha = 1.0f;
+	private NewtonColor color = NewtonColor.white;
 	private static final long disappearDuration = 1000000000L;
 
 	public KeyLock(World world, float w, float h) {
@@ -75,7 +77,15 @@ public class KeyLock extends Platform implements Updatable {
 		return opened;
 	}
 
-	public void open() {
+	void open() {
 		this.opened = true;
+	}
+
+	boolean isOpenableWithKey(Key key) {
+		return !isOpened() && color == key.getColor();
+	}
+	
+	public void setColor(NewtonColor color) {
+		this.color = color;
 	}
 }
