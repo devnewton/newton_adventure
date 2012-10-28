@@ -826,6 +826,19 @@ public strictfp class World extends net.phys2d.raw.World {
 			platform.setFriction(getTileFriction(tile));
 			platform.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(platform);
+		} else if (c.equals("dangerous_moving_platform")) {
+			DangerousMovingPlatform platform = new DangerousMovingPlatform(this,
+					getAnimationForTile(map, tile, textureCache),
+					getMovingPlatformPath(tile, x, y, baseSize),
+					tileWidth, tileHeight);
+			if(tile.getProperties().containsKey("newton_adventure.color")) {
+				platform.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.color", "white")));
+			}
+			platform.setPosition(tileX, tileY);
+			platform.setFriction(getTileFriction(tile));
+			platform.setZOrder(getTileZOrder(tile, zOrderBase));
+			add(platform);
 		} else if (c.equals("teleporter")) {
 			Teleporter teleporter = new Teleporter(this, tileWidth, tileHeight);
 			teleporter.setTexture(getAnimationForTile(map, tile, textureCache));
