@@ -55,6 +55,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -79,7 +80,8 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	private static final Logger LOGGER = Logger
 			.getLogger(World.class.getName());
-	static final int STATIC_BODY_COLLIDE_BIT = 1;
+	public static final int STATIC_BODY_COLLIDE_BIT = 1;
+
 	boolean mustDrawContacts = false;
 	boolean mustDrawNormals = false;
 	boolean mustDrawJoints = false;
@@ -132,6 +134,7 @@ public strictfp class World extends net.phys2d.raw.World {
 	private ArrayList<PostUpdateAction> postUpdateActions = new ArrayList<PostUpdateAction>();
 	private boolean isRotateGravityPossible = true;
 	private ITrueTypeFont scoreIndicatorFont;
+	private HashMap<NewtonColor, BodyList> coloredStaticBodies;
 
 	public static interface PostUpdateAction {
 
@@ -182,6 +185,10 @@ public strictfp class World extends net.phys2d.raw.World {
 		this.questName = questName;
 		this.levelName = levelName;
 		this.scoreIndicatorFont = scoreIndicatorFont;
+		coloredStaticBodies = new HashMap<NewtonColor, BodyList>();
+		for(NewtonColor color : NewtonColor.values()) {
+			coloredStaticBodies.put(color, new BodyList());
+		}
 	}
 
 	public AbsoluteAABox getStaticBounds() {
@@ -866,9 +873,10 @@ public strictfp class World extends net.phys2d.raw.World {
 			colored.setTexture(getAnimationForTile(map, tile, textureCache));
 			colored.setPosition(tileX, tileY);
 			colored.setZOrder(getTileZOrder(tile, zOrderBase, 1));
-			colored.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-					"newton_adventure.color")));
+			NewtonColor color = NewtonColor.valueOf(tile.getProperties().getProperty(
+					"newton_adventure.color"));
 			add(colored);
+			coloredStaticBodies.get(color).add(colored);
 		}else if (c.equals("keylock")) {
 			KeyLock keylock = new KeyLock(this, tileWidth, tileHeight);
 			keylock.setTexture(getAnimationForTile(map, tile, textureCache));
@@ -934,6 +942,10 @@ public strictfp class World extends net.phys2d.raw.World {
 					questName, levelName, map, tile));
 		}
 		return animation;
+	}
+	
+	public BodyList getColoredStaticBodyList(NewtonColor color) {
+		return coloredStaticBodies.get(color);
 	}
 
 	public Vector2f getGravityVector() {

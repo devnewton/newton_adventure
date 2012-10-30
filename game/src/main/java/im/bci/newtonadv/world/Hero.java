@@ -31,8 +31,6 @@
  */
 package im.bci.newtonadv.world;
 
-import java.util.EnumSet;
-
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.ROVector2f;
 import im.bci.newtonadv.anim.Animation;
@@ -46,6 +44,7 @@ import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.NewtonColor;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
+import net.phys2d.raw.BodyList;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.Shape;
@@ -401,10 +400,21 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 	}
 
 	public void setColor(NewtonColor color) {
+		removeColoredExcludedBodies(this.color);
 		this.color = color;
-		for(NewtonColor c : EnumSet.complementOf(EnumSet.of(color))) {
-			this.removeBit(c.collisionBitmask);
+		addColoredExcludedBodies(color);
+	}
+
+	private void removeColoredExcludedBodies(NewtonColor oldColor) {
+		BodyList bodies = world.getColoredStaticBodyList(oldColor);
+		for(int i=0, n=bodies.size(); i<n;++i) {
+			this.removeExcludedBody(bodies.get(i));
 		}
-		this.addBit(color.collisionBitmask);
+	}
+	private void addColoredExcludedBodies(NewtonColor newColor) {
+		BodyList bodies = world.getColoredStaticBodyList(newColor);
+		for(int i=0, n=bodies.size(); i<n;++i) {
+			this.addExcludedBody(bodies.get(i));
+		}
 	}
 }

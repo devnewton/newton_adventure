@@ -31,8 +31,6 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.util.NewtonColor;
-
 /**
  *
  * @author devnewton
@@ -42,8 +40,4 @@ public strictfp class ColoredPlatform extends Platform {
     ColoredPlatform(World world, float w, float h) {
     	super(world, w, h);
     }
-
-	public void setColor(NewtonColor color) {
-		this.addBit(color.collisionBitmask);
-	}
 }
