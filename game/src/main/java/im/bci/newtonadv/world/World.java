@@ -907,12 +907,9 @@ public strictfp class World extends net.phys2d.raw.World {
 			crate.setPosition(tileX, tileY);
 			crate.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(crate);
-		} else if (c.equals("egyptian_boss")) {
-			EgyptianBoss boss = new EgyptianBoss(this, tileX, tileY);
-			boss.setBodyTexture(new AnimationCollection(textureCache.getTexture(game.getData().getFile(
-					"egyptian_boss_body.png"))));
-			boss.setHandTexture(new AnimationCollection(textureCache.getTexture(game.getData().getFile(
-					"egyptian_boss_hand.png"))));
+		} else if (c.equals("boss")) {
+			Boss boss = new Boss(this, tileX, tileY);
+			boss.setTexture(getAnimationForTile(map, tile,textureCache));
 			boss.setZOrder(getTileZOrder(tile, zOrderBase));
 			boss.getLeftHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
 			boss.getRightHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));

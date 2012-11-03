@@ -475,16 +475,14 @@ strictfp class NalLoader {
 			EntityType type,
 			im.bci.newtonadv.nal.NewtonAdventureLevelParser.EgyptianBoss egyptianBossType)  throws CannotLoadAnimation{
 		Vector2f pos = getPos(entity);
-		im.bci.newtonadv.world.EgyptianBoss boss = new EgyptianBoss(world, pos.getX(), pos.getY());
-		boss.setBodyTexture(getOrLoadAnimation(egyptianBossType.getBodyAnimation()));
-		boss.setHandTexture(getOrLoadAnimation(egyptianBossType.getHandAnimation()));
+		im.bci.newtonadv.world.Boss boss = new Boss(world, pos.getX(), pos.getY());
+		boss.setTexture(getOrLoadAnimation(egyptianBossType.getBodyAnimation()));
 		boss.setZOrder(entity.getZorder());
 		boss.getLeftHand().setZOrder(entity.getZorder()+1);
 		boss.getRightHand().setZOrder(entity.getZorder()+1);
 		world.add(boss);
 		world.add(boss.getLeftHand());
 		world.add(boss.getRightHand());
-
 	}
 
 	private void loadDoorToBonusWorld(

@@ -45,6 +45,7 @@ public class QuestMenuSequence extends MenuSequence {
 
 	List<QuestSequence> quests;
 	ITrueTypeFont questNameFont;
+	private List<QuestMenuSequence> questMenuSequences = new ArrayList<QuestMenuSequence>();
 	private static final int NB_BUTTONS_ON_X = 2;
 	private static final int NB_BUTTONS_ON_Y = 3;
 	private static final float QUEST_MINIATURE_SPACING = 60;
@@ -98,6 +99,7 @@ public class QuestMenuSequence extends MenuSequence {
 					previousSequence = null;
 				} else if(questNamesIterator.hasNext()) {
 					QuestMenuSequence nextQuestMenu = new QuestMenuSequence(game, this, questNamesIterator);
+					questMenuSequences .add(nextQuestMenu);
 					createNavigateButton(i, j, nextQuestMenu, "bt-next");
 					return;
 				} else {
@@ -159,6 +161,9 @@ public class QuestMenuSequence extends MenuSequence {
 	public void setNextSequence(Sequence sequence) {
 		for (QuestSequence quest : quests) {
 			quest.setNextSequence(sequence);
+		}
+		for(QuestMenuSequence questMenu : questMenuSequences) {
+			questMenu.setNextSequence(sequence);
 		}
 	}
 

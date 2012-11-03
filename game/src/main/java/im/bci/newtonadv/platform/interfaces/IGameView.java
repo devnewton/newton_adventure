@@ -51,8 +51,8 @@ import im.bci.newtonadv.world.Cloud;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
 import im.bci.newtonadv.world.DownRightHalfPlatform;
-import im.bci.newtonadv.world.EgyptianBoss;
-import im.bci.newtonadv.world.EgyptianBossHand;
+import im.bci.newtonadv.world.Boss;
+import im.bci.newtonadv.world.BossHand;
 import im.bci.newtonadv.world.Explosion;
 import im.bci.newtonadv.world.FireBall;
 import im.bci.newtonadv.world.Hero;
@@ -102,9 +102,9 @@ public interface IGameView {
 
     void drawDownRightHalfPlatform(DownRightHalfPlatform platform, AnimationFrame texture);
 
-    void drawEgyptianBoss(EgyptianBoss boss, AnimationFrame bodyTexture, boolean isHurtBlinkState);
+    void drawBoss(Boss boss, AnimationFrame bodyTexture);
 
-    void drawEgyptianBossHand(EgyptianBossHand hand, AnimationFrame texture);
+    void drawBossHand(BossHand hand, AnimationFrame texture);
 
     void drawExplosion(Explosion explosion, AnimationFrame texture, World world);
 

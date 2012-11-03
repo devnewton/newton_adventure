@@ -49,14 +49,14 @@ import im.bci.newtonadv.util.Vector;
  * 
  * @author devnewton
  */
-public strictfp class EgyptianBoss extends AbstractDrawableBody implements
+public strictfp class Boss extends AbstractDrawableBody implements
 		Updatable {
 
-	public EgyptianBossHand getLeftHand() {
+	public BossHand getLeftHand() {
 		return leftHand;
 	}
 
-	public EgyptianBossHand getRightHand() {
+	public BossHand getRightHand() {
 		return rightHand;
 	}
 
@@ -75,31 +75,31 @@ public strictfp class EgyptianBoss extends AbstractDrawableBody implements
 	private boolean isHurt = false;
 	World world;
 	private Vector2f directionVelocity;
-	private EgyptianBossHand leftHand, rightHand;
+	private BossHand leftHand, rightHand;
 	private int lifePoints = 3;
-	private boolean isHurtBlinkState = false;
 	private long nextExplosionTime;
+	private AnimationCollection texture;
 	private static final long timeBetweenExplosion = 300000000L;
 
-	public EgyptianBoss(World world, float x, float y) {
+	public Boss(World world, float x, float y) {
 		super(new Circle(size / 2.0f), weight);
 		this.world = world;
 		setRotatable(false);
 		setGravityEffected(false);
-		leftHand = new EgyptianBossHand(this, EgyptianBossHand.Side.LEFT, world);
-		leftHand.setPosition(getHandPosition(EgyptianBossHand.Side.LEFT).x,
-				getHandPosition(EgyptianBossHand.Side.LEFT).y);
-		rightHand = new EgyptianBossHand(this, EgyptianBossHand.Side.RIGHT,
+		leftHand = new BossHand(this, BossHand.Side.LEFT, world);
+		leftHand.setPosition(getHandPosition(BossHand.Side.LEFT).x,
+				getHandPosition(BossHand.Side.LEFT).y);
+		rightHand = new BossHand(this, BossHand.Side.RIGHT,
 				world);
-		rightHand.setPosition(getHandPosition(EgyptianBossHand.Side.RIGHT).x,
-				getHandPosition(EgyptianBossHand.Side.RIGHT).y);
+		rightHand.setPosition(getHandPosition(BossHand.Side.RIGHT).x,
+				getHandPosition(BossHand.Side.RIGHT).y);
 		setPosition(x, y);
 	}
 
-	final Vector2f getHandPosition(EgyptianBossHand.Side side) {
+	final Vector2f getHandPosition(BossHand.Side side) {
 		Vector2f pos = new Vector2f(this.getPosition());
 		pos.y -= 0.327005f * size;
-		if (side == EgyptianBossHand.Side.LEFT) {
+		if (side == BossHand.Side.LEFT) {
 			pos.x -= 0.35f * size;
 		} else {
 			pos.x += 0.35f * size;
@@ -107,13 +107,11 @@ public strictfp class EgyptianBoss extends AbstractDrawableBody implements
 		return pos;
 	}
 
-	public void setBodyTexture(AnimationCollection bodyTexture) {
-		this.play = bodyTexture.getFirst().start();
-	}
-
-	public void setHandTexture(AnimationCollection handTexture) {
-		leftHand.setTexture(handTexture);
-		rightHand.setTexture(handTexture);
+	public void setTexture(AnimationCollection texture) {
+		this.play = texture.getAnimationByName("boss_body").start();
+		this.texture = texture;
+		leftHand.setTexture(texture);
+		rightHand.setTexture(texture);
 	}
 
 	public boolean isDead() {
@@ -176,14 +174,7 @@ public strictfp class EgyptianBoss extends AbstractDrawableBody implements
 
 	@Override
 	public void draw() {
-
-		if (isHurt) {
-			isHurtBlinkState = !isHurtBlinkState;
-		} else {
-			isHurtBlinkState = false;
-		}
-		world.getView().drawEgyptianBoss(this, play.getCurrentFrame(),
-				isHurtBlinkState);
+		world.getView().drawBoss(this, play.getCurrentFrame());
 	}
 
 	@Override
@@ -230,10 +221,12 @@ public strictfp class EgyptianBoss extends AbstractDrawableBody implements
 
 		if (isHurt) {
 			if (endOfInvincibilityDuration < 0) {
+				play = texture.getAnimationByName("angry_boss_body").start();
 				speed = normalSpeed * 2.0f;
 				endOfInvincibilityDuration = frameTimeInfos.currentTime
 						+ invincibleAfterHurtDuration;
 			} else if (frameTimeInfos.currentTime > endOfInvincibilityDuration) {
+				play = texture.getAnimationByName("boss_body").start();
 				isHurt = false;
 				speed = 1.0f;
 			}

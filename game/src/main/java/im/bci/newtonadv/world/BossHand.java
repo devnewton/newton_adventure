@@ -47,7 +47,7 @@ import im.bci.newtonadv.util.Vector;
  *
  * @author devnewton
  */
-public strictfp class EgyptianBossHand extends AbstractDrawableBody implements Updatable {
+public strictfp class BossHand extends AbstractDrawableBody implements Updatable {
     private final World world;
 
     enum Side {
@@ -62,12 +62,12 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
         MOVING_TO_BOSS,
     }
     private static final float weight = 5.0f;
-    private EgyptianBoss boss;
+    private Boss boss;
     private Animation.Play play;
     private Side side;
     private State state = State.MOVING_TO_BOSS;
 
-    EgyptianBossHand(EgyptianBoss boss, Side side, World world) {
+    BossHand(Boss boss, Side side, World world) {
         super(new Circle(World.distanceUnit /* * 2.0f, World.distanceUnit * 2.0f*/), weight);
         this.boss = boss;
         this.side = side;
@@ -78,7 +78,7 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
     }
 
     public void setTexture(AnimationCollection t) {
-        this.play = t.getFirst().start();
+        this.play = t.getAnimationByName("boss_hand").start();
     }
 
     @Override
@@ -95,7 +95,7 @@ public strictfp class EgyptianBossHand extends AbstractDrawableBody implements U
 
     @Override
     public void draw() {
-        world.getView().drawEgyptianBossHand(this, play.getCurrentFrame());
+        world.getView().drawBossHand(this, play.getCurrentFrame());
     }
 
     @Override

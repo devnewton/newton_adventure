@@ -59,8 +59,8 @@ import im.bci.newtonadv.world.Cloud;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
 import im.bci.newtonadv.world.DownRightHalfPlatform;
-import im.bci.newtonadv.world.EgyptianBoss;
-import im.bci.newtonadv.world.EgyptianBossHand;
+import im.bci.newtonadv.world.Boss;
+import im.bci.newtonadv.world.BossHand;
 import im.bci.newtonadv.world.Explosion;
 import im.bci.newtonadv.world.FireBall;
 import im.bci.newtonadv.world.Hero;
@@ -979,8 +979,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawEgyptianBoss(EgyptianBoss boss, AnimationFrame texture,
-			boolean isHurtBlinkState) {
+	public void drawBoss(Boss boss, AnimationFrame texture) {
 		AABox bounds = boss.getShape().getBounds();
 
 		GL11.glPushMatrix();
@@ -994,9 +993,6 @@ public strictfp class GameView implements IGameView {
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
-		if (isHurtBlinkState) {
-			GL11.glColor3f(1, 0, 0);
-		}
 		final float u1 = 1, u2 = 0;
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(u1, 0.0f);
@@ -1008,9 +1004,6 @@ public strictfp class GameView implements IGameView {
 		GL11.glTexCoord2f(u1, 1.0f);
 		GL11.glVertex2f(x1, y1);
 		GL11.glEnd();
-		if (isHurtBlinkState) {
-			GL11.glColor3f(1, 1, 1);
-		}
 		GL11.glPopMatrix();
 		
 		GL11.glColor3f(1f, 1f, 1f);
@@ -1018,7 +1011,7 @@ public strictfp class GameView implements IGameView {
 	}
 
 	@Override
-	public void drawEgyptianBossHand(EgyptianBossHand hand, AnimationFrame texture) {
+	public void drawBossHand(BossHand hand, AnimationFrame texture) {
 		AABox bounds = hand.getShape().getBounds();
 
 		GL11.glPushMatrix();

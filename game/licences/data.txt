@@ -24,11 +24,6 @@ Author: Delfos (aka Matías Poggini http://opengameart.org/users/delfos)
 License: CC-BY 3.0
 Author: Daniel Cook (http://lostgarden.com, http://opengameart.org/content/iron-plague-explode5bmp)
 
-* egyptian_boss_body.png, egyptian_boss_hand.png
-
-License: permission to use
-Author: Adrian Nock <acespark@gmail.com> (http://ace-spark.deviantart.com/art/Robotnikhotep-Sonic-3-Style-152753823)
-
 * jump.wav (original name: ApricotJumpBounce-SheepBounce2.ogg)
 
 Author: YoFrankie! (c) 2008, Blender Foundation (http://opengameart.org/content/cartoony-jump-and-bounce)

@@ -43,14 +43,12 @@ abstract class AbstractGameData implements IGameData {
 	public String getLevelFilePath(String questName, String levelName, String filename) {
 		String path = dataDir + "quests/" + questName + "/levels/" + levelName
 				+ "/" + filename;
-		try {
-			InputStream s = openFile(path);
-			if (s != null) {
-				s.close();
-				return path;
-			}
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
+		if(fileExists(path)) {
+			return path;
+		}
+		path = dataDir + "quests/" + questName + "/" + filename;
+		if(fileExists(path)) {
+			return path;
 		}
 		return dataDir + "default_level_data/" + filename;
 	}
