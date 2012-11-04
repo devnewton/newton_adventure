@@ -58,7 +58,7 @@ class EmbeddedGameData extends AbstractGameData {
 		questLevels.put("arctic", Arrays.asList("level0", "level0.5", "level1",
 				"level2", "level3", "level4"));
 		questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
-				"level3", "level4"));
+				"level3", "level4", "level5"));
 		questLevels.put("volcano", Arrays.asList("level0", "level0.5",
 				"level1", "level2", "level3", "level4"));
 		questLevels.put("bridge", Arrays.asList("level0"));

@@ -309,16 +309,16 @@ public class TextureCache implements ITextureCache {
 	private BufferedImage loadImage(String filename) {
 		try {
 			InputStream is = data.openFile(filename);
+			if(null == filename) {
+				throw new RuntimeException("Impossible de charger la texture " + filename);
+			}
 			try {
 				return ImageIO.read(new BufferedInputStream(is));
 			} finally {
 				is.close();
 			}
 		} catch (Exception e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"Impossible de charger la texture " + filename, e);
-			System.exit(0);
-			return null;
+			throw new RuntimeException("Impossible de charger la texture " + filename, e);
 		}
 	}
 
