@@ -1,0 +1,9 @@
+Package: [[name]]
+Version: [[version]]
+Section: misc
+Priority: optional
+Architecture: all
+Depends: liblwjgl-java (>=2.7), libprotobuf-java (>= 2.4), libjorbis-java (>=0.0.17)
+Maintainer: devnewton <devnewton@bci.im>
+Description: Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.
+Distribution: development
