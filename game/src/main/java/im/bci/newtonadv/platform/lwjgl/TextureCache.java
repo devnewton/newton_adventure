@@ -58,8 +58,6 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 
