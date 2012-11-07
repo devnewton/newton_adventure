@@ -17,8 +17,20 @@ public class MinimapGenerator {
 	final int tileSize;
 
 	public MinimapGenerator(int imageWidth, int imageHeight, int tileSize) {
-		image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+		image = new BufferedImage(imageWidth, imageHeight,
+				BufferedImage.TYPE_INT_ARGB);
 		this.tileSize = tileSize;
+		clearBackground();
+	}
+
+	private void clearBackground() {
+		Graphics g = image.getGraphics();
+		try {
+			g.setColor(new Color(128, 128, 128, 128));
+			g.fillRect(0, 0, image.getWidth(), image.getHeight());
+		} finally {
+			g.dispose();
+		}
 	}
 
 	public void addLayer(TileLayer layer) {
@@ -26,8 +38,12 @@ public class MinimapGenerator {
 		try {
 			for (int x = 0; x < layer.getWidth(); ++x)
 				for (int y = 0; y < layer.getHeight(); ++y) {
-					g.setColor(getColor(layer.getTileAt(x, y)));
-					g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+					Color color = getColor(layer.getTileAt(x, y));
+					if (null != color) {
+						g.setColor(color);
+						g.fillRect(x * tileSize, y * tileSize, tileSize,
+								tileSize);
+					}
 				}
 		} finally {
 			g.dispose();
@@ -35,60 +51,62 @@ public class MinimapGenerator {
 	}
 
 	private Color getColor(Tile tile) {
-		if(null != tile)
-		{
-	        String c = tile.getProperties().getProperty("newton_adventure.type", "unknown");
-	        if (c.equals("platform")) {
-	            return new Color(0, 0, 237); 
-	        } else if (c.equals("up_right_half_platform")) {
-	        	return new Color(0, 0, 237);
-	        } else if (c.equals("up_left_half_platform")) {
-	        	return new Color(0, 0, 237);
-	        } else if (c.equals("down_left_half_platform")) {
-	        	return new Color(0, 0, 237);
-	        } else if (c.equals("down_right_half_platform")) {
-	        	return new Color(0, 0, 237);
-	        } else if (c.equals("door")) {
-	        	return new Color(255,255,0);
-	        } else if (c.equals("door_to_bonus_world")) {
-	        	return new Color(255,0,255);
-	        } else if (c.equals("pikes_up")) {
-	        	return new Color(255, 0, 0);
-	        } else if (c.equals("pikes_down")) {
-	        	return new Color(255, 0, 0);
-	        } else if (c.equals("pikes_left")) {
-	        	return new Color(255, 0, 0);
-	        } else if (c.equals("pikes_right")) {
-	        	return new Color(255, 0, 0);
-	        } else if (c.equals("cannon_up")) {
-	        	return new Color(255, 0, 0);
-	        } else if (c.equals("cannon_down")) {
-	        	return new Color(255, 0, 0);
-	        } else if (c.equals("cannon_right")) {
-	        	return new Color(255, 0, 0);
-	        } else if (c.equals("cannon_left")) {
-	        	return new Color(255, 0, 0);
-	        } else if (c.equals("mobile_pike_anchor")) {
-	        	return new Color(255, 0, 0);
-        	} else if (c.equals("axe_anchor")) {
-        		return new Color(255, 0, 0);
-    		} else if (c.equals("bounce_platform")) {
-    			return new Color(0, 0, 237);
-	        } else if (c.equals("activator1")) {
-	        	return new Color(80, 255, 40);
-	        } else if (c.equals("activator2")) {
-	        	return new Color(80, 255, 40);
-	        } else if (c.equals("activator3")) {
-	        	return new Color(80, 255, 40);
-	        } else if (c.equals("blocker1")) {
-	        	return new Color(80, 255, 40);
-	        } else if (c.equals("blocker2")) {
-	        	return new Color(80, 255, 40);
-	        } else if (c.equals("blocker3")) {
-	        	return new Color(80, 255, 40);
-	        }
+		if (null != tile) {
+			String c = tile.getProperties().getProperty(
+					"newton_adventure.type", "unknown");
+			if (c.equals("platform")) {
+				return new Color(0, 0, 237);
+			} else if (c.equals("up_right_half_platform")) {
+				return new Color(0, 0, 237);
+			} else if (c.equals("up_left_half_platform")) {
+				return new Color(0, 0, 237);
+			} else if (c.equals("down_left_half_platform")) {
+				return new Color(0, 0, 237);
+			} else if (c.equals("down_right_half_platform")) {
+				return new Color(0, 0, 237);
+			} else if (c.equals("door")) {
+				return new Color(255, 255, 0);
+			} else if (c.equals("door_to_bonus_world")) {
+				return new Color(255, 0, 255);
+			} else if (c.equals("pikes_up")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("pikes_down")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("pikes_left")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("pikes_right")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("cannon_up")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("cannon_down")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("cannon_right")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("cannon_left")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("mobile_pike_anchor")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("axe_anchor")) {
+				return new Color(255, 0, 0);
+			} else if (c.equals("bounce_platform")) {
+				return new Color(0, 0, 237);
+			} else if (c.equals("activator1")) {
+				return new Color(80, 255, 40);
+			} else if (c.equals("activator2")) {
+				return new Color(80, 255, 40);
+			} else if (c.equals("activator3")) {
+				return new Color(80, 255, 40);
+			} else if (c.equals("blocker1")) {
+				return new Color(80, 255, 40);
+			} else if (c.equals("blocker2")) {
+				return new Color(80, 255, 40);
+			} else if (c.equals("blocker3")) {
+				return new Color(80, 255, 40);
+			} else if (!c.equals("unknown")) {
+				System.err.println("Unhandled tile type " + c);
+			}
 		}
-		return new Color(128, 128, 128, 128);
+		return null;
 	}
 
 	public void save(String selectedFile) {
