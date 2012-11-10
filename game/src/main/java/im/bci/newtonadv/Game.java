@@ -310,4 +310,8 @@ public strictfp class Game {
 		throw new ResumableTransitionException(new StoryboardSequence(this, this.getData()
 				.getFile("help.jpg"), null, new Sequence.ResumeTransitionException(currentSequence)));
 	}
+
+	public void insertCoins() {
+		platform.openUrl("http://devnewton.bci.im/projects/newton_adventure/wiki?name=Donation");
+	}
 }

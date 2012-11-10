@@ -59,7 +59,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
 		specialOccasionLayer.update();
 	}
 
-	public MainMenuSequence(Game game, Sequence playSeq, Sequence quitSeq,
+	public MainMenuSequence(final Game game, Sequence playSeq, Sequence quitSeq,
 			Sequence optSequence) {
 		super(game);
 
@@ -170,6 +170,25 @@ public strictfp class MainMenuSequence extends MenuSequence {
 		quitButton.w = 312;
 		quitButton.h = 90;
 		addButton(quitButton);
+		
+		Button insertCoinsButton = new Button() {
+
+			@Override
+			void activate() throws Sequence.NormalTransitionException {
+				game.insertCoins();
+			}
+		};
+		insertCoinsButton.offTextureName = game.getData()
+				.getFile("main_menu/bt-insert-coins-off.png");
+		insertCoinsButton.onTextureName = game.getData().getFile(
+				"main_menu/bt-insert-coins-on.png");
+		insertCoinsButton.x = 920;
+		insertCoinsButton.y = 683;
+		insertCoinsButton.w = 312;
+		insertCoinsButton.h = 90;
+		addButton(insertCoinsButton);
+		
+		
 	}
 
 	@Override

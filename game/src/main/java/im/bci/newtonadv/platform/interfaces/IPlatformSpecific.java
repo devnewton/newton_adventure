@@ -58,4 +58,6 @@ public interface IPlatformSpecific {
 
 	ScoreServer getScoreServer();
 
+	void openUrl(String string);
+
 }

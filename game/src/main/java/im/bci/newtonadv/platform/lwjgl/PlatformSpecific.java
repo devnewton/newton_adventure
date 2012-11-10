@@ -51,6 +51,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.lwjgl.Sys;
+
 /**
  * 
  * @author devnewton
@@ -248,5 +250,10 @@ public class PlatformSpecific implements IPlatformSpecific {
 	@Override
 	public ScoreServer getScoreServer() {
 		return scoreServer;
+	}
+
+	@Override
+	public void openUrl(String url) {
+		Sys.openURL(url);
 	}
 }

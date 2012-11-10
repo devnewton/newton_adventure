@@ -168,6 +168,7 @@ public abstract class MenuSequence implements Sequence {
 						if (game.getInput().isMouseButtonDown()) {
 							mouseActivateCurrentButton = true;
 						} else if (mouseActivateCurrentButton) {
+							mouseActivateCurrentButton = false;
 							button.activate();
 						}
 						break;
