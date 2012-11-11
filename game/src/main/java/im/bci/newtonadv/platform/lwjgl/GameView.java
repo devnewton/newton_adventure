@@ -728,7 +728,7 @@ public strictfp class GameView implements IGameView {
 			u1 = frame.getU1();
 			u2 = frame.getU2();
 		}
-
+		
 		NewtonColor color = hero.getColor();
 		GL11.glColor3f(color.r, color.g, color.b);
 		GL11.glBegin(GL11.GL_QUADS);
@@ -766,6 +766,11 @@ public strictfp class GameView implements IGameView {
 		NewtonColor color = key.getColor();
 		GL11.glColor3f(color.r, color.g, color.b);
 		
+		if(color != NewtonColor.white) {
+			GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+				GL11.GL_BLEND);
+		}
+		
 		final float u1 = texture.getU1(), u2 = texture.getU2();
 		final float v1 = texture.getU1(), v2 = texture.getU2();
 		GL11.glBegin(GL11.GL_QUADS);
@@ -781,6 +786,11 @@ public strictfp class GameView implements IGameView {
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glColor3f(1f, 1f, 1f);
+		
+		if(color != NewtonColor.white) {
+			GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+				GL11.GL_MODULATE);
+		}
 	}
 
 	@Override
