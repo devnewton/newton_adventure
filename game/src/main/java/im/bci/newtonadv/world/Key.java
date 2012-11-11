@@ -79,8 +79,10 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
     public strictfp void collided(Body body) {
         if (body instanceof Door) {
         	Door door = (Door) body;
-        	if(door.isOpenableWithKey(this))
+        	if(door.isOpenableWithKey(this)) {
+        		door.open();
         		use();
+        	}
         } else if(body instanceof KeyLock) {
         	KeyLock keyLock = (KeyLock) body;
         	if(keyLock.isOpenableWithKey(this)) {

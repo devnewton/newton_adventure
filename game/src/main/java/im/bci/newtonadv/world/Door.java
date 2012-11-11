@@ -86,10 +86,9 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	@Override
 	public strictfp void collided(Body body) {
-		if (body instanceof Key) {
-			open();
-		} else if (body instanceof Hero && !isClose)
+		if (body instanceof Hero && !isClose) {
 			world.setObjectivesCompleted(true);
+		}
 	}
 
 	void open() {
