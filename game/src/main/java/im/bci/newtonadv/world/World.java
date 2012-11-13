@@ -647,8 +647,10 @@ public strictfp class World extends net.phys2d.raw.World {
 			door.setClosedTexture(closedDoorTexture);
 			door.setOpenTexture(openDoorTexture);
 			door.setZOrder(getTileZOrder(tile, zOrderBase));
-			door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+			if(tile.getProperties().containsKey("newton_adventure.color")) {
+				door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
 					"newton_adventure.color", "white")));
+			}
 			add(door);
 		} else if (c.equals("door_to_bonus_world")) {
 			DoorToBonusWorld door = new DoorToBonusWorld(this, tileWidth,
