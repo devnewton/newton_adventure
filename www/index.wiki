@@ -13,7 +13,7 @@ If you like this game, you can make a [Donation] or better [Contribute] to his d
 <h1>Downloads</h1>
 
 <p>Download latest release: <a href="downloads/newton_adventure_1.6.zip">Version 1.6</a></p>
-<p>Download latest release with alternative <strong>faster</strong> download link: <a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure_1.6.zip">Version 1.6</a></p>
+<p>Download latest release with alternative <strong>MUCH FASTER</strong> download link: <a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure_1.6.zip">Version 1.6</a></p>
 <p>Source: this site a <a href="http://fossil-scm.org">fossil</a> repository. Use the "files" menu entry or use "fossil clone" command.</p>
 
 <h1>Screenshots and videos</h1>
