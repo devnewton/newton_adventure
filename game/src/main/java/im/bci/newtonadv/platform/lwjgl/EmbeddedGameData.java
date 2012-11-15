@@ -35,6 +35,7 @@ package im.bci.newtonadv.platform.lwjgl;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,6 +47,7 @@ class EmbeddedGameData extends AbstractGameData {
 
 	private static final List<String> quests;
 	private static final HashMap<String, List<String>> questLevels;
+	private static final HashMap<String, List<String>> questsToCompleteToUnlockQuests;
 
 	static {
 		quests = Arrays.asList("jungle", "vatican", "arctic", "volcano",
@@ -62,11 +64,15 @@ class EmbeddedGameData extends AbstractGameData {
 		questLevels.put("volcano", Arrays.asList("level0", "level0.5",
 				"level1", "level2", "level3", "level4"));
 		questLevels.put("bridge", Arrays.asList("level0"));
-		questLevels.put("lab", Arrays.asList("level0", "level1", "level2", "level3", "level4", "level5"));
+		questLevels.put("lab", Arrays.asList("level0", "level1", "level2",
+				"level3", "level4", "level5"));
 		questLevels.put("prison", Arrays.asList("boss"));
 		questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
 				"bonus_level3", "bonus_level4", "bonus_level5"));
 
+		questsToCompleteToUnlockQuests = new HashMap<String, List<String>>();
+		questsToCompleteToUnlockQuests.put("prison", Arrays.asList("jungle",
+				"vatican", "arctic", "volcano", "egypt", "bridge", "lab"));
 	}
 
 	public EmbeddedGameData() {
@@ -86,6 +92,16 @@ class EmbeddedGameData extends AbstractGameData {
 	@Override
 	public InputStream openFile(String path) throws FileNotFoundException {
 		return getClass().getClassLoader().getResourceAsStream(path);
+	}
+
+	@Override
+	public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
+		List<String> questsToComplete = questsToCompleteToUnlockQuests
+				.get(questName);
+		if (null == questsToComplete) {
+			questsToComplete = Collections.emptyList();
+		}
+		return questsToComplete;
 	}
 
 }

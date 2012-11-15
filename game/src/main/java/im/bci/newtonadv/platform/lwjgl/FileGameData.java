@@ -37,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -85,6 +86,11 @@ class FileGameData extends AbstractGameData {
 			}
 		}
 		return subdirs;
+	}
+
+	@Override
+	public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
+		return Collections.emptyList();
 	}
 
 }

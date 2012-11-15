@@ -174,13 +174,25 @@ public class QuestMenuSequence extends MenuSequence {
 
 			@Override
 			void activate() throws Sequence.NormalTransitionException {
-				throw new Sequence.NormalTransitionException(levelMenuSequence);
+				if(!game.isQuestBlocked(questName)) {
+					throw new Sequence.NormalTransitionException(levelMenuSequence);
+				}
 			}
 
 			@Override
 			public void draw() {
 				game.getView().drawMenuButton(this, questNameFont,
 						questName);
+			}
+			
+			@Override
+			public void start() {
+				if(game.isQuestBlocked(questName)) {
+					onTextureName = game.getData().getFile("btn-blocked.png");
+				} else {
+					onTextureName = game.getData().getQuestFile(questName,
+							"bt-quest-on.jpg");
+				}
 			}
 		};
 		questButton.offTextureName = game.getData().getQuestFile(questName,

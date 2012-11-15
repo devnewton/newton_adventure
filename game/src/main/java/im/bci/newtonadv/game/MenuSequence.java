@@ -191,6 +191,7 @@ public abstract class MenuSequence implements Sequence {
 		redraw = true;
 		setCurrentButton(buttons.isEmpty() ? null : buttons.get(0));
 		for (Button button : buttons) {
+			button.start();
 			button.onTexture = textureCache.getTexture(button.onTextureName);
 			button.offTexture = textureCache.getTexture(button.offTextureName);
 		}
@@ -243,7 +244,8 @@ public abstract class MenuSequence implements Sequence {
 
 	public abstract class Button {
 
-		String onTextureName, offTextureName;
+		public String onTextureName;
+		public String offTextureName;
 		public float x = 273, y;
 		public float w = -1.0f;
 		public float h = -1.0f;
@@ -269,5 +271,8 @@ public abstract class MenuSequence implements Sequence {
 
 		abstract void activate() throws Sequence.NormalTransitionException,
 				Sequence.ResumeTransitionException;
+		
+		void start() {
+		}
 	}
 }

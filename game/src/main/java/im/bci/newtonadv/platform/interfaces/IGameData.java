@@ -23,4 +23,6 @@ public interface IGameData {
 	boolean fileExists(String minimapPath);
 
 	InputStream openLevelNal(String questName, String levelName) throws Exception;
+
+	List<String> listQuestsToCompleteToUnlockQuest(String questName);
 }

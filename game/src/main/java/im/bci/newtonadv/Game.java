@@ -278,14 +278,31 @@ public strictfp class Game {
 			throws Sequence.NormalTransitionException {
 		this.questMenuSequence.gotoLevel(newQuestName, newLevelName);
 	}
+	
+	public boolean isQuestBlocked(String questName) {
+		for(String questToComplete : data.listQuestsToCompleteToUnlockQuest(questName)) {
+			if(!isQuestCompleted(questToComplete)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isQuestCompleted(String questName) {
+		for(String levelName : data.listQuestLevels(questName)) {
+			if(isLevelBlocked(questName, levelName)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public boolean isLevelBlocked(String questName, String levelName) {
 		if (data.listQuestLevels(questName).get(0).equals(levelName)) {
 			return false;
 		}
-		return config.getProperty(
-				"game." + questName + "." + levelName + ".blocked", "true")
-				.equals("true");
+		return "true".equals(config.getProperty(
+				"game." + questName + "." + levelName + ".blocked"));
 	}
 
 	public void unblockNextLevel(String questName, String completedLevelName) {
@@ -297,7 +314,6 @@ public strictfp class Game {
 				}
 			}
 		}
-
 	}
 
 	private void unblockLevel(String questName, String levelName) {
