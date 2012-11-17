@@ -329,7 +329,7 @@ public strictfp class GameView implements IGameView {
     public void drawFPS(int nbFps) {
         String fps = nbFps + " FPS";
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
 
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
@@ -365,7 +365,7 @@ public strictfp class GameView implements IGameView {
         final float y1 = -bounds.getHeight() / 2.0f;
         final float y2 = bounds.getHeight() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
         final float u1 = texture.getU1(), u2 = texture.getU2();
@@ -381,7 +381,7 @@ public strictfp class GameView implements IGameView {
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glPopMatrix();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     @Override
@@ -389,7 +389,7 @@ public strictfp class GameView implements IGameView {
         Box box = (Box) axe.getShape();
         Vector2f[] pts = box.getPoints(axe.getPosition(), axe.getRotation());
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
 
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
         GL11.glBegin(GL11.GL_QUADS);
@@ -402,7 +402,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTexCoord2f(texture.getU1(), texture.getV1());
         GL11.glVertex2f(pts[3].x, pts[3].y);
         GL11.glEnd();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
 
     }
 
@@ -456,7 +456,7 @@ public strictfp class GameView implements IGameView {
         float y1 = -bounds.getHeight() / 2.0f;
         float y2 = bounds.getHeight() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 
         GL11.glBegin(GL11.GL_QUADS);
@@ -470,7 +470,7 @@ public strictfp class GameView implements IGameView {
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glPopMatrix();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     @Override
@@ -542,7 +542,7 @@ public strictfp class GameView implements IGameView {
         Box box = (Box) door.getShape();
         Vector2f[] pts = box.getPoints(door.getPosition(), door.getRotation());
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(texture.getU1(), texture.getV2());
@@ -554,7 +554,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTexCoord2f(texture.getU1(), texture.getV1());
         GL11.glVertex2f(pts[3].x, pts[3].y);
         GL11.glEnd();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     @Override
@@ -663,7 +663,7 @@ public strictfp class GameView implements IGameView {
         final float y1 = -explosion.getSize() / 2.0f;
         final float y2 = explosion.getSize() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 
         final float u1 = frame.getU1(), v1 = frame.getV1(), u2 = frame.getU2(), v2 = frame.getV2();
@@ -677,7 +677,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTexCoord2f(u1, v2);
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
@@ -734,7 +734,7 @@ public strictfp class GameView implements IGameView {
         float y1 = -bounds.getHeight() / 2.0f;
         float y2 = bounds.getHeight() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 
         final float v1 = frame.getV1(), v2 = frame.getV2();
@@ -760,7 +760,7 @@ public strictfp class GameView implements IGameView {
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glColor3f(1f, 1f, 1f);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
@@ -778,7 +778,7 @@ public strictfp class GameView implements IGameView {
         final float y1 = -bounds.getHeight() / 2.0f;
         final float y2 = bounds.getHeight() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
         NewtonColor color = key.getColor();
@@ -802,7 +802,7 @@ public strictfp class GameView implements IGameView {
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glPopMatrix();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glColor3f(1f, 1f, 1f);
 
         if (color != NewtonColor.white) {
@@ -882,7 +882,7 @@ public strictfp class GameView implements IGameView {
     public void drawMobilePikes(MobilePikes pikes, AnimationFrame texture) {
         Box box = (Box) pikes.getShape();
         Vector2f[] pts = box.getPoints(pikes.getPosition(), pikes.getRotation());
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(texture.getU1(), texture.getV2());
@@ -894,7 +894,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTexCoord2f(texture.getU1(), texture.getV1());
         GL11.glVertex2f(pts[3].x, pts[3].y);
         GL11.glEnd();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     @Override
@@ -912,7 +912,7 @@ public strictfp class GameView implements IGameView {
         float y1 = -bounds.getHeight() / 2.0f;
         float y2 = bounds.getHeight() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, frame.getImage().getId());
 
         final float v1 = frame.getV1(), v2 = frame.getV2();
@@ -935,7 +935,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTexCoord2f(u1, v2);
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
@@ -951,7 +951,7 @@ public strictfp class GameView implements IGameView {
         final float y1 = -pickedUpObject.getSize() / 2.0f;
         final float y2 = pickedUpObject.getSize() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
         final float u1 = texture.getU1(), u2 = texture.getU2();
@@ -966,7 +966,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTexCoord2f(u1, v2);
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
@@ -982,7 +982,7 @@ public strictfp class GameView implements IGameView {
         final float y1 = -key.getSize() / 2.0f;
         final float y2 = key.getSize() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
         final float u1 = texture.getU1(), u2 = texture.getU2();
@@ -997,7 +997,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTexCoord2f(u1, v2);
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
@@ -1013,7 +1013,7 @@ public strictfp class GameView implements IGameView {
         float y1 = -bounds.getHeight() / 2.0f;
         float y2 = bounds.getHeight() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
         final float u1 = 1, u2 = 0;
@@ -1030,7 +1030,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPopMatrix();
 
         GL11.glColor3f(1f, 1f, 1f);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
     }
 
     @Override
@@ -1045,7 +1045,7 @@ public strictfp class GameView implements IGameView {
         float y1 = -bounds.getHeight() / 2.0f;
         float y2 = bounds.getHeight() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
         final float u1 = 1, u2 = 0;
@@ -1059,7 +1059,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTexCoord2f(u1, 1.0f);
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
 
     }
@@ -1099,7 +1099,7 @@ public strictfp class GameView implements IGameView {
 
     private void drawContinueText(ITrueTypeFont font) {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
 
         font.drawString(StoryboardSequence.ortho2DRight,
                 StoryboardSequence.ortho2DBottom - font.getHeight(),
@@ -1110,7 +1110,7 @@ public strictfp class GameView implements IGameView {
     private void drawGameOverText(ITrueTypeFont font) {
         drawContinueText(font);
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
 
         font.drawString(StoryboardSequence.ortho2DRight,
                 StoryboardSequence.ortho2DBottom - font.getHeight() * 2,
@@ -1130,7 +1130,7 @@ public strictfp class GameView implements IGameView {
                     ScoreSequence.ortho2DTop);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
             GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            GL11.glEnable(GL11.GL_BLEND);
 
             int i = 1;
             font.drawString(
@@ -1227,7 +1227,7 @@ public strictfp class GameView implements IGameView {
     public void drawLevelIndicators(String indicators,
             ITrueTypeFont indicatorsFont) {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
 
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
@@ -1273,8 +1273,7 @@ public strictfp class GameView implements IGameView {
             }
 
             GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-            GL11.glEnable(GL11.GL_ALPHA_TEST); // allows alpha channels or
-            // transperancy
+            GL11.glEnable(GL11.GL_BLEND);
 
             for (Button b : sequence.getButtons()) {
                 b.draw();
@@ -1633,7 +1632,7 @@ public strictfp class GameView implements IGameView {
     public void drawScoreVisualIndicator(World world,
             ScoreVisualIndicator scoreVisualIndicator) {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
 
         ITrueTypeFont font = world.getScoreIndicatorFont();
         String value = scoreVisualIndicator.getValue();
@@ -1674,7 +1673,7 @@ public strictfp class GameView implements IGameView {
         final float y1 = -bounds.getHeight() / 2.0f;
         final float y2 = bounds.getHeight() / 2.0f;
 
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
         final float u1 = texture.getU1(), u2 = texture.getU2();
@@ -1690,7 +1689,7 @@ public strictfp class GameView implements IGameView {
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glPopMatrix();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
 
     }
 }
