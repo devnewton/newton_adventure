@@ -35,18 +35,23 @@ import org.lwjgl.opengl.GL11;
 
 public enum GameViewQuality {
 
-    DEFAULT,
-    NICEST,
-    FASTEST;
+    DEFAULT(GL11.GL_DONT_CARE, GL11.GL_LINEAR),
+    NICEST(GL11.GL_NICEST, GL11.GL_LINEAR),
+    FASTEST(GL11.GL_FASTEST, GL11.GL_NEAREST);
+    
+    private final int gl, glTextureFilter;
+
+    private GameViewQuality(int gl, int glTextureFilter) {
+        this.gl = gl;
+        this.glTextureFilter = glTextureFilter;
+    }
+    
 
     int toGL() {
-        switch(this) {
-            case NICEST:
-                return GL11.GL_NICEST;
-            case FASTEST:
-                return GL11.GL_FASTEST;
-            default:
-                return GL11.GL_DONT_CARE;
-        }
+        return gl;
+    }
+
+    int toGLTextureFilter() {
+        return glTextureFilter;
     }
 }

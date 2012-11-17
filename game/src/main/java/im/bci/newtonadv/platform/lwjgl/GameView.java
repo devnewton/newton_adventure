@@ -295,10 +295,11 @@ public strictfp class GameView implements IGameView {
         if (null == textureCache) {
             textureCache = new TextureCache(this.data);
         } else {
-            textureCache.clearAll();
+            textureCache.clearUseless();
         }
-        fpsFont = new TrueTypeFont(this.data);
         this.quality = newQuality;
+        textureCache.setQuality(newQuality);
+        fpsFont = new TrueTypeFont(this.data);
     }
 
     @Override

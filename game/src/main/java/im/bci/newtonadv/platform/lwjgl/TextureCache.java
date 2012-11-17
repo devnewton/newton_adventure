@@ -80,10 +80,18 @@ public class TextureCache implements ITextureCache {
 			ColorSpace.getInstance(ColorSpace.CS_sRGB),
 			new int[] { 8, 8, 8, 0 }, false, false, ComponentColorModel.OPAQUE,
 			DataBuffer.TYPE_BYTE);
+        private GameViewQuality quality = GameViewQuality.DEFAULT;
 
 	TextureCache(IGameData data) {
 		this.data = data;
 	}
+        
+        public void setQuality(GameViewQuality newQuality) {
+            if(newQuality != quality) {
+                quality = newQuality;
+                updateQuality();
+            }            
+        }
 
 	@Override
 	public void clearAll() {
@@ -170,7 +178,7 @@ public class TextureCache implements ITextureCache {
 		return texture;
 	}
 
-	private static Texture convertImageToTexture(BufferedImage bufferedImage,
+	private Texture convertImageToTexture(BufferedImage bufferedImage,
 			boolean usePowerOfTwoTexture) {
 		ByteBuffer imageBuffer = null;
 		WritableRaster raster;
@@ -225,25 +233,12 @@ public class TextureCache implements ITextureCache {
 		imageBuffer.put(data, 0, data.length);
 		imageBuffer.flip();
 
-		// {
-
-		// GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter);
-		// }
 		Texture texture = new Texture(texWidth, texHeight, texImage.getColorModel().hasAlpha());
 
 		// produce a texture from the byte buffer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
-		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
-				GL11.GL_CLAMP);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T,
-				GL11.GL_CLAMP);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER,
-				GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER,
-				GL11.GL_NEAREST);
-		GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
-				GL11.GL_MODULATE);
+		setupGLTextureParams();
+                GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 		int pixelFormat = texImage.getColorModel().hasAlpha() ? GL11.GL_RGBA
 				: GL11.GL_RGB;
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, pixelFormat, texWidth,
@@ -279,22 +274,30 @@ public class TextureCache implements ITextureCache {
 		// produce a texture from the byte buffer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
-				GL11.GL_CLAMP);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T,
-				GL11.GL_CLAMP);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER,
-				GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER,
-				GL11.GL_NEAREST);
-		GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
-				GL11.GL_MODULATE);
+		setupGLTextureParams();
 		int pixelFormat = nimage.getFormat().equals(PixelFormat.RGBA_8888) ? GL11.GL_RGBA
 				: GL11.GL_RGB;
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, pixelFormat, texWidth,
 				texHeight, 0, pixelFormat, GL11.GL_UNSIGNED_BYTE, imageBuffer);
 		return texture;
 	}
+
+    private void setupGLTextureParams() {
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
+                        GL11.GL_CLAMP);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T,
+                        GL11.GL_CLAMP);
+        setupGLTextureQualityParams();
+        GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
+                        GL11.GL_MODULATE);
+    }
+
+    private void setupGLTextureQualityParams() {
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER,
+                        quality.toGLTextureFilter());
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER,
+                        quality.toGLTextureFilter());
+    }
 
 	private void deleteTexture(int textureId) {
 		ByteBuffer temp = ByteBuffer.allocateDirect(4);
@@ -345,6 +348,12 @@ public class TextureCache implements ITextureCache {
 	    return cm.hasAlpha();
 	}
 
+        private void updateQuality() {
+            for (TextureWeakReference ref : textures.values()) {
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, ref.textureId);
+		setupGLTextureQualityParams();
+            }
+        }
 
 	private static final class TextureWeakReference extends
 			WeakReference<Texture> {
