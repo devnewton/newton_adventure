@@ -48,7 +48,7 @@ import net.phys2d.raw.shapes.Shape;
  */
 public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 
-    static final float size = 2.0f * World.distanceUnit;
+    static final float size = 1.95f * World.distanceUnit;
     private World world;
     private AnimationCollection texture;
 	private Animation.Play play;
