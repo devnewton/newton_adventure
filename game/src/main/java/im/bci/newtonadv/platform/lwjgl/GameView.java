@@ -1379,6 +1379,9 @@ public strictfp class GameView implements IGameView {
             float yt = -heroPos.getY()
                     * (staticBounds.getHeight() / worldStaticBounds.getHeight());
 
+            xt *= 0.1f;
+            yt *= 0.1f;
+            
             xt = Math.max(xt, -World.ortho2DBaseSize / 2.0f);
             xt = Math.min(xt, World.ortho2DBaseSize / 2.0f);
             yt = Math.max(yt, -World.ortho2DBaseSize / 2.0f);
