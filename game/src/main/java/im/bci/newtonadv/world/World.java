@@ -136,6 +136,11 @@ public strictfp class World extends net.phys2d.raw.World {
 	private ITrueTypeFont scoreIndicatorFont;
 	private HashMap<NewtonColor, BodyList> coloredStaticBodies;
 
+    void removeKey(Key key) {
+        keys.remove(key);
+        remove(key);
+    }
+
 	public static interface PostUpdateAction {
 
 		public void run() throws Sequence.NormalTransitionException,

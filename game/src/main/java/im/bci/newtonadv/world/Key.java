@@ -80,20 +80,20 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
         if (body instanceof Door) {
         	Door door = (Door) body;
         	if(door.isOpenableWithKey(this)) {
-        		door.open();
-        		use();
+                    door.open();
+                    use();
         	}
         } else if(body instanceof KeyLock) {
         	KeyLock keyLock = (KeyLock) body;
         	if(keyLock.isOpenableWithKey(this)) {
-        		keyLock.open();
-                use();
+                    keyLock.open();
+                    use();
         	}
         }
     }
 
 	private void use() {
-		world.remove(this);
+		world.removeKey(this);
 		world.addTopLevelEntities(new UsedKey(world, play.getCurrentFrame(), getPosition()));
 	}
 
