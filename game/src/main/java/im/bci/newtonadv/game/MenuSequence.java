@@ -66,10 +66,15 @@ public abstract class MenuSequence implements Sequence {
 	private ITexture backgroundTexture;
 	private Vector2f oldMousePos = new Vector2f();
 	private boolean mouseActivateCurrentButton;
+        private Button defaultButton;
 
 	public MenuSequence(Game game) {
 		this.game = game;
 	}
+
+        protected void setDefaultButton(Button b) {
+            this.defaultButton = b;
+        }
 
 	public void setBackgroundTexturePath(String backgroundImage) {
 		this.backgroundTexturePath = backgroundImage;
@@ -90,7 +95,8 @@ public abstract class MenuSequence implements Sequence {
 
 	@Override
 	public void processInputs() throws Sequence.NormalTransitionException,
-			ResumeTransitionException {
+			ResumeTransitionException, 
+			ResumableTransitionException {
 		if (game.getInput().isKeyRightDown()) {
 			horizontalSelectNextButton = true;
 		} else if (horizontalSelectNextButton) {
@@ -185,11 +191,15 @@ public abstract class MenuSequence implements Sequence {
 		if (null != backgroundTexturePath) {
 			backgroundTexture = textureCache.getTexture(backgroundTexturePath);
 		}
-		currentButtonIndex = 0;
+                currentButtonIndex = 0;
 		activateCurrentButton = false;
 		mouseActivateCurrentButton = false;
 		redraw = true;
-		setCurrentButton(buttons.isEmpty() ? null : buttons.get(0));
+                if(buttons.contains(defaultButton)) {
+                    setCurrentButton(defaultButton);
+                } else {
+                    setCurrentButton(buttons.isEmpty() ? null : buttons.get(0));
+                }
 		for (Button button : buttons) {
 			button.start();
 			button.onTexture = textureCache.getTexture(button.onTextureName);
@@ -270,7 +280,7 @@ public abstract class MenuSequence implements Sequence {
 		}
 
 		abstract void activate() throws Sequence.NormalTransitionException,
-				Sequence.ResumeTransitionException;
+				Sequence.ResumeTransitionException, Sequence.ResumableTransitionException;
 		
 		void start() {
 		}

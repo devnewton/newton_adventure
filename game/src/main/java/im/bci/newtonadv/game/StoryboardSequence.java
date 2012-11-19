@@ -32,78 +32,44 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 
-public class StoryboardSequence implements Sequence {
+public class StoryboardSequence extends MenuSequence {
 
-    private String texture;
-    static public final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
-    static public final float ortho2DLeft = 0;
-    static public final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
-    static public final float ortho2DTop = 0;
-    protected Game game;
     private final String music;
-    private boolean redraw = true;
-    protected ITrueTypeFont font;
-	private AbstractTransitionException transition;
+    protected final Button continueButton;
 
-    public StoryboardSequence(Game game, String texture, String music, AbstractTransitionException transition) {
-        this.game = game;
-        this.texture = texture;
+    public StoryboardSequence(Game game, String texture, String music, final AbstractTransitionException transition) {
+        super(game);
+        this.setBackgroundTexturePath(texture);
         this.music = music;
-        this.transition = transition;
+
+        continueButton = new Button() {
+
+            @Override
+            void activate() throws NormalTransitionException,
+                    ResumeTransitionException, ResumableTransitionException {
+                transition.throwMe();
+            }
+        };
+        continueButton.offTextureName = game.getData().getFile("bt-continue-off.png");
+        continueButton.onTextureName = game.getData().getFile("bt-continue-on.png");
+        continueButton.x = 960;
+        continueButton.y = 700;
+        continueButton.w = 312;
+        continueButton.h = 90;
+        addButton(continueButton);
     }
 
     @Override
-    public void draw() {
-        game.getView().drawStoryBoardSequence(this,font);
-    }
-
-    @Override
-    public void update() {
-        //NOTHING
-    }
-    private boolean mustQuit;
-
-    @Override
-    public void processInputs() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException {
-        if (game.getInput().isKeyReturnDown() || game.getInput().isMouseButtonDown()) {
-            mustQuit = true;
-        } else if (mustQuit) {
-        	transition.throwMe();
-        }
-    }
-
-    @Override
-	public void start() {
+    public void start() {
+        super.start();
         if (music != null) {
             game.getSoundCache().playMusicIfEnabled(music);
         }
-        redraw = true;
-        mustQuit = false;
-        font = game.getView().createStoryBoardSequenceFont();
     }
 
     @Override
-	public void stop() {
-        font.destroy();
+    public void resume() {
+        //nothing
     }
-
-    public boolean isDirty() {
-        return redraw;
-    }
-
-    public void setDirty(boolean b) {
-        redraw = b;
-    }
-
-    public String getTexture() {
-        return texture;
-    }
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -112,8 +112,6 @@ public interface IGameView {
 
     void drawFireBall(FireBall fireball, AnimationFrame texture, World world);
 
-    void drawGameOverSequence(GameOverSequence sequence, ITrueTypeFont font);
-
     void drawHero(Hero hero, AnimationFrame texture, World world, float scale);
 
     void drawKey(Key key, AnimationFrame texture, World world);
@@ -139,8 +137,6 @@ public interface IGameView {
     void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font, QuestScore questScore, long scorePerCentToShow);
 
     void drawSnowLayer(SnowLayer layer);
-
-    void drawStoryBoardSequence(StoryboardSequence sequence, ITrueTypeFont font);
 
     void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform, AnimationFrame texture);
 

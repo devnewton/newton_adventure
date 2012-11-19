@@ -1065,60 +1065,6 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawStoryBoardSequence(StoryboardSequence sequence,
-            ITrueTypeFont font) {
-        if (Display.isVisible() || Display.wasResized() || Display.isDirty()
-                || sequence.isDirty()) {
-            sequence.setDirty(false);
-
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft,
-                    StoryboardSequence.ortho2DRight,
-                    StoryboardSequence.ortho2DBottom,
-                    StoryboardSequence.ortho2DTop);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache().getTexture(sequence.getTexture()).getId());
-            final float x1 = StoryboardSequence.ortho2DLeft;
-            final float x2 = StoryboardSequence.ortho2DRight;
-            final float y1 = StoryboardSequence.ortho2DBottom;
-            final float y2 = StoryboardSequence.ortho2DTop;
-            final float u1 = 0.0f, u2 = 1.0f;
-            GL11.glBegin(GL11.GL_QUADS);
-            GL11.glTexCoord2f(u1, 0.0f);
-            GL11.glVertex2f(x1, y2);
-            GL11.glTexCoord2f(u2, 0.0f);
-            GL11.glVertex2f(x2, y2);
-            GL11.glTexCoord2f(u2, 1.0f);
-            GL11.glVertex2f(x2, y1);
-            GL11.glTexCoord2f(u1, 1.0f);
-            GL11.glVertex2f(x1, y1);
-            GL11.glEnd();
-            drawContinueText(font);
-            GL11.glPopMatrix();
-        }
-    }
-
-    private void drawContinueText(ITrueTypeFont font) {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-
-        font.drawString(StoryboardSequence.ortho2DRight,
-                StoryboardSequence.ortho2DBottom - font.getHeight(),
-                "Click or press enter to continue ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-        GL11.glPopAttrib();
-    }
-
-    private void drawGameOverText(ITrueTypeFont font) {
-        drawContinueText(font);
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-
-        font.drawString(StoryboardSequence.ortho2DRight,
-                StoryboardSequence.ortho2DBottom - font.getHeight() * 2,
-                "Press up to retry ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
-        GL11.glPopAttrib();
-    }
-
-    @Override
     public void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font,
             QuestScore questScore, long scorePerCentToShow) {
         if (Display.isVisible() || Display.isDirty() || Display.wasResized()
@@ -1162,39 +1108,6 @@ public strictfp class GameView implements IGameView {
                     "Press right to skip ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
-        }
-    }
-
-    @Override
-    public void drawGameOverSequence(GameOverSequence sequence,
-            ITrueTypeFont font) {
-        if (Display.isVisible() || Display.wasResized() || Display.isDirty()
-                || sequence.isDirty()) {
-            sequence.setDirty(false);
-
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(StoryboardSequence.ortho2DLeft,
-                    StoryboardSequence.ortho2DRight,
-                    StoryboardSequence.ortho2DBottom,
-                    StoryboardSequence.ortho2DTop);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureCache().getTexture(sequence.getTexture()).getId());
-            final float x1 = StoryboardSequence.ortho2DLeft;
-            final float x2 = StoryboardSequence.ortho2DRight;
-            final float y1 = StoryboardSequence.ortho2DBottom;
-            final float y2 = StoryboardSequence.ortho2DTop;
-            final float u1 = 0.0f, u2 = 1.0f;
-            GL11.glBegin(GL11.GL_QUADS);
-            GL11.glTexCoord2f(u1, 0.0f);
-            GL11.glVertex2f(x1, y2);
-            GL11.glTexCoord2f(u2, 0.0f);
-            GL11.glVertex2f(x2, y2);
-            GL11.glTexCoord2f(u2, 1.0f);
-            GL11.glVertex2f(x2, y1);
-            GL11.glTexCoord2f(u1, 1.0f);
-            GL11.glVertex2f(x1, y1);
-            GL11.glEnd();
-            drawGameOverText(font);
-            GL11.glPopMatrix();
         }
     }
 
