@@ -40,52 +40,80 @@ import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
  *
  * @author devnewton
  */
-public class ScoreSequence implements Sequence {
+public class ScoreSequence extends MenuSequence {
 
-    public static final float ortho2DBottom = Game.DEFAULT_SCREEN_HEIGHT;
-    public static final float ortho2DLeft = 0;
-    public static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
-    public static final float ortho2DTop = 0;
     ITrueTypeFont font;
     private final QuestScore questScore;
-    private boolean redraw;
-    private boolean mustSendScoreQuit;
-    private boolean mustQuitWithoutSendingScore;
     private Sequence nextSequence;
     private FrameTimeInfos timeInfos;
     private long scorePerCentToShow;
     private final ScoreServer scoreServer;
-    private final Game game;
 
     public ScoreSequence(Game game, String questName, Sequence nextSequence) {
+        super(game);
         this.questScore = game.getScore().getQuestScore(questName);
         this.nextSequence = nextSequence;
         this.scoreServer = game.getScoreServer();
-        this.game = game;
+               
+       Button shareButton = new Button() {
+
+            @Override
+            void activate() throws NormalTransitionException,
+                    ResumeTransitionException, ResumableTransitionException {
+                scoreServer.sendScore(questScore.getQuestName(), questScore.computeScore());
+                throw new NormalTransitionException(ScoreSequence.this.nextSequence);
+            }
+        };
+        shareButton.offTextureName = game.getData().getFile("bt-share-off.png");
+        shareButton.onTextureName = game.getData().getFile("bt-share-on.png");
+        shareButton.x = 640;
+        shareButton.y = 700;
+        shareButton.w = 312;
+        shareButton.h = 90;
+        addButton(shareButton);
+        
+        Button continueButton = new Button() {
+
+            @Override
+            void activate() throws NormalTransitionException,
+                    ResumeTransitionException, ResumableTransitionException {
+                throw new NormalTransitionException(ScoreSequence.this.nextSequence);
+            }
+        };
+        continueButton.offTextureName = game.getData().getFile("bt-continue-off.png");
+        continueButton.onTextureName = game.getData().getFile("bt-continue-on.png");
+        continueButton.x = 960;
+        continueButton.y = 700;
+        continueButton.w = 312;
+        continueButton.h = 90;
+        addButton(continueButton);
+        
+        setDefaultButton(shareButton);
     }
 
     @Override
     public void start() {
+        super.start();
         font = game.getView().createScoreSequenceFont();
-        redraw = true;
-        mustSendScoreQuit = false;
-        mustQuitWithoutSendingScore = false;
+
         timeInfos = new FrameTimeInfos();
         scorePerCentToShow = 0;
     }
 
     @Override
     public void stop() {
+        super.stop();
         font.destroy();
     }
 
     @Override
-	public void draw() {
+    public void draw() {
         game.getView().drawScoreSequence(this,font,questScore,scorePerCentToShow);
     }
 
     @Override
 	public void update() {
+        super.update();
         timeInfos.update();
         long newScorePercentToShow = Math.min(100, timeInfos.currentTime * 100 / (10 * 1000000000));
         if (newScorePercentToShow != scorePerCentToShow) {
@@ -94,36 +122,11 @@ public class ScoreSequence implements Sequence {
         }
     }
 
-    @Override
-	public void processInputs() throws Sequence.NormalTransitionException {
-        if (game.getInput().isKeyReturnDown() || game.getInput().isMouseButtonDown()) {
-            mustSendScoreQuit = true;
-        } else if (mustSendScoreQuit) {
-            scoreServer.sendScore(questScore.getQuestName(), questScore.computeScore());
-            throw new Sequence.NormalTransitionException(nextSequence);
-        }
-        if (game.getInput().isKeyRightDown()) {
-            mustQuitWithoutSendingScore = true;
-        } else if (mustQuitWithoutSendingScore) {
-            throw new Sequence.NormalTransitionException(nextSequence);
-        }
-    }
-
     void setNextSequence(Sequence nextSequence) {
         this.nextSequence = nextSequence;
     }
 
-    public boolean isDirty() {
-        return redraw;
+    @Override
+    public void resume() {
     }
-
-    public void setDirty(boolean b) {
-        redraw = b;
-    }
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
 }

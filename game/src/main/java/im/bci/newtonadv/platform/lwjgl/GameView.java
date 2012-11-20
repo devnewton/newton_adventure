@@ -142,6 +142,45 @@ public strictfp class GameView implements IGameView {
         }
     }
 
+    private void doDrawMenuSequence(MenuSequence sequence) {
+        GL11.glPushMatrix();
+        GL11.glLoadIdentity();
+        GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight,
+                MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
+
+        ITexture background = sequence.getBackgroundImage();
+        if (background != null) {
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, background.getId());
+            final float x1 = MenuSequence.ortho2DLeft;
+            final float x2 = MenuSequence.ortho2DRight;
+            final float y1 = MenuSequence.ortho2DBottom;
+            final float y2 = MenuSequence.ortho2DTop;
+            final float u1 = 0.0F;
+            final float u2 = 1.0F;
+            GL11.glBegin(GL11.GL_QUADS);
+            GL11.glTexCoord2f(u1, 0.0F);
+            GL11.glVertex2f(x1, y2);
+            GL11.glTexCoord2f(u2, 0.0F);
+            GL11.glVertex2f(x2, y2);
+            GL11.glTexCoord2f(u2, 1.0F);
+            GL11.glVertex2f(x2, y1);
+            GL11.glTexCoord2f(u1, 1.0F);
+            GL11.glVertex2f(x1, y1);
+            GL11.glEnd();
+        } else {
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        }
+
+        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+        GL11.glEnable(GL11.GL_BLEND);
+
+        for (Button b : sequence.getButtons()) {
+            b.draw();
+        }
+        GL11.glPopAttrib();
+        GL11.glPopMatrix();
+    }
+
     private DisplayMode findGoodDisplayMode(final int targetHeight,
             final int targetWidth, final int targetBpp) {
         try {
@@ -1070,11 +1109,11 @@ public strictfp class GameView implements IGameView {
         if (Display.isVisible() || Display.isDirty() || Display.wasResized()
                 || sequence.isDirty()) {
             sequence.setDirty(false);
+            doDrawMenuSequence(sequence);
             GL11.glPushMatrix();
             GLU.gluOrtho2D(ScoreSequence.ortho2DLeft,
                     ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom,
                     ScoreSequence.ortho2DTop);
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
             GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_BLEND);
 
@@ -1099,13 +1138,6 @@ public strictfp class GameView implements IGameView {
                     + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
                     ITrueTypeFont.ALIGN_LEFT);
-            font.drawString(ScoreSequence.ortho2DRight,
-                    ScoreSequence.ortho2DBottom - font.getHeight() * 2,
-                    "Click or press enter to send score to server ", 1, -1,
-                    ITrueTypeFont.ALIGN_RIGHT);
-            font.drawString(ScoreSequence.ortho2DRight,
-                    ScoreSequence.ortho2DBottom - font.getHeight(),
-                    "Press right to skip ", 1, -1, ITrueTypeFont.ALIGN_RIGHT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
         }
@@ -1157,42 +1189,7 @@ public strictfp class GameView implements IGameView {
         if (Display.isVisible() || Display.isDirty() || Display.wasResized()
                 || sequence.isDirty()) {
             sequence.setDirty(false);
-            GL11.glPushMatrix();
-            GL11.glLoadIdentity();
-            GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight,
-                    MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
-
-            ITexture background = sequence.getBackgroundImage();
-            if (background != null) {
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, background.getId());
-                final float x1 = MenuSequence.ortho2DLeft;
-                final float x2 = MenuSequence.ortho2DRight;
-                final float y1 = MenuSequence.ortho2DBottom;
-                final float y2 = MenuSequence.ortho2DTop;
-                final float u1 = 0.0F;
-                final float u2 = 1.0F;
-                GL11.glBegin(GL11.GL_QUADS);
-                GL11.glTexCoord2f(u1, 0.0F);
-                GL11.glVertex2f(x1, y2);
-                GL11.glTexCoord2f(u2, 0.0F);
-                GL11.glVertex2f(x2, y2);
-                GL11.glTexCoord2f(u2, 1.0F);
-                GL11.glVertex2f(x2, y1);
-                GL11.glTexCoord2f(u1, 1.0F);
-                GL11.glVertex2f(x1, y1);
-                GL11.glEnd();
-            } else {
-                GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-            }
-
-            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-            GL11.glEnable(GL11.GL_BLEND);
-
-            for (Button b : sequence.getButtons()) {
-                b.draw();
-            }
-            GL11.glPopAttrib();
-            GL11.glPopMatrix();
+            doDrawMenuSequence(sequence);
         }
     }
 

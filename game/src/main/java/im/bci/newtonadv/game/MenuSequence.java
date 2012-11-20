@@ -53,7 +53,7 @@ public abstract class MenuSequence implements Sequence {
 	public static final float ortho2DTop = 0;
 	private ArrayList<Button> buttons = new ArrayList<Button>();
 	private int currentButtonIndex;
-	private boolean redraw;
+	protected boolean redraw;
 	private boolean horizontalSelectNextButton = false,
 			horizontalSelectPreviousButton = false;
 	private boolean verticalSelectNextButton = false,
