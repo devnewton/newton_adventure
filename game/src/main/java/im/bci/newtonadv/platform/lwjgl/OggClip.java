@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
@@ -88,6 +90,7 @@ public class OggClip {
 		}
 		
 		try {
+                    if(outputLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
 			FloatControl control = (FloatControl) outputLine.getControl(FloatControl.Type.MASTER_GAIN);
 			if (gain == -1) {
 				control.setValue(0);
@@ -98,9 +101,10 @@ public class OggClip {
 				
 				control.setValue(min+(range*gain));
 			}
-		} catch (IllegalArgumentException e) {
+                    }
+		} catch (IllegalArgumentException ex) {
 			// gain not supported
-			e.printStackTrace();
+			Logger.getLogger(OggClip.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 	
@@ -224,14 +228,14 @@ public class OggClip {
 			public void run() {
 				try {
 					playStream(Thread.currentThread());
-				} catch (InternalException e) {
-					e.printStackTrace();
+				} catch (InternalException ex) {
+					Logger.getLogger(OggClip.class.getName()).log(Level.SEVERE, null, ex);
 				}
 				
 				try {
 					bitStream.reset();
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (IOException ex) {
+					Logger.getLogger(OggClip.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			};
 		};
@@ -257,8 +261,8 @@ public class OggClip {
 				while (player == Thread.currentThread()) {
 					try {
 						playStream(Thread.currentThread());
-					} catch (InternalException e) {
-						e.printStackTrace();
+					} catch (InternalException ex) {
+						Logger.getLogger(OggClip.class.getName()).log(Level.SEVERE, null, ex);
 						player = null;
 					} 
 
@@ -280,9 +284,16 @@ public class OggClip {
 		if (stopped()) {
 			return;
 		}
-		
+                Thread p = player;
 		player = null;
-		outputLine.drain();
+                try {
+                    p.join(30000);
+                    p.interrupt();
+                    outputLine.drain();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(OggClip.class.getName()).log(Level.SEVERE, null, ex);
+                }
+		
 	}
 	
 	/**
@@ -326,8 +337,8 @@ public class OggClip {
 			
 			setBalance(balance);
 			setGain(gain);
-		} catch (Exception ee) {
-			System.out.println(ee);
+		} catch (Exception ex) {
+                    Logger.getLogger(OggClip.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
