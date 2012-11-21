@@ -594,8 +594,10 @@ public strictfp class World extends net.phys2d.raw.World {
 						game.getView().loadFromAnimation(
 								getFileFromMap(map, "newton_adventure.hero")));
 				hero.setJumpSound(
-						game.getSoundCache().getSoundIfEnabled(
+						game.getSoundCache().getSound(
 								game.getData().getFile("jump.wav")));
+                                hero.setPickupSound(game.getSoundCache().getSound(
+								game.getData().getFile("pickup.wav")));
 				add(hero);
 			} else {
 				LOGGER.warning("One hero is enough for level " + levelName

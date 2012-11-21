@@ -46,6 +46,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 
 /**
  * 
@@ -54,7 +56,7 @@ import javax.sound.sampled.DataLine;
 public class SoundCache implements ISoundCache {
 
 	private HashMap<String/* name */, ClipWeakReference> clips = new HashMap<String, ClipWeakReference>();
-	private ReferenceQueue<Clip> clipReferenceQueue = new ReferenceQueue<Clip>();
+	private ReferenceQueue<PlayableClipWrapper> clipReferenceQueue = new ReferenceQueue<PlayableClipWrapper>();
 	private String currentMusicName;
 	private OggClip currentMusic;
 	private boolean soundEnabled;
@@ -63,24 +65,48 @@ public class SoundCache implements ISoundCache {
 	private static final Logger logger = Logger.getLogger(SoundCache.class.getName());
 
 
-	public static final class PlayableClipWrapper implements Playable {
+	public static final class PlayableClipWrapper implements Playable, LineListener{
 
 		private final Clip clip;
+                private int nbLoopTodo = 0;
+                private boolean isPlaying;
 
 		PlayableClipWrapper(Clip clip) {
 			this.clip = clip;
+                        clip.addLineListener(this);
 		}
 
 		@Override
 		public void play() {
-			clip.setFramePosition(0);
-			clip.loop(0);
+                    ++nbLoopTodo;
+                    System.out.println("play " + nbLoopTodo);
 		}
 
 		@Override
 		public void stop() {
 			clip.stop();
 		}
+
+                public void update() {
+
+                    if(nbLoopTodo > 0 && !isPlaying) {
+                        System.out.println("update " + nbLoopTodo);
+                        clip.setFramePosition(0);
+                        clip.loop(0);
+                    }
+                }
+
+                @Override
+                public void update(LineEvent event) {
+                    if(LineEvent.Type.START == event.getType()) {
+                        if(nbLoopTodo>0) {
+                            --nbLoopTodo;
+                        }
+                        isPlaying = true; 
+                    }else if(LineEvent.Type.STOP == event.getType()) {
+                        isPlaying = false;
+                    }
+                }
 	}
 	
 	public static final class NullPlayable implements Playable {
@@ -144,23 +170,24 @@ public class SoundCache implements ISoundCache {
 	}
 
 	@Override
-	public Playable getSoundIfEnabled(String name) {
+	public Playable getSound(String name) {
 		if (!soundEnabled) {
-			return null;
+			return new NullPlayable();
 		}
 		ClipWeakReference clipRef = clips.get(name);
 		if (clipRef != null) {
-			Clip clip = clipRef.get();
-			if (clip != null) {
-				return new PlayableClipWrapper(clip);
+			PlayableClipWrapper playable = clipRef.get();
+			if (playable != null) {
+				return playable;
 			} else {
 				clips.remove(name);
 			}
 		}
 		final Clip clip = loadClip(name);
 		if (clip != null) {
-			clips.put(name, new ClipWeakReference(clip, clipReferenceQueue));
-			return new PlayableClipWrapper(clip);
+                        PlayableClipWrapper playable = new PlayableClipWrapper(clip);
+			clips.put(name, new ClipWeakReference(playable, clipReferenceQueue));
+			return playable;
 		} else {
 			return new NullPlayable();
 		}
@@ -171,11 +198,20 @@ public class SoundCache implements ISoundCache {
 	public void clearAll() {
 		for (ClipWeakReference ref : clips.values()) {
 			if (ref.get() != null) {
-				ref.get().close();
+				ref.get().clip.close();
 			}
 		}
 		clips.clear();
 		stopMusic();
+	}
+        
+        @Override
+	public void update() {
+		for (ClipWeakReference ref : clips.values()) {
+			if (ref.get() != null) {
+				ref.get().update();
+			}
+		}
 	}
 
 	@Override
@@ -183,7 +219,7 @@ public class SoundCache implements ISoundCache {
 		ClipWeakReference ref;
 		while ((ref = (ClipWeakReference) clipReferenceQueue.poll()) != null) {
 			if (ref.get() != null) {
-				ref.get().close();
+				ref.get().clip.close();
 			}
 		}
 	}
@@ -216,9 +252,9 @@ public class SoundCache implements ISoundCache {
 		}
 	}
 
-	private static final class ClipWeakReference extends WeakReference<Clip> {
+	private static final class ClipWeakReference extends WeakReference<PlayableClipWrapper> {
 
-		ClipWeakReference(Clip clip, ReferenceQueue<Clip> queue) {
+		ClipWeakReference(PlayableClipWrapper clip, ReferenceQueue<PlayableClipWrapper> queue) {
 			super(clip, queue);
 		}
 	}

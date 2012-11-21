@@ -68,17 +68,21 @@ public strictfp class PickedUpObject extends AbstractEntity {
     @Override
     public void update(FrameTimeInfos frameTimeInfos) {
         if( canMove ) {   
-        Vector2f direction = new Vector2f( world.getHero().getPosition() );
-        direction.sub(position);
-        direction.normalise();
-        position.add(direction);
+            Vector2f direction = new Vector2f( world.getHero().getPosition() );
+            direction.sub(position);
+            direction.normalise();
+            position.add(direction);
         } else {
             if( canMoveTime < 0) {
                 canMoveTime = frameTimeInfos.currentTime + waitingDuration;
             }
             else {
                 canMove = frameTimeInfos.currentTime > canMoveTime;
-                size = originalSize * ( 0.5f + 0.5f * (canMoveTime -  frameTimeInfos.currentTime) / waitingDuration);
+                if(!canMove) {
+                    size = originalSize * ( 0.5f + 0.5f * (canMoveTime -  frameTimeInfos.currentTime) / waitingDuration);
+                } else {
+                    size = originalSize * 0.5f;
+                }
             }
         }
     }

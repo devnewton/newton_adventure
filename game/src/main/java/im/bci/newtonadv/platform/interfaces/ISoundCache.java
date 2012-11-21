@@ -37,6 +37,8 @@ package im.bci.newtonadv.platform.interfaces;
  */
 public interface ISoundCache {
 
+    public void update();
+
     public static interface Playable {
 
         void play();
@@ -48,7 +50,7 @@ public interface ISoundCache {
 
     void clearUseless();
 
-    Playable getSoundIfEnabled(String name);
+    Playable getSound(String name);
 
     void playMusicIfEnabled(String name);
 

@@ -121,6 +121,7 @@ public strictfp class Game {
 				}
 			}
 			frameTimeInfos.update();
+                        soundCache.update();
 			if (currentSequence instanceof CustomTickSequence) {
 				((CustomTickSequence) currentSequence).tick();
 			} else {
