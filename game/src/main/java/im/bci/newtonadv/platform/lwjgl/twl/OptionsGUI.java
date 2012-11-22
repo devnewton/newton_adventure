@@ -3,7 +3,7 @@ package im.bci.newtonadv.platform.lwjgl.twl;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.platform.lwjgl.SoundCache;
+import im.bci.newtonadv.platform.lwjgl.javaxsound.JavaxSoundCache;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.lang.reflect.Field;
@@ -61,7 +61,7 @@ public class OptionsGUI extends Widget {
 	private SimpleChangableListModel<JoyButtonItem> joyButtonModel = new SimpleChangableListModel<JoyButtonItem>();
 
 	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
-			SoundCache soundCache, String dataDir) throws LWJGLException {
+			JavaxSoundCache soundCache, String dataDir) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
 		this.layout = new ColumnLayout();
 		layout.setSize(Display.getWidth(), Display.getHeight());

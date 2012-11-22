@@ -22,7 +22,7 @@ import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.platform.lwjgl.SoundCache;
+import im.bci.newtonadv.platform.lwjgl.javaxsound.JavaxSoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.JoyButtonItem;
@@ -40,11 +40,11 @@ public class OptionsSequence implements IOptionsSequence {
 	private final GameInput input;
 	private final Properties config;
 	private final ScoreServer scoreServer;
-	private final SoundCache soundCache;
+	private final JavaxSoundCache soundCache;
 	private IPlatformSpecific platform;
 
 	public OptionsSequence(IPlatformSpecific platform, GameView view,
-			GameInput input, ScoreServer scoreServer, SoundCache soundCache,
+			GameInput input, ScoreServer scoreServer, JavaxSoundCache soundCache,
 			Properties config) {
 		this.platform = platform;
 		this.view = view;

@@ -1,4 +1,4 @@
-package im.bci.newtonadv.platform.lwjgl;
+package im.bci.newtonadv.platform.lwjgl.javaxsound;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

@@ -29,8 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.platform.lwjgl;
+package im.bci.newtonadv.platform.lwjgl.javaxsound;
 
+import im.bci.newtonadv.platform.lwjgl.javaxsound.OggClip;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 
@@ -53,7 +54,7 @@ import javax.sound.sampled.LineListener;
  * 
  * @author bci
  */
-public class SoundCache implements ISoundCache {
+public class JavaxSoundCache implements ISoundCache {
 
 	private HashMap<String/* name */, ClipWeakReference> clips = new HashMap<String, ClipWeakReference>();
 	private ReferenceQueue<PlayableClipWrapper> clipReferenceQueue = new ReferenceQueue<PlayableClipWrapper>();
@@ -62,8 +63,13 @@ public class SoundCache implements ISoundCache {
 	private boolean soundEnabled;
 	private boolean musicEnabled;
 	private final IGameData data;
-	private static final Logger logger = Logger.getLogger(SoundCache.class.getName());
+	private static final Logger logger = Logger.getLogger(JavaxSoundCache.class.getName());
 
+        @Override
+        public void close() {
+            stopMusic();
+            clearAll();
+        }
 
 	public static final class PlayableClipWrapper implements Playable, LineListener{
 
@@ -121,7 +127,7 @@ public class SoundCache implements ISoundCache {
 		
 	}
 
-	public SoundCache(IGameData data, Properties config) {
+	public JavaxSoundCache(IGameData data, Properties config) {
 		this.data = data;
 		this.soundEnabled = config.getProperty("sound.enabled").equals("true");
 		this.musicEnabled = config.getProperty("music.enabled").equals("true");

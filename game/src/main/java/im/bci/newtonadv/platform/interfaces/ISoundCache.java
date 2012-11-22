@@ -38,6 +38,8 @@ package im.bci.newtonadv.platform.interfaces;
 public interface ISoundCache {
 
     public void update();
+    
+    public void close();
 
     public static interface Playable {
 

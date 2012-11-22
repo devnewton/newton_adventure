@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.lwjgl.javaxsound.JavaxSoundCache;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
@@ -64,7 +65,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 	private Properties config;
 	private ScoreServer scoreServer;
 	private IGameData data;
-	private SoundCache soundCache;
+	private JavaxSoundCache soundCache;
 	private IOptionsSequence options;
 	
 	public PlatformSpecific() throws Exception {
@@ -79,11 +80,11 @@ public class PlatformSpecific implements IPlatformSpecific {
 
 	}
 
-	private SoundCache createSoundCache() {
+	private JavaxSoundCache createSoundCache() {
 		if (null == data)
 			throw new RuntimeException("create IGameData before  SoundCache");
 		if (null == soundCache)
-			soundCache = new SoundCache(data, config);
+			soundCache = new JavaxSoundCache(data, config);
 		return soundCache;
 	}
 
