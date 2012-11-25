@@ -41,6 +41,14 @@ public interface ISoundCache {
     
     public void close();
 
+    public boolean isSoundEnabled();
+
+    public boolean isMusicEnabled();
+
+    public void setSoundEnabled(boolean active);
+
+    public void setMusicEnabled(boolean active);
+
     public static interface Playable {
 
         void play();

@@ -33,6 +33,10 @@ package im.bci.newtonadv.platform.lwjgl.openal;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,28 +45,63 @@ import java.util.logging.Logger;
  * @author devnewton
  */
 public class OpenALSoundCache implements ISoundCache {
-    
+
     private static final Logger logger = Logger.getLogger(OpenALSoundCache.class.getName());
+    private boolean soundEnabled;
+    private boolean musicEnabled;
+    private final IGameData gameData;
     private SimpleSoundEngine engine;
-    
-    OpenALSoundCache(IGameData gameData) {
-        try {
-            engine = new SimpleSoundEngine(gameData);
-            engine.init();
-        } catch(Exception e) {
-            logger.log(Level.WARNING, "Cannot init openal sound system", e);
+    private final ExecutorService executor;
+    private final Runnable poll = new AbstractOpenALTask() {
+
+        @Override
+        public void doRun() {
+            engine.poll();
+            Thread.yield();
+            executor.submit(poll);
         }
-    }
+    };
     
+    private abstract class AbstractOpenALTask implements Runnable {
+
+        @Override
+        public final void run() {
+            try {
+                doRun();
+            } catch (Exception ex) {
+                logger.log(Level.WARNING, "OpenAL error", ex);
+            }
+        }
+        
+        protected abstract void doRun() throws Exception;
+    }
+
+    public OpenALSoundCache(IGameData gd, Properties config) {
+        this.gameData = gd;
+        this.soundEnabled = config.getProperty("sound.enabled").equals("true");
+        this.musicEnabled = config.getProperty("music.enabled").equals("true");
+        executor = Executors.newSingleThreadExecutor();
+        executor.submit(new AbstractOpenALTask() {
+
+            @Override
+            public void doRun() {
+                engine = new SimpleSoundEngine(gameData);
+                engine.init();
+                executor.submit(poll);
+            }
+        });
+    }
+
     @Override
     public void close() {
-        try {
-            if(null != engine) {
+        executor.submit(new AbstractOpenALTask() {
+
+            @Override
+            public void doRun() {
                 engine.destroy();
+                executor.shutdownNow();
             }
-        } catch(Exception e) {
-            logger.log(Level.WARNING, "Cannot close openal sound system", e);
-        }
+        });
     }
 
     @Override
@@ -71,13 +110,13 @@ public class OpenALSoundCache implements ISoundCache {
 
     @Override
     public void clearAll() {
-        try {
-            if(null != engine) {
+        executor.submit(new AbstractOpenALTask() {
+
+            @Override
+            public void doRun() {
                 engine.unloadAllSounds();
             }
-        } catch(Exception e) {
-            logger.log(Level.WARNING, "Cannot unload openal sounds", e);
-        }
+        });
     }
 
     @Override
@@ -91,12 +130,14 @@ public class OpenALSoundCache implements ISoundCache {
 
             @Override
             public void play() {
-                try {
-                    if(null != engine) {
-                        engine.playSound(name);
-                    }
-                } catch(Exception e) {
-                    logger.log(Level.WARNING, "Cannot play sound" + name, e);
+                if (soundEnabled) {
+                    executor.submit(new AbstractOpenALTask() {
+
+                        @Override
+                        public void doRun() {
+                            engine.playSound(name);
+                        }
+                    });
                 }
             }
 
@@ -107,25 +148,54 @@ public class OpenALSoundCache implements ISoundCache {
     }
 
     @Override
-    public void playMusicIfEnabled(String name) {
-        try {
-            if(null != engine) {
-                engine.playMusic(name, true);
-            }
-        } catch(Exception e) {
-            logger.log(Level.WARNING, "Cannot play music" + name, e);
+    public void playMusicIfEnabled(final String name) {
+        if (musicEnabled) {
+            executor.submit(new AbstractOpenALTask() {
+
+                @Override
+                public void doRun() {
+                    try {
+                        engine.playMusic(name, true);
+                    } catch (IOException ex) {
+                        logger.log(Level.SEVERE, "Cannot play music " + name, ex);
+                    }
+                }
+            });
         }
     }
 
     @Override
     public void stopMusic() {
-        try {
-            if(null != engine) {
-               engine.stopMusic();
+        executor.submit(new AbstractOpenALTask() {
+
+            @Override
+            public void doRun() {
+                engine.stopMusic();
             }
-        } catch(Exception e) {
-            logger.log(Level.WARNING, "Cannot stop music", e);
+        });
+
+    }
+
+    @Override
+    public boolean isSoundEnabled() {
+        return soundEnabled;
+    }
+
+    @Override
+    public boolean isMusicEnabled() {
+        return musicEnabled;
+    }
+
+    @Override
+    public void setSoundEnabled(boolean e) {
+        this.soundEnabled = e;
+    }
+
+    @Override
+    public void setMusicEnabled(boolean e) {
+        this.musicEnabled = e;
+        if (!e) {
+            stopMusic();
         }
     }
-    
 }

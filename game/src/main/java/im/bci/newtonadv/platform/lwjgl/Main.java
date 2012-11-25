@@ -105,10 +105,12 @@ public class Main {
 			ClassNotFoundException, Exception {
 
 		Game game;
+                IPlatformSpecific platform = null;
+                try {
 		try {
 			setupLibraryPath();
 
-			final IPlatformSpecific platform = new PlatformSpecific();
+			platform = new PlatformSpecific();
 			game = new Game(platform);
 			game.start();
 			game.tick();
@@ -125,6 +127,11 @@ public class Main {
 			handleError(e, "Unexpected error during newton adventure execution.\n");
 			return;
 		}
+                }finally {
+                    if(null != platform) {
+                        platform.close();
+                    }
+                }
 	}
 
 	private static void handleError(Throwable e, final String defaultMessage) {

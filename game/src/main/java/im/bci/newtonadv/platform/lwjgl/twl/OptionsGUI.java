@@ -3,7 +3,6 @@ package im.bci.newtonadv.platform.lwjgl.twl;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.platform.lwjgl.javaxsound.JavaxSoundCache;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.lang.reflect.Field;
@@ -29,6 +28,7 @@ import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.EnumListModel;
 import de.matthiasmann.twl.model.SimpleChangableListModel;
+import im.bci.newtonadv.platform.interfaces.ISoundCache;
 
 public class OptionsGUI extends Widget {
 
@@ -61,7 +61,7 @@ public class OptionsGUI extends Widget {
 	private SimpleChangableListModel<JoyButtonItem> joyButtonModel = new SimpleChangableListModel<JoyButtonItem>();
 
 	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
-			JavaxSoundCache soundCache, String dataDir) throws LWJGLException {
+			ISoundCache soundCache, String dataDir) throws LWJGLException {
 		setSize(Display.getWidth(), Display.getHeight());
 		this.layout = new ColumnLayout();
 		layout.setSize(Display.getWidth(), Display.getHeight());
@@ -279,6 +279,13 @@ public class OptionsGUI extends Widget {
 			}
 		}
 
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 79 * hash + (this.controller != null ? this.controller.hashCode() : 0);
+            return hash;
+        }
+
 		@Override
 		public String toString() {
 			if(null != controller) {
@@ -317,6 +324,13 @@ public class OptionsGUI extends Widget {
 				return super.equals(o);
 			}
 		}
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 37 * hash + (this.buttonName != null ? this.buttonName.hashCode() : 0);
+            return hash;
+        }
 
 		@Override
 		public String toString() {

@@ -1,5 +1,6 @@
 package im.bci.newtonadv.platform.lwjgl.openal;
 
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -25,7 +26,8 @@ class Streamer {
     private static final Logger logger = Logger.getLogger(Streamer.class.getName());
     public static final int BUFFER_COUNT = 3;
     private static final int sectionSize = 4096 * 20;
-    
+  
+    private final IGameData gameData;
     private int source;
     private byte[] buffer;
     private IntBuffer buffersId;
@@ -33,17 +35,18 @@ class Streamer {
     private ByteBuffer bufferData;
     private IntBuffer auxBuffer;
     private OggInputStream audio;
-    private File audioFile;
+    private String audioFile;
     private boolean loop;
     private boolean idle;
     private boolean initiated;
     private boolean paused;
 
-    public Streamer() {
+    public Streamer(IGameData gameData) {
         buffer = new byte[sectionSize];
         bufferData = BufferUtils.createByteBuffer(sectionSize);
         auxBuffer = BufferUtils.createIntBuffer(1);
         idle = true;
+        this.gameData = gameData;
     }
 
     public void init() {
@@ -71,7 +74,7 @@ class Streamer {
         }
     }
 
-    public void setSourceFile(File f) {
+    public void setSourceFile(String f) {
         stop();
         audioFile = f;
     }
@@ -127,7 +130,6 @@ class Streamer {
                 }
             } else {
                 remainingBufferCount--;
-                System.out.println("RemBuf " + remainingBufferCount);
                 if (remainingBufferCount <= 0) {
                     stop();
                 } else {
@@ -147,7 +149,7 @@ class Streamer {
             audio.close();
         }
         if (audioFile != null) {
-            audio = new OggInputStream(audioFile);
+            audio = new OggInputStream(gameData.openFile(audioFile));
         } else {
             throw new IOException("File not setted");
         }

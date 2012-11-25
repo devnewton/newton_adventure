@@ -38,6 +38,7 @@ import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
+import im.bci.newtonadv.platform.lwjgl.openal.OpenALSoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 import im.bci.newtonadv.score.ScoreServer;
 
@@ -65,7 +66,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 	private Properties config;
 	private ScoreServer scoreServer;
 	private IGameData data;
-	private JavaxSoundCache soundCache;
+	private ISoundCache soundCache;
 	private IOptionsSequence options;
 	
 	public PlatformSpecific() throws Exception {
@@ -80,11 +81,11 @@ public class PlatformSpecific implements IPlatformSpecific {
 
 	}
 
-	private JavaxSoundCache createSoundCache() {
+	private ISoundCache createSoundCache() {
 		if (null == data)
 			throw new RuntimeException("create IGameData before  SoundCache");
 		if (null == soundCache)
-			soundCache = new JavaxSoundCache(data, config);
+			soundCache = new OpenALSoundCache(data, config);
 		return soundCache;
 	}
 
@@ -257,4 +258,11 @@ public class PlatformSpecific implements IPlatformSpecific {
 	public void openUrl(String url) {
 		Sys.openURL(url);
 	}
+
+    @Override
+    public void close() {
+        if(null != soundCache) {
+            soundCache.close();
+        }
+    }
 }
