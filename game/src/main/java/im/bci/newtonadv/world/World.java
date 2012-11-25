@@ -47,6 +47,7 @@ import im.bci.newtonadv.game.Sequence.NormalTransitionException;
 import im.bci.newtonadv.game.Sequence.ResumableTransitionException;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.IGameView;
+import im.bci.newtonadv.platform.interfaces.ISoundCache.Playable;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
 import im.bci.newtonadv.util.NewtonColor;
@@ -136,10 +137,15 @@ public strictfp class World extends net.phys2d.raw.World {
 	private boolean isRotateGravityPossible = true;
 	private ITrueTypeFont scoreIndicatorFont;
 	private HashMap<NewtonColor, BodyList> coloredStaticBodies;
+        private Playable explodeSound;
 
     void removeKey(Key key) {
         keys.remove(key);
         remove(key);
+    }
+
+    Playable getExplodeSound() {
+        return explodeSound;
     }
 
 	public static interface PostUpdateAction {
@@ -195,6 +201,7 @@ public strictfp class World extends net.phys2d.raw.World {
 		for(NewtonColor color : NewtonColor.values()) {
 			coloredStaticBodies.put(color, new BodyList());
 		}
+                explodeSound = game.getSoundCache().getSound(game.getData().getFile("explode.wav"));
 	}
 
 	public AbsoluteAABox getStaticBounds() {

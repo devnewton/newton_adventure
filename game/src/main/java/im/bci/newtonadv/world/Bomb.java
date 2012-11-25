@@ -107,6 +107,7 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 	}
 
 	private void explode() {
+                world.getExplodeSound().play();
 		if(null != parentHole) {
 			parentHole.bombExploded();
 		}
