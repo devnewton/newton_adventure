@@ -97,6 +97,7 @@ public abstract class MenuSequence implements Sequence {
 	public void processInputs() throws Sequence.NormalTransitionException,
 			ResumeTransitionException, 
 			ResumableTransitionException {
+            int oldButtonIndex = currentButtonIndex;
 		if (game.getInput().isKeyRightDown()) {
 			horizontalSelectNextButton = true;
 		} else if (horizontalSelectNextButton) {
@@ -183,6 +184,10 @@ public abstract class MenuSequence implements Sequence {
 			}
 			oldMousePos.set(mousePos);
 		}
+                
+                if(oldButtonIndex != currentButtonIndex) {
+                    game.getSoundCache().getSound(game.getData().getFile("select.wav")).play();
+                }
 	}
 
 	@Override
@@ -272,7 +277,7 @@ public abstract class MenuSequence implements Sequence {
 		}
 
 		void setOn() {
-			on = true;
+                    on = true;
 		}
 
 		void setOff() {

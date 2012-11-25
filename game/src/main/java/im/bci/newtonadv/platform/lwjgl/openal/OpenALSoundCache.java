@@ -74,7 +74,6 @@ public class OpenALSoundCache implements ISoundCache {
                 logger.log(Level.WARNING, "OpenAL error", ex);
             }
         }
-        
         protected abstract void doRun() throws Exception;
     }
 
