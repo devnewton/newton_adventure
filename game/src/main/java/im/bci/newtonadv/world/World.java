@@ -1096,6 +1096,7 @@ public strictfp class World extends net.phys2d.raw.World {
 
 			@Override
 			public void run() throws ResumableTransitionException {
+                                game.getSoundCache().getSound(game.getData().getFile("go_to_bonus_world.wav")).play();
 				game.goToRandomBonusLevel(questName);
 			}
 		});
@@ -1108,6 +1109,7 @@ public strictfp class World extends net.phys2d.raw.World {
 			for (int i = 0; i < bodies.size(); ++i) {
 				Body body = bodies.get(i);
 				if (body instanceof DoorToBonusWorld) {
+                                        game.getSoundCache().getSound(game.getData().getFile("door_to_bonus_world_unlocked.wav")).play();
 					((DoorToBonusWorld) body).open();
 				}
 			}
