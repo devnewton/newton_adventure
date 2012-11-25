@@ -52,13 +52,15 @@ public class OpenALSoundCache implements ISoundCache {
     private final IGameData gameData;
     private SimpleSoundEngine engine;
     private final ExecutorService executor;
-    private final Runnable poll = new AbstractOpenALTask() {
+    private Runnable poll = new AbstractOpenALTask() {
 
         @Override
         public void doRun() {
             engine.poll();
             Thread.yield();
-            executor.submit(poll);
+            if(null != poll) {
+                executor.submit(poll);
+            }
         }
     };
     
@@ -94,14 +96,15 @@ public class OpenALSoundCache implements ISoundCache {
 
     @Override
     public void close() {
+        poll = null;
         executor.submit(new AbstractOpenALTask() {
 
             @Override
             public void doRun() {
                 engine.destroy();
-                executor.shutdownNow();
             }
         });
+        executor.shutdown();
     }
 
     @Override

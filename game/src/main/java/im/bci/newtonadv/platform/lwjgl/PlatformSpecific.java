@@ -31,7 +31,6 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
-import im.bci.newtonadv.platform.lwjgl.javaxsound.JavaxSoundCache;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
@@ -259,10 +258,9 @@ public class PlatformSpecific implements IPlatformSpecific {
 		Sys.openURL(url);
 	}
 
-    @Override
-    public void close() {
-        if(null != soundCache) {
-            soundCache.close();
+        public void close() {
+            if(null != soundCache) {
+                soundCache.close();
+            }
         }
-    }
 }

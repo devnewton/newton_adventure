@@ -105,7 +105,7 @@ public class Main {
 			ClassNotFoundException, Exception {
 
 		Game game;
-                IPlatformSpecific platform = null;
+                PlatformSpecific platform = null;
                 try {
 		try {
 			setupLibraryPath();
