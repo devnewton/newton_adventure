@@ -10,6 +10,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.BufferUtils;
@@ -117,6 +118,16 @@ public class SimpleSoundEngine {
             AL10.alDeleteBuffers(e.bufferId);
         }
         buffers.clear();
+    }
+    
+    public void unloadUselessSounds(){
+        for(Iterator<Entry<String, SoundBufferEntry>> it = buffers.entrySet().iterator(); it.hasNext(); ){
+            Entry<String,SoundBufferEntry> e = it.next();
+            if(e.getValue().playingAt.isEmpty()) {
+                AL10.alDeleteBuffers(e.getValue().bufferId);
+                it.remove();
+            }
+        }
     }
     
     public void loadSound(String path){

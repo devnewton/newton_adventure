@@ -150,6 +150,7 @@ public abstract class MenuSequence implements Sequence {
 			activateCurrentButton = true;
 		} else if (activateCurrentButton) {
 			activateCurrentButton = false;
+                        game.getSoundCache().getSound(game.getData().getFile("select.wav")).play();
 			buttons.get(currentButtonIndex).activate();
 		}
 
@@ -176,6 +177,7 @@ public abstract class MenuSequence implements Sequence {
 							mouseActivateCurrentButton = true;
 						} else if (mouseActivateCurrentButton) {
 							mouseActivateCurrentButton = false;
+                                                        game.getSoundCache().getSound(game.getData().getFile("select.wav")).play();
 							button.activate();
 						}
 						break;

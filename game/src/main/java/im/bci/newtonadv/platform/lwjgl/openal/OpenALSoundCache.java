@@ -116,7 +116,7 @@ public class OpenALSoundCache implements ISoundCache {
 
             @Override
             public void doRun() {
-                engine.unloadAllSounds();
+                engine.unloadUselessSounds();
             }
         });
     }
