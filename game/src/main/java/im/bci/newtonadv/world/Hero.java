@@ -57,6 +57,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 
     private ISoundCache.Playable jumpSound;
     private ISoundCache.Playable pickupSound;
+    private ISoundCache.Playable hurtSound;
     private AnimationCollection animations;
     private int nbApple = 10;
     private static final float jumpForce = 180.0f;
@@ -82,6 +83,10 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     public void setPickupSound(ISoundCache.Playable pickupSound) {
         this.pickupSound = pickupSound;
     }
+    
+    public void setHurtSound(ISoundCache.Playable hurtSound) {
+        this.hurtSound = hurtSound;
+    }
 
     public Movement getCurrentMovement() {
         return currentMovement;
@@ -100,6 +105,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     }
 
     private void hurt(int nbAppleLose) {
+        hurtSound.play();
         if (nbApple == 0) {
             this.isDead = true;
         }

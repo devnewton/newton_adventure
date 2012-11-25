@@ -59,6 +59,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.phys2d.math.Matrix2f;
@@ -598,10 +599,11 @@ public strictfp class World extends net.phys2d.raw.World {
 								game.getData().getFile("jump.wav")));
                                 hero.setPickupSound(game.getSoundCache().getSound(
 								game.getData().getFile("pickup.wav")));
+                                hero.setHurtSound(game.getSoundCache().getSound(
+								game.getData().getFile("hurt.wav")));
 				add(hero);
 			} else {
-				LOGGER.warning("One hero is enough for level " + levelName
-						+ " in quest " + questName);
+				LOGGER.log(Level.WARNING, "One hero is enough for level {0} in quest {1}", new Object[]{levelName, questName});
 			}
 		} else if (c.equals("mummy")) {
 			Mummy mummy = new Mummy(this, new Circle(distanceUnit),
