@@ -58,10 +58,15 @@ License: CC-BY 3.0
 Author: surt (Carl Olsson) (http://opengameart.org/content/classical-ruin-tiles)
 License: CC-BY-SA 3.0
 
-* most of bonus levels tiles
+* most of bonus and credit levels tiles
 
 Author: Scribe (Daniel Stephens) (http://opengameart.org/content/breakout-graphics-no-shadow)
 License: CC0
+
+* credit level font
+
+Author: Lasse Öörni, Kalle Niemitalo, Olli Niemitalo Tuomas Mäkelä (http://opengameart.org/content/3-low-pixel-fonts)
+License: CC-BY-3.0
 
 * most of volcano quest tiles
 
@@ -118,6 +123,11 @@ License: CC-BY-SA
 * help signs in level0.tmx files
 
 Author: Nick Janssen (http://opengameart.org/content/sign-pack)
+License: CC-BY-SA
+
+* menu gfx
+
+Author: Nicolas (nicolas@probablement.net)
 License: CC-BY-SA
 
 * Other files
