@@ -32,7 +32,6 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,101 +47,101 @@ import javax.swing.JOptionPane;
  */
 public class Main {
 
-	static void setupLibraryPath() {
-		if (System.getProperty("javawebstart.version") != null) {
-			return;
-		}
+    static void setupLibraryPath() {
+        if (System.getProperty("javawebstart.version") != null) {
+            return;
+        }
 
-		String libraryPath = System.getProperty("java.library.path");
-		if (libraryPath != null && libraryPath.contains("native"))
-			return;
+        String libraryPath = System.getProperty("java.library.path");
+        if (libraryPath != null && libraryPath.contains("native")) {
+            return;
+        }
 
-		String osName = System.getProperty("os.name");
-		String osDir;
+        String osName = System.getProperty("os.name");
+        String osDir;
 
-		if (osName.startsWith("Windows")) {
-			osDir = "windows";
-		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
-			osDir = "linux";
-		} else if (osName.startsWith("Mac OS X")) {
-			osDir = "macosx";
-		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
-			osDir = "solaris";
-		} else {
-			Logger.getLogger(Main.class.getName()).log(Level.WARNING,
-					"Unknown platform: {0}", osName);
-			return;
-		}
-		try {
-			File nativeDir = new File(getApplicationDir() + File.separator
-					+ "native" + File.separator + osDir);
-			if (!nativeDir.exists())
-				nativeDir = new File("native" + File.separator + osDir);
+        if (osName.startsWith("Windows")) {
+            osDir = "windows";
+        } else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
+            osDir = "linux";
+        } else if (osName.startsWith("Mac OS X")) {
+            osDir = "macosx";
+        } else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
+            osDir = "solaris";
+        } else {
+            Logger.getLogger(Main.class.getName()).log(Level.WARNING,
+                    "Unknown platform: {0}", osName);
+            return;
+        }
+        try {
+            File nativeDir = new File(getApplicationDir() + File.separator
+                    + "native" + File.separator + osDir);
+            if (!nativeDir.exists()) {
+                nativeDir = new File("native" + File.separator + osDir);
+            }
 
-			String nativePath = nativeDir.getCanonicalPath();
-			System.setProperty("org.lwjgl.librarypath", nativePath);
-			System.setProperty("net.java.games.input.librarypath", nativePath);
-		} catch (IOException e) {
-			Logger.getLogger(Main.class.getName())
-					.log(Level.WARNING,
-							"Cannot find 'native' library folder, try system libraries",
-							e);
-		}
-	}
+            String nativePath = nativeDir.getCanonicalPath();
+            System.setProperty("org.lwjgl.librarypath", nativePath);
+            System.setProperty("net.java.games.input.librarypath", nativePath);
+        } catch (IOException e) {
+            Logger.getLogger(Main.class.getName()).log(Level.WARNING,
+                    "Cannot find 'native' library folder, try system libraries",
+                    e);
+        }
+    }
 
-	private static String getApplicationDir() throws IOException {
-		try {
-			return new File(Main.class.getProtectionDomain().getCodeSource()
-					.getLocation().toURI()).getParent();
-		} catch (URISyntaxException uriEx) {
-			Logger.getLogger(Main.class.getName()).log(Level.WARNING,
-					"Cannot find application directory, try current", uriEx);
-			return new File(".").getCanonicalPath();
-		}
-	}
+    private static String getApplicationDir() throws IOException {
+        try {
+            return new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+        } catch (URISyntaxException uriEx) {
+            Logger.getLogger(Main.class.getName()).log(Level.WARNING,
+                    "Cannot find application directory, try current", uriEx);
+            return new File(".").getCanonicalPath();
+        }
+    }
 
-	public static void main(String[] args) throws IOException,
-			ClassNotFoundException, Exception {
+    public static void main(String[] args) throws IOException,
+            ClassNotFoundException, Exception {
 
-		Game game;
-                PlatformSpecific platform = null;
-                try {
-		try {
-			setupLibraryPath();
+        Game game;
+        PlatformSpecific platform = null;
+        try {
+            try {
+                setupLibraryPath();
 
-			platform = new PlatformSpecific();
-			game = new Game(platform);
-			game.start();
-			game.tick();
-		} catch (Throwable e) {
-			handleError(e, "Unexpected error during newton adventure startup. Check your java version and your opengl driver.\n");
-			return;
-		}
+                platform = new PlatformSpecific();
+                game = new Game(platform);
+                game.start();
+                game.tick();
+            } catch (Throwable e) {
+                handleError(e, "Unexpected error during newton adventure startup. Check your java version and your opengl driver.\n");
+                return;
+            }
 
-		try {
-			while (game.isRunning()) {
-				game.tick();
-			}
-		} catch (Throwable e) {
-			handleError(e, "Unexpected error during newton adventure execution.\n");
-			return;
-		}
-                }finally {
-                    if(null != platform) {
-                        platform.close();
-                    }
+            try {
+                while (game.isRunning()) {
+                    game.tick();
                 }
-	}
+            } catch (Throwable e) {
+                handleError(e, "Unexpected error during newton adventure execution.\n");
+                return;
+            }
+        } finally {
+            if (null != platform) {
+                platform.close();
+            }
+        }
+    }
 
-	private static void handleError(Throwable e, final String defaultMessage) {
-		Logger.getLogger(Main.class.getName()).log(Level.SEVERE,
-				defaultMessage, e);
-		JOptionPane.showMessageDialog(null,
-				defaultMessage
-						+ "\n"
-						+ e.getMessage()
-						+ (e.getCause() != null ? "\nCause: "
-								+ e.getCause().getMessage() : ""), "Error",
-				JOptionPane.ERROR_MESSAGE);
-	}
+    public static void handleError(Throwable e, final String defaultMessage) {
+        Logger.getLogger(Main.class.getName()).log(Level.SEVERE,
+                defaultMessage, e);
+        JOptionPane.showMessageDialog(null,
+                defaultMessage
+                + "\n"
+                + e.getMessage()
+                + (e.getCause() != null ? "\nCause: "
+                + e.getCause().getMessage() : ""), "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
 }

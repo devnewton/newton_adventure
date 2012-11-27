@@ -91,7 +91,6 @@ import im.bci.newtonadv.world.PickableObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -235,7 +234,7 @@ public strictfp class GameView implements IGameView {
                 return Display.getDesktopDisplayMode();
             }
         } catch (LWJGLException e) {
-            Sys.alert("Error", "Unable to determine display modes.");
+            Main.handleError(e, "Unable to determine display modes.");
         }
         return Display.getDesktopDisplayMode();
     }
@@ -273,11 +272,9 @@ public strictfp class GameView implements IGameView {
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
                 targetBpp);
         if (chosenMode == null) {
-            Sys.alert("Error",
-                    "Unable to find appropriate display mode. Try to edit"
+            throw new RuntimeException("Unable to find appropriate display mode. Try to edit"
                     + PlatformSpecific.getUserOrDefaultConfigFilePath()
                     + ".\n" + getDisplayModeInfos());
-            System.exit(0);
         }
         setDisplayMode(startFullscreen, newQuality, chosenMode);
     }
@@ -305,10 +302,9 @@ public strictfp class GameView implements IGameView {
             }
             Display.setVSyncEnabled(true);
         } catch (LWJGLException e) {
-            Sys.alert("Error", e + "\nUnable to create display. Try to edit "
+            throw new RuntimeException("Unable to create display. Try to edit "
                     + PlatformSpecific.getUserOrDefaultConfigFilePath() + ".\n"
-                    + getDisplayModeInfos());
-            System.exit(0);
+                    + getDisplayModeInfos(), e);
         }
 
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
