@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,12 +59,12 @@ public class OpenALSoundCache implements ISoundCache {
         public void doRun() {
             engine.poll();
             Thread.yield();
-            if(null != poll) {
+            if (null != poll) {
                 executor.submit(poll);
             }
         }
     };
-    
+
     private abstract class AbstractOpenALTask implements Runnable {
 
         @Override
@@ -74,6 +75,7 @@ public class OpenALSoundCache implements ISoundCache {
                 logger.log(Level.WARNING, "OpenAL error", ex);
             }
         }
+
         protected abstract void doRun() throws Exception;
     }
 
@@ -81,7 +83,15 @@ public class OpenALSoundCache implements ISoundCache {
         this.gameData = gd;
         this.soundEnabled = config.getProperty("sound.enabled").equals("true");
         this.musicEnabled = config.getProperty("music.enabled").equals("true");
-        executor = Executors.newSingleThreadExecutor();
+        executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
+
+            @Override
+            public Thread newThread(Runnable runnable) {
+                Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+                thread.setDaemon(true);
+                return thread;
+            }
+        });
         executor.submit(new AbstractOpenALTask() {
 
             @Override
