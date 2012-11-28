@@ -119,6 +119,45 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>l4j-gui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <dontWrapJar>true</dontWrapJar>
+                            <outfile>target/${project.build.finalName}.exe</outfile>
+                            <jar>${project.build.finalName}.jar</jar>
+                            <errTitle>Newton Adventure</errTitle>
+                            <classPath>
+                                <mainClass>im.bci.newtonadv.platform.lwjgl.Main</mainClass>
+                                <addDependencies>true</addDependencies>
+                                <postCp>lib/*</postCp>
+                            </classPath>
+                            <jre>
+                                <minVersion>1.6.0</minVersion>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.</fileDescription>
+                                <copyright>devnewton</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>Newton Adventure</productName>
+                                <internalName>newton_adventure</internalName>
+                                <originalFilename>${project.build.finalName}.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
