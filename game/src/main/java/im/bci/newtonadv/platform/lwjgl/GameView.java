@@ -277,6 +277,7 @@ public strictfp class GameView implements IGameView {
                     + ".\n" + getDisplayModeInfos());
         }
         setDisplayMode(startFullscreen, newQuality, chosenMode);
+        IconLoader.setIcon();
     }
 
     public void setDisplayMode(boolean startFullscreen,
