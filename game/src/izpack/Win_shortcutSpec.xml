@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+<skipIfNotSupported/>
+<programGroup defaultName="Newton Adventure" location="applications"/>
+<shortcut name="Newton Adventure"
+        target="$INSTALL_PATH\${newton_adventure_build_final_name}.exe"
+        description="Launch Newton Adventure"
+        workingDirectory="$INSTALL_PATH"
+        iconFile="$INSTALL_PATH\icon.ico"
+        initialState="normal"
+        programGroup="yes"
+        desktop="yes"
+        applications="no"
+        startMenu="no"
+        startup="no">
+<createForPack name="Core"/>
+</shortcut>
+
+</shortcuts>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<installation version="1.0">
+    <info>
+        <appname>@{project.name}</appname>
+        <appversion>@{project.version}</appversion>
+        <authors>
+            <author name="devnewton" email="devnewton@bci.Im" />
+        </authors>
+        <url>http://devnewton.bci.im</url>
+        <javaversion>1.6</javaversion>
+        <requiresjdk>no</requiresjdk>
+    </info>
+ 
+    <guiprefs width="640" height="480" resizable="yes" />
+ 
+    <locale>
+        <langpack iso3="eng" />
+    </locale>
+
+    <variables>
+        <variable name="newton_adventure_build_final_name" value="@{project.build.finalName}"/>
+    </variables>
+
+    <resources>
+        <res src="../../src/izpack/Win_shortcutSpec.xml" id="Win_shortcutSpec.xml" parse="yes"/>
+        <res src="../../src/izpack/Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml" parse="yes"/>
+    </resources>
+ 
+    <panels>
+        <panel classname="HelloPanel" />
+        <panel classname="TargetPanel"/>       
+        <panel classname="InstallPanel"/>
+        <panel classname="ShortcutPanel"/>     
+        <panel classname="FinishPanel" />
+    </panels>
+ 
+    <packs>
+        <pack name="Core" required="yes">
+            <description>Core installation files</description>
+            <file src="../@{project.build.finalName}.jar" targetdir="$INSTALL_PATH" />
+            <file src="../@{project.build.finalName}.exe" targetdir="$INSTALL_PATH" />
+            <file src="../../src/izpack/icon.ico" targetdir="$INSTALL_PATH" />
+            <file src="../../README_YOU_DONT_WANT_TO_BUT_YOU_HAVE_TO_README.txt" targetdir="$INSTALL_PATH" />
+            <file src="../../run_linux.sh" targetdir="$INSTALL_PATH" />
+            <file src="../../run_macosx.sh" targetdir="$INSTALL_PATH" />
+            <file src="../../run_solaris.sh" targetdir="$INSTALL_PATH" />
+            <file src="../../run_windows.bat" targetdir="$INSTALL_PATH" />
+            <file src="../../data/icon.png" targetdir="$INSTALL_PATH" />
+            <fileset dir="../../licences" targetdir="$INSTALL_PATH/licences" override="true"/>
+            <fileset dir="../../lib" targetdir="$INSTALL_PATH/lib" override="true"/>
+            <fileset dir="../../native" targetdir="$INSTALL_PATH/native" override="true"/>
+        </pack>
+    </packs>
+
+    <native type="izpack" name="ShellLink.dll"/>
+    <native type="izpack" name="ShellLink_x64.dll"/>
+ 
+</installation>
+

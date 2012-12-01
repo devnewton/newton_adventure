@@ -68,32 +68,32 @@
                     </archive>
                 </configuration>
             </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-		<outputDirectory>${basedir}/target</outputDirectory>
-              <resources>
-                <resource>
-                    <directory>${basedir}/src/deb</directory>
-                    <includes>
-                      <include>**/*.desktop</include>
-                    </includes>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>              
-            </configuration>            
-          </execution>
-        </executions>
-      </plugin>
-           <plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/deb</directory>
+                                    <includes>
+                                        <include>**/*.desktop</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>              
+                        </configuration>            
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>jdeb</artifactId>
                 <groupId>org.vafer</groupId>
                 <version>0.11</version>
@@ -115,7 +115,7 @@
                                         <filemode>755</filemode>
                                     </mapper>  
                                 </data>
-                                 <data>
+                                <data>
                                     <src>${basedir}/data/icon.png</src>
                                     <type>file</type>
                                     <mapper>
@@ -210,6 +210,29 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-maven-plugin</artifactId>
+                <version>1.0-alpha-5</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>izpack</goal>
+                        </goals>
+                        <configuration>
+                            <installerFile>${project.build.directory}/${project.build.finalName}-installer.jar</installerFile>
+                        </configuration>
+                    </execution>
+                </executions>  
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.izpack</groupId>
+                        <artifactId>izpack-standalone-compiler</artifactId>
+                        <version>4.3.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
