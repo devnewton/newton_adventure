@@ -1,5 +1,5 @@
-Package: newton_adventure
-Version: 1.6
+Package: [[name]]
+Version: [[version]]
 Section: misc/games
 Priority: optional
 Architecture: i386

@@ -68,7 +68,32 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+		<outputDirectory>${basedir}/target</outputDirectory>
+              <resources>
+                <resource>
+                    <directory>${basedir}/src/deb</directory>
+                    <includes>
+                      <include>**/*.desktop</include>
+                    </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>
+           <plugin>
                 <artifactId>jdeb</artifactId>
                 <groupId>org.vafer</groupId>
                 <version>0.11</version>
@@ -83,9 +108,19 @@
                                 <data>
                                     <src>${project.build.directory}/${project.build.finalName}.jar</src>
                                     <type>file</type>
+                                    <dst>${project.name}.jar</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/${project.build.finalName}</prefix>
+                                        <prefix>/opt/${project.name}</prefix>
+                                        <filemode>755</filemode>
+                                    </mapper>  
+                                </data>
+                                 <data>
+                                    <src>${basedir}/data/icon.png</src>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/opt/${project.name}</prefix>
                                     </mapper>  
                                 </data>
                                 <data>
@@ -94,7 +129,7 @@
                                     <excludes>AppleJavaExtensions.jar,libtiled-android.jar,asm-debug-all.jar</excludes>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/${project.build.finalName}/lib</prefix>
+                                        <prefix>/opt/${project.name}/lib</prefix>
                                     </mapper>                                
                                 </data>
                                 <data>
@@ -103,7 +138,7 @@
                                     <includes>linux/*</includes>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/${project.build.finalName}/native</prefix>
+                                        <prefix>/opt/${project.name}/native</prefix>
                                     </mapper>                                
                                 </data>
                                 <data>
@@ -111,8 +146,16 @@
                                     <type>directory</type>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/${project.build.finalName}/licences</prefix>
+                                        <prefix>/opt/${project.name}/licences</prefix>
                                     </mapper>                                
+                                </data>
+                                <data >
+                                    <src>${basedir}/src/deb/newton_adventure.desktop</src>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/usr/share/applications</prefix>
+                                    </mapper>
                                 </data>
                             </dataSet>
                         </configuration>
