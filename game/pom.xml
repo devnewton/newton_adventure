@@ -234,6 +234,43 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>l4j-installer</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <dontWrapJar>true</dontWrapJar>
+                            <outfile>target/${project.build.finalName}-installer.exe</outfile>
+                            <jar>${project.build.finalName}-installer.jar</jar>
+                            <errTitle>Newton Adventure installer</errTitle>
+                            <classPath>
+                                <mainClass>com.izforge.izpack.installer.Installer</mainClass>
+                            </classPath>
+                            <jre>
+                                <minVersion>1.6.0</minVersion>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.</fileDescription>
+                                <copyright>devnewton</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>Newton Adventure installer</productName>
+                                <internalName>newton_adventure_installer</internalName>
+                                <originalFilename>${project.build.finalName}-installer.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
