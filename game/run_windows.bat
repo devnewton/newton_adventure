@@ -1,1 +1,1 @@
-java -jar newton_adventure-1.6-SNAPSHOT.jar
+java -jar newton_adventure-1.7-SNAPSHOT.jar

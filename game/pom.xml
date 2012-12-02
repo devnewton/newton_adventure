@@ -26,12 +26,12 @@
     <groupId>im.bci.newtonadv</groupId>
     <artifactId>newton_adventure</artifactId>
     <packaging>jar</packaging>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
     <name>newton_adventure</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <newton.adventure.version>deluxe</newton.adventure.version>
-        <!--<newton.adventure.quests.exclude>%regex[.*(bridge|lab|prison)\/.*]</newton.adventure.quests.exclude>-->
+        <newton.adventure.version>normal</newton.adventure.version>
+        <newton.adventure.quests.exclude>%regex[.*(bridge|lab|prison)\/.*]</newton.adventure.quests.exclude>
     </properties>
     <build>
         <resources>
@@ -249,19 +249,16 @@
                 <executions>
                     <execution>
                         <id>l4j-installer</id>
-                        <phase>package</phase>
+                        <phase>install</phase><!-- how to create a custom phase? -->
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
                             <headerType>gui</headerType>
-                            <dontWrapJar>true</dontWrapJar>
-                            <outfile>target/${project.build.finalName}-installer.exe</outfile>
-                            <jar>${project.build.finalName}-installer.jar</jar>
+                            <dontWrapJar>false</dontWrapJar>
+                            <outfile>${project.build.finalName}-installer.exe</outfile>
+                            <jar>${project.build.finalName}-installer.jar</jar><!-- Copy manually the file in ${basedir}. Without this, the generated exe will be bugged. -->
                             <errTitle>Newton Adventure installer</errTitle>
-                            <classPath>
-                                <mainClass>com.izforge.izpack.installer.Installer</mainClass>
-                            </classPath>
                             <jre>
                                 <minVersion>1.6.0</minVersion>
                             </jre>
