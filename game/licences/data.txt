@@ -83,7 +83,7 @@ License: CC0
 
 Original photo author: xiquinhosilva ( http://www.flickr.com/photos/xiquinho/ )
 Artistic filters author: devnewton@bci.im
-License: CC-BY
+License: CC-BY 3.0
 
 * lovelace_0.ogg
 
@@ -118,17 +118,32 @@ License: CC0
 * map.png compass.png
 
 Author: DItzyDM (http://opengameart.org/content/rpg-icons)
-License: CC-BY-SA
+License: CC-BY-SA 3.0
 
 * help signs in level0.tmx files
 
 Author: Nick Janssen (http://opengameart.org/content/sign-pack)
-License: CC-BY-SA
+License: CC-BY-SA 3.0
 
 * menu gfx
 
 Author: Nicolas (nicolas@probablement.net)
-License: CC-BY-SA
+License: CC-BY-SA 3.0
+
+* Unfinished_Business_0.ogg
+
+Author: MegaPixel Music ( http://opengameart.org/content/unfinished-business )
+License: CC-BY-SA 3.0
+
+* It_Is_0.ogg
+
+Author: HorrorPen ( http://opengameart.org/users/horrorpen )
+License: CC-BY-SA 3.0
+
+* skulls_adventure_0.ogg
+
+Author: Mopz ( http://opengameart.org/users/mopz )
+License: CC-BY-SA 3.0
 
 * Other files
 
