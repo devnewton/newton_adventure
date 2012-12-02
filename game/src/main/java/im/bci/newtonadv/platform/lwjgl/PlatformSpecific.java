@@ -260,6 +260,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 
         public void close() {
             if(null != soundCache) {
+                soundCache.stopMusic();
                 soundCache.close();
             }
         }

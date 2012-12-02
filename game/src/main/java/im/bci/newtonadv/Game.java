@@ -169,7 +169,7 @@ public strictfp class Game {
 	void stopGame() {
 		running = false;
 		getView().getTextureCache().clearAll();
-		getSoundCache().clearAll();
+		getSoundCache().stopMusic();
 	}
 
 	Sequence setupSequences() {

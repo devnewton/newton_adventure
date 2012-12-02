@@ -113,6 +113,8 @@ public class Main {
                 game = new Game(platform);
                 game.start();
                 game.tick();
+            } catch (GameCloseException e) {
+                return;
             } catch (Throwable e) {
                 handleError(e, "Unexpected error during newton adventure startup. Check your java version and your opengl driver.\n");
                 return;
@@ -122,6 +124,8 @@ public class Main {
                 while (game.isRunning()) {
                     game.tick();
                 }
+            } catch (GameCloseException e) {
+                return;
             } catch (Throwable e) {
                 handleError(e, "Unexpected error during newton adventure execution.\n");
                 return;
@@ -130,6 +134,7 @@ public class Main {
             if (null != platform) {
                 platform.close();
             }
+            System.exit(0);
         }
     }
 

@@ -38,6 +38,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -114,6 +115,11 @@ public class OpenALSoundCache implements ISoundCache {
             }
         });
         executor.shutdown();
+        try {
+            executor.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(OpenALSoundCache.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

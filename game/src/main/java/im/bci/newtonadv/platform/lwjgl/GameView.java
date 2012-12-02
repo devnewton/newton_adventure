@@ -354,8 +354,7 @@ public strictfp class GameView implements IGameView {
         // finally check if the user has requested that the display be
         // shutdown
         if (Display.isCloseRequested()) {
-            close();
-            System.exit(0);
+            throw new GameCloseException();
         }
     }
 
@@ -375,7 +374,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPopAttrib();
     }
 
-    private void close() {
+    public void close() {
         textureCache.clearAll();
         Display.destroy();
     }

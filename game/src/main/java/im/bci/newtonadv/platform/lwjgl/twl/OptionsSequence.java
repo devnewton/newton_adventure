@@ -20,6 +20,7 @@ import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
+import im.bci.newtonadv.platform.lwjgl.GameCloseException;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
@@ -329,7 +330,7 @@ public class OptionsSequence implements IOptionsSequence {
 		// finally check if the user has requested that the display be
 		// shutdown
 		if (Display.isCloseRequested()) {
-			System.exit(0);
+                    throw new GameCloseException();
 		}
 
 		if (optionsGui.okPressed) {
