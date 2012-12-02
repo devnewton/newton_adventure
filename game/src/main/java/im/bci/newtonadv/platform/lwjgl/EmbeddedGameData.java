@@ -29,15 +29,20 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package im.bci.newtonadv.platform.lwjgl;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -45,63 +50,89 @@ import java.util.List;
  */
 class EmbeddedGameData extends AbstractGameData {
 
-	private static final List<String> quests;
-	private static final HashMap<String, List<String>> questLevels;
-	private static final HashMap<String, List<String>> questsToCompleteToUnlockQuests;
+    private List<String> quests;
+    private HashMap<String, List<String>> questLevels;
+    private HashMap<String, List<String>> questsToCompleteToUnlockQuests;
+    private String version = "normal";
 
-	static {
-		quests = Arrays.asList("jungle", "vatican", "arctic", "volcano",
-				"egypt", "bridge", "lab", "prison");
-		questLevels = new HashMap<String, List<String>>();
-		questLevels.put("jungle", Arrays.asList("level0", "level0.5", "level1",
-				"level2", "level3", "level4"));
-		questLevels.put("vatican", Arrays.asList("level0", "level0.5",
-				"level1", "level2", "level3", "level4"));
-		questLevels.put("arctic", Arrays.asList("level0", "level0.5", "level1",
-				"level2", "level3", "level4"));
-		questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
-				"level3", "level4", "level5"));
-		questLevels.put("volcano", Arrays.asList("level0", "level0.5",
-				"level1", "level2", "level3", "level4"));
-		questLevels.put("bridge", Arrays.asList("level0", "level1", "level2", "level3", "level4", "level5"));
-		questLevels.put("lab", Arrays.asList("level0", "level1", "level2",
-				"level3", "level4", "level5"));
-		questLevels.put("prison", Arrays.asList("boss", "credits"));
-		questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
-				"bonus_level3", "bonus_level4", "bonus_level5"));
+    public EmbeddedGameData() {
+        super("");
+        loadVersionInfo();
+        setup();
+    }
 
-		questsToCompleteToUnlockQuests = new HashMap<String, List<String>>();
-		questsToCompleteToUnlockQuests.put("prison", Arrays.asList("jungle",
-				"vatican", "arctic", "volcano", "egypt", "bridge", "lab"));
-	}
+    private void setup() {
+        boolean isDeluxe = "deluxe".equals(version);
+        quests = new ArrayList<String>(Arrays.asList("jungle", "vatican", "arctic", "volcano",
+                "egypt"));
+        if (isDeluxe) {
+            quests.addAll(Arrays.asList("bridge", "lab", "prison"));
+        }
+        questLevels = new HashMap<String, List<String>>();
+        questLevels.put("jungle", Arrays.asList("level0", "level0.5", "level1",
+                "level2", "level3", "level4"));
+        questLevels.put("vatican", Arrays.asList("level0", "level0.5",
+                "level1", "level2", "level3", "level4"));
+        questLevels.put("arctic", Arrays.asList("level0", "level0.5", "level1",
+                "level2", "level3", "level4"));
+        questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
+                "level3", "level4", "level5"));
+        questLevels.put("volcano", Arrays.asList("level0", "level0.5",
+                "level1", "level2", "level3", "level4"));
+        if (isDeluxe) {
+            questLevels.put("bridge", Arrays.asList("level0", "level1", "level2", "level3", "level4", "level5"));
+            questLevels.put("lab", Arrays.asList("level0", "level1", "level2",
+                    "level3", "level4", "level5"));
+            questLevels.put("prison", Arrays.asList("boss", "credits"));
+        }
+        questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
+                "bonus_level3", "bonus_level4", "bonus_level5"));
 
-	public EmbeddedGameData() {
-		super("");
-	}
+        questsToCompleteToUnlockQuests = new HashMap<String, List<String>>();
+        if (isDeluxe) {
+            questsToCompleteToUnlockQuests.put("prison", Arrays.asList("jungle",
+                    "vatican", "arctic", "volcano", "egypt", "bridge", "lab"));
+        }
+    }
 
-	@Override
-	public List<String> listQuests() {
-		return quests;
-	}
+    @Override
+    public List<String> listQuests() {
+        return quests;
+    }
 
-	@Override
-	public List<String> listQuestLevels(String questName) {
-		return questLevels.get(questName);
-	}
+    @Override
+    public List<String> listQuestLevels(String questName) {
+        return questLevels.get(questName);
+    }
 
-	@Override
-	public InputStream openFile(String path) throws FileNotFoundException {
-		return getClass().getClassLoader().getResourceAsStream(path);
-	}
+    @Override
+    public InputStream openFile(String path) throws FileNotFoundException {
+        return getClass().getClassLoader().getResourceAsStream(path);
+    }
 
-	@Override
-	public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
-		List<String> questsToComplete = questsToCompleteToUnlockQuests
-				.get(questName);
-		if (null == questsToComplete) {
-			questsToComplete = Collections.emptyList();
-		}
-		return questsToComplete;
-	}
+    @Override
+    public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
+        List<String> questsToComplete = questsToCompleteToUnlockQuests.get(questName);
+        if (null == questsToComplete) {
+            questsToComplete = Collections.emptyList();
+        }
+        return questsToComplete;
+    }
 
+    private void loadVersionInfo() {
+        try {
+            URL configFilePath = getClass().getClassLoader().getResource(
+                    "version.properties");
+            InputStream f = configFilePath.openStream();
+            try {
+                Properties prop = new Properties();
+                prop.load(f);
+                version = prop.getProperty("newton.adventure.version", version);
+            } finally {
+                f.close();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(EmbeddedGameData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

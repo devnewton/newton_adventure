@@ -30,11 +30,20 @@
     <name>newton_adventure</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <newton.adventure.version>normal</newton.adventure.version>
+        <newton.adventure.quests.exclude>%regex[.*(bridge|lab|prison)\/.*]</newton.adventure.quests.exclude>
     </properties>
     <build>
         <resources>
             <resource>
                 <directory>data</directory>
+                <excludes>
+                    <exclude>${newton.adventure.quests.exclude}</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
             </resource>
         </resources>
         <plugins>
