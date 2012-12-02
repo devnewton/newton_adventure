@@ -26,7 +26,7 @@
     <groupId>im.bci.newtonadv</groupId>
     <artifactId>newton_adventure</artifactId>
     <packaging>jar</packaging>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.7</version>
     <name>newton_adventure</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
