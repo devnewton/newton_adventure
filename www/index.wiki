@@ -8,9 +8,9 @@ It runs on every Linux, Windows, Mac OS X or any OS with Java and OpenGL support
 
 If you like this game, you can make a [Donation] or better [Contribute] to his development.
 
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SV77ZDUH33R78"><img src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" alt="Faire un don"></a>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SV77ZDUH33R78"><img src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" alt="Donation"></a>
 
-<h1><a href="download.wiki">Downloads</a></h1>
+<h1><a href="download.wiki">Download and play!</a></h1>
 
 <h1>Screenshots and videos</h1>
 <p><a href="http://youtu.be/Jta0M-uOGXA">Video of gameplay</a></p>
