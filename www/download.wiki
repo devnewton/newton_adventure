@@ -7,7 +7,6 @@ Note that Newton Adventure requires <a href="http://java.com">Java</a> and a goo
 <td><a href="downloads/newton_adventure_1.7.deb">newton_adventure_1.7.deb</a></td>
 <td><a href="downloads/newton_adventure-1.7-installer.exe">newton_adventure-1.7-installer.exe</a></td>
 <td><a href="downloads/newton_adventure-1.7-installer.jar">newton_adventure-1.7-installer.jar</a></td></tr>
-
-<p>Source code: this site a <a href="http://fossil-scm.org">fossil</a> repository. Use the "files" menu entry or use "fossil clone" command.</p>
-
 </table>
+
+<p><a href="downloads/newton_adventure_1.7_sources.zip">Source code</a></p>
