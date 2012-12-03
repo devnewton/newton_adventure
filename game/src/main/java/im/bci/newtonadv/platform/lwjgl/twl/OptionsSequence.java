@@ -91,6 +91,7 @@ public class OptionsSequence implements IOptionsSequence {
 	}
 
 	private void applyOptions() throws LWJGLException {
+                view.setRotateViewWithGravity(optionsGui.rotateViewWithGravity.isActive());
 		view.setDisplayMode(optionsGui.fullscreen.isActive(),
 				getSelectedQuality(), getSelectedMode());
 		input.keyJump = findKeyIndex(optionsGui.keyJump);
@@ -209,7 +210,8 @@ public class OptionsSequence implements IOptionsSequence {
 		config.setProperty("view.height", "" + Display.getHeight());
 		config.setProperty("view.bpp", ""
 				+ Display.getDisplayMode().getBitsPerPixel());
-		config.getProperty("view.fullscreen", "" + Display.isFullscreen());
+		config.setProperty("view.fullscreen", "" + Display.isFullscreen());
+                config.setProperty("view.rotate", "" + view.isRotateViewWithGravity());
 		config.setProperty("view.quality", view.getQuality().toString());
 
 		config.setProperty("key.jump", getKeyFieldName(input.keyJump));

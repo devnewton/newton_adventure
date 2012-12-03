@@ -123,11 +123,21 @@ public strictfp class GameView implements IGameView {
     private ITrueTypeFont fpsFont;
     private GameViewQuality quality = GameViewQuality.DEFAULT;
     private final IGameData data;
+    private boolean rotateViewWithGravity = true;
 
     public GameView(IGameData data, Properties config) {
         this.data = data;
         initDisplay(config);
     }
+
+    public boolean isRotateViewWithGravity() {
+        return rotateViewWithGravity;
+    }
+
+    public void setRotateViewWithGravity(boolean rotateViewWithGravity) {
+        this.rotateViewWithGravity = rotateViewWithGravity;
+    }
+        
 
     @Override
     public void toggleFullscreen() {
@@ -267,6 +277,8 @@ public strictfp class GameView implements IGameView {
                 + Display.getDesktopDisplayMode().getBitsPerPixel()));
         boolean startFullscreen = Boolean.parseBoolean(config.getProperty(
                 "view.fullscreen", "false"));
+        rotateViewWithGravity = Boolean.parseBoolean(config.getProperty(
+                "view.rotate", "true"));
         GameViewQuality newQuality = GameViewQuality.valueOf(config.getProperty("view.quality"));
 
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
@@ -294,6 +306,7 @@ public strictfp class GameView implements IGameView {
             if (startFullscreen) {
                 Display.setDisplayModeAndFullscreen(chosenMode);
             } else {
+                Display.setFullscreen(false);
                 Display.setDisplayMode(chosenMode);
             }
             Display.setResizable(true);
@@ -1236,8 +1249,10 @@ public strictfp class GameView implements IGameView {
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-        GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
+        if(rotateViewWithGravity) {
+            GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
                 1.0f);
+        }
         drawWorldBackground(world, aspectRatio);
 
         ROVector2f heroPos = world.getHero().getPosition();
@@ -1453,8 +1468,10 @@ public strictfp class GameView implements IGameView {
         GL11.glTranslatef(100 - minimapSize / 1.5f, minimapSize / 1.5f, 0);
 
         GL11.glPushMatrix();
-        GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
+        if(rotateViewWithGravity) {
+            GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
                 1.0f);
+        }
         if (world.getHero().hasMap()) {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, minimapTexture.getId());

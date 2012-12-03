@@ -35,6 +35,7 @@ public class OptionsGUI extends Widget {
 	boolean okPressed, cancelPressed;
 	ToggleButton soundEnabled;
 	ToggleButton fullscreen;
+        ToggleButton rotateViewWithGravity;
 	ComboBox<DisplayMode> mode;
 	ComboBox<GameViewQuality> quality;
 	InputChoice keyJump;
@@ -75,19 +76,26 @@ public class OptionsGUI extends Widget {
 		soundRow.add(soundEnabled);
 		soundRow.add(musicEnabled);
 
-		fullscreen = new ToggleButton("Fullscreen");
-		fullscreen.setActive(Display.isFullscreen());
 		mode = new ComboBox<DisplayMode>(
 				new SimpleChangableListModel<DisplayMode>(getDisplayModes()));
 		mode.setSelected(0);
-		EnumListModel<GameViewQuality> gameViewQualityModel = new EnumListModel<GameViewQuality>(
-				GameViewQuality.class);
+                fullscreen = new ToggleButton("Fullscreen");
+		fullscreen.setActive(Display.isFullscreen());
+                Row gfxRow = layout.addRow("label", "mode", "fullscreen");
+		gfxRow.addLabel("Video mode");
+		gfxRow.add(mode);
+		gfxRow.add(fullscreen);
+                
+                EnumListModel<GameViewQuality> gameViewQualityModel = new EnumListModel<GameViewQuality>(GameViewQuality.class);
 		quality = new ComboBox<GameViewQuality>(gameViewQualityModel);
 		quality.setSelected(gameViewQualityModel.findEntry(gameView
 				.getQuality()));
-		layout.addRow("label", "widget").addWithLabel("", fullscreen);
-		layout.addRow("label", "widget").addWithLabel("Video mode", mode);
 		layout.addRow("label", "widget").addWithLabel("Quality", quality);
+                
+                rotateViewWithGravity = new ToggleButton("Rotate view with gravity");
+                rotateViewWithGravity.setActive(gameView.isRotateViewWithGravity());
+                layout.addRow("label", "widget").addWithLabel("View option", rotateViewWithGravity);
+
 
 		joypad = new ComboBox<ControllerItem>(controllerModel);
 		joypad.setNoSelectionIsError(false);
