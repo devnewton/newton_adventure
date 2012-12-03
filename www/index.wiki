@@ -12,7 +12,6 @@ If you like this game, you can make a [Donation] or better [Contribute] to his d
 
 <h1><a href="download.wiki">Download and play!</a></h1>
 
-<h1>Screenshots and videos</h1>
 <p><a href="http://youtu.be/Jta0M-uOGXA">Video of gameplay</a></p>
 <p><img src="screenshots/montage_800_600.jpg" /></p>
 

@@ -6,6 +6,12 @@ Note that Newton Adventure requires <a href="http://java.com">Java</a> and a goo
 <tr><th></th><th>Debian/Ubuntu</th><th>Windows XP/Vista/7</th><th>Others (linux, Macosx, Windows, Solaris, BSD...)</th></tr>
 
 <tr><th>Download site 1</th>
+<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure_1.7.deb">newton_adventure_1.7.deb</a></td>
+<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure-1.7-installer.exe">newton_adventure-1.7-installer.exe</a></td>
+<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure-1.7-installer.jar">newton_adventure-1.7-installer.jar</a></td></tr>
+</table>
+
+<tr><th>Download site 2<br/>(slow)</th>
 <td><a href="downloads/newton_adventure_1.7.deb">newton_adventure_1.7.deb</a></td>
 <td><a href="downloads/newton_adventure-1.7-installer.exe">newton_adventure-1.7-installer.exe</a></td>
 <td><a href="downloads/newton_adventure-1.7-installer.jar">newton_adventure-1.7-installer.jar</a></td></tr>
