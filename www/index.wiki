@@ -10,7 +10,7 @@ If you like this game, you can make a [Donation] or better [Contribute] to his d
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SV77ZDUH33R78"><img src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" alt="Faire un don"></a>
 
-<h1>[Download] now!</h1>
+<h1><a href="/doc/trunk/www/download.wiki">Downloads</a></h1>
 
 <h1>Screenshots and videos</h1>
 <p><a href="http://youtu.be/Jta0M-uOGXA">Video of gameplay</a></p>
@@ -20,4 +20,4 @@ If you like this game, you can make a [Donation] or better [Contribute] to his d
 
 <p>Send me mails to devnewton ^at^ bci.im</p>
 
-<p>To chat with me click <a href="/chat">here (I'm not always available, but you can leave a message)</a>.</p>
+<p>To chat with me click <a href="/chat">here</a>.</p>
