@@ -17,3 +17,5 @@ Note that Newton Adventure requires <a href="http://java.com">Java</a> and a goo
 </table>
 
 <p><a href="downloads/newton_adventure_1.7_sources.zip">Source code</a></p>
+
+<p>If you have any problem to install or run Newton Adventure, <a href="contact.wiki">contact me!</a></p>
