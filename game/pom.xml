@@ -49,6 +49,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -57,6 +58,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -103,87 +105,9 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>jdeb</artifactId>
-                <groupId>org.vafer</groupId>
-                <version>0.11</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jdeb</goal>
-                        </goals>
-                        <configuration>
-                            <dataSet>
-                                <data>
-                                    <src>${project.build.directory}/${project.build.finalName}.jar</src>
-                                    <type>file</type>
-                                    <dst>${project.name}.jar</dst>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/opt/${project.name}</prefix>
-                                        <filemode>755</filemode>
-                                    </mapper>  
-                                </data>
-                                <data>
-                                    <src>${basedir}/data/icon.png</src>
-                                    <type>file</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/opt/${project.name}</prefix>
-                                    </mapper>  
-                                </data>
-                                <data>
-                                    <src>${basedir}/lib</src>
-                                    <type>directory</type>
-                                    <excludes>AppleJavaExtensions.jar,libtiled-android.jar,asm-debug-all.jar</excludes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/opt/${project.name}/lib</prefix>
-                                    </mapper>                                
-                                </data>
-                                <data>
-                                    <src>${basedir}/native</src>
-                                    <type>directory</type>
-                                    <includes>linux/*</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/opt/${project.name}/native</prefix>
-                                    </mapper>                                
-                                </data>
-                                <data>
-                                    <src>${basedir}/licences</src>
-                                    <type>directory</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/opt/${project.name}/licences</prefix>
-                                    </mapper>                                
-                                </data>
-                                <data >
-                                    <src>${basedir}/src/deb/newton_adventure.desktop</src>
-                                    <type>file</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/usr/share/applications</prefix>
-                                    </mapper>
-                                </data>
-                                <data >
-                                    <src>${basedir}/src/deb/run_newton_adventure.sh</src>
-                                    <type>file</type>
-                                    <dst>newton_adventure</dst>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/usr/bin</prefix>
-                                        <filemode>755</filemode>
-                                    </mapper>
-                                </data>
-                            </dataSet>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.5.2</version>
                 <executions>
                     <execution>
                         <id>l4j-gui</id>
@@ -242,40 +166,6 @@
                         <version>4.3.1</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>l4j-installer</id>
-                        <phase>install</phase><!-- how to create a custom phase? -->
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <headerType>gui</headerType>
-                            <dontWrapJar>false</dontWrapJar>
-                            <outfile>${project.build.finalName}-installer.exe</outfile>
-                            <jar>${project.build.finalName}-installer.jar</jar><!-- Copy manually the file in ${basedir}. Without this, the generated exe will be bugged. -->
-                            <errTitle>Newton Adventure installer</errTitle>
-                            <jre>
-                                <minVersion>1.6.0</minVersion>
-                            </jre>
-                            <versionInfo>
-                                <fileVersion>1.0.0.0</fileVersion>
-                                <txtFileVersion>${project.version}</txtFileVersion>
-                                <fileDescription>Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.</fileDescription>
-                                <copyright>devnewton</copyright>
-                                <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
-                                <productName>Newton Adventure installer</productName>
-                                <internalName>newton_adventure_installer</internalName>
-                                <originalFilename>${project.build.finalName}-installer.exe</originalFilename>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
@@ -351,6 +241,300 @@
             <systemPath>${basedir}/lib/protobuf-java-2.4.1.jar</systemPath>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>win</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>1.5.2</version>
+                        <executions>
+                            <execution>
+                                <id>l4j-installer</id>
+                                <phase>install</phase><!-- how to create a custom phase? -->
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <headerType>gui</headerType>
+                                    <dontWrapJar>false</dontWrapJar>
+                                    <outfile>${project.build.finalName}-installer.exe</outfile>
+                                    <jar>${project.build.finalName}-installer.jar</jar><!-- Copy manually the file in ${basedir}. Without this, the generated exe will be bugged. -->
+                                    <errTitle>Newton Adventure installer</errTitle>
+                                    <jre>
+                                        <minVersion>1.6.0</minVersion>
+                                    </jre>
+                                    <versionInfo>
+                                        <fileVersion>1.0.0.0</fileVersion>
+                                        <txtFileVersion>${project.version}</txtFileVersion>
+                                        <fileDescription>Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.</fileDescription>
+                                        <copyright>BSD, CC-BY-SA 3.0</copyright>
+                                        <productVersion>1.0.0.0</productVersion>
+                                        <txtProductVersion>${project.version}</txtProductVersion>
+                                        <productName>Newton Adventure installer</productName>
+                                        <internalName>newton_adventure_installer</internalName>
+                                        <originalFilename>${project.build.finalName}-installer.exe</originalFilename>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>rpm</id>
+            <build>
+                <plugins>            
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>rpm-maven-plugin</artifactId>
+                        <version>2.1-alpha-2</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>rpm</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <copyright>2012, devnewton@bci.im</copyright>
+                            <group>Application/Games</group>
+                            <packager>devnewton</packager>
+                            <requires>
+                                <require>java &gt; 1-1.6.0 </require>
+                            </requires>
+                            <mappings>
+                                <mapping>
+                                    <directory>/opt/${project.name}</directory>
+                                    <filemode>755</filemode>
+                                    <username>root</username>
+                                    <groupname>root</groupname>
+                                    <sources>
+                                        <source>
+                                            <location>${project.build.directory}/${project.build.finalName}.jar</location>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/${project.name}</directory>
+                                    <username>root</username>
+                                    <groupname>root</groupname>
+                                    <sources>
+                                        <source>
+                                            <location>${basedir}/data/icon.png</location>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/${project.name}/lib</directory>
+                                    <username>root</username>
+                                    <groupname>root</groupname>
+                                    <sources>
+                                        <source>
+                                            <location>${basedir}/lib</location>
+                                            <excludes>
+                                                <exclude>AppleJavaExtensions.jar,libtiled-android.jar,asm-debug-all.jar</exclude>
+                                            </excludes>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/${project.name}/native</directory>
+                                    <username>root</username>
+                                    <groupname>root</groupname>
+                                    <sources>
+                                        <source>
+                                            <location>${basedir}/native</location>
+                                            <targetArchitecture>x86_64</targetArchitecture>
+                                            <includes>
+                                                <include>linux/*64*</include>
+                                            </includes>
+                                        </source>
+                                        <source>
+                                            <location>${basedir}/native</location>
+                                            <targetArchitecture>i686</targetArchitecture>
+                                            <includes>
+                                                <include>linux/*</include>
+                                            </includes>
+                                            <excludes>
+                                                <exclude>linux/*64*</exclude>
+                                            </excludes>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/${project.name}/licences</directory>
+                                    <username>root</username>
+                                    <groupname>root</groupname>
+                                    <sources>
+                                        <source>
+                                            <location>${basedir}/licences</location>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                                <mapping>
+                                    <directory>/usr/share/applications</directory>
+                                    <username>root</username>
+                                    <groupname>root</groupname>
+                                    <sources>
+                                        <source>
+                                            <location>${basedir}/src/deb/newton_adventure.desktop</location>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                                <mapping>
+                                    <directory>/usr/bin</directory>
+                                    <filemode>755</filemode>
+                                    <username>root</username>
+                                    <groupname>root</groupname>
+                                    <sources>
+                                        <source>
+                                            <location>${basedir}/src/deb/run_newton_adventure.sh</location>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                            </mappings>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>rpm32</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>rpm-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>rpm-i686</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attached-rpm</goal>
+                                </goals>
+                                <configuration>
+                                    <needarch>i686</needarch>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>rpm64</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>rpm-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>rpm-x86_64</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attached-rpm</goal>
+                                </goals>
+                                <configuration>
+                                    <needarch>x86_64</needarch>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deb</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>jdeb</artifactId>
+                        <groupId>org.vafer</groupId>
+                        <version>0.11</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jdeb</goal>
+                                </goals>
+                                <configuration>
+                                    <dataSet>
+                                        <data>
+                                            <src>${project.build.directory}/${project.build.finalName}.jar</src>
+                                            <type>file</type>
+                                            <dst>${project.name}.jar</dst>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/opt/${project.name}</prefix>
+                                                <filemode>755</filemode>
+                                            </mapper>  
+                                        </data>
+                                        <data>
+                                            <src>${basedir}/data/icon.png</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/opt/${project.name}</prefix>
+                                            </mapper>  
+                                        </data>
+                                        <data>
+                                            <src>${basedir}/lib</src>
+                                            <type>directory</type>
+                                            <excludes>AppleJavaExtensions.jar,libtiled-android.jar,asm-debug-all.jar</excludes>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/opt/${project.name}/lib</prefix>
+                                            </mapper>                                
+                                        </data>
+                                        <data>
+                                            <src>${basedir}/native</src>
+                                            <type>directory</type>
+                                            <includes>linux/*</includes>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/opt/${project.name}/native</prefix>
+                                            </mapper>                                
+                                        </data>
+                                        <data>
+                                            <src>${basedir}/licences</src>
+                                            <type>directory</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/opt/${project.name}/licences</prefix>
+                                            </mapper>                                
+                                        </data>
+                                        <data >
+                                            <src>${basedir}/src/deb/newton_adventure.desktop</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/usr/share/applications</prefix>
+                                            </mapper>
+                                        </data>
+                                        <data >
+                                            <src>${basedir}/src/deb/run_newton_adventure.sh</src>
+                                            <type>file</type>
+                                            <dst>newton_adventure</dst>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/usr/bin</prefix>
+                                                <filemode>755</filemode>
+                                            </mapper>
+                                        </data>
+                                    </dataSet>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>    
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 
 
