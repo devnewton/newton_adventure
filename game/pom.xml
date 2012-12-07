@@ -315,6 +315,7 @@
                                     <sources>
                                         <source>
                                             <location>${project.build.directory}/${project.build.finalName}.jar</location>
+                                            <destination>${project.name}.jar</destination>
                                         </source>
                                     </sources>
                                 </mapping>
@@ -381,7 +382,7 @@
                                     <groupname>root</groupname>
                                     <sources>
                                         <source>
-                                            <location>${basedir}/src/deb/newton_adventure.desktop</location>
+                                            <location>${basedir}/src/rpm/newton_adventure.desktop</location>
                                         </source>
                                     </sources>
                                 </mapping>
@@ -392,7 +393,8 @@
                                     <groupname>root</groupname>
                                     <sources>
                                         <source>
-                                            <location>${basedir}/src/deb/run_newton_adventure.sh</location>
+                                            <location>${basedir}/src/rpm/run_newton_adventure.sh</location>
+                                            <destination>${project.name}</destination>
                                         </source>
                                     </sources>
                                 </mapping>
