@@ -838,23 +838,29 @@ public strictfp class World extends net.phys2d.raw.World {
 			add(activator);
 		} else if (c.equals("blocker1")) {
 			Blocker activable = new Blocker(this, 1, tileWidth, tileHeight);
-			activable.setTexture(blocker1Texture);
+			activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker1Texture));
 			activable.setPosition(tileX, tileY);
 			activable.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activable);
 		} else if (c.equals("blocker2")) {
 			Blocker activable = new Blocker(this, 2, tileWidth, tileHeight);
-			activable.setTexture(blocker2Texture);
+			activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker2Texture));
 			activable.setPosition(tileX, tileY);
 			activable.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activable);
 		} else if (c.equals("blocker3")) {
 			Blocker activable = new Blocker(this, 3, tileWidth, tileHeight);
-			activable.setTexture(blocker3Texture);
+			activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker3Texture));
 			activable.setPosition(tileX, tileY);
 			activable.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activable);
-		} else if (c.equals("moving_platform")) {
+		} else if (c.equals("laser_blocker")) {
+			LaserBlocker activable = new LaserBlocker(this, 1, tileWidth, tileHeight);
+			activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker1Texture));
+			activable.setPosition(tileX, tileY);
+			activable.setZOrder(getTileZOrder(tile, zOrderBase));
+			add(activable);
+		}else if (c.equals("moving_platform")) {
 			MovingPlatform platform = new MovingPlatform(this,
 					getAnimationForTile(map, tile, textureCache),
 					getMovingPlatformPath(tile, x, y, baseSize),
@@ -964,7 +970,21 @@ public strictfp class World extends net.phys2d.raw.World {
 		}
 		return animation;
 	}
-	
+
+        private AnimationCollection getAnimationForTile(tiled.core.Map map,
+			tiled.core.Tile tile, ITextureCache textureCache, AnimationCollection defaultAnimation)
+			throws FileNotFoundException, IOException {
+		AnimationCollection animation;
+		String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+		if (null != gfx) {
+			animation = game.getView().loadFromAnimation(
+					game.getData().getLevelFilePath(questName, levelName, gfx));
+		} else {
+			animation = defaultAnimation;
+		}
+		return animation;
+	}
+        
 	public BodyList getColoredStaticBodyList(NewtonColor color) {
 		return coloredStaticBodies.get(color);
 	}
