@@ -308,7 +308,60 @@
     </data>
    </image>
   </tile>
+  <tile id="30">
+   <properties>
+    <property name="newton_adventure.accelerator.ax" value="0"/>
+    <property name="newton_adventure.accelerator.ay" value="-5"/>
+    <property name="newton_adventure.type" value="accelerator"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEnUlEQVR42r2XW3bURhCGe8/TamU8BIMNBowDMQzYY8DcAiSBZAtsgA2YBZgVqIWkF+qv6mqVLja8gM/p4xmNVP31X1c5N/rrjt3/P3O5y/74Bl+dutAe0Tp0RTxwi3jLFdUuXb/mQve7K7otV9S/OR9L+l7Qf7tK/g33LOorztfb9NwO2wjtgSvbBxdCyObxDd30jIwc0UMP6KE/XGhuZwBf9wBFDLzmABb1Ft8bGnqmuuGKRgBC+5DWZgLBF8ruA/341wjggIwKAIxBgdCteJPQlbypVQHXQrecAMAGH4YAinpD115kiLS5ABRRAHx9zC7wURQIzQ0xRkZhXF1Qdr0CogauDRUom12xkQB8fQIAuv8t752kx3rPCoT21BXtMSsAANDzKYwLfL3k01oAfMY1hqtJpe5qVkABfBSA0L6gZQCggI+igAahAswo0Gzcl7mVAnPJAIv6qkCPXKAAAwUAEDpRAADjIFQF2Gi9wmbt2n1qN7TWshiA46LuAQBdVDfZRtneS0F4Qp9fEtS7oQsAAAUW1bNLASgIDcBZWp+yAhagqK7zs4t4h2zfI9euyeYTBgjtu6kLbBZoELJ8zQTg69EMgCpQdFcyABQAgI/3yeYjBvDVCAAKjNPQxz4LVAEEFgVhBji8QAEA4F4UIV/tzQIs4t/zMQAAG4Q2C8YxAIBDAyAZsOQqKEEoAD7uk00BKGoCiK/o8wjA1gEAQAFJnaECCrBJLgDA2gBoGZ4D8BEKPKX1aqiAukDTEC6guj3rAgswdoGWYbggdNv07A4tANzNAL4SAB//GQdhn4bjOiDFRADodDYL6sfuDPHAALYKaiNSgLL9k/4/ZgC4YAAwroQKoC5AFpTNdYnsbgDQ3jEuEP/3ZVia2B41o7ukrgDABUX7ek6BD4NCBBcAgCMYHa0SgJECcENWQDJgS5pWAkArhgIAwME4y+YBpBBxL6inWcA5bVwwFwNahGwjQitWF0h9OZ0C2DpgS7EtROoCq8A4DbUPQAEErQLILHCYBp1TSffu32kpzt1wlAVlc3MSA3NpqApwweIquCvzRDzgtOYCVwkA7ff9ZpQUmOt82QUGYNodUyvmg7Q9AKd7/A6AKpBiwJxa1xlvdN+dqxvYLcfuo9SE1Ij6ViwuuBTABqEFQEMhFygEcp8+n+M7JRZOez4sSMkF3MQSANvjSUtccKECNgtsKUYMkOGB/zfuc84EjQOUYQVA7Og0JGm9oXb/nLLgzcUKQCKQagygDmgWoLzaNDRDScqCVQZAFYRyfAC2IwBlKwCUdfNZoAOJzQIZyXa4vMq8L/3gxH3MPpc5cSV9ABN00wNgGNGJmBWIb+cB7ESklbBo+kqoAFJulzna0QNQA1QBKKWdMDT7PI5hIIUCaR6k7//9WDPicQonQWNBh0OR4Wq3zEsKkABoEZoHyCN5BjBvRe8H7VgGSO2GexlAOt1qsLkFEP9fG8wCOpCO3wkmb0eqAIKQZ/iUhohmNlhv929H3HSWIyVWg04orXifx7FFXLMC5ILL3w81BkQycYEFkJeTHAcDF/Sz4BRAJuKTH3pD/pWv598AJbL0CxA+jEYAAAAASUVORK5CYII=
+    </data>
+   </image>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="newton_adventure.accelerator.ax" value="-5"/>
+    <property name="newton_adventure.accelerator.ay" value="0"/>
+    <property name="newton_adventure.type" value="accelerator"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAD1UlEQVR42r2XeXbUOBDGfeeWZPYlMEDYQg+BpDMwzLAvgStwAS4QDgAnsDyW/6G+kkouqd0Nb3jQ7/26yiXZ+kq2tqapfuNh8+FX0mz7cYV2/NAYH4FfU5eJ/4OxjSK4wPh3jBu3047Hqe5xvgcxMJUf5/pSL9VZE8EBF5431j/fajV1DNdzsTlr/Issgp1F97gx3d8ZXEvMhYiUiV9b0IbHBfq5qKfLKMZt85/tDxrTH7J14YCtjm0D9eUe7dd1bDgsnkexSYDx9xkX7jcL/ycpjMCvr+u49o1fsg/rwjKXCTpG/iTAhTt00501W/s1KNtWty6Psdscs/72JGDhd6nwRuOGG+zbYTf7iGsQF1/fp+PiS1xfT+1cnwS0wx+M6a41toO9SpUi8FNsWDVfuZ7EpZ74mrk6sLa7IqhvoNspsN1lqrxDjV0W0HgSEGOoA+C74RLdtxkph1V1lYD+IuPGiL624wU0HFbNJxaw6C8wFC98oS4Dpj+fcWO2WkBRQDedE6TxLMCO53R5vjb92Ywdz9BzzjK4XvRnOAaLGHxCzQP0EKksN5CVxvuHzYkI+L/Q807T+D+lUaMgKUSlhMr8hPwvsNITYV/ZfXWdYv8dRKSMBbixpRHQsrXewdev4DQVlI0fNR/Tgz9LFjSNnLCQZWKl2FwWBbSjY4y3LMCNthSgRHBjhyQAGdHD/EMSsEe9sKwagN1tTtIrmhcmPYCGATUsvpoJx0kAaMdTLGJfvYJlfJjubulmtqvqVahXUghQrPfAXE8kET/9EaL747ufESCjYIb8MeZMyu+FoR4rvnD52LbZ4iPExIE5AFbmATXe5ZtIAsrxjhEkVCOp6FEIg1Dxi2Gop0v2MSPStZrhcleKSD15RfHl5AS0WJlflFjVA2mB0OsB1gJZFxJRAPl6Xmfhadqem6Z1TE/JJFSNguEag9VQwAoI6tUPQtshooWLYL2gxUXt0prgJFrviG5m3BCZW//Ft8N1htZ0FrspAbWUMxA9Ldk7WsAe04a7GevvFrsa2dnQToZ3NcbfYuxwK/uSBDYqQr05kQSKDYmlQbbw+7wn3LQ/xH4OyH6vDfdITAS+C3sZSQhJIBmdRIST0HvCI8b0R8lf0TBZsQXYzerdrt4FG5qoIw8YFyaQGBKRxMQHlFR5NnDhH3ovEfiL7glVesJW7/31WQH7exceUSwC3/Z/kdXExISU2PzpyPqXJeEFM3fyseFZxvinFIvAN92/TBsiSEgl+L3z4XtGznpy9tPnxnZ8S/6bNRb+NTX0OtlXjPGvOBkXOKkfOiH/zuP5NwT/9AsanMJLAAAAAElFTkSuQmCC
+    </data>
+   </image>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="newton_adventure.accelerator.ax" value="5"/>
+    <property name="newton_adventure.accelerator.ay" value="0"/>
+    <property name="newton_adventure.type" value="accelerator"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADyklEQVR42r2Xa1IUMRDH5847yaggqIjIQ3BxhV0U8AWiolfwAlwADwAnmIyTfLG7k046M7NblpZu1a+689iZfyeTpFMUnZ+bFt/+JcWiH3VQ5rzQ9pxsaT6C7xmZC7AXZEvzqUflPhfafQE/p3KXRGm+InNFUENZvyG09VT2LVHWAfMO6j3oK/s+ou0HQhkP+fbMY84lPRFUoe2sUM2sKJujiLbIq4hq0L4GMR70K3sM9oQo6wSWR/UptJ+SxYBEgFEEOZXdh8oXkdIkX9kJ2JeR0jAHhLaHIOwwWvbLZkpBcWDel4Ed0btD9DuBZxmV3YUh24UX7RHaJir7HNo86Gs7hj5jsggGhYzMfgyKAxuZCQaWBIzMRqHaDejwtNCth/2R2YyUZiuwTah2O/oYgDI74OdBYBmDwGCYEFASUNaPgMdE1a5FX9Xrwj6J6NaDPouXAaDt+1tECmJLCGhWofFBRll7q+qHhBfp0a23ql4jUDSCPovXLQazTuLnBCCmoFkGEfcjyq1AXY6s0261JxoFg9B2VtxG0SycBTNBeBKg3D14cKJsljKUWyZQKII+i9UuWRCJArwItxIhkSi6TiMLVgho7hDa3YVdK/ll06crFstCLL7cTovvJEIKRhtE8iiLb8BUhHaLLQtFUKgUFgSTgElxBav+ikRotzQIiJICVEQZDQ/XPJR/Ar4cuEYhJEIIlAwLCMhIMkLdz0Pvk5VtyLi4hv/fZCJwxFAECwHbF6DdkIDryDgAfnMAdjOVYxu+fK+4gU36NrRdxW+iMxJiK3Z+6PHlMPw8BXEoOy+Pdk6bmIofFMSRECBE5B8hChAfXRyBMMw85L3hnuRTw6LjFMzEd9BZSf1lyISv+W8+Qpqi9PKlbH/prQJUhGADr23+Q1o2+QYl17dY72LqrrK9gPcBsXnJbyDf1ZihrVjucAPbNAuIuyFv27R1u1VZlqdh2iLlQcT1Q2B71aY9H30gbsWhTOBZ0D3QADEF4VRD8BTj00yebOxLun3g9PNzLo5yrOd+fCriKQnkCYlMQmRi0q3vJi0+Uen3YbAd61W7Gf1QL0bAcDrmMxpGZjWyblH7or4dK3PCMeVuPn9LvqzDfA99tJzrIUO+zAe7ZZEfSgEpo8VsVtlpViezXZkFD/XpQs9r8sw51MlVcEL5PSNz/FF9nLUhMvcfsuxzGZ+ByHsDlPO7QWnO4s1myA7dfGSdLC96TrDDt6N0j8N73SXd9fx9z9ejn/fxbXwH5P7zCP9ZfD+sHI6Gt9L/nTpZloi237oh/8/r+S8Sj/QLPjbzWAAAAABJRU5ErkJggg==
+    </data>
+   </image>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="newton_adventure.accelerator.ax" value="0"/>
+    <property name="newton_adventure.accelerator.ay" value="5"/>
+    <property name="newton_adventure.type" value="accelerator"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAElklEQVR42r2XW3LVRhCGZ8+6cWwT29gYCA7mgLF9uCeBBGLCFtiANwALgBVohKQX+u+eHvXo4uIlOVVTRyWNZr75+yrnRr/+wn38L4e77scTyu6pK7pTl/sTGr+6sj1yRX3g8nrPFf0vNHZc3qxc2a/4HyNrtsL9mzR2ae4tV7W3Xebv0Xq/0TqPXdGcu6x+sQgRNn/NAJmfApTtHm9Q9ttxYwUp+i2+X/YpQO7v0hCAvLmg+y9p/TcTCL5R+L9owmua+JQmPXZV94AB8vqIF1QFFAAbWxXyZjsA7ob5RwR9lxXAelAAAIV/Q+teRgi+yP2/EQAKgBgAZZsC4IQWwCoBAHkuAEUtJoACmX9E656rAgBwVS8+kQCICTazAFg4a3aC1Cta4Ea7cd8woh/gOUxQ1Pv0zqErWvGBqnukPsAKlP0l7WEAqv4DA2T1K5q4Ecn8A7YhTlK2t9gH4GhBAWzcXbhPpNenALEdAWT+IZsAClgAKDAP0L2lia9YAUgmziMALCnZPyjAm5+6K5p5pf8MIc93yQH3GcCaQJ1QFRiZ4JIBoAAAQMzOQyeAN0PSAGA2/9ytaWzcF75WCMwDAEyAA2AdAECBsnsZFZgA8AOaAFIF4AXoJAGAN9/I5nT91Z+JD+C6OTMQAGDlfGoCrL+sAMKDvRQT1xGAnanejzZX6en07Yn7GqA+B7DBHKqABdAouBZASNf8IjtRfajebgeDrKMZrubmRAA1wSIAbnB8BoDcrwnoODjhQfQBSTarBCC1/w75ifgAfGccBdYHRlHwT/SBwQTHFMd3aKGDmIQk2ayiL6gCpyYKFAC+s6QAoi4ByP17ioI/xUloYtU9pHv3I4DWAavAJomEAYALVr2f+ICNgpCKxz4gAFX3ghUovABk/k4sRFAARScAfD83JhgroABaDcdOmPsP8wBl95yuzxigaO9zGraVEOnW+sC9EYD1ATWB5gEx7VALJibI/R+0oQCoCVCKuRChxAaAUAOgQIj9VAGumACuh1T8E8XoPT1QgCd0fRIBOK9TepXTUePR3Fj0AfgIR0udAlgTwAcmTpj5dwwgJlCAoRJCVjndADAXhmMANQHCGgrAxxQgzQPdOzZB0Tyj62UAlF2rwDgMpSKmANYE4uQziQgK5PXv9FAA0I5xJQsAthfMfTU2AfwhOOHWrAk4sTUDwMQEZff3LAAKCkKKQys2oynAxgCgV1AFbCJCYrMAkzAEQNUJADpiNCOiwGEECEloooCNAgugCthyvNgR5V4BhoYUL0s3tJcAqAKnQzOy6ANjgMVipP2gdsS2FGMxBeBGVBSYrX6SqG5K5mzn84Ck4okJBgA0pNoNySn2YiWkCIAC9HJJ8woeuMY9jpBeAOaioKBuYjETjr8JhnYsTcOUBaEAzU8B+B7BLSnA/QV3WtM8MHwbEIB2xNYEFkA+Rqq4ednrfxXUCd8GUA2fc5yIjqMPmDCc/zpCQyoA0guMAbAJTqsAGFCDBz2zJpAiljohAHL/9vrvQ2lIj7kUayEyaXgCICpUEYAblwDA5Zw6K2lw2Al/6gv5//w8/wHxzfQLMsp9gQAAAABJRU5ErkJggg==
+    </data>
+   </image>
+  </tile>
  </tileset>
+ <layer name="accelerators" width="24" height="16">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAAGNgGAVDFcgPtANwAMUBsldhgOwlFSgNtAOwAIWBdsAoGBAAAEhajIYABgAA
+  </data>
+ </layer>
  <layer name="level" width="24" height="16">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAAGNgGB5ABogZqYRlsJgvTUW3YjNrOJgvTmPzqQUGm/mg9CaLhrGlQXLNlyNSbDCYz0SB+ax4zKd1+TBUAQBDwiqLAAYAAA==

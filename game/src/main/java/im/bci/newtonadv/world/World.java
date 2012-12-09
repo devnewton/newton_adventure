@@ -148,6 +148,12 @@ public strictfp class World extends net.phys2d.raw.World {
         return explodeSound;
     }
 
+    private Vector2f getAcceleratorForce(Tile tile) {
+        float ax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.accelerator.ax"));
+        float ay = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.accelerator.ay"));
+        return new Vector2f(ax, ay);
+    }
+
 	public static interface PostUpdateAction {
 
 		public void run() throws Sequence.NormalTransitionException,
@@ -860,7 +866,15 @@ public strictfp class World extends net.phys2d.raw.World {
 			activable.setPosition(tileX, tileY);
 			activable.setZOrder(getTileZOrder(tile, zOrderBase));
 			add(activable);
-		}else if (c.equals("moving_platform")) {
+		} else if (c.equals("accelerator")) {
+			Accelerator accelerator = new Accelerator(this, tileWidth, tileHeight, getAcceleratorForce(tile));
+			accelerator.setTexture(getAnimationForTile(map, tile, textureCache));
+			accelerator.setPosition(tileX, tileY);
+			accelerator.setFriction(getTileFriction(tile));
+			accelerator.setZOrder(getTileZOrder(tile, zOrderBase));
+			add(accelerator);
+		}
+                else if (c.equals("moving_platform")) {
 			MovingPlatform platform = new MovingPlatform(this,
 					getAnimationForTile(map, tile, textureCache),
 					getMovingPlatformPath(tile, x, y, baseSize),
