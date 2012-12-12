@@ -31,10 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.game.Updatable;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
-import net.phys2d.raw.shapes.Shape;
 
 /**
  * 
@@ -52,10 +50,7 @@ public strictfp class Accelerator extends Platform implements
 
 	@Override
 	public void collided(Body body) {
-		if (body instanceof Hero) {
-                    Hero hero = (Hero)body;
-                    hero.addForce(force);
-		}
+            body.addForce(force);
 	}
 
 }
