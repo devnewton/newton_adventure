@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
-<map version="1.0" orientation="orthogonal" width="24" height="16" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32">
  <properties>
   <property name="newton_adventure.background" value="prison_background.png"/>
+  <property name="newton_adventure.mummy" value="robot.gif"/>
   <property name="newton_adventure.music" value="Lava_City.ogg"/>
  </properties>
  <tileset name="newton_adventure_desert" firstgid="1">
@@ -356,15 +357,25 @@
     </data>
    </image>
   </tile>
+  <tile id="34">
+   <properties>
+    <property name="newton_adventure.type" value="mummy"/>
+   </properties>
+   <image format="png">
+    <data encoding="base64">
+     iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA4klEQVR42tVXWwqEMAzsRdxfzyPs96KewXv3CLsrGAghqfnoTHeFYLHSzEwebUv55+e5HG9rFKff161BwLSc18tWJIgM+4oGkA0BNAwRCP19317YpHxMM5+9ONZMPSBI5mNYexVwxvgn6t+bo5efnaOooEOgAcLyIFP71PLzAMB3w6EAGg2HI3/EWM+dYwlVVzB6UauEfNPOTZvuL7+XC/KPVQSWgPocKE5lDDsfRr3A5khX5pkybIQED8CyhymQYQ+TPtoRTebzbkJeH6Bex4ar4ClAUeLuVAQH4d2GI8uu+QHMHMsX6SQvIAAAAABJRU5ErkJggg==
+    </data>
+   </image>
+  </tile>
  </tileset>
- <layer name="accelerators" width="24" height="16">
+ <layer name="accelerators" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAGNgGAVDFcgPtANwAMUBsldhgOwlFSgNtAOwAIWBdsAoGBAAAEhajIYABgAA
+   H4sIAAAAAAAAAO2V3QqAIAxGK+sZCvq56f3fsZsCGdvnbAu72IEhDd2ZYdl1QRC0ZnMKi9+KpQ8Pv6UWWpOyaOF/U6u2nqc/70F7TqXczgSdy81D++F64OYfwnqaX4EL9fB3v/QOad7bPzK5QekvfaML8PcktOc3f0b+Ug3t/4Xy7D+RkfOj3qx+ynmPk4N/Fmojf8396HX/et3HQRAEX3MBWxAXPQAQAAA=
   </data>
  </layer>
- <layer name="level" width="24" height="16">
+ <layer name="level" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAGNgGB5ABogZqYRlsJgvTUW3YjNrOJgvTmPzqQUGm/mg9CaLhrGlQXLNlyNSbDCYz0SB+ax4zKd1+TBUAQBDwiqLAAYAAA==
+   H4sIAAAAAAAAAO3BAQ0AAADCoPdPbQ8HFAAAAPBuEQAcxwAQAAA=
   </data>
  </layer>
 </map>
