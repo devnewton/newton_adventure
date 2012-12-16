@@ -65,7 +65,7 @@ class EmbeddedGameData extends AbstractGameData {
         quests = new ArrayList<String>(Arrays.asList("jungle", "vatican", "arctic", "volcano",
                 "egypt"));
         if (isDeluxe) {
-            quests.addAll(Arrays.asList("bridge", "lab", "prison"));
+            quests.addAll(Arrays.asList("bridge", "lab", "prison", "bonus"));
         }
         questLevels = new HashMap<String, List<String>>();
         questLevels.put("jungle", Arrays.asList("level0", "level0.5", "level1",
@@ -91,6 +91,7 @@ class EmbeddedGameData extends AbstractGameData {
         if (isDeluxe) {
             questsToCompleteToUnlockQuests.put("prison", Arrays.asList("jungle",
                     "vatican", "arctic", "volcano", "egypt", "bridge", "lab"));
+            questsToCompleteToUnlockQuests.put("bonus", Arrays.asList("bonus"));
         }
     }
 

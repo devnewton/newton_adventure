@@ -42,4 +42,9 @@ public strictfp class Coin extends PickableObject {
     Coin(World world, Shape shape) {
         super(world, shape);
     }
+
+    @Override
+    protected void removeFromWorld() {
+        world.removeCoin(this);
+    }
 }
