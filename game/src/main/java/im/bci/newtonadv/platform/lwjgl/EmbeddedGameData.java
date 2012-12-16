@@ -85,7 +85,7 @@ class EmbeddedGameData extends AbstractGameData {
             questLevels.put("prison", Arrays.asList("level0", "level1", "level2", "level3", "boss", "credits"));
         }
         questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
-                "bonus_level3", "bonus_level4", "bonus_level5"));
+                "bonus_level3", "bonus_level4", "bonus_level5", "bonus_level6"));
 
         questsToCompleteToUnlockQuests = new HashMap<String, List<String>>();
         if (isDeluxe) {
