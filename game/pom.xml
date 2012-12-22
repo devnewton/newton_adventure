@@ -30,6 +30,7 @@
     <name>newton_adventure</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--<newton.adventure.version>deluxe</newton.adventure.version>-->
         <newton.adventure.version>normal</newton.adventure.version>
         <newton.adventure.quests.exclude>%regex[.*(bridge|lab|prison)\/.*]</newton.adventure.quests.exclude>
     </properties>
@@ -71,10 +72,7 @@
                         <manifestEntries>
                             <mode>development</mode>
                             <url>${pom.url}</url>
-                            <Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar
-								lib/jinput.jar lib/phys2d.jar lib/libtiled.jar lib/jorbis.jar
-								lib/TWL.jar lib/xpp3-1.1.4c.jar lib/protobuf-java-2.4.1.jar
-                            </Class-Path>
+                            <Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar lib/jinput.jar lib/phys2d.jar lib/libtiled.jar lib/jorbis.jar lib/TWL.jar lib/xpp3-1.1.4c.jar lib/protobuf-java-2.4.1.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>
