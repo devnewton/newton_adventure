@@ -236,7 +236,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 
     public void setAnimation(AnimationCollection heroAnimation) {
         this.animations = heroAnimation;
-        play = animations.getFirst().start();
+        play = animations.getAnimationByName("walk").start();
         play.stop();
     }
 

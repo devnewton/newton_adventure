@@ -295,7 +295,7 @@ public strictfp class World extends net.phys2d.raw.World {
         defaultMapProperties.put("newton_adventure.door", "door.png");
         defaultMapProperties.put("newton_adventure.door_open", "door_open.png");
         defaultMapProperties.put("newton_adventure.key", "key.png");
-        defaultMapProperties.put("newton_adventure.hero", "hero.gif");
+        defaultMapProperties.put("newton_adventure.hero", "hero.nanim");
         defaultMapProperties.put("newton_adventure.apple", "apple.png");
         defaultMapProperties.put("newton_adventure.coin", "coin.png");
         defaultMapProperties.put("newton_adventure.world_map", "map.png");
@@ -1009,7 +1009,6 @@ public strictfp class World extends net.phys2d.raw.World {
     public static final float ortho2DBottom = -ortho2DBaseSize;
     public static final float ortho2DRight = ortho2DBaseSize;
     public static final float ortho2DTop = ortho2DBaseSize;
-    float aspectRatio = 1.0f;
 
     public void draw() {
         getView().drawWorld(this);
