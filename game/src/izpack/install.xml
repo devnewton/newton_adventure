@@ -38,17 +38,47 @@
         <pack name="Core" required="yes">
             <description>Core installation files</description>
             <file src="../@{project.build.finalName}.jar" targetdir="$INSTALL_PATH" />
-            <file src="../@{project.build.finalName}.exe" targetdir="$INSTALL_PATH" />
+            <file src="../@{project.build.finalName}.exe" targetdir="$INSTALL_PATH" >
+		<os family="windows"/>
+	    </file>
             <file src="../../src/izpack/icon.ico" targetdir="$INSTALL_PATH" />
             <file src="../../README_YOU_DONT_WANT_TO_BUT_YOU_HAVE_TO_README.txt" targetdir="$INSTALL_PATH" />
-            <file src="../../run_linux.sh" targetdir="$INSTALL_PATH" />
-            <file src="../../run_macosx.sh" targetdir="$INSTALL_PATH" />
-            <file src="../../run_solaris.sh" targetdir="$INSTALL_PATH" />
-            <file src="../../run_windows.bat" targetdir="$INSTALL_PATH" />
+            <file src="../../run_linux.sh" targetdir="$INSTALL_PATH" >
+		<os family="unix"/>
+	    </file>
+            <file src="../../run_macosx.sh" targetdir="$INSTALL_PATH" >
+		<os family="mac"/>
+	    </file>
+            <file src="../../run_solaris.sh" targetdir="$INSTALL_PATH" >
+		<os family="unix"/>
+	    </file>
+            <file src="../../run_windows.bat" targetdir="$INSTALL_PATH" >
+		<os family="windows"/>
+	    </file>
             <file src="../../data/icon.png" targetdir="$INSTALL_PATH" />
             <fileset dir="../../licences" targetdir="$INSTALL_PATH/licences" override="true"/>
             <fileset dir="../../lib" targetdir="$INSTALL_PATH/lib" override="true"/>
-            <fileset dir="../../native" targetdir="$INSTALL_PATH/native" override="true"/>
+            <fileset dir="../../native/linux" targetdir="$INSTALL_PATH/native/linux" override="true">
+		<os family="unix"/>
+	    </fileset>
+            <fileset dir="../../native/solaris" targetdir="$INSTALL_PATH/native/solaris" override="true">
+		<os family="unix"/>
+	    </fileset>
+            <fileset dir="../../native/macosx" targetdir="$INSTALL_PATH/native/macosx" override="true">
+		<os family="mac"/>
+	    </fileset>
+	    <fileset dir="../../native/windows" targetdir="$INSTALL_PATH/native/windows" override="true">
+		<os family="windows"/>
+	    </fileset>
+	    <executable type="bin" stage="never" targetfile="$INSTALL_PATH/run_linux.sh">
+		<os family="unix"/>
+	    </executable>
+	    <executable type="bin" stage="never" targetfile="$INSTALL_PATH/run_solaris.sh" >
+		<os family="unix"/>
+	    </executable>
+	    <executable type="bin" stage="never" targetfile="$INSTALL_PATH/run_macosx.sh" >
+		<os family="mac"/>
+	    </executable>
         </pack>
     </packs>
 
