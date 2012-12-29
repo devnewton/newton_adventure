@@ -31,14 +31,17 @@
  */
 package im.bci.newtonadv.score;
 
+import java.io.Serializable;
 import java.util.TreeMap;
 
 /**
  *
  * @author devnewton
  */
-public class GameScore {
-
+public class GameScore implements Serializable {
+    
+    public static final long serialVersionUID = 1L;
+    
     private TreeMap<String, QuestScore> questScores = new TreeMap<String, QuestScore>();
 
     public void setLevelScore(String questName, String levelName, LevelScore score) {

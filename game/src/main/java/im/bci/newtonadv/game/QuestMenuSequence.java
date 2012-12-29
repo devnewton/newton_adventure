@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.game;
 
+import im.bci.newtonadv.score.QuestScore;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -181,8 +182,13 @@ public class QuestMenuSequence extends MenuSequence {
 
 			@Override
 			public void draw() {
-				game.getView().drawMenuButton(this, questNameFont,
-						questName);
+				String questLabel = questName;
+                                int score = game.getScore().getQuestScore(questName).computeScore();
+                                if(score>0) {
+                                    questLabel += " - best score: " + score;
+                                }
+                                game.getView().drawMenuButton(this, questNameFont,
+						questLabel);
 			}
 			
 			@Override

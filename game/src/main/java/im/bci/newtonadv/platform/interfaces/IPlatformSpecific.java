@@ -32,6 +32,7 @@
 
 package im.bci.newtonadv.platform.interfaces;
 
+import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.util.Properties;
@@ -59,5 +60,9 @@ public interface IPlatformSpecific {
 	ScoreServer getScoreServer();
 
 	void openUrl(String string);
+
+    public GameScore loadScore();
+
+    public void saveScore(GameScore score);
 
 }

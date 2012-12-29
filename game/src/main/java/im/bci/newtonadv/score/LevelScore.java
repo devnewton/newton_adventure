@@ -31,13 +31,16 @@
  */
 package im.bci.newtonadv.score;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  *
  * @author devnewton
  */
-public class LevelScore {
+public class LevelScore implements Serializable{
+ 
+    public static final long serialVersionUID = 1L;
     private int nbKilledMummy;
     private int nbKilledBat;
     private int nbKilledEgyptianBoss;

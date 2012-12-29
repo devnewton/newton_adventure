@@ -39,13 +39,17 @@ import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.openal.OpenALSoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
+import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
@@ -60,15 +64,15 @@ import org.lwjgl.Sys;
  */
 public class PlatformSpecific implements IPlatformSpecific {
 
-	private GameView view;
-	private GameInput input;
-	private Properties config;
-	private ScoreServer scoreServer;
-	private IGameData data;
-	private ISoundCache soundCache;
-	private IOptionsSequence options;
-	
-	public PlatformSpecific() throws Exception {
+    private GameView view;
+    private GameInput input;
+    private Properties config;
+    private ScoreServer scoreServer;
+    private IGameData data;
+    private ISoundCache soundCache;
+    private IOptionsSequence options;
+
+    public PlatformSpecific() throws Exception {
         loadConfig();
 
         createGameData();
@@ -78,190 +82,244 @@ public class PlatformSpecific implements IPlatformSpecific {
         createScoreServer();
         createOptionsSequence();
 
-	}
+    }
 
-	private ISoundCache createSoundCache() {
-		if (null == data)
-			throw new RuntimeException("create IGameData before  SoundCache");
-		if (null == soundCache)
-			soundCache = new OpenALSoundCache(data, config);
-		return soundCache;
-	}
+    private ISoundCache createSoundCache() {
+        if (null == data) {
+            throw new RuntimeException("create IGameData before  SoundCache");
+        }
+        if (null == soundCache) {
+            soundCache = new OpenALSoundCache(data, config);
+        }
+        return soundCache;
+    }
 
-	private GameView createGameView() {
-		if (null == data)
-			throw new RuntimeException("create IGameData before IGameView");
-		if (view == null) {
-			view = new GameView(data, config);
-		}
-		return view;
-	}
+    private GameView createGameView() {
+        if (null == data) {
+            throw new RuntimeException("create IGameData before IGameView");
+        }
+        if (view == null) {
+            view = new GameView(data, config);
+        }
+        return view;
+    }
 
-	private GameInput createGameInput() throws Exception {
-		if (null == input) {
-			input = new GameInput(config);
-		}
-		return input;
-	}
+    private GameInput createGameInput() throws Exception {
+        if (null == input) {
+            input = new GameInput(config);
+        }
+        return input;
+    }
 
-	private void loadConfig() {
-		try {
-			URL configFilePath = getUserOrDefaultConfigFilePath();
-			Logger.getLogger(PlatformSpecific.class.getName()).log(Level.INFO,
-					"Load config from file {0}", configFilePath);
+    private void loadConfig() {
+        try {
+            URL configFilePath = getUserOrDefaultConfigFilePath();
+            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.INFO,
+                    "Load config from file {0}", configFilePath);
 
-			InputStream f = configFilePath.openStream();
-			try {
-				config = new Properties();
-				config.load(f);
-			} finally {
-				f.close();
-			}
-		} catch (IOException e) {
-			Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE,
-					null, e);
-		}
-	}
+            InputStream f = configFilePath.openStream();
+            try {
+                config = new Properties();
+                config.load(f);
+            } finally {
+                f.close();
+            }
+        } catch (IOException e) {
+            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE,
+                    null, e);
+        }
+    }
 
-	private IGameData createGameData() {
-		if (data == null) {
-			String dataDir = config.getProperty("data.dir");
-			if(null != dataDir) {
-				data = new FileGameData(dataDir);
-			} else {
-				data = new EmbeddedGameData();
-			}
-		}
-		return data;
-	}
-
-	private IOptionsSequence createOptionsSequence() {
-		if (null == view) {
-			throw new RuntimeException(
-					"create IGameView before IOptionsSequence");
-		}
-		if (null == input) {
-			throw new RuntimeException(
-					"create IGameInput before IOptionsSequence");
-		}
-		if (null == scoreServer) {
-			throw new RuntimeException(
-					"create ScoreServer before creating IOptionsSequence");
-		}
-		if (null == config) {
-			throw new RuntimeException(
-					"load config before creating IOptionsSequence");
-		}
-		options = new OptionsSequence(this, view, input, scoreServer, soundCache, config);
-		return options;
-	}
-
-	public static URL getDefaultConfigFilePath() {
-		return PlatformSpecific.class.getClassLoader().getResource(
-				"config.properties");
-	}
-
-	public static String getUserConfigDirPath() {
-		String configDirPath = System.getenv("XDG_CONFIG_HOME");
-		if (null == configDirPath) {
-			configDirPath = System.getProperty("user.home") + File.separator
-					+ ".config";
-		}
-		return configDirPath + File.separator + "newton_adventure";
-	}
-
-	public static String getUserConfigFilePath() {
-		return getUserConfigDirPath() + File.separator + "config.properties";
-	}
-
-	public static URL getUserOrDefaultConfigFilePath() {
-		File f = new File(getUserConfigFilePath());
-		if (f.exists() && f.canRead()) {
-			try {
-				return f.toURI().toURL();
-			} catch (MalformedURLException e) {
-				throw new RuntimeException("Invalid user config file path" + f);
-			}
-		}
-		return getDefaultConfigFilePath();
-	}
-
-	private ScoreServer createScoreServer() {
-		scoreServer = new ScoreServer(config);
-		return scoreServer;
-	}
-
-	private void writeConfig(String path) throws FileNotFoundException,
-			IOException {
-		FileOutputStream os = new FileOutputStream(path);
-		try {
-			config.store(os, "Newton adventure configuration, see "
-					+ PlatformSpecific.getDefaultConfigFilePath()
-					+ " for example and documentation");
-		} finally {
-			os.close();
-		}
-
-	}
-
-	@Override
-	public void saveConfig() {
-		File userConfigFile = new File(PlatformSpecific.getUserConfigFilePath());
-
-		if (!userConfigFile.exists()) {
-			(new File(PlatformSpecific.getUserConfigDirPath())).mkdirs();
-		}
-		try {
-			writeConfig(userConfigFile.getAbsolutePath());
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
-		}
-	}
-
-	@Override
-	public Properties getConfig() {
-		return config;
-	}
-
-	@Override
-	public IGameInput getGameInput() {
-		return input;
-	}
-
-	@Override
-	public IGameView getGameView() {
-		return view;
-	}
-
-	@Override
-	public ISoundCache getSoundCache() {
-		return soundCache;
-	}
-
-	@Override
-	public IGameData getGameData() {
-		return data;
-	}
-
-	@Override
-	public IOptionsSequence getOptionsSequence() {
-		return options;
-	}
-
-	@Override
-	public ScoreServer getScoreServer() {
-		return scoreServer;
-	}
-
-	@Override
-	public void openUrl(String url) {
-		Sys.openURL(url);
-	}
-
-        public void close() {
-            if(null != soundCache) {
-                soundCache.stopMusic();
-                soundCache.close();
+    private IGameData createGameData() {
+        if (data == null) {
+            String dataDir = config.getProperty("data.dir");
+            if (null != dataDir) {
+                data = new FileGameData(dataDir);
+            } else {
+                data = new EmbeddedGameData();
             }
         }
+        return data;
+    }
+
+    private IOptionsSequence createOptionsSequence() {
+        if (null == view) {
+            throw new RuntimeException(
+                    "create IGameView before IOptionsSequence");
+        }
+        if (null == input) {
+            throw new RuntimeException(
+                    "create IGameInput before IOptionsSequence");
+        }
+        if (null == scoreServer) {
+            throw new RuntimeException(
+                    "create ScoreServer before creating IOptionsSequence");
+        }
+        if (null == config) {
+            throw new RuntimeException(
+                    "load config before creating IOptionsSequence");
+        }
+        options = new OptionsSequence(this, view, input, scoreServer, soundCache, config);
+        return options;
+    }
+
+    public static URL getDefaultConfigFilePath() {
+        return PlatformSpecific.class.getClassLoader().getResource(
+                "config.properties");
+    }
+
+    public static String getUserConfigDirPath() {
+        String configDirPath = System.getenv("XDG_CONFIG_HOME");
+        if (null == configDirPath) {
+            configDirPath = System.getProperty("user.home") + File.separator
+                    + ".config";
+        }
+        return configDirPath + File.separator + "newton_adventure";
+    }
+
+    public static String getUserScoreDirPath() {
+        return getUserConfigDirPath();
+    }
+
+    public static String getUserConfigFilePath() {
+        return getUserConfigDirPath() + File.separator + "config.properties";
+    }
+
+    public static String getUserScoreFilePath() {
+        return getUserScoreDirPath() + File.separator + "scores";
+    }
+
+    public static URL getUserOrDefaultConfigFilePath() {
+        File f = new File(getUserConfigFilePath());
+        if (f.exists() && f.canRead()) {
+            try {
+                return f.toURI().toURL();
+            } catch (MalformedURLException e) {
+                throw new RuntimeException("Invalid user config file path" + f);
+            }
+        }
+        return getDefaultConfigFilePath();
+    }
+
+    private ScoreServer createScoreServer() {
+        scoreServer = new ScoreServer(config);
+        return scoreServer;
+    }
+
+    private void writeConfig(String path) throws FileNotFoundException,
+            IOException {
+        FileOutputStream os = new FileOutputStream(path);
+        try {
+            config.store(os, "Newton adventure configuration, see "
+                    + PlatformSpecific.getDefaultConfigFilePath()
+                    + " for example and documentation");
+        } finally {
+            os.close();
+        }
+
+    }
+
+    @Override
+    public void saveConfig() {
+        File userConfigFile = new File(PlatformSpecific.getUserConfigFilePath());
+
+        if (!userConfigFile.exists()) {
+            (new File(PlatformSpecific.getUserConfigDirPath())).mkdirs();
+        }
+        try {
+            writeConfig(userConfigFile.getAbsolutePath());
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+        }
+    }
+
+    @Override
+    public Properties getConfig() {
+        return config;
+    }
+
+    @Override
+    public IGameInput getGameInput() {
+        return input;
+    }
+
+    @Override
+    public IGameView getGameView() {
+        return view;
+    }
+
+    @Override
+    public ISoundCache getSoundCache() {
+        return soundCache;
+    }
+
+    @Override
+    public IGameData getGameData() {
+        return data;
+    }
+
+    @Override
+    public IOptionsSequence getOptionsSequence() {
+        return options;
+    }
+
+    @Override
+    public ScoreServer getScoreServer() {
+        return scoreServer;
+    }
+
+    @Override
+    public void openUrl(String url) {
+        Sys.openURL(url);
+    }
+
+    public void close() {
+        if (null != soundCache) {
+            soundCache.stopMusic();
+            soundCache.close();
+        }
+    }
+
+    @Override
+    public GameScore loadScore() {
+        File scoreFile = new File(PlatformSpecific.getUserScoreFilePath());
+        if (scoreFile.exists()) {
+            try {
+                FileInputStream fs = new FileInputStream(scoreFile);
+                try {
+                    ObjectInputStream is = new ObjectInputStream(fs);
+                    Object o = is.readObject();
+                    if(o instanceof GameScore) {
+                        return (GameScore)o;
+                    }
+                } finally {
+                    fs.close();
+                }
+            } catch (Exception e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+            }
+
+        }
+        return new GameScore();
+    }
+
+    @Override
+    public void saveScore(GameScore score) {
+        File scoreFile = new File(PlatformSpecific.getUserScoreFilePath());
+
+        if (!scoreFile.exists()) {
+            (new File(PlatformSpecific.getUserScoreDirPath())).mkdirs();
+        }
+        try {
+            FileOutputStream fs = new FileOutputStream(scoreFile);
+            try {
+                ObjectOutputStream os = new ObjectOutputStream(fs);
+                os.writeObject(score);
+            } finally {
+                fs.close();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+        }
+    }
 }

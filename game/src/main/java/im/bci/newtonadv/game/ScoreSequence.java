@@ -104,6 +104,7 @@ public class ScoreSequence extends MenuSequence {
     public void stop() {
         super.stop();
         font.destroy();
+        game.saveScore();
     }
 
     @Override

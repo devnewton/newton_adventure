@@ -74,7 +74,7 @@ public strictfp class Game {
 	private Properties config;
 	private ISoundCache soundCache = null;
 	private MainMenuSequence mainMenuSequence;
-	private GameScore score = new GameScore();
+	private GameScore score;
 	private Sequence currentSequence;
 	private List<BonusSequence> bonusSequences;
 	private BonusSequence lastBonusSequence;
@@ -101,6 +101,7 @@ public strictfp class Game {
 	public Game(IPlatformSpecific platform) throws Exception {
 		this.config = platform.getConfig();
 		this.data = platform.getGameData();
+                this.score = platform.loadScore();
 		this.soundCache = platform.getSoundCache();
 		this.view = platform.getGameView();
 		this.input = platform.getGameInput();
@@ -331,4 +332,8 @@ public strictfp class Game {
 	public void insertCoins() {
 		platform.openUrl("http://devnewton.bci.im/projects/newton_adventure/wiki?name=Donation");
 	}
+
+    public void saveScore() {
+        platform.saveScore(score);
+    }
 }

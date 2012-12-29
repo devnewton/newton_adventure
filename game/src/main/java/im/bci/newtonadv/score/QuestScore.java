@@ -31,15 +31,16 @@
  */
 package im.bci.newtonadv.score;
 
+import java.io.Serializable;
 import java.util.TreeMap;
 
 /**
  *
  * @author devnewton
  */
-public class QuestScore extends TreeMap<String/*level*/, LevelScore> {
+public class QuestScore extends TreeMap<String/*level*/, LevelScore> implements Serializable {
 
-	private static final long serialVersionUID = 6380879178554593330L;
+	private static final long serialVersionUID = 1L;
 	private final String questName;
     
     QuestScore(String questName) {
