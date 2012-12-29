@@ -302,7 +302,7 @@ public strictfp class Game {
 		if (data.listQuestLevels(questName).get(0).equals(levelName)) {
 			return false;
 		}
-		return "true".equals(config.getProperty(
+		return !"false".equals(config.getProperty(
 				"game." + questName + "." + levelName + ".blocked"));
 	}
 
