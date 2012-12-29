@@ -32,14 +32,13 @@
 package im.bci.newtonadv.score;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 /**
  *
  * @author devnewton
  */
-public class LevelScore implements Serializable{
- 
+public class LevelScore implements Serializable {
+
     public static final long serialVersionUID = 1L;
     private int nbKilledMummy;
     private int nbKilledBat;
@@ -47,28 +46,13 @@ public class LevelScore implements Serializable{
     private int nbApple;
     private int nbLosedApple;
     private int nbCoin;
-    
-    static final Comparator<LevelScore> comparator = new Comparator<LevelScore>() {
+    private static final int appleValue = 1;
+    private static final int coinValue = 5;
+    private static final int losedAppleValue = -2;
+    private static final int killedBatValue = 4;
+    private static final int killedMummyValue = 3;
+    private static final int killedEgyptianBossValue = 10;
 
-        @Override
-		public int compare(LevelScore o1, LevelScore o2) {
-            int c1 = o1.computeScore();
-            int c2 = o2.computeScore();
-            if(c1<c2)
-                return -1;
-            else if(c2>c1)
-                return 1;
-            else
-                return 0;
-        }
-    };
-	private static final int appleValue = 1;
-	private static final int coinValue = 5;
-	private static final int losedAppleValue = -2;
-	private static final int killedBatValue = 4;
-	private static final int killedMummyValue = 3;
-	private static final int killedEgyptianBossValue = 10;
-	
     public void addKilledMummy() {
         ++nbKilledMummy;
     }
@@ -88,36 +72,44 @@ public class LevelScore implements Serializable{
     public void addLosedApple(int n) {
         this.nbLosedApple += n;
     }
-    
+
     public int computeScore() {
-        return nbKilledMummy * killedMummyValue + nbKilledBat * killedBatValue + nbKilledEgyptianBoss * killedEgyptianBossValue + nbCoin * coinValue +  nbApple * appleValue + nbLosedApple * losedAppleValue;
+        return nbKilledMummy * killedMummyValue + nbKilledBat * killedBatValue + nbKilledEgyptianBoss * killedEgyptianBossValue + nbCoin * coinValue + nbApple * appleValue + nbLosedApple * losedAppleValue;
     }
 
     public void addCoin(int n) {
         this.nbCoin += n;
     }
 
-	public final int getAppleValue() {
-		return appleValue;
-	}
+    public final int getAppleValue() {
+        return appleValue;
+    }
 
-	public int getCoinValue() {
-		return coinValue;
-	}
+    public int getCoinValue() {
+        return coinValue;
+    }
 
-	public int getKilledBatValue() {
-		return killedBatValue;
-	}
+    public int getKilledBatValue() {
+        return killedBatValue;
+    }
 
-	public int getKilledMummyValue() {
-		return killedMummyValue;
-	}
+    public int getKilledMummyValue() {
+        return killedMummyValue;
+    }
 
-	public int getKilledEgyptianBossValue() {
-		return killedEgyptianBossValue;
-	}
+    public int getKilledEgyptianBossValue() {
+        return killedEgyptianBossValue;
+    }
 
-	public int getLosedAppleValue() {
-		return losedAppleValue;
-	}
+    public int getLosedAppleValue() {
+        return losedAppleValue;
+    }
+
+    boolean isBetterThan(LevelScore other) {
+        if(null == other) {
+            return true;
+        } else {
+            return computeScore() > other.computeScore();
+        }
+    }
 }

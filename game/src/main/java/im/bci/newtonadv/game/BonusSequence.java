@@ -62,6 +62,7 @@ public strictfp class BonusSequence extends LevelSequence {
 
         if (game.getFrameTimeInfos().currentTime > endTime) {
             game.getScore().setLevelScore(currentQuestName, levelName, world.getLevelScore());
+            game.saveScore();
             throw new NormalTransitionException(new FadeSequence(game, new Sequence.ResumeTransitionException(nextSequence), 1, 1, 1, 1000000000L));
         }
     }

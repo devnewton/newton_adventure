@@ -155,7 +155,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
         world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), levelScore.getKilledEgyptianBossValue()));
     }
 
-    LevelScore getLevelScore() {
+    public LevelScore getLevelScore() {
         return levelScore;
     }
 

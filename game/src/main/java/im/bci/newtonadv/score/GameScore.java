@@ -45,8 +45,8 @@ public class GameScore implements Serializable {
     private TreeMap<String, QuestScore> questScores = new TreeMap<String, QuestScore>();
 
     public void setLevelScore(String questName, String levelName, LevelScore score) {
-        QuestScore bestScores = getQuestScore(questName);
-        bestScores.setLevelScore(levelName, score);
+        QuestScore questScore = getQuestScore(questName);
+        questScore.setLevelScoreIfBetter(levelName, score);
     }
 
     public QuestScore getQuestScore(String questName) {

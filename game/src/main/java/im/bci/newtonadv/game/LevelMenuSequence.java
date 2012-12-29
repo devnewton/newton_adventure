@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.game;
 
+import im.bci.newtonadv.score.LevelScore;
 import java.util.Iterator;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
@@ -101,8 +102,16 @@ public class LevelMenuSequence extends MenuSequence {
 
 			@Override
 			public void draw() {
-				game.getView().drawMenuButton(this, levelNameFont,
-						levelName);
+                            String levelLabel = levelName;
+                                LevelScore levelScore = game.getScore().getQuestScore(questSequence.getQuestName()).get(levelName);
+				if(null != levelScore) {
+                                    int score = levelScore.computeScore();
+                                    if(score>0) {
+                                        levelLabel += " - best score: " + score;
+                                    }                                    
+                                }
+                                game.getView().drawMenuButton(this, levelNameFont,
+						levelLabel);
 			}
 		};
 		questButton.offTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),

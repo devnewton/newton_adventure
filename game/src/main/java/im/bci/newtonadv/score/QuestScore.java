@@ -46,8 +46,11 @@ public class QuestScore extends TreeMap<String/*level*/, LevelScore> implements 
     QuestScore(String questName) {
         this.questName = questName;
     }
-    public void setLevelScore(String levelName, LevelScore score) {
-        put(levelName, score);
+    public void setLevelScoreIfBetter(String levelName, LevelScore score) {
+        LevelScore currentScore = get(levelName);
+        if(score.isBetterThan(currentScore)) {
+            put(levelName, score);
+        }
     }
     
     public int computeScore() {
