@@ -56,7 +56,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -135,7 +135,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private ArrayList<PostUpdateAction> postUpdateActions = new ArrayList<PostUpdateAction>();
     private boolean isRotateGravityPossible = true;
     private ITrueTypeFont scoreIndicatorFont;
-    private HashMap<NewtonColor, BodyList> coloredStaticBodies;
+    private EnumMap<NewtonColor, BodyList> coloredStaticBodies;
     private Playable explodeSound;
 
     void removeKey(Key key) {
@@ -200,7 +200,7 @@ public strictfp class World extends net.phys2d.raw.World {
         this.questName = questName;
         this.levelName = levelName;
         this.scoreIndicatorFont = scoreIndicatorFont;
-        coloredStaticBodies = new HashMap<NewtonColor, BodyList>();
+        coloredStaticBodies = new EnumMap<NewtonColor, BodyList>(NewtonColor.class);
         for (NewtonColor color : NewtonColor.values()) {
             coloredStaticBodies.put(color, new BodyList());
         }
@@ -247,7 +247,7 @@ public strictfp class World extends net.phys2d.raw.World {
             ((StaticQuadSpaceStrategy) collisionStrategy).removeBody(body);
         }
         if (body instanceof Updatable) {
-            updatableBodies.remove(body);
+            updatableBodies.remove((Updatable)body);
         }
         super.remove(body);
     }
@@ -1183,6 +1183,7 @@ public strictfp class World extends net.phys2d.raw.World {
         remove(hero);
         postStepActions.add(new Runnable() {
 
+            @Override
             public void run() {
                 hero.setEnabled(true);
                 hero.setPosition(teleporter.getPosition().getX(), teleporter.getPosition().getY() + 1.0f);
