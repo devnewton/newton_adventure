@@ -91,7 +91,7 @@ class EmbeddedGameData extends AbstractGameData {
         if (isDeluxe) {
             questsToCompleteToUnlockQuests.put("prison", Arrays.asList("jungle",
                     "vatican", "arctic", "volcano", "egypt", "bridge", "lab"));
-            questsToCompleteToUnlockQuests.put("bonus", Arrays.asList("bonus"));
+            questsToCompleteToUnlockQuests.put("bonus", Arrays.asList("prison"));
         }
     }
 
