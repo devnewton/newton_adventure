@@ -317,7 +317,6 @@ public strictfp class Game {
     public void setLevelCompleted(String questName, String completedLevelName) {
         progression.getQuest(questName).getLevel(completedLevelName).setCompleted(true);
         platform.saveProgression(progression);
-        platform.saveConfig();
     }
 
     public void showHelp() throws ResumableTransitionException {
