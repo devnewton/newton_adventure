@@ -341,7 +341,7 @@ public class PlatformSpecific implements IPlatformSpecific {
                 try {
                     ObjectInputStream is = new ObjectInputStream(fs);
                     Object o = is.readObject();
-                    if(o instanceof GameScore) {
+                    if(o instanceof GameProgression) {
                         return (GameProgression)o;
                     }
                 } finally {
