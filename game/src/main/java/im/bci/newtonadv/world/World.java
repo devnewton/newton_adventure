@@ -637,7 +637,7 @@ public strictfp class World extends net.phys2d.raw.World {
             letter.setPosition(tileX, tileY);
             letter.setTexture(getAnimationForTile(map, tile, textureCache));
             letter.setZOrder(getTileZOrder(tile, zOrderBase + 10));
-            add(letter);
+            addCoin(letter);
         } else if (c.equals("world_map")) {
             WorldMap worldMap = new WorldMap(this, defaultPickableObjectShape);
             worldMap.setPosition(tileX, tileY);
