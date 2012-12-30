@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.GameProgression;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
@@ -181,12 +182,20 @@ public class PlatformSpecific implements IPlatformSpecific {
         return getUserConfigDirPath();
     }
 
+    public static String getUserProgressionDirPath() {
+        return getUserConfigDirPath();
+    }
+
     public static String getUserConfigFilePath() {
         return getUserConfigDirPath() + File.separator + "config.properties";
     }
 
     public static String getUserScoreFilePath() {
         return getUserScoreDirPath() + File.separator + "scores";
+    }
+    
+    public static String getUserProgressionFilePath() {
+        return getUserScoreDirPath() + File.separator + "progression";
     }
 
     public static URL getUserOrDefaultConfigFilePath() {
@@ -221,10 +230,10 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     @Override
     public void saveConfig() {
-        File userConfigFile = new File(PlatformSpecific.getUserConfigFilePath());
+        File userConfigFile = new File(getUserConfigFilePath());
 
         if (!userConfigFile.exists()) {
-            (new File(PlatformSpecific.getUserConfigDirPath())).mkdirs();
+            (new File(getUserConfigDirPath())).mkdirs();
         }
         try {
             writeConfig(userConfigFile.getAbsolutePath());
@@ -282,7 +291,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     @Override
     public GameScore loadScore() {
-        File scoreFile = new File(PlatformSpecific.getUserScoreFilePath());
+        File scoreFile = new File(getUserScoreFilePath());
         if (scoreFile.exists()) {
             try {
                 FileInputStream fs = new FileInputStream(scoreFile);
@@ -305,16 +314,59 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     @Override
     public void saveScore(GameScore score) {
-        File scoreFile = new File(PlatformSpecific.getUserScoreFilePath());
+        File scoreFile = new File(getUserScoreFilePath());
 
         if (!scoreFile.exists()) {
-            (new File(PlatformSpecific.getUserScoreDirPath())).mkdirs();
+            (new File(getUserScoreDirPath())).mkdirs();
         }
         try {
             FileOutputStream fs = new FileOutputStream(scoreFile);
             try {
                 ObjectOutputStream os = new ObjectOutputStream(fs);
                 os.writeObject(score);
+            } finally {
+                fs.close();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+        }
+    }
+
+    @Override
+    public GameProgression loadProgression() {
+        File progressionFile = new File(getUserProgressionFilePath());
+        if (progressionFile.exists()) {
+            try {
+                FileInputStream fs = new FileInputStream(progressionFile);
+                try {
+                    ObjectInputStream is = new ObjectInputStream(fs);
+                    Object o = is.readObject();
+                    if(o instanceof GameScore) {
+                        return (GameProgression)o;
+                    }
+                } finally {
+                    fs.close();
+                }
+            } catch (Exception e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+            }
+
+        }
+        return new GameProgression();
+    }
+
+    @Override
+    public void saveProgression(GameProgression progression) {
+        File scoreFile = new File(getUserProgressionFilePath());
+
+        if (!scoreFile.exists()) {
+            (new File(getUserProgressionDirPath())).mkdirs();
+        }
+        try {
+            FileOutputStream fs = new FileOutputStream(scoreFile);
+            try {
+                ObjectOutputStream os = new ObjectOutputStream(fs);
+                os.writeObject(progression);
             } finally {
                 fs.close();
             }

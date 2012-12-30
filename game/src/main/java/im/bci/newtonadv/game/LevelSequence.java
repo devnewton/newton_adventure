@@ -118,7 +118,7 @@ strictfp public class LevelSequence implements Sequence {
 				game.getScore().setLevelScore(questName, levelName,
 						world.getLevelScore());
                                 game.saveScore();
-				game.unblockNextLevel(questName, levelName);
+				game.setLevelCompleted(questName, levelName);
 				throw new NormalTransitionException(new FadeSequence(game,
 						new Sequence.NormalTransitionException(nextSequence), 0, 0, 0, 1000000000L));
 			}

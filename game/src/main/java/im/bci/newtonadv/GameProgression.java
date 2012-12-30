@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2012 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,44 +30,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package im.bci.newtonadv.platform.interfaces;
+package im.bci.newtonadv;
 
-import im.bci.newtonadv.GameProgression;
-import im.bci.newtonadv.score.GameScore;
-import im.bci.newtonadv.score.ScoreServer;
-
-import java.util.Properties;
+import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  *
  * @author devnewton
  */
-public interface IPlatformSpecific {
-	
-	Properties getConfig();
+public class GameProgression implements Serializable {
+    public final static long serialVersionUID = 1L;
+    private HashMap<String/*quest name*/,QuestProgression> quests = new HashMap<String, QuestProgression>();
 
-	void saveConfig();
-	
-    IGameInput getGameInput();
-
-    IGameView getGameView();
-
-    ISoundCache getSoundCache();
-
-	IGameData getGameData();
-
-	IOptionsSequence getOptionsSequence();
-
-	ScoreServer getScoreServer();
-
-	void openUrl(String string);
-
-    public GameScore loadScore();
-
-    public void saveScore(GameScore score);
-
-    public GameProgression loadProgression();
-
-    public void saveProgression(GameProgression progression);
-
+    public QuestProgression getQuest(String questName) {
+        QuestProgression quest = quests.get(questName);
+        if(null == quest) {
+            quest = new QuestProgression();
+            quests.put(questName, quest);
+        }
+        return quest;
+    }    
 }

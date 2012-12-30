@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2009 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,6 @@ import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -62,276 +61,272 @@ import java.util.List;
  */
 public strictfp class Game {
 
-	private final IGameView view;
-	private final IGameInput input;
-	private final IGameData data;
-	private boolean running = true;
-	static public final int FPS = 60;
-	static public final float FPSf = FPS;
-	static public final int DEFAULT_SCREEN_WIDTH = 1280;
-	static public final int DEFAULT_SCREEN_HEIGHT = 800;
-	private FrameTimeInfos frameTimeInfos = new FrameTimeInfos();
-	private Properties config;
-	private ISoundCache soundCache = null;
-	private MainMenuSequence mainMenuSequence;
-	private GameScore score;
-	private Sequence currentSequence;
-	private List<BonusSequence> bonusSequences;
-	private BonusSequence lastBonusSequence;
-	private IOptionsSequence optionsSequence;
-	private QuestMenuSequence questMenuSequence;
-	private IPlatformSpecific platform;
+    private final IGameView view;
+    private final IGameInput input;
+    private final IGameData data;
+    private boolean running = true;
+    static public final int FPS = 60;
+    static public final float FPSf = FPS;
+    static public final int DEFAULT_SCREEN_WIDTH = 1280;
+    static public final int DEFAULT_SCREEN_HEIGHT = 800;
+    private FrameTimeInfos frameTimeInfos = new FrameTimeInfos();
+    private Properties config;
+    private ISoundCache soundCache = null;
+    private MainMenuSequence mainMenuSequence;
+    private GameScore score;
+    private Sequence currentSequence;
+    private List<BonusSequence> bonusSequences;
+    private BonusSequence lastBonusSequence;
+    private IOptionsSequence optionsSequence;
+    private QuestMenuSequence questMenuSequence;
+    private IPlatformSpecific platform;
+    private GameProgression progression;
 
-	public Properties getConfig() {
-		return config;
-	}
+    public Properties getConfig() {
+        return config;
+    }
 
-	public FrameTimeInfos getFrameTimeInfos() {
-		return frameTimeInfos;
-	}
+    public FrameTimeInfos getFrameTimeInfos() {
+        return frameTimeInfos;
+    }
 
-	public IGameView getView() {
-		return view;
-	}
+    public IGameView getView() {
+        return view;
+    }
 
-	public ISoundCache getSoundCache() {
-		return soundCache;
-	}
+    public ISoundCache getSoundCache() {
+        return soundCache;
+    }
 
-	public Game(IPlatformSpecific platform) throws Exception {
-		this.config = platform.getConfig();
-		this.data = platform.getGameData();
-                this.score = platform.loadScore();
-		this.soundCache = platform.getSoundCache();
-		this.view = platform.getGameView();
-		this.input = platform.getGameInput();
-		this.scoreServer = platform.getScoreServer();
-		this.optionsSequence = platform.getOptionsSequence();
+    public Game(IPlatformSpecific platform) throws Exception {
+        this.config = platform.getConfig();
+        this.data = platform.getGameData();
+        this.score = platform.loadScore();
+        this.progression = platform.loadProgression();
+        this.soundCache = platform.getSoundCache();
+        this.view = platform.getGameView();
+        this.input = platform.getGameInput();
+        this.scoreServer = platform.getScoreServer();
+        this.optionsSequence = platform.getOptionsSequence();
 
-		this.platform = platform;
-	}
+        this.platform = platform;
+    }
 
-	public void tick() {
-		try {
-			if (bShowMainMenu) {
-				bShowMainMenu = false;
-				if (currentSequence != mainMenuSequence) {
-					mainMenuSequence.setResumeSequence(currentSequence);
-					currentSequence = mainMenuSequence;
-					mainMenuSequence.start();
-				}
-			}
-			frameTimeInfos.update();
-                        soundCache.update();
-			if (currentSequence instanceof CustomTickSequence) {
-				((CustomTickSequence) currentSequence).tick();
-			} else {
-				view.draw(currentSequence);
-				for (input.beginPoll(); input.poll();) {
-					processInputs();
-					if (!frameTimeInfos.paused) {
-						currentSequence.processInputs();
-					}
-				}
-				if (!frameTimeInfos.paused) {
-					currentSequence.update();
-				}
-			}
-		} catch (Sequence.NormalTransitionException ex) {
-			currentSequence.stop();
-			currentSequence = ex.getNextSequence();
-			collectGarbage();
-			if (currentSequence == null) {
-				stopGame();
-			} else {
-				currentSequence.start();
-				collectGarbage();
-			}
-		} catch (Sequence.ResumeTransitionException ex) {
-			currentSequence.stop();
-			currentSequence = ex.getNextSequence();
-			collectGarbage();
-			currentSequence.resume();
-			collectGarbage();
-		} catch (ResumableTransitionException e) {
-			currentSequence = e.getNextSequence();
-			collectGarbage();
-			currentSequence.start();
-			collectGarbage();
-		}
-	}
+    public void tick() {
+        try {
+            if (bShowMainMenu) {
+                bShowMainMenu = false;
+                if (currentSequence != mainMenuSequence) {
+                    mainMenuSequence.setResumeSequence(currentSequence);
+                    currentSequence = mainMenuSequence;
+                    mainMenuSequence.start();
+                }
+            }
+            frameTimeInfos.update();
+            soundCache.update();
+            if (currentSequence instanceof CustomTickSequence) {
+                ((CustomTickSequence) currentSequence).tick();
+            } else {
+                view.draw(currentSequence);
+                for (input.beginPoll(); input.poll();) {
+                    processInputs();
+                    if (!frameTimeInfos.paused) {
+                        currentSequence.processInputs();
+                    }
+                }
+                if (!frameTimeInfos.paused) {
+                    currentSequence.update();
+                }
+            }
+        } catch (Sequence.NormalTransitionException ex) {
+            currentSequence.stop();
+            currentSequence = ex.getNextSequence();
+            collectGarbage();
+            if (currentSequence == null) {
+                stopGame();
+            } else {
+                currentSequence.start();
+                collectGarbage();
+            }
+        } catch (Sequence.ResumeTransitionException ex) {
+            currentSequence.stop();
+            currentSequence = ex.getNextSequence();
+            collectGarbage();
+            currentSequence.resume();
+            collectGarbage();
+        } catch (ResumableTransitionException e) {
+            currentSequence = e.getNextSequence();
+            collectGarbage();
+            currentSequence.start();
+            collectGarbage();
+        }
+    }
 
-	private void collectGarbage() {
-		System.gc();
-		getView().getTextureCache().clearUseless();
-		getSoundCache().clearUseless();
-	}
+    private void collectGarbage() {
+        System.gc();
+        getView().getTextureCache().clearUseless();
+        getSoundCache().clearUseless();
+    }
 
-	void stopGame() {
-		running = false;
-		getView().getTextureCache().clearAll();
-		getSoundCache().stopMusic();
-	}
+    void stopGame() {
+        running = false;
+        getView().getTextureCache().clearAll();
+        getSoundCache().stopMusic();
+    }
 
-	Sequence setupSequences() {
-		Sequence outroSequence = new StoryboardSequence(this,
-				data.getFile("outro.jpg"), data.getFile("The_End.ogg"), new Sequence.NormalTransitionException(null));
-		this.questMenuSequence = new QuestMenuSequence(this);
-		mainMenuSequence = new MainMenuSequence(this, questMenuSequence,
-				outroSequence, optionsSequence);
-		questMenuSequence.setNextSequence(mainMenuSequence);
-		if (null != optionsSequence)
-			optionsSequence.setNextSequence(mainMenuSequence);
-		loadBonusSequences();
-		return mainMenuSequence;
-	}
+    Sequence setupSequences() {
+        Sequence outroSequence = new StoryboardSequence(this,
+                data.getFile("outro.jpg"), data.getFile("The_End.ogg"), new Sequence.NormalTransitionException(null));
+        this.questMenuSequence = new QuestMenuSequence(this);
+        mainMenuSequence = new MainMenuSequence(this, questMenuSequence,
+                outroSequence, optionsSequence);
+        questMenuSequence.setNextSequence(mainMenuSequence);
+        if (null != optionsSequence) {
+            optionsSequence.setNextSequence(mainMenuSequence);
+        }
+        loadBonusSequences();
+        return mainMenuSequence;
+    }
 
-	public void start() throws IOException {
+    public void start() throws IOException {
 
-		currentSequence = setupSequences();
-		currentSequence.start();
-	}
+        currentSequence = setupSequences();
+        currentSequence.start();
+    }
+    private boolean bToggleFullscreen = false;
+    private boolean bTogglePause = false;
+    private boolean bShowMainMenu = false;
+    private ScoreServer scoreServer;
 
-	private boolean bToggleFullscreen = false;
-	private boolean bTogglePause = false;
-	private boolean bShowMainMenu = false;
-	private ScoreServer scoreServer;
+    private void processInputs() {
+        if (input.isKeyReturnToMenuDown()) {
+            bShowMainMenu = true;
+        }
+        if (input.isKeyToggleFullscreenDown()) {
+            bToggleFullscreen = true;
+        } else if (bToggleFullscreen) {
+            bToggleFullscreen = false;
+            view.toggleFullscreen();
+        }
+        if (input.isKeyPauseDown()) {
+            bTogglePause = true;
+        } else if (bTogglePause) {
+            bTogglePause = false;
+            frameTimeInfos.togglePause();
+        }
+    }
 
-	private void processInputs() {
-		if (input.isKeyReturnToMenuDown()) {
-			bShowMainMenu = true;
-		}
-		if (input.isKeyToggleFullscreenDown()) {
-			bToggleFullscreen = true;
-		} else if (bToggleFullscreen) {
-			bToggleFullscreen = false;
-			view.toggleFullscreen();
-		}
-		if (input.isKeyPauseDown()) {
-			bTogglePause = true;
-		} else if (bTogglePause) {
-			bTogglePause = false;
-			frameTimeInfos.togglePause();
-		}
-	}
+    public GameScore getScore() {
+        return score;
+    }
 
-	public GameScore getScore() {
-		return score;
-	}
+    final public IGameInput getInput() {
+        return input;
+    }
 
-	final public IGameInput getInput() {
-		return input;
-	}
+    public boolean isRunning() {
+        return running;
+    }
 
-	public boolean isRunning() {
-		return running;
-	}
+    public IGameData getData() {
+        return data;
+    }
 
-	public IGameData getData() {
-		return data;
-	}
+    public void goToRandomBonusLevel(String currentQuestName)
+            throws ResumableTransitionException {
+        if (!bonusSequences.isEmpty()) {
+            BonusSequence bonusSequence = bonusSequences.get(frameTimeInfos.random.nextInt(bonusSequences.size()));
+            bonusSequence.setCurrentQuestName(currentQuestName);
+            bonusSequence.setNextSequence(currentSequence);
+            throw new Sequence.ResumableTransitionException(new FadeSequence(
+                    this, new Sequence.NormalTransitionException(bonusSequence), 1, 1, 1, 1000000000L));
+        }
+    }
 
-	public void goToRandomBonusLevel(String currentQuestName)
-			throws ResumableTransitionException {
-		if (!bonusSequences.isEmpty()) {
-			BonusSequence bonusSequence = bonusSequences
-					.get(frameTimeInfos.random.nextInt(bonusSequences.size()));
-			bonusSequence.setCurrentQuestName(currentQuestName);
-			bonusSequence.setNextSequence(currentSequence);
-			throw new Sequence.ResumableTransitionException(new FadeSequence(
-					this, new Sequence.NormalTransitionException(bonusSequence), 1, 1, 1, 1000000000L));
-		}
-	}
+    public void goToNextBonusLevel(String currentQuestName)
+            throws ResumableTransitionException {
+        if (!bonusSequences.isEmpty()) {
+            int i = bonusSequences.indexOf(lastBonusSequence) + 1;
+            if (i < 0 || i >= bonusSequences.size()) {
+                i = 0;
+            }
+            lastBonusSequence = bonusSequences.get(i);
+            lastBonusSequence.setCurrentQuestName(currentQuestName);
+            lastBonusSequence.setNextSequence(currentSequence);
+            throw new Sequence.ResumableTransitionException(new FadeSequence(
+                    this, new Sequence.NormalTransitionException(lastBonusSequence), 1, 1, 1, 1000000000L));
+        }
+    }
 
-	public void goToNextBonusLevel(String currentQuestName)
-			throws ResumableTransitionException {
-		if (!bonusSequences.isEmpty()) {
-			int i = bonusSequences.indexOf(lastBonusSequence) + 1;
-			if (i < 0 || i >= bonusSequences.size()) {
-				i = 0;
-			}
-			lastBonusSequence = bonusSequences.get(i);
-			lastBonusSequence.setCurrentQuestName(currentQuestName);
-			lastBonusSequence.setNextSequence(currentSequence);
-			throw new Sequence.ResumableTransitionException(new FadeSequence(
-					this, new Sequence.NormalTransitionException(lastBonusSequence), 1, 1, 1, 1000000000L));
-		}
-	}
+    private void loadBonusSequences() {
+        bonusSequences = new ArrayList<BonusSequence>();
+        List<String> levelNames = getData().listQuestLevels("bonus");
 
-	private void loadBonusSequences() {
-		bonusSequences = new ArrayList<BonusSequence>();
-		List<String> levelNames = getData().listQuestLevels("bonus");
+        for (String levelName : levelNames) {
+            BonusSequence levelSequence = new BonusSequence(this, levelName);
+            bonusSequences.add(levelSequence);
+        }
+    }
 
-		for (String levelName : levelNames) {
-			BonusSequence levelSequence = new BonusSequence(this, levelName);
-			bonusSequences.add(levelSequence);
-		}
-	}
+    public Sequence getMainMenuSequence() {
+        return mainMenuSequence;
+    }
 
-	public Sequence getMainMenuSequence() {
-		return mainMenuSequence;
-	}
+    public ScoreServer getScoreServer() {
+        return scoreServer;
+    }
 
-	public ScoreServer getScoreServer() {
-		return scoreServer;
-	}
+    public void gotoLevel(String newQuestName, String newLevelName)
+            throws Sequence.NormalTransitionException {
+        this.questMenuSequence.gotoLevel(newQuestName, newLevelName);
+    }
 
-	public void gotoLevel(String newQuestName, String newLevelName)
-			throws Sequence.NormalTransitionException {
-		this.questMenuSequence.gotoLevel(newQuestName, newLevelName);
-	}
-	
-	public boolean isQuestBlocked(String questName) {
-		for(String questToComplete : data.listQuestsToCompleteToUnlockQuest(questName)) {
-			if(!isQuestCompleted(questToComplete)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public boolean isQuestBlocked(String questName) {
+        for (String questToComplete : data.listQuestsToCompleteToUnlockQuest(questName)) {
+            if (!isQuestCompleted(questToComplete)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private boolean isQuestCompleted(String questName) {
-		for(String levelName : data.listQuestLevels(questName)) {
-			if(isLevelBlocked(questName, levelName)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    private boolean isQuestCompleted(String questName) {
+        for (String levelName : data.listQuestLevels(questName)) {
+            if (isLevelBlocked(questName, levelName)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	public boolean isLevelBlocked(String questName, String levelName) {
-		if (data.listQuestLevels(questName).get(0).equals(levelName)) {
-			return false;
-		}
-		return !"false".equals(config.getProperty(
-				"game." + questName + "." + levelName + ".blocked"));
-	}
+    public boolean isLevelBlocked(String questName, String levelName) {
+        String previousLevelName = null;
+        for (String l : data.listQuestLevels(questName)) {
+            if (l.equals(levelName)) {
+                if(null != previousLevelName) {
+                    return !progression.getQuest(questName).getLevel(previousLevelName).isCompleted();
+                } else {
+                    return false;
+                }
+            }
+            previousLevelName = l;
+        }
+        return false;
+    }
 
-	public void unblockNextLevel(String questName, String completedLevelName) {
-		Iterator<String> it = data.listQuestLevels(questName).iterator();
-		while (it.hasNext()) {
-			if (it.next().equals(completedLevelName)) {
-				if (it.hasNext()) {
-					unblockLevel(questName, it.next());
-				}
-			}
-		}
-	}
+    public void setLevelCompleted(String questName, String completedLevelName) {
+        progression.getQuest(questName).getLevel(completedLevelName).setCompleted(true);
+        platform.saveProgression(progression);
+        platform.saveConfig();
+    }
 
-	private void unblockLevel(String questName, String levelName) {
-		config.setProperty("game." + questName + "." + levelName + ".blocked",
-				"false");
-		platform.saveConfig();
-	}
+    public void showHelp() throws ResumableTransitionException {
+        throw new ResumableTransitionException(new StoryboardSequence(this, this.getData().getFile("help.jpg"), null, new Sequence.ResumeTransitionException(currentSequence)));
+    }
 
-	public void showHelp() throws ResumableTransitionException {
-		throw new ResumableTransitionException(new StoryboardSequence(this, this.getData()
-				.getFile("help.jpg"), null, new Sequence.ResumeTransitionException(currentSequence)));
-	}
-
-	public void insertCoins() {
-		platform.openUrl("http://devnewton.bci.im/projects/newton_adventure/wiki?name=Donation");
-	}
+    public void insertCoins() {
+        platform.openUrl("http://devnewton.bci.im/projects/newton_adventure/wiki?name=Donation");
+    }
 
     public void saveScore() {
         platform.saveScore(score);
