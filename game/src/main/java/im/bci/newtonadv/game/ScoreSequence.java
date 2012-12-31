@@ -49,6 +49,10 @@ public class ScoreSequence extends MenuSequence {
     private long scorePerCentToShow;
     private final ScoreServer scoreServer;
 
+    public ScoreServer getScoreServer() {
+        return scoreServer;
+    }
+
     public ScoreSequence(Game game, String questName, Sequence nextSequence) {
         super(game);
         this.questScore = game.getScore().getQuestScore(questName);
