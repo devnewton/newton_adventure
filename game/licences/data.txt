@@ -3,11 +3,6 @@
 License: CC-BY-SA 3.0
 Author: Ails (http://ails.deviantart.com/)
 
-* hero.gif
-
-License: CC-BY-SA 3.0
-Author: Christian Tietze (christian.tietze@googlemail.com, http://www.pixeljoint.com/pixelart/14400.htm)
-
 * pyramid_background.jpg
 * sky_background.jpg
 
