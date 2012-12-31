@@ -2,7 +2,7 @@
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="25" height="24" tilewidth="32" tileheight="32">
  <properties>
-  <property name="newton_adventure.background" value="jungle_bg02.jpg"/>
+  <property name="newton_adventure.background" value="sky_background.jpg"/>
   <property name="newton_adventure.mummy" value="toad.gif"/>
   <property name="newton_adventure.music" value="jump_and_run_tropics.ogg"/>
  </properties>
