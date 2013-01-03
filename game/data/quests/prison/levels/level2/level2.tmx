@@ -4,7 +4,7 @@
  <properties>
   <property name="newton_adventure.background" value="prison_background.png"/>
   <property name="newton_adventure.mummy" value="robot.gif"/>
-  <property name="newton_adventure.music" value="Lava_City.ogg"/>
+  <property name="newton_adventure.music" value="tomsong8.ogg"/>
  </properties>
  <tileset name="newton_adventure_desert" firstgid="1">
   <tile id="0">
