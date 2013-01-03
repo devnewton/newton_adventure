@@ -69,7 +69,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
 		this.playSequence = playSeq;
 		this.quitSequence = quitSeq;
 		this.optionsSequence = optSequence;
-		this.helpSequence = new StoryboardSequence(game, game.getData()
+		this.helpSequence = new HelpSequence(game, game.getData()
 				.getFile("help.jpg"), null, new NormalTransitionException(this));
 
 		setBackgroundTexturePath(game.getData().getFile("main_menu/home.png"));

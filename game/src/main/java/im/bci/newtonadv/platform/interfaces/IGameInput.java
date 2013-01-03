@@ -83,4 +83,6 @@ public interface IGameInput {
 	void beginPoll();
 	
 	boolean poll();
+
+        public boolean isKeyCheatSetAllCompletedDown();
 }

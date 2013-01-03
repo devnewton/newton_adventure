@@ -172,8 +172,8 @@ public class GameInput implements IGameInput {
 						joypad,
 						config.getProperty("joypad.button.rotate_90_counter_clockwise"));
 			} else {
-				Logger.getLogger(this.getClass().getName()).warning(
-						"Cannot find joypad '" + joypadName + "'");
+				Logger.getLogger(this.getClass().getName()).log(
+						Level.WARNING, "Cannot find joypad ''{0}''", joypadName);
 			}
 		}
 	}
@@ -361,5 +361,10 @@ public class GameInput implements IGameInput {
 	public boolean poll() {
 		return pollCount-- > 0;
 	}
+
+    @Override
+    public boolean isKeyCheatSetAllCompletedDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_F12);
+    }
 
 }

@@ -318,6 +318,14 @@ public strictfp class Game {
         progression.getQuest(questName).getLevel(completedLevelName).setCompleted(true);
         platform.saveProgression(progression);
     }
+    
+    public void cheatSetAllCompleted() {
+        for (String q : data.listQuests()) {
+            for(String l : data.listQuestLevels(q)) {
+                setLevelCompleted(q, l);
+            }            
+        }
+    }
 
     public void showHelp() throws ResumableTransitionException {
         throw new ResumableTransitionException(new StoryboardSequence(this, this.getData().getFile("help.jpg"), null, new Sequence.ResumeTransitionException(currentSequence)));

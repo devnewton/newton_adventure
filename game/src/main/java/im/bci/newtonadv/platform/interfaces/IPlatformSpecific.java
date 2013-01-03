@@ -29,7 +29,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package im.bci.newtonadv.platform.interfaces;
 
 import im.bci.newtonadv.GameProgression;
@@ -43,24 +42,24 @@ import java.util.Properties;
  * @author devnewton
  */
 public interface IPlatformSpecific {
-	
-	Properties getConfig();
 
-	void saveConfig();
-	
+    Properties getConfig();
+
+    void saveConfig();
+
     IGameInput getGameInput();
 
     IGameView getGameView();
 
     ISoundCache getSoundCache();
 
-	IGameData getGameData();
+    IGameData getGameData();
 
-	IOptionsSequence getOptionsSequence();
+    IOptionsSequence getOptionsSequence();
 
-	ScoreServer getScoreServer();
+    ScoreServer getScoreServer();
 
-	void openUrl(String string);
+    void openUrl(String string);
 
     public GameScore loadScore();
 
@@ -69,5 +68,4 @@ public interface IPlatformSpecific {
     public GameProgression loadProgression();
 
     public void saveProgression(GameProgression progression);
-
 }
