@@ -70,6 +70,7 @@
 	    <fileset dir="../../native/windows" targetdir="$INSTALL_PATH/native/windows" override="true">
 		<os family="windows"/>
 	    </fileset>
+	    <executable type="bin" stage="never" targetfile="$INSTALL_PATH/@{project.build.finalName}.jar"/>
 	    <executable type="bin" stage="never" targetfile="$INSTALL_PATH/run_linux.sh">
 		<os family="unix"/>
 	    </executable>

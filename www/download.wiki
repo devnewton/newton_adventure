@@ -3,19 +3,33 @@
 Note that Newton Adventure requires <a href="http://java.com">Java</a> and a good graphic card with OpenGL support.
 
 <table border="1" cellpadding="8px">
-<tr><th></th><th>Debian/Ubuntu</th><th>Windows XP/Vista/7</th><th>Others (linux, Macosx, Windows, Solaris, BSD...)</th></tr>
+<tr><th></th><th>Download site 1</th><th>Download site 2<br/>( SLOW! )</th></tr>
 
-<tr><th>Download site 1</th>
-<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure_1.7.deb">newton_adventure_1.7.deb</a></td>
-<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure-1.7-installer.exe">newton_adventure-1.7-installer.exe</a></td>
-<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure-1.7-installer.jar">newton_adventure-1.7-installer.jar</a></td></tr>
+<tr><th>Debian / Ubuntu</th>
+<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure_1.8.deb">deb</a></td>
+<td><a href="downloads/newton_adventure_1.8.deb">deb</a></td></td>
+</tr>
 
-<tr><th>Download site 2<br/>(slow)</th>
-<td><a href="downloads/newton_adventure_1.7.deb">newton_adventure_1.7.deb</a></td>
-<td><a href="downloads/newton_adventure-1.7-installer.exe">newton_adventure-1.7-installer.exe</a></td>
-<td><a href="downloads/newton_adventure-1.7-installer.jar">newton_adventure-1.7-installer.jar</a></td></tr>
+<tr><th>Windows XP / Vista /7</th>
+<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure-1.8-installer.exe">installer</a></td>
+<td><a href="downloads/newton_adventure-1.8-installer.exe">installer</a></td>
+</tr>
+
+<tr><th>Red Hat / Fedora / Suse</th>
+<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure-1.8-1.i686.rpm">32 bits rpm</a><br/>
+	<a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure-1.8-1.x86_64.rpm">64 bits rpm</a></td>
+<td><a href="downloads/newton_adventure-1.8-1.i686.rpm">32 bits rpm</a><br/>
+	<a href="downloads/newton_adventure-1.8-1.x86_64.rpm">64 bits rpm</a></td>
+</tr>
+
+<tr><th>Others (Linux, Macosx, Windows, Solaris, BSD...)</th>
+<td><a href="http://chiselapp.com/user/devnewton/repository/newton_adventure/doc/trunk/www/downloads/newton_adventure-1.8-installer.jar">universal installer</a></td>
+<td><a href="downloads/newton_adventure-1.8-installer.jar">universal installer</a></td>
+</tr>
+
 </table>
 
-<p><a href="downloads/newton_adventure_1.7_sources.zip">Source code</a></p>
+<p><a href="downloads/newton_adventure_editor-1.0.jar">Level editor</a></p>
+<p><a href="downloads/newton_adventure_1.8_sources.zip">Source code</a></p>
 
 <p>If you have any problem to install or run Newton Adventure, <a href="contact.wiki">contact me!</a></p>

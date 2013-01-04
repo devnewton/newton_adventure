@@ -1,1 +1,1 @@
-java -jar newton_adventure-1.7.jar
+java -jar newton_adventure-1.8.jar
