@@ -150,6 +150,11 @@ License: CC-BY-SA 3.0
 License: CC-BY-SA 3.0
 Authors: devnewton (devnewton@bci.im, http://devnewton.bci.im), Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr)
 
+* door.nanim
+
+License: CC-BY-SA 3.0
+Authors: devnewton (devnewton@bci.im, http://devnewton.bci.im), Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr)
+
 * Other files
 
 License: CC-BY-SA 3.0
