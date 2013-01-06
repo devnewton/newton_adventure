@@ -145,9 +145,10 @@ License: CC-BY-SA 3.0
 Author: Gobusto ( https://sites.google.com/site/gobusto/music )
 License: CC-BY-SA 3.0
 
+* key.nanim
 
-
-http://opengameart.org/content/unnamed-song
+License: CC-BY-SA 3.0
+Authors: devnewton (devnewton@bci.im, http://devnewton.bci.im), Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr)
 
 * Other files
 

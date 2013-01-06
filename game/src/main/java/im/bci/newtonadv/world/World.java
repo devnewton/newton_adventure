@@ -294,7 +294,7 @@ public strictfp class World extends net.phys2d.raw.World {
                 "door_to_bonus_world_open.png");
         defaultMapProperties.put("newton_adventure.door", "door.png");
         defaultMapProperties.put("newton_adventure.door_open", "door_open.png");
-        defaultMapProperties.put("newton_adventure.key", "key.png");
+        defaultMapProperties.put("newton_adventure.key", "key.nanim");
         defaultMapProperties.put("newton_adventure.hero", "hero.nanim");
         defaultMapProperties.put("newton_adventure.apple", "apple.png");
         defaultMapProperties.put("newton_adventure.coin", "coin.png");
