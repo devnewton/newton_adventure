@@ -496,10 +496,8 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			door.setPosition(pos.getX(), pos.getY());
 			door.setZOrder(entity.getZorder());
-			door.setOpenTexture(getOrLoadAnimation(doorToBonusWorldType
+			door.setTexture(getOrLoadAnimation(doorToBonusWorldType
 					.getOpenAnimation()));
-			door.setClosedTexture(getOrLoadAnimation(doorToBonusWorldType
-					.getClosedAnimation()));
 			world.add(door);
 		}
 
@@ -516,9 +514,7 @@ strictfp class NalLoader {
 			Vector2f pos = getPos(entity);
 			door.setPosition(pos.getX(), pos.getY());
 			door.setZOrder(entity.getZorder());
-			door.setOpenTexture(getOrLoadAnimation(doorType.getOpenAnimation()));
-			door.setClosedTexture(getOrLoadAnimation(doorType
-					.getClosedAnimation()));
+			door.setTexture(getOrLoadAnimation(doorType.getOpenAnimation()));
 			world.add(door);
 		}
 	}

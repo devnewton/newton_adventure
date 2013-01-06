@@ -50,8 +50,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 		CollisionDetectionOnly, Updatable {
 
 	protected final World world;
-	private AnimationCollection closedTexture;
-	private AnimationCollection openTexture;
+	private AnimationCollection texture;
 	private Animation.Play play;
 	private NewtonColor color;
 	protected boolean isClose = true;
@@ -75,13 +74,9 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 				play.getCurrentFrame());
 	}
 
-	void setOpenTexture(AnimationCollection texture) {
-		this.openTexture = texture;
-	}
-
-	void setClosedTexture(AnimationCollection texture) {
-		this.closedTexture = texture;
-		play = closedTexture.getFirst().start();
+	void setTexture(AnimationCollection texture) {
+		this.texture = texture;
+		play = texture.getAnimationByName("closed").start();
 	}
 
 	@Override
@@ -93,7 +88,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	void open() {
 		isClose = false;
-		play = openTexture.getFirst().start();
+		play = texture.getAnimationByName("open").start(Animation.PlayMode.ONCE);
 	}
 
 	public boolean isOpenableWithKey(Key key) {

@@ -110,10 +110,8 @@ public strictfp class World extends net.phys2d.raw.World {
     private AnimationCollection mummyAnimation;
     private AnimationCollection batAnimation;
     private AnimationCollection keyTexture;
-    private AnimationCollection openDoorTexture;
-    private AnimationCollection closedDoorTexture;
-    private AnimationCollection openDoorToBonusWorldTexture;
-    private AnimationCollection closedDoorToBonusWorldTexture;
+    private AnimationCollection doorTexture;
+    private AnimationCollection doorToBonusWorldTexture;
     private AnimationCollection mobilePikesTexture;
     private AnimationCollection axeTexture;
     private AnimationCollection activator1OnTexture;
@@ -289,11 +287,8 @@ public strictfp class World extends net.phys2d.raw.World {
         defaultMapProperties.put("newton_adventure.mobilePikes",
                 "mobile_pikes.png");
         defaultMapProperties.put("newton_adventure.door_to_bonus_world",
-                "door_to_bonus_world.png");
-        defaultMapProperties.put("newton_adventure.door_to_bonus_world_open",
-                "door_to_bonus_world_open.png");
-        defaultMapProperties.put("newton_adventure.door", "door.png");
-        defaultMapProperties.put("newton_adventure.door_open", "door_open.png");
+                "door_to_bonus_world.nanim");
+        defaultMapProperties.put("newton_adventure.door", "door.nanim");
         defaultMapProperties.put("newton_adventure.key", "key.nanim");
         defaultMapProperties.put("newton_adventure.hero", "hero.nanim");
         defaultMapProperties.put("newton_adventure.apple", "apple.png");
@@ -414,16 +409,11 @@ public strictfp class World extends net.phys2d.raw.World {
                     getFileFromMap(map, "newton_adventure.crate"));
             keyTexture = game.getView().loadFromAnimation(
                     getFileFromMap(map, "newton_adventure.key"));
-            closedDoorTexture = game.getView().loadFromAnimation(
+            doorTexture = game.getView().loadFromAnimation(
                     getFileFromMap(map, "newton_adventure.door"));
-            openDoorTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.door_open"));
-            closedDoorToBonusWorldTexture = game.getView().loadFromAnimation(
+            doorToBonusWorldTexture = game.getView().loadFromAnimation(
                     getFileFromMap(map,
                     "newton_adventure.door_to_bonus_world"));
-            openDoorToBonusWorldTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map,
-                    "newton_adventure.door_to_bonus_world_open"));
             mobilePikesTexture = game.getView().loadFromAnimation(
                     getFileFromMap(map, "newton_adventure.mobilePikes"));
             axeTexture = getView().loadFromAnimation(
@@ -662,8 +652,7 @@ public strictfp class World extends net.phys2d.raw.World {
         } else if (c.equals("door")) {
             Door door = new Door(this, tileWidth, tileHeight);
             door.setPosition(tileX, tileY);
-            door.setClosedTexture(closedDoorTexture);
-            door.setOpenTexture(openDoorTexture);
+            door.setTexture(doorTexture);
             door.setZOrder(getTileZOrder(tile, zOrderBase));
             if (tile.getProperties().containsKey("newton_adventure.color")) {
                 door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
@@ -674,8 +663,7 @@ public strictfp class World extends net.phys2d.raw.World {
             DoorToBonusWorld door = new DoorToBonusWorld(this, tileWidth,
                     tileHeight);
             door.setPosition(tileX, tileY);
-            door.setClosedTexture(closedDoorToBonusWorldTexture);
-            door.setOpenTexture(openDoorToBonusWorldTexture);
+            door.setTexture(doorToBonusWorldTexture);
             door.setZOrder(getTileZOrder(tile, zOrderBase));
             door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
                     "newton_adventure.color", "white")));
