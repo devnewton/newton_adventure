@@ -155,6 +155,11 @@ Authors: devnewton (devnewton@bci.im, http://devnewton.bci.im), Julien Jorge ( j
 License: CC-BY-SA 3.0
 Authors: devnewton (devnewton@bci.im, http://devnewton.bci.im), Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr)
 
+* egypt tiles
+
+License: CC-BY-SA 3.0
+Author: Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr), devnewton (devnewton@bci.im, http://devnewton.bci.im)
+
 * Other files
 
 License: CC-BY-SA 3.0
