@@ -2,4 +2,4 @@
 
 <p>Send me mails to devnewton ^at^ bci.im</p>
 
-<p>To chat with me click <a href="http://devnewton.bci.im/chat">here</a>.</p>
+<p>To chat with me click <a href="http://devnewton.bci.im/home/?q=chat">here</a>.</p>
