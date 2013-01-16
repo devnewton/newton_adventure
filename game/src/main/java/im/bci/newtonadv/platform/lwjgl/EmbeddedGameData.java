@@ -68,16 +68,16 @@ class EmbeddedGameData extends AbstractGameData {
             quests.addAll(Arrays.asList("bridge", "lab", "prison", "bonus"));
         }
         questLevels = new HashMap<String, List<String>>();
-        questLevels.put("jungle", Arrays.asList("level0", "level0.5", "level1",
-                "level2", "level3", "level4"));
-        questLevels.put("vatican", Arrays.asList("level0", "level0.5",
-                "level1", "level2", "level3", "level4"));
-        questLevels.put("arctic", Arrays.asList("level0", "level0.5", "level1",
-                "level2", "level3", "level4"));
-        questLevels.put("egypt", Arrays.asList("level0", "level1", "level2",
-                "level3", "level4", "level5"));
-        questLevels.put("volcano", Arrays.asList("level0", "level0.5",
-                "level1", "level2", "level3", "level4"));
+        questLevels.put("jungle", Arrays.asList("jaguar", "sloth", "caiman",
+                "tamarin", "toucan", "piranha"));
+        questLevels.put("vatican", Arrays.asList("jean", "benoit",
+                "clement", "innocent", "urbain", "gregoire"));
+        questLevels.put("arctic", Arrays.asList("snow", "ice", "firn",
+                "slush", "powder", "graupel"));
+        questLevels.put("egypt", Arrays.asList("osiris", "re", "seth",
+                "ptah", "min", "amon"));
+        questLevels.put("volcano", Arrays.asList("etna", "merapi",
+                "teide", "vesuvius", "unzen", "tambora"));
         if (isDeluxe) {
             questLevels.put("bridge", Arrays.asList("level0", "level1", "level2", "level3", "level4", "level5"));
             questLevels.put("lab", Arrays.asList("level0", "level1", "level2",
