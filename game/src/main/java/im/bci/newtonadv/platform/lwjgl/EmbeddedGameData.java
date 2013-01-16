@@ -79,10 +79,10 @@ class EmbeddedGameData extends AbstractGameData {
         questLevels.put("volcano", Arrays.asList("etna", "merapi",
                 "teide", "vesuvius", "unzen", "tambora"));
         if (isDeluxe) {
-            questLevels.put("bridge", Arrays.asList("level0", "level1", "level2", "level3", "level4", "level5"));
-            questLevels.put("lab", Arrays.asList("level0", "level1", "level2",
-                    "level3", "level4", "level5"));
-            questLevels.put("prison", Arrays.asList("level0", "level1", "level2", "level3", "boss", "credits"));
+            questLevels.put("bridge", Arrays.asList("sveetch", "ned", "cbo", "geo", "euro", "finss"));
+            questLevels.put("lab", Arrays.asList("adonai", "ffx", "claudex",
+                    "thoasm", "chrisix", "zorel"));
+            questLevels.put("prison", Arrays.asList("caged", "tower", "snail", "cells", "boss", "credits"));
         }
         questLevels.put("bonus", Arrays.asList("bonus_level1", "bonus_level2",
                 "bonus_level3", "bonus_level4", "bonus_level5", "bonus_level6"));
