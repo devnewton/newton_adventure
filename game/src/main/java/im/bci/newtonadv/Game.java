@@ -280,6 +280,11 @@ public strictfp class Game {
             throws Sequence.NormalTransitionException {
         this.questMenuSequence.gotoLevel(newQuestName, newLevelName);
     }
+    
+    public void gotoQuestMenu()
+            throws Sequence.NormalTransitionException {
+        throw new Sequence.NormalTransitionException(this.questMenuSequence);
+    }
 
     public boolean isQuestBlocked(String questName) {
         for (String questToComplete : data.listQuestsToCompleteToUnlockQuest(questName)) {

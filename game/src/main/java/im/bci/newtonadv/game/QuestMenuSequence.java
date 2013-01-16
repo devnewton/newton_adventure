@@ -49,7 +49,7 @@ public class QuestMenuSequence extends MenuSequence {
 	private static final int NB_BUTTONS_ON_X = 2;
 	private static final int NB_BUTTONS_ON_Y = 3;
 	private static final float QUEST_MINIATURE_SPACING = 60;
-	private static final float QUEST_MINIATURE_WIDTH = (ortho2DRight - QUEST_MINIATURE_SPACING
+	public static final float QUEST_MINIATURE_WIDTH = (ortho2DRight - QUEST_MINIATURE_SPACING
 			* (NB_BUTTONS_ON_X + 1))
 			/ NB_BUTTONS_ON_X;
 	public static final float QUEST_MINIATURE_HEIGHT = (ortho2DBottom - QUEST_MINIATURE_SPACING
@@ -181,13 +181,13 @@ public class QuestMenuSequence extends MenuSequence {
 
 			@Override
 			public void draw() {
-				String questLabel = questName;
+				String scoreLabel = "";
                                 int score = game.getScore().getQuestScore(questName).computeScore();
                                 if(score>0) {
-                                    questLabel += " - best score: " + score;
+                                    scoreLabel += score;
                                 }
                                 game.getView().drawMenuButton(this, questNameFont,
-						questLabel);
+						questName, scoreLabel);
 			}
 			
 			@Override

@@ -42,98 +42,112 @@ import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
  */
 public class LevelMenuSequence extends MenuSequence {
 
-	ITrueTypeFont levelNameFont;
-	private QuestSequence questSequence;
-	static final int LEVEL_MINIATURE_ON_X = 2;
-	static final int LEVEL_MINIATURE_ON_Y = 3;
-	static final float LEVEL_MINIATURE_SPACING = 60;
-	static final float LEVEL_MINIATURE_WIDTH = (ortho2DRight - LEVEL_MINIATURE_SPACING
-			* (LEVEL_MINIATURE_ON_X + 1))
-			/ LEVEL_MINIATURE_ON_X;
-	public static final float LEVEL_MINIATURE_HEIGHT = (ortho2DBottom - LEVEL_MINIATURE_SPACING
-			* (LEVEL_MINIATURE_ON_Y + 1))
-			/ LEVEL_MINIATURE_ON_Y;
+    ITrueTypeFont levelNameFont;
+    private QuestSequence questSequence;
+    static final int LEVEL_MINIATURE_ON_X = 2;
+    static final int LEVEL_MINIATURE_ON_Y = 3;
+    static final float LEVEL_MINIATURE_SPACING = 60;
+    static final float LEVEL_MINIATURE_WIDTH = (ortho2DRight - LEVEL_MINIATURE_SPACING
+            * (LEVEL_MINIATURE_ON_X + 1))
+            / LEVEL_MINIATURE_ON_X;
+    public static final float LEVEL_MINIATURE_HEIGHT = (ortho2DBottom - LEVEL_MINIATURE_SPACING
+            * (LEVEL_MINIATURE_ON_Y + 1))
+            / LEVEL_MINIATURE_ON_Y;
 
-	public LevelMenuSequence(Game game, QuestSequence questSequence) {
-		super(game);
-		this.questSequence = questSequence;
-		verticalIncrement = LEVEL_MINIATURE_ON_X;
-	}
+    public LevelMenuSequence(Game game, QuestSequence questSequence) {
+        super(game);
+        this.questSequence = questSequence;
+        verticalIncrement = LEVEL_MINIATURE_ON_X;
+    }
 
-	@Override
-	public void start() {
-		levelNameFont = game.getView().createQuestNameFont();
-		loadLevels();
-		super.start();
-	}
+    @Override
+    public void start() {
+        levelNameFont = game.getView().createQuestNameFont();
+        loadLevels();
+        Button returnToPreviousSequence = new Button() {
 
-	@Override
-	public void stop() {
-		super.stop();
-		levelNameFont.destroy();
-	}
+            @Override
+            void activate() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
+                game.gotoQuestMenu();
+            }
+        };
+        returnToPreviousSequence.offTextureName = game.getData().getFile("quest_menu/bt-menu-off.png");
+        returnToPreviousSequence.onTextureName = game.getData().getFile("quest_menu/bt-menu-on.png");
+        returnToPreviousSequence.x = ortho2DRight - LEVEL_MINIATURE_WIDTH - LEVEL_MINIATURE_SPACING;
+        returnToPreviousSequence.y = ortho2DBottom - LEVEL_MINIATURE_SPACING * 4.8f / 4.0f;
+        returnToPreviousSequence.w = LEVEL_MINIATURE_WIDTH;
+        returnToPreviousSequence.h = LEVEL_MINIATURE_SPACING;
+        addButton(returnToPreviousSequence);
+        super.start();
+    }
 
-	private void loadLevels() {
+    @Override
+    public void stop() {
+        super.stop();
+        levelNameFont.destroy();
+    }
 
-		clearButtons();
-		
-		Iterator<String> levelNamesIterator = game.getData().listQuestLevels(questSequence.getQuestName()).iterator();
+    private void loadLevels() {
 
-		for (int j = 0; j < LEVEL_MINIATURE_ON_Y; ++j) {
-			for (int i = 0; i < LEVEL_MINIATURE_ON_X; ++i) {
-				if (!levelNamesIterator.hasNext())
-					return;
-				String levelName = levelNamesIterator.next();
-				createLevelButton(i, j, levelName);
-			}
-		}
-	}
+        clearButtons();
 
-	private void createLevelButton(int i, int j, final String levelName) {
-		final boolean isBlocked = game.isLevelBlocked(questSequence.getQuestName(),levelName);
-		Button questButton = new Button() {
+        Iterator<String> levelNamesIterator = game.getData().listQuestLevels(questSequence.getQuestName()).iterator();
 
-			@Override
-			void activate() throws NormalTransitionException {
-				if(!isBlocked) {
-					questSequence.gotoLevel(levelName);
-				}
-			}
+        for (int j = 0; j < LEVEL_MINIATURE_ON_Y; ++j) {
+            for (int i = 0; i < LEVEL_MINIATURE_ON_X; ++i) {
+                if (!levelNamesIterator.hasNext()) {
+                    return;
+                }
+                String levelName = levelNamesIterator.next();
+                createLevelButton(i, j, levelName);
+            }
+        }
+    }
 
-			@Override
-			public void draw() {
-                            String levelLabel = levelName;
-                                LevelScore levelScore = game.getScore().getQuestScore(questSequence.getQuestName()).get(levelName);
-				if(null != levelScore) {
-                                    int score = levelScore.computeScore();
-                                    if(score>0) {
-                                        levelLabel += " - best score: " + score;
-                                    }                                    
-                                }
-                                game.getView().drawMenuButton(this, levelNameFont,
-						levelLabel);
-			}
-		};
-		questButton.offTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
-				levelName, "bt-level-off.jpg");
-		if(!isBlocked) {
-			questButton.onTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
-				levelName, "bt-level-on.jpg");
-		}else{
-			questButton.onTextureName = game.getData().getFile("btn-blocked.png");
-		}
+    private void createLevelButton(int i, int j, final String levelName) {
+        final boolean isBlocked = game.isLevelBlocked(questSequence.getQuestName(), levelName);
+        Button questButton = new Button() {
 
-		questButton.x = LEVEL_MINIATURE_SPACING + i
-				* (LEVEL_MINIATURE_WIDTH + LEVEL_MINIATURE_SPACING);
-		questButton.y = LEVEL_MINIATURE_SPACING + j
-				* (LEVEL_MINIATURE_HEIGHT + LEVEL_MINIATURE_SPACING);
-		questButton.w = LEVEL_MINIATURE_WIDTH;
-		questButton.h = LEVEL_MINIATURE_HEIGHT;
-		addButton(questButton);
-	}
+            @Override
+            void activate() throws NormalTransitionException {
+                if (!isBlocked) {
+                    questSequence.gotoLevel(levelName);
+                }
+            }
 
-	@Override
-	public void resume() {
-		
-	}
+            @Override
+            public void draw() {
+                String scoreLabel = "";
+                LevelScore levelScore = game.getScore().getQuestScore(questSequence.getQuestName()).get(levelName);
+                if (null != levelScore) {
+                    int score = levelScore.computeScore();
+                    if (score > 0) {
+                        scoreLabel += score;
+                    }
+                }
+                game.getView().drawMenuButton(this, levelNameFont,
+                        levelName, scoreLabel);
+            }
+        };
+        questButton.offTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
+                levelName, "bt-level-off.jpg");
+        if (!isBlocked) {
+            questButton.onTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
+                    levelName, "bt-level-on.jpg");
+        } else {
+            questButton.onTextureName = game.getData().getFile("btn-blocked.png");
+        }
+
+        questButton.x = LEVEL_MINIATURE_SPACING + i
+                * (LEVEL_MINIATURE_WIDTH + LEVEL_MINIATURE_SPACING);
+        questButton.y = LEVEL_MINIATURE_SPACING / 4.0f + j
+                * (LEVEL_MINIATURE_HEIGHT + LEVEL_MINIATURE_SPACING);
+        questButton.w = LEVEL_MINIATURE_WIDTH;
+        questButton.h = LEVEL_MINIATURE_HEIGHT;
+        addButton(questButton);
+    }
+
+    @Override
+    public void resume() {
+    }
 }

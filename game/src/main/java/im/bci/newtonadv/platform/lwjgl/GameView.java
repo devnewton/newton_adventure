@@ -1128,9 +1128,9 @@ public strictfp class GameView implements IGameView {
             font.drawString(
                     (ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
                     i++ * font.getHeight(), "SCORES", 1, -1,
-                    ITrueTypeFont.ALIGN_CENTER);
+                    ITrueTypeFont.Align.CENTER);
             font.drawString(0, i++ * font.getHeight(),
-                    questScore.getQuestName(), 1, -1, ITrueTypeFont.ALIGN_LEFT);
+                    questScore.getQuestName(), 1, -1, ITrueTypeFont.Align.LEFT);
             for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
                 String levelScoreStr = levelEntry.getKey()
                         + ": "
@@ -1139,14 +1139,14 @@ public strictfp class GameView implements IGameView {
                 font.drawString(
                         (ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
                         i++ * font.getHeight(), levelScoreStr, 1, -1,
-                        ITrueTypeFont.ALIGN_CENTER);
+                        ITrueTypeFont.Align.CENTER);
             }
             String questScoreStr = "Quest total: "
                     + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
-                    ITrueTypeFont.ALIGN_LEFT);
+                    ITrueTypeFont.Align.LEFT);
             font.drawString(0, i++ * font.getHeight(), "Share on " + sequence.getScoreServer().getServerUrl() + " !", 1, -1,
-                    ITrueTypeFont.ALIGN_LEFT);
+                    ITrueTypeFont.Align.LEFT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
         }
@@ -1229,14 +1229,23 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawMenuButton(Button button, ITrueTypeFont questNameFont,
-            String questName) {
+             String leftLabel, String rightLabel) {
         drawButton(button);
         GL11.glPushMatrix();
         GL11.glTranslatef(button.x,
                 button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
                 + questNameFont.getHeight(), 0);
         GL11.glScalef(1, -1, 1);
-        questNameFont.drawString(questName);
+        questNameFont.drawString(leftLabel, ITrueTypeFont.Align.LEFT);
+
+        GL11.glPopMatrix();
+        
+        GL11.glPushMatrix();
+        GL11.glTranslatef(button.x + QuestMenuSequence.QUEST_MINIATURE_WIDTH,
+                button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
+                + questNameFont.getHeight(), 0);
+        GL11.glScalef(1, -1, 1);
+        questNameFont.drawString(rightLabel, ITrueTypeFont.Align.RIGHT);
         GL11.glPopMatrix();
     }
 

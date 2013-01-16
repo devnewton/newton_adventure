@@ -132,7 +132,7 @@ public interface IGameView {
 
     void drawPlatform(Platform platform);
 
-    void drawMenuButton(Button button, ITrueTypeFont questNameFont, String questName);
+    void drawMenuButton(Button button, ITrueTypeFont questNameFont, String leftLabel, String rightLabel);
 
     void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font, QuestScore questScore, long scorePerCentToShow);
 

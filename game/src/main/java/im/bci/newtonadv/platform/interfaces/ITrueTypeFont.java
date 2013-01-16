@@ -37,19 +37,20 @@ package im.bci.newtonadv.platform.interfaces;
  * @author devnewton
  */
 public interface ITrueTypeFont {
-    int ALIGN_CENTER = 2;
-    int ALIGN_LEFT = 0;
-    int ALIGN_RIGHT = 1;
+    
+    public enum Align {
+        CENTER,
+        LEFT,
+        RIGHT
+    }
 
     void destroy();
 
     void drawString(String msg);
+    
+    void drawString(String msg, Align format);
 
-    void drawString(float x, float y, String whatchars, float scaleX, float scaleY);
-
-    void drawString(float x, float y, String whatchars, float scaleX, float scaleY, int format);
-
-    void drawString(float x, float y, String whatchars, int startIndex, int endIndex, float scaleX, float scaleY, int format);
+    void drawString(float x, float y, String whatchars, float scaleX, float scaleY, Align format);
 
     int getHeight();
 
