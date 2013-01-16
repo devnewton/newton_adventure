@@ -3,13 +3,13 @@
 License: CC-BY-SA 3.0
 Author: Ails (http://ails.deviantart.com/)
 
-* pyramid_background.jpg
-* sky_background.jpg
+* pyramid_background.png
+* sky_background.png
 
 License: CC-BY-SA 3.0
 Author: Bart Kelsey (http://opengameart.org/user/1)
 
-* arctic_background.jpg
+* arctic_background.png
 
 License: CC-BY-SA 3.0
 Author: Delfos (aka Matías Poggini http://opengameart.org/users/delfos)
@@ -68,7 +68,7 @@ License: CC-BY-3.0
 Author: surt (Carl Olsson) (http://opengameart.org/content/monsterboy-in-wonder-world-mockup-assets)
 License: CC-BY-SA 3.0
 
-* volcano quest bt-quest-off.jpg  bt-quest-on.jpg completed.jpg illustration, volcano_background.jpg
+* volcano quest bt-quest-off.jpg  bt-quest-on.jpg completed.jpg illustration, volcano_background.png
 
 Author: jap (http://opengameart.org/content/oil-painting-landscapes)
 Artistic filters author: devnewton@bci.im

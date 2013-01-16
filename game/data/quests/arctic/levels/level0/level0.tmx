@@ -2,7 +2,7 @@
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="24" height="24" tilewidth="32" tileheight="32">
  <properties>
-  <property name="newton_adventure.background" value="arctic_background.jpg"/>
+  <property name="newton_adventure.background" value="arctic_background.png"/>
  </properties>
  <tileset name="newton_adventure_jungle" firstgid="1">
   <tile id="0">

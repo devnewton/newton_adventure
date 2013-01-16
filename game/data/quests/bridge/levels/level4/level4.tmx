@@ -2,7 +2,7 @@
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="32" tileheight="32">
  <properties>
-  <property name="newton_adventure.background" value="bridge_background.jpg"/>
+  <property name="newton_adventure.background" value="bridge_background.png"/>
   <property name="newton_adventure.mummy" value="toad.gif"/>
   <property name="newton_adventure.music" value="Unfinished_Business_0.ogg"/>
  </properties>
