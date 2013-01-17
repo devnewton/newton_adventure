@@ -90,7 +90,7 @@ public class QuestSequence implements Sequence {
 
         if(lastSequence!=null) {
             scoreSequence = new ScoreSequence(game, questName, nextSequence);
-            StoryboardSequence completedSequence = new StoryboardSequence(game, game.getData().getQuestFile(questName,"completed.jpg"), game.getData().getFile("story_time.ogg"), new NormalTransitionException(scoreSequence));
+            StoryboardSequence completedSequence = new StoryboardSequence(game, game.getData().getQuestFile(questName,"completed.png"), game.getData().getFile("story_time.ogg"), new NormalTransitionException(scoreSequence));
             lastSequence.setNextSequence(completedSequence);
         }
     }

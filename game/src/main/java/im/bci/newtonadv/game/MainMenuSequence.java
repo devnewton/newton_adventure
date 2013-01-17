@@ -70,7 +70,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
 		this.quitSequence = quitSeq;
 		this.optionsSequence = optSequence;
 		this.helpSequence = new HelpSequence(game, game.getData()
-				.getFile("help.jpg"), null, new NormalTransitionException(this));
+				.getFile("help.png"), null, new NormalTransitionException(this));
 
 		setBackgroundTexturePath(game.getData().getFile("main_menu/home.png"));
 

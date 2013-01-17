@@ -196,14 +196,14 @@ public class QuestMenuSequence extends MenuSequence {
 					onTextureName = game.getData().getFile("btn-blocked.png");
 				} else {
 					onTextureName = game.getData().getQuestFile(questName,
-							"bt-quest-on.jpg");
+							"bt-quest-on.png");
 				}
 			}
 		};
 		questButton.offTextureName = game.getData().getQuestFile(questName,
-				"bt-quest-off.jpg");
+				"bt-quest-off.png");
 		questButton.onTextureName = game.getData().getQuestFile(questName,
-				"bt-quest-on.jpg");
+				"bt-quest-on.png");
 
 		questButton.x = QUEST_MINIATURE_SPACING + i
 				* (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);

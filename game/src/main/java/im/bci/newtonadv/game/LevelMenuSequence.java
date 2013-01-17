@@ -130,10 +130,10 @@ public class LevelMenuSequence extends MenuSequence {
             }
         };
         questButton.offTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
-                levelName, "bt-level-off.jpg");
+                levelName, "bt-level-off.png");
         if (!isBlocked) {
             questButton.onTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
-                    levelName, "bt-level-on.jpg");
+                    levelName, "bt-level-on.png");
         } else {
             questButton.onTextureName = game.getData().getFile("btn-blocked.png");
         }

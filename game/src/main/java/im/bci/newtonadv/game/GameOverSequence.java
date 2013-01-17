@@ -36,7 +36,7 @@ import im.bci.newtonadv.Game;
 public class GameOverSequence extends StoryboardSequence {
 
     GameOverSequence(Game game, final LevelSequence level) {
-        super(game, game.getData().getFile("gameover.jpg"), game.getData().getFile("Game_Over.ogg"), new NormalTransitionException(game.getMainMenuSequence()));
+        super(game, game.getData().getFile("gameover.png"), game.getData().getFile("Game_Over.ogg"), new NormalTransitionException(game.getMainMenuSequence()));
         
        Button retryButton = new Button() {
 

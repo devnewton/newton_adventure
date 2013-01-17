@@ -2,7 +2,7 @@
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="48" height="24" tilewidth="32" tileheight="32">
  <properties>
-  <property name="newton_adventure.background" value="starfield.jpg"/>
+  <property name="newton_adventure.background" value="starfield.png"/>
   <property name="newton_adventure.rotate_gravity_possible" value="false" />
  </properties>
  <tileset name="newton_adventure_jungle" firstgid="1">

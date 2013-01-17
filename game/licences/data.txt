@@ -68,13 +68,13 @@ License: CC-BY-3.0
 Author: surt (Carl Olsson) (http://opengameart.org/content/monsterboy-in-wonder-world-mockup-assets)
 License: CC-BY-SA 3.0
 
-* volcano quest bt-quest-off.jpg  bt-quest-on.jpg completed.jpg illustration, volcano_background.png
+* volcano quest bt-quest-off.png  bt-quest-on.png completed.png illustration, volcano_background.png
 
 Author: jap (http://opengameart.org/content/oil-painting-landscapes)
 Artistic filters author: devnewton@bci.im
 License: CC0
 
-* vatican quest bt-quest-off.jpg  bt-quest-on.jpg  completed.jpg illustration
+* vatican quest bt-quest-off.png  bt-quest-on.png  completed.png illustration
 
 Original photo author: xiquinhosilva ( http://www.flickr.com/photos/xiquinho/ )
 Artistic filters author: devnewton@bci.im
@@ -105,7 +105,7 @@ License: CC-BY 3.0
 Author: Augmentality (http://opengameart.org/content/story-time)
 License: CC-BY 3.0
 
-* starfield.jpg
+* starfield.png
 
 Author: Sauer2 (http://opengameart.org/content/starfield-background)
 License: CC0

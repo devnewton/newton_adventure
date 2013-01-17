@@ -176,7 +176,7 @@ public strictfp class Game {
 
     Sequence setupSequences() {
         Sequence outroSequence = new StoryboardSequence(this,
-                data.getFile("outro.jpg"), data.getFile("The_End.ogg"), new Sequence.NormalTransitionException(null));
+                data.getFile("outro.png"), data.getFile("The_End.ogg"), new Sequence.NormalTransitionException(null));
         this.questMenuSequence = new QuestMenuSequence(this);
         mainMenuSequence = new MainMenuSequence(this, questMenuSequence,
                 outroSequence, optionsSequence);
@@ -333,7 +333,7 @@ public strictfp class Game {
     }
 
     public void showHelp() throws ResumableTransitionException {
-        throw new ResumableTransitionException(new StoryboardSequence(this, this.getData().getFile("help.jpg"), null, new Sequence.ResumeTransitionException(currentSequence)));
+        throw new ResumableTransitionException(new StoryboardSequence(this, this.getData().getFile("help.png"), null, new Sequence.ResumeTransitionException(currentSequence)));
     }
 
     public void insertCoins() {
