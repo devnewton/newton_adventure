@@ -32,8 +32,8 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
@@ -52,27 +52,17 @@ import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
 import im.bci.newtonadv.util.NewtonColor;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.Vector2f;
-import net.phys2d.raw.BasicJoint;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
-import net.phys2d.raw.shapes.Box;
-import net.phys2d.raw.shapes.Circle;
-import net.phys2d.raw.shapes.Line;
-import tiled.core.Tile;
-import tiled.io.TMXMapReader;
 
 /**
  * 
@@ -96,34 +86,11 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITexture backgroundTexture;
     private List<Updatable> updatableBodies = new LinkedList<Updatable>();
     protected EntityList topLevelEntities = new EntityList();
-    private AnimationCollection appleIconTexture;
-    private Animation.Play appleIconPlay;
-    private AnimationCollection coinTexture;
-    private AnimationCollection worldMapTexture;
-    private AnimationCollection compassTexture;
-    private AnimationCollection fireBallTexture;
-    private AnimationCollection bombTexture;
-    private AnimationCollection crateTexture;
+
+
+        private Animation.Play appleIconPlay;
     private boolean objectivesCompleted = false;
     private float nonProgressiveGravityRotationStep;
-    private AnimationCollection explosionAnimation;
-    private AnimationCollection mummyAnimation;
-    private AnimationCollection batAnimation;
-    private AnimationCollection keyTexture;
-    private AnimationCollection doorTexture;
-    private AnimationCollection doorToBonusWorldTexture;
-    private AnimationCollection mobilePikesTexture;
-    private AnimationCollection axeTexture;
-    private AnimationCollection activator1OnTexture;
-    private AnimationCollection activator2OnTexture;
-    private AnimationCollection activator3OnTexture;
-    private AnimationCollection activator1OffTexture;
-    private AnimationCollection activator2OffTexture;
-    private AnimationCollection activator3OffTexture;
-    private AnimationCollection memoryActivatorHiddenTexture;
-    private AnimationCollection blocker1Texture;
-    private AnimationCollection blocker2Texture;
-    private AnimationCollection blocker3Texture;
     private final String questName;
     private final String levelName;
     private int nbCollectableApple;
@@ -135,6 +102,10 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITrueTypeFont scoreIndicatorFont;
     private EnumMap<NewtonColor, BodyList> coloredStaticBodies;
     private Playable explodeSound;
+    
+        public void setAppleIcon(AnimationCollection appleIcon) {
+        this.appleIconPlay = appleIcon.getFirst().start();
+    }
 
     void removeKey(Key key) {
         keys.remove(key);
@@ -145,10 +116,14 @@ public strictfp class World extends net.phys2d.raw.World {
         return explodeSound;
     }
 
-    private Vector2f getAcceleratorForce(Tile tile) {
-        float ax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.accelerator.ax"));
-        float ay = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.accelerator.ay"));
-        return new Vector2f(ax, ay);
+    void addKey(Key key) {
+        add(key);
+        keys.add(key);
+    }
+
+    void addColoredPlatform(NewtonColor color, ColoredPlatform colored) {
+        add(colored);
+        coloredStaticBodies.get(color).add(colored);
     }
 
     public static interface PostUpdateAction {
@@ -167,22 +142,6 @@ public strictfp class World extends net.phys2d.raw.World {
 
     public AnimationFrame getAppleIconTexture() {
         return appleIconPlay.getCurrentFrame();
-    }
-
-    public AnimationCollection getFireBallTexture() {
-        return fireBallTexture;
-    }
-
-    AnimationCollection getExplosionAnimation() {
-        return explosionAnimation;
-    }
-
-    AnimationCollection getBombTexture() {
-        return bombTexture;
-    }
-
-    AnimationCollection getCrateTexture() {
-        return crateTexture;
     }
 
     public Hero getHero() {
@@ -274,79 +233,8 @@ public strictfp class World extends net.phys2d.raw.World {
         }
         postStepActions.clear();
     }
-    private static final Properties defaultMapProperties = new Properties();
 
-    static {
-        defaultMapProperties.put("newton_adventure.mummy", "mummy.gif");
-        defaultMapProperties.put("newton_adventure.bat", "bat.nanim");
-        defaultMapProperties.put("newton_adventure.explosion", "explosion.gif");
-        defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
-        defaultMapProperties.put("newton_adventure.bomb", "bomb.nanim");
-        defaultMapProperties.put("newton_adventure.crate", "crate.nanim");
-        defaultMapProperties.put("newton_adventure.axe", "axe.png");
-        defaultMapProperties.put("newton_adventure.mobilePikes",
-                "mobile_pikes.png");
-        defaultMapProperties.put("newton_adventure.door_to_bonus_world",
-                "door_to_bonus_world.nanim");
-        defaultMapProperties.put("newton_adventure.door", "door.nanim");
-        defaultMapProperties.put("newton_adventure.key", "key.nanim");
-        defaultMapProperties.put("newton_adventure.hero", "hero.nanim");
-        defaultMapProperties.put("newton_adventure.apple", "apple.png");
-        defaultMapProperties.put("newton_adventure.coin", "coin.png");
-        defaultMapProperties.put("newton_adventure.world_map", "map.png");
-        defaultMapProperties.put("newton_adventure.compass", "compass.png");
-        defaultMapProperties.put("newton_adventure.activator1.on",
-                "actived1.png");
-        defaultMapProperties.put("newton_adventure.activator2.on",
-                "actived2.png");
-        defaultMapProperties.put("newton_adventure.activator3.on",
-                "actived3.png");
-        defaultMapProperties.put("newton_adventure.activator1.off",
-                "activable1.png");
-        defaultMapProperties.put("newton_adventure.activator2.off",
-                "activable2.png");
-        defaultMapProperties.put("newton_adventure.activator3.off",
-                "activable3.png");
-        defaultMapProperties.put("newton_adventure.memory_activator.hidden",
-                "activable_hidden.png");
-        defaultMapProperties.put("newton_adventure.blocker1", "blocker1.png");
-        defaultMapProperties.put("newton_adventure.blocker2", "blocker2.png");
-        defaultMapProperties.put("newton_adventure.blocker3", "blocker3.png");
-        defaultMapProperties.put("newton_adventure.music", "hopnbop.ogg");
-        defaultMapProperties.put("newton_adventure.rotate_gravity_possible",
-                "true");
-    }
 
-    public String getFileFromMap(tiled.core.Map map, String filePropertyName) {
-        String filename = getFileFromMapIfAvailable(map, filePropertyName);
-        if (filename != null) {
-            return filename;
-        } else {
-            throw new RuntimeException(
-                    "error in tmx map file, cannot find property "
-                    + filePropertyName);
-        }
-    }
-
-    public String getFileFromMapIfAvailable(tiled.core.Map map,
-            String filePropertyName) {
-        String filename = map.getProperties().getProperty(filePropertyName);
-        if (filename == null) {
-            filename = defaultMapProperties.getProperty(filePropertyName);
-            if (filename == null) {
-                return null;
-            }
-        }
-        return game.getData().getLevelFilePath(questName, levelName, filename);
-    }
-
-    private String getMapProperty(tiled.core.Map map, String prop) {
-        String value = map.getProperties().getProperty(prop);
-        if (null == value) {
-            return defaultMapProperties.getProperty(prop);
-        }
-        return value;
-    }
 
     private boolean loadNalLevel() {
         NalLoader loader = null;
@@ -372,102 +260,10 @@ public strictfp class World extends net.phys2d.raw.World {
 
     private boolean loadTmxLevel() {
         try {
-            TMXMapReader mapReader = new TMXMapReader();
-            tiled.core.Map map;
-            InputStream mapInputStream = game.getData().openLevelTmx(questName,
-                    levelName);
-            if (null == mapInputStream) {
-                return false;
-            }
-            try {
-                map = mapReader.readMap(mapInputStream);
-            } finally {
-                mapInputStream.close();
-            }
-
-            final ITextureCache textureCache = game.getView().getTextureCache();
-            explosionAnimation = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.explosion"));
-            mummyAnimation = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.mummy"));
-            batAnimation = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.bat"));
-            appleIconTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.apple"));
-            appleIconPlay = appleIconTexture.getFirst().start();
-            coinTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.coin"));
-            worldMapTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.world_map"));
-            compassTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.compass"));
-            fireBallTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.fireball"));
-            bombTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.bomb"));
-            crateTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.crate"));
-            keyTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.key"));
-            doorTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.door"));
-            doorToBonusWorldTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map,
-                    "newton_adventure.door_to_bonus_world"));
-            mobilePikesTexture = game.getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.mobilePikes"));
-            axeTexture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.axe"));
-            activator1OnTexture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.activator1.on"));
-            activator2OnTexture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.activator2.on"));
-            activator3OnTexture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.activator3.on"));
-            activator1OffTexture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.activator1.off"));
-            activator2OffTexture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.activator2.off"));
-            activator3OffTexture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.activator3.off"));
-            memoryActivatorHiddenTexture = getView().loadFromAnimation(
-                    getFileFromMap(map,
-                    "newton_adventure.memory_activator.hidden"));
-            blocker1Texture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.blocker1"));
-            blocker2Texture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.blocker2"));
-            blocker3Texture = getView().loadFromAnimation(
-                    getFileFromMap(map, "newton_adventure.blocker3"));
-
-            int zorderBase = 0;
-            for (tiled.core.MapLayer layer : map.getLayers()) {
-                if (layer instanceof tiled.core.TileLayer) {
-                    tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
-                    for (int x = 0; x < tileLayer.getWidth(); ++x) {
-                        for (int y = 0; y < tileLayer.getHeight(); ++y) {
-                            Tile tile = tileLayer.getTileAt(x, y);
-                            if (null != tile) {
-                                initFromTile(x - map.getWidth() / 2.0f, -y
-                                        + map.getHeight() / 2.0f, map, tile,
-                                        zorderBase);
-                            }
-                        }
-                    }
-                }
-                zorderBase += 1000000;
-            }
-
-            String backgroundTextureFile = getFileFromMapIfAvailable(map,
-                    "newton_adventure.background");
-            if (null != backgroundTextureFile) {
-                backgroundTexture = textureCache.getTexture(backgroundTextureFile);
-            }
-            game.getSoundCache().playMusicIfEnabled(
-                    getFileFromMap(map, "newton_adventure.music"));
-
-            isRotateGravityPossible = "true".equals(getMapProperty(map,
-                    "newton_adventure.rotate_gravity_possible"));
+            TmxLoader loader = new TmxLoader(game, this, questName, levelName);
+            loader.startLoading();
+            loader.load();
+            loader.finishLoading();
             return true;
         } catch (Exception e) {
             LOGGER.log(java.util.logging.Level.WARNING, "Cannot load level " + levelName + " in quest "
@@ -504,475 +300,16 @@ public strictfp class World extends net.phys2d.raw.World {
     float getGravityForce() {
         return gravityForce;
     }
-    static final float defaultPickableObjectSize = 2.0f * World.distanceUnit;
-    private static final Circle defaultPickableObjectShape = new Circle(
-            defaultPickableObjectSize / 2.0f);
 
-    private void initFromTile(float x, float y, tiled.core.Map map,
-            tiled.core.Tile tile, int zOrderBase) throws IOException {
-        ITextureCache textureCache = game.getView().getTextureCache();
-        String c = tile.getProperties().getProperty("newton_adventure.type",
-                "unknown");
-
-        final float baseSize = 2.0f * World.distanceUnit;
-        final float tileWidthScale = (float) tile.getWidth()
-                / (float) map.getTileWidth();
-        final float tileHeightScale = (float) tile.getHeight()
-                / (float) map.getTileHeight();
-        final float tileWidth = baseSize * tileWidthScale;
-        final float tileHeight = baseSize * tileHeightScale;
-        final float tileX = x * baseSize + tileWidth / 2.0f;
-        final float tileY = y * baseSize + tileHeight / 2.0f;
-
-        if (c.equals("platform")) {
-            Platform platform = new Platform(this, tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("slash_platform")) {
-            Platform platform = new Platform(this, tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setShape(new Line(-tileWidth / 2.0f, -tileHeight / 2.0f, tileWidth / 2.0f, tileHeight / 2.0f));
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("antislash_platform")) {
-            Platform platform = new Platform(this, tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setShape(new Line(-tileWidth / 2.0f, tileHeight / 2.0f, tileWidth / 2.0f, -tileHeight / 2.0f));
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("up_right_half_platform")) {
-            UpRightHalfPlatform platform = new UpRightHalfPlatform(this,
-                    tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("up_left_half_platform")) {
-            UpLeftHalfPlatform platform = new UpLeftHalfPlatform(this,
-                    tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("down_left_half_platform")) {
-            DownLeftHalfPlatform platform = new DownLeftHalfPlatform(this,
-                    tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("down_right_half_platform")) {
-            DownRightHalfPlatform platform = new DownRightHalfPlatform(this,
-                    tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("hero")) {
-            if (null == hero) {
-                hero = new Hero(this);
-                hero.setPosition(tileX, tileY);
-                hero.setZOrder(getTileZOrder(tile, zOrderBase));
-                hero.setAnimation(
-                        game.getView().loadFromAnimation(
-                        getFileFromMap(map, "newton_adventure.hero")));
-                hero.setJumpSound(
-                        game.getSoundCache().getSound(
-                        game.getData().getFile("jump.wav")));
-                hero.setPickupSound(game.getSoundCache().getSound(
-                        game.getData().getFile("pickup.wav")));
-                hero.setHurtSound(game.getSoundCache().getSound(
-                        game.getData().getFile("hurt.wav")));
-                add(hero);
-            } else {
-                LOGGER.log(Level.WARNING, "One hero is enough for level {0} in quest {1}", new Object[]{levelName, questName});
-            }
-        } else if (c.equals("mummy")) {
-            Mummy mummy = new Mummy(this, new Circle(distanceUnit),
-                    mummyAnimation);
-            mummy.setPosition(tileX, tileY);
-            mummy.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(mummy);
-        } else if (c.equals("bat")) {
-            Bat bat = new Bat(this, new Box(distanceUnit * 1.0f,
-                    distanceUnit * 0.5f), batAnimation);
-            bat.setPosition(tileX, tileY);
-            bat.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(bat);
-        } else if (c.equals("apple")) {
-            Apple apple = new Apple(this, defaultPickableObjectShape);
-            apple.setPosition(tileX, tileY);
-            apple.setTexture(appleIconTexture);
-            apple.setZOrder(getTileZOrder(tile, zOrderBase));
-            addApple(apple);
-        } else if (c.equals("coin")) {
-            Coin coin = new Coin(this, defaultPickableObjectShape);
-            coin.setPosition(tileX, tileY);
-            coin.setTexture(coinTexture);
-            coin.setZOrder(getTileZOrder(tile, zOrderBase));
-            addCoin(coin);
-        } else if (c.equals("letter")) {
-            Letter letter = new Letter(this, defaultPickableObjectShape);
-            letter.setPosition(tileX, tileY);
-            letter.setTexture(getAnimationForTile(map, tile, textureCache));
-            letter.setZOrder(getTileZOrder(tile, zOrderBase + 10));
-            addCoin(letter);
-        } else if (c.equals("world_map")) {
-            WorldMap worldMap = new WorldMap(this, defaultPickableObjectShape);
-            worldMap.setPosition(tileX, tileY);
-            worldMap.setTexture(worldMapTexture);
-            worldMap.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(worldMap);
-        } else if (c.equals("compass")) {
-            Compass compass = new Compass(this, defaultPickableObjectShape);
-            compass.setPosition(tileX, tileY);
-            compass.setTexture(compassTexture);
-            compass.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(compass);
-        } else if (c.equals("key")) {
-            Key key = new Key(this);
-            key.setPosition(tileX, tileY);
-            key.setTexture(keyTexture);
-            key.setZOrder(getTileZOrder(tile, zOrderBase));
-            key.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                    "newton_adventure.color", "white")));
-            add(key);
-            keys.add(key);
-        } else if (c.equals("door")) {
-            Door door = new Door(this, tileWidth, tileHeight);
-            door.setPosition(tileX, tileY);
-            door.setTexture(doorTexture);
-            door.setZOrder(getTileZOrder(tile, zOrderBase));
-            if (tile.getProperties().containsKey("newton_adventure.color")) {
-                door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                        "newton_adventure.color", "white")));
-            }
-            add(door);
-        } else if (c.equals("door_to_bonus_world")) {
-            DoorToBonusWorld door = new DoorToBonusWorld(this, tileWidth,
-                    tileHeight);
-            door.setPosition(tileX, tileY);
-            door.setTexture(doorToBonusWorldTexture);
-            door.setZOrder(getTileZOrder(tile, zOrderBase));
-            door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                    "newton_adventure.color", "white")));
-            add(door);
-        } else if (c.equals("cloud")) {
-            Cloud cloud = new Cloud(this, tileWidth, tileHeight);
-            cloud.setTexture(getAnimationForTile(map, tile, textureCache));
-            cloud.setPosition(tileX, tileY);
-            cloud.setZOrder(getTileZOrder(tile, zOrderBase));
-            cloud.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                    "newton_adventure.color", "white")));
-            add(cloud);
-        } else if (c.equals("pikes_up")) {
-            Pikes pikes = new Pikes(this, Pikes.DangerousSide.UP, tileWidth,
-                    tileHeight);
-            pikes.setTexture(getAnimationForTile(map, tile, textureCache));
-            pikes.setPosition(tileX, tileY);
-            pikes.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(pikes);
-        } else if (c.equals("pikes_down")) {
-            Pikes pikes = new Pikes(this, Pikes.DangerousSide.DOWN, tileWidth,
-                    tileHeight);
-            pikes.setTexture(getAnimationForTile(map, tile, textureCache));
-            pikes.setPosition(tileX, tileY);
-            pikes.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(pikes);
-        } else if (c.equals("pikes_left")) {
-            Pikes pikes = new Pikes(this, Pikes.DangerousSide.LEFT, tileWidth,
-                    tileHeight);
-            pikes.setTexture(getAnimationForTile(map, tile, textureCache));
-            pikes.setPosition(tileX, tileY);
-            pikes.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(pikes);
-        } else if (c.equals("pikes_right")) {
-            Pikes pikes = new Pikes(this, Pikes.DangerousSide.RIGHT, tileWidth,
-                    tileHeight);
-            pikes.setTexture(getAnimationForTile(map, tile, textureCache));
-            pikes.setPosition(tileX, tileY);
-            pikes.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(pikes);
-        } else if (c.equals("cannon_up")) {
-            Cannon cannon = new Cannon(this, Cannon.Orientation.UP, tileWidth,
-                    tileHeight);
-            cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-            cannon.setPosition(tileX, tileY);
-            cannon.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(cannon);
-        } else if (c.equals("cannon_down")) {
-            Cannon cannon = new Cannon(this, Cannon.Orientation.DOWN,
-                    tileWidth, tileHeight);
-            cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-            cannon.setPosition(tileX, tileY);
-            cannon.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(cannon);
-        } else if (c.equals("cannon_right")) {
-            Cannon cannon = new Cannon(this, Cannon.Orientation.RIGHT,
-                    tileWidth, tileHeight);
-            cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-            cannon.setPosition(tileX, tileY);
-            cannon.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(cannon);
-        } else if (c.equals("cannon_left")) {
-            Cannon cannon = new Cannon(this, Cannon.Orientation.LEFT,
-                    tileWidth, tileHeight);
-            cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-            cannon.setPosition(tileX, tileY);
-            cannon.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(cannon);
-        } else if (c.equals("mobile_pike_anchor")) {
-            MobilePikeAnchor anchor = new MobilePikeAnchor(this);
-            anchor.setTexture(getAnimationForTile(map, tile, textureCache));
-            anchor.setPosition(tileX, tileY);
-            anchor.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(anchor);
-
-            MobilePikes pikes = new MobilePikes(this);
-            pikes.setTexture(mobilePikesTexture);
-            pikes.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY()
-                    - MobilePikes.height
-                    / 2.0f
-                    - anchor.getShape().getBounds().getHeight() / 2.0f);
-            add(pikes);
-            pikes.setZOrder(getTileZOrder(tile, zOrderBase));
-
-            BasicJoint j = new BasicJoint(anchor, pikes, new Vector2f(
-                    anchor.getPosition()));
-            j.setRelaxation(0);
-            add(j);
-        } else if (c.equals("axe_anchor")) {
-            AxeAnchor anchor = new AxeAnchor(this);
-            anchor.setTexture(getAnimationForTile(map, tile, textureCache));
-            anchor.setPosition(tileX, tileY);
-            anchor.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(anchor);
-
-            Axe axe = new Axe(this);
-            axe.setTexture(axeTexture);
-            axe.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY()
-                    - MobilePikes.height
-                    / 2.0f
-                    - anchor.getShape().getBounds().getHeight() / 2.0f);
-            axe.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(axe);
-
-            BasicJoint j = new BasicJoint(anchor, axe, new Vector2f(
-                    anchor.getPosition()));
-            j.setRelaxation(0);
-            add(j);
-        } else if (c.equals("bounce_platform")) {
-            BouncePlatform platform = new BouncePlatform(this, tileWidth,
-                    tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("activator1")) {
-            Activator activator = new Activator(this, 1, activator1OnTexture,
-                    activator1OffTexture, tileWidth, tileHeight);
-            activator.setPosition(tileX, tileY);
-            activator.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activator);
-        } else if (c.equals("activator2")) {
-            Activator activator = new Activator(this, 2, activator2OnTexture,
-                    activator2OffTexture, tileWidth, tileHeight);
-            activator.setPosition(tileX, tileY);
-            activator.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activator);
-        } else if (c.equals("activator3")) {
-            Activator activator = new Activator(this, 3, activator3OnTexture,
-                    activator3OffTexture, tileWidth, tileHeight);
-            activator.setPosition(tileX, tileY);
-            activator.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activator);
-        } else if (c.equals("memory_activator1")) {
-            MemoryActivator activator = new MemoryActivator(this, 1,
-                    activator1OnTexture, activator1OffTexture,
-                    memoryActivatorHiddenTexture, tileWidth, tileHeight);
-            activator.setPosition(tileX, tileY);
-            activator.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activator);
-        } else if (c.equals("memory_activator2")) {
-            MemoryActivator activator = new MemoryActivator(this, 2,
-                    activator2OnTexture, activator2OffTexture,
-                    memoryActivatorHiddenTexture, tileWidth, tileHeight);
-            activator.setPosition(tileX, tileY);
-            activator.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activator);
-        } else if (c.equals("memory_activator3")) {
-            MemoryActivator activator = new MemoryActivator(this, 3,
-                    activator3OnTexture, activator3OffTexture,
-                    memoryActivatorHiddenTexture, tileWidth, tileHeight);
-            activator.setPosition(tileX, tileY);
-            activator.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activator);
-        } else if (c.equals("blocker1")) {
-            Blocker activable = new Blocker(this, 1, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker1Texture));
-            activable.setPosition(tileX, tileY);
-            activable.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activable);
-        } else if (c.equals("blocker2")) {
-            Blocker activable = new Blocker(this, 2, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker2Texture));
-            activable.setPosition(tileX, tileY);
-            activable.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activable);
-        } else if (c.equals("blocker3")) {
-            Blocker activable = new Blocker(this, 3, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker3Texture));
-            activable.setPosition(tileX, tileY);
-            activable.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activable);
-        } else if (c.equals("laser_blocker")) {
-            LaserBlocker activable = new LaserBlocker(this, 1, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker1Texture));
-            activable.setPosition(tileX, tileY);
-            activable.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(activable);
-        } else if (c.equals("accelerator")) {
-            Accelerator accelerator = new Accelerator(this, tileWidth, tileHeight, getAcceleratorForce(tile));
-            accelerator.setTexture(getAnimationForTile(map, tile, textureCache));
-            accelerator.setPosition(tileX, tileY);
-            accelerator.setFriction(getTileFriction(tile));
-            accelerator.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(accelerator);
-        } else if (c.equals("moving_platform")) {
-            MovingPlatform platform = new MovingPlatform(this,
-                    getAnimationForTile(map, tile, textureCache),
-                    getMovingPlatformPath(tile, x, y, baseSize),
-                    tileWidth, tileHeight);
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("dangerous_moving_platform")) {
-            DangerousMovingPlatform platform = new DangerousMovingPlatform(this,
-                    getAnimationForTile(map, tile, textureCache),
-                    getMovingPlatformPath(tile, x, y, baseSize),
-                    tileWidth, tileHeight);
-            if (tile.getProperties().containsKey("newton_adventure.color")) {
-                platform.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                        "newton_adventure.color", "white")));
-            }
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        } else if (c.equals("teleporter")) {
-            Teleporter teleporter = new Teleporter(this, tileWidth, tileHeight);
-            teleporter.setTexture(getAnimationForTile(map, tile, textureCache));
-            teleporter.setPosition(tileX, tileY);
-            teleporter.setZOrder(getTileZOrder(tile, zOrderBase, 1));
-            teleporter.setColor(tile.getProperties().getProperty(
-                    "newton_adventure.teleporter.color"));
-            add(teleporter);
-        } else if (c.equals("colorizer")) {
-            Colorizer colorizer = new Colorizer(this, tileWidth, tileHeight);
-            colorizer.setTexture(getAnimationForTile(map, tile, textureCache));
-            colorizer.setPosition(tileX, tileY);
-            colorizer.setZOrder(getTileZOrder(tile, zOrderBase, 1));
-            colorizer.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                    "newton_adventure.color", "white")));
-            add(colorizer);
-        } else if (c.equals("colored_platform")) {
-            ColoredPlatform colored = new ColoredPlatform(this, tileWidth, tileHeight);
-            colored.setTexture(getAnimationForTile(map, tile, textureCache));
-            colored.setPosition(tileX, tileY);
-            colored.setZOrder(getTileZOrder(tile, zOrderBase, 1));
-            NewtonColor color = NewtonColor.valueOf(tile.getProperties().getProperty(
-                    "newton_adventure.color"));
-            add(colored);
-            coloredStaticBodies.get(color).add(colored);
-        } else if (c.equals("keylock")) {
-            KeyLock keylock = new KeyLock(this, tileWidth, tileHeight);
-            keylock.setTexture(getAnimationForTile(map, tile, textureCache));
-            keylock.setPosition(tileX, tileY);
-            keylock.setZOrder(getTileZOrder(tile, zOrderBase));
-            keylock.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                    "newton_adventure.color", "white")));
-            add(keylock);
-        } else if (c.equals("help_sign")) {
-            HelpSign helpSign = new HelpSign(this, tileWidth, tileHeight);
-            helpSign.setTexture(getAnimationForTile(map, tile, textureCache));
-            helpSign.setPosition(tileX, tileY);
-            helpSign.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(helpSign);
-        } else if (c.equals("bomb")) {
-            Bomb bomb = new Bomb(this);
-            bomb.setPosition(tileX, tileY);
-            bomb.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(bomb);
-        } else if (c.equals("bomb_hole")) {
-            BombHole bombHole = new BombHole(this, tileWidth, tileHeight);
-            bombHole.setTexture(getAnimationForTile(map, tile, textureCache));
-            bombHole.setPosition(tileX, tileY);
-            bombHole.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(bombHole);
-        } else if (c.equals("crate")) {
-            Crate crate = new Crate(this, tileWidth, tileHeight);
-            crate.setPosition(tileX, tileY);
-            crate.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(crate);
-        } else if (c.equals("boss")) {
-            Boss boss = new Boss(this, tileX, tileY);
-            boss.setTexture(getAnimationForTile(map, tile, textureCache));
-            boss.setZOrder(getTileZOrder(tile, zOrderBase));
-            boss.getLeftHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
-            boss.getRightHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
-            add(boss);
-            add(boss.getLeftHand());
-            add(boss.getRightHand());
-        } else {
-            Platform platform = new Platform(this, tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setEnabled(false);
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            add(platform);
-        }
+    void setBackgroundTexture(ITexture backgroundTexture) {
+        this.backgroundTexture = backgroundTexture;
     }
 
-    private AnimationCollection getAnimationForTile(tiled.core.Map map,
-            tiled.core.Tile tile, ITextureCache textureCache)
-            throws FileNotFoundException, IOException {
-        AnimationCollection animation;
-        String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
-        if (null != gfx) {
-            animation = game.getView().loadFromAnimation(
-                    game.getData().getLevelFilePath(questName, levelName, gfx));
-        } else {
-            animation = new AnimationCollection(textureCache.getTexture(
-                    questName, levelName, map, tile));
-        }
-        return animation;
+    void setIsRotateGravityPossible(boolean isRotateGravityPossible) {
+        this.isRotateGravityPossible = isRotateGravityPossible;
     }
 
-    private AnimationCollection getAnimationForTile(tiled.core.Map map,
-            tiled.core.Tile tile, ITextureCache textureCache, AnimationCollection defaultAnimation)
-            throws FileNotFoundException, IOException {
-        AnimationCollection animation;
-        String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
-        if (null != gfx) {
-            animation = game.getView().loadFromAnimation(
-                    game.getData().getLevelFilePath(questName, levelName, gfx));
-        } else {
-            animation = defaultAnimation;
-        }
-        return animation;
-    }
+
 
     public BodyList getColoredStaticBodyList(NewtonColor color) {
         return coloredStaticBodies.get(color);
@@ -1040,53 +377,6 @@ public strictfp class World extends net.phys2d.raw.World {
         }
     }
 
-    private float getTileFriction(Tile tile) {
-        return Float.parseFloat(tile.getProperties().getProperty(
-                "newton_adventure.friction", "10"));
-    }
-
-    private int getTileZOrder(Tile tile, int zOrderBase, int defaultZ) {
-        int z = zOrderBase;
-        String zprop = tile.getProperties().getProperty(
-                "newton_adventure.zorder");
-        if (null == zprop) {
-            z += defaultZ;
-        } else {
-            z += Integer.parseInt(zprop);
-        }
-        return z;
-    }
-
-    private int getTileZOrder(Tile tile, int zOrderBase) {
-        return getTileZOrder(tile, zOrderBase, 0);
-    }
-
-    private Vector2f[] getMovingPlatformPath(Tile tile,
-            float x, float y, float baseSize) {
-        Vector2f[] dest = new Vector2f[2];
-        float ax = Float.parseFloat(tile.getProperties().getProperty(
-                "newton_adventure.moving_platform.a.x", "-1"));
-        float ay = Float.parseFloat(tile.getProperties().getProperty(
-                "newton_adventure.moving_platform.a.y", "-1"));
-        float bx = Float.parseFloat(tile.getProperties().getProperty(
-                "newton_adventure.moving_platform.b.x", "1"));
-        float by = Float.parseFloat(tile.getProperties().getProperty(
-                "newton_adventure.moving_platform.b.y", "1"));
-
-        ax += x;
-        bx += x;
-        ay += y;
-        by += y;
-
-        ax *= baseSize;
-        bx *= baseSize;
-        ay *= baseSize;
-        by *= baseSize;
-
-        dest[0] = new Vector2f(ax, ay);
-        dest[1] = new Vector2f(bx, by);
-        return dest;
-    }
 
     public LevelScore getLevelScore() {
         return hero.getLevelScore();
@@ -1223,12 +513,12 @@ public strictfp class World extends net.phys2d.raw.World {
         add(apple);
     }
 
-    private void addCoin(Coin coin) {
+    void addCoin(Coin coin) {
         ++nbCollectableCoin;
         add(coin);
     }
 
-    public void setHero(Hero hero) {
+    void setHero(Hero hero) {
         this.hero = hero;
         add(hero);
     }

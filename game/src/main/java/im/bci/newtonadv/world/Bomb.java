@@ -51,31 +51,40 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
     static final float size = 1.95f * World.distanceUnit;
     private World world;
     private AnimationCollection texture;
-	private Animation.Play play;
-	private boolean triggered;
-	private long explodeTime = -1;
-	private static final float explosionForce = 10000.0f;
-	private static final long triggerDuration = 2000000000L;
-	private BombHole parentHole;
+    private Animation.Play play;
+    private boolean triggered;
+    private long explodeTime = -1;
+    private static final float explosionForce = 10000.0f;
+    private static final long triggerDuration = 2000000000L;
+    private BombHole parentHole;
+    private AnimationCollection fireBallTexture;
+    private AnimationCollection explositionTexture;
 
     Bomb(World world) {
         super(new Circle(size / 2.0f), 1.0f);
         this.world = world;
-        setTexture(world.getBombTexture());
     }
 
     Bomb(World world, Shape shape) {
         super(shape, 1.0f);
         this.world = world;
         setRotatable(false);
-	}
+    }
 
-	@Override
+    public void setFireBallTexture(AnimationCollection fireBallTexture) {
+        this.fireBallTexture = fireBallTexture;
+    }
+
+    public void setExplosionTexture(AnimationCollection explositionTexture) {
+        this.explositionTexture = explositionTexture;
+    }
+
+    @Override
     public void draw() {
         world.getView().drawBomb(this, play.getCurrentFrame(), world);
     }
 
-    private void setTexture(AnimationCollection texture) {
+    void setTexture(AnimationCollection texture) {
         this.texture = texture;
         this.play = texture.getAnimationByName("bomb_inactive").start();
     }
@@ -83,52 +92,53 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
     @Override
     public strictfp void collided(Body body) {
         if (body instanceof Hero || body instanceof FireBall) {
-        	if(!triggered) {
-        		play = texture.getAnimationByName("bomb_about_to_explode").start();
-        		triggered = true;
-        	}
+            if (!triggered) {
+                play = texture.getAnimationByName("bomb_about_to_explode").start();
+                triggered = true;
+            }
         }
     }
 
-	public AnimationCollection getTexture() {
-		return texture;
-	}
+    public AnimationCollection getTexture() {
+        return texture;
+    }
 
-	@Override
-	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		play.update(frameTimeInfos.elapsedTime / 1000000);
-	       if(triggered) {
-	           if( explodeTime < 0 )
-	               explodeTime = frameTimeInfos.currentTime + triggerDuration;
-	           else if( frameTimeInfos.currentTime  >= explodeTime ) {
-	               explode();
-	           }
-	       }
-	}
+    @Override
+    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+        play.update(frameTimeInfos.elapsedTime / 1000000);
+        if (triggered) {
+            if (explodeTime < 0) {
+                explodeTime = frameTimeInfos.currentTime + triggerDuration;
+            } else if (frameTimeInfos.currentTime >= explodeTime) {
+                explode();
+            }
+        }
+    }
 
-	private void explode() {
-                world.getExplodeSound().play();
-		if(null != parentHole) {
-			parentHole.bombExploded();
-		}
-		world.remove(this);
-		throwFireball(1, 1);
-		throwFireball(-1, -1);
-		throwFireball(-1, 1);
-		throwFireball(1, -1);
-	}
-	
+    private void explode() {
+        world.getExplodeSound().play();
+        if (null != parentHole) {
+            parentHole.bombExploded();
+        }
+        world.remove(this);
+        throwFireball(1, 1);
+        throwFireball(-1, -1);
+        throwFireball(-1, 1);
+        throwFireball(1, -1);
+    }
+
     private void throwFireball(float dx, float dy) {
         Vector2f pos = new Vector2f(getPosition());
         float w = this.getShape().getBounds().getWidth();
-		FireBall fireBall = new FireBall(world, w / 2.0f);
+        FireBall fireBall = new FireBall(world, w / 2.0f);
         fireBall.setPosition(pos.x + dx * w, pos.y + dy * w);
-        fireBall.setTexture(world.getFireBallTexture());
+        fireBall.setTexture(fireBallTexture);
+        fireBall.setExplosionTexture(explositionTexture);
         world.add(fireBall);
         fireBall.addForce(new Vector2f(dx * explosionForce, dy * explosionForce));
     }
 
-	public void setParentHole(BombHole parentHole) {
-		this.parentHole = parentHole;
-	}
+    public void setParentHole(BombHole parentHole) {
+        this.parentHole = parentHole;
+    }
 }

@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.AnimationCollection;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -41,36 +42,55 @@ import im.bci.newtonadv.game.Updatable;
  * @author bci
  */
 public strictfp class BombHole extends Platform implements Updatable {
+    
+    private boolean canThrowBomb = true;
+    private AnimationCollection bombTexture;
+        private AnimationCollection fireBallTexture;
+    private AnimationCollection explosionTexture;
+    
+    public BombHole(World world, float w, float h) {
+        super(world, w, h);
+        setEnabled(false);
+    }
+    
+    public void setBombTexture(AnimationCollection bombTexture) {
+        this.bombTexture = bombTexture;
+    }
+    
+    
+    public void setFireBallTexture(AnimationCollection fireBallTexture) {
+        this.fireBallTexture = fireBallTexture;
+    }
 
-	private boolean canThrowBomb = true;
-
-	public BombHole(World world, float w, float h) {
-		super(world, w, h);
-		setEnabled(false);
-	}
-
-	public BombHole(World world, Shape shape) {
-		super(world, shape);
-		setEnabled(false);
-	}
-
-	@Override
-	public void update(FrameTimeInfos frameTimeInfos) {
-		if (canThrowBomb) {
-			canThrowBomb = false;
-			throwBomb();
-		}
-	}
-
-	private void throwBomb() {
-		Vector2f pos = new Vector2f(getPosition());
-		Bomb bomb = new Bomb(world);
-		bomb.setParentHole(this);
-		bomb.setPosition(pos.x, pos.y);
-		world.add(bomb);
-	}
-
-	public void bombExploded() {
-		canThrowBomb = true;
-	}
+    public void setExplosionTexture(AnimationCollection explositionTexture) {
+        this.explosionTexture = explositionTexture;
+    }
+    
+    public BombHole(World world, Shape shape) {
+        super(world, shape);
+        setEnabled(false);
+    }
+    
+    @Override
+    public void update(FrameTimeInfos frameTimeInfos) {
+        if (canThrowBomb) {
+            canThrowBomb = false;
+            throwBomb();
+        }
+    }
+    
+    private void throwBomb() {
+        Vector2f pos = new Vector2f(getPosition());
+        Bomb bomb = new Bomb(world);
+        bomb.setTexture(bombTexture);
+        bomb.setFireBallTexture(fireBallTexture);
+        bomb.setExplosionTexture(explosionTexture);
+        bomb.setParentHole(this);
+        bomb.setPosition(pos.x, pos.y);
+        world.add(bomb);
+    }
+    
+    public void bombExploded() {
+        canThrowBomb = true;
+    }
 }

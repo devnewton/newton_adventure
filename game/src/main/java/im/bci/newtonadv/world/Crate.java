@@ -43,13 +43,11 @@ public strictfp class Crate extends Platform implements Updatable {
 
 	public Crate(World world, float w, float h) {
 		super(world, w, h);
-		setTexture(world.getCrateTexture());
 		changeAnimation("crate", PlayMode.LOOP);
 	}
 
 	public Crate(World world, Shape shape) {
 		super(world, shape);
-		setTexture(world.getCrateTexture());
 		changeAnimation("crate", PlayMode.LOOP);
 	}
 

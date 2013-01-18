@@ -50,199 +50,205 @@ import im.bci.newtonadv.util.Vector;
  * @author devnewton
  */
 public strictfp class Boss extends AbstractDrawableBody implements
-		Updatable {
+        Updatable {
 
-	public BossHand getLeftHand() {
-		return leftHand;
-	}
+    private AnimationCollection explosionTexture;
 
-	public BossHand getRightHand() {
-		return rightHand;
-	}
+    public BossHand getLeftHand() {
+        return leftHand;
+    }
 
-	private Animation.Play play;
-	private static final float weight = 10.0f;
-	static final float normalSpeed = 1.0f;
-	float speed = normalSpeed;
-	private static final long maxMoveStraightDuration = 1000000000L;
-	private static final long minMoveStraightDuration = 500000000L;
-	private static final long invincibleAfterHurtDuration = 10000000000L;
-	private static final float size = World.distanceUnit * 8.0f;
-	private long nextChangeDirectionTime = 0;
-	private static final long dyingDuration = 10000000000L;
-	private long endOfDyingDuration = -1;
-	private long endOfInvincibilityDuration = -1;
-	private boolean isHurt = false;
-	World world;
-	private Vector2f directionVelocity;
-	private BossHand leftHand, rightHand;
-	private int lifePoints = 3;
-	private long nextExplosionTime;
-	private AnimationCollection texture;
-	private static final long timeBetweenExplosion = 300000000L;
+    public BossHand getRightHand() {
+        return rightHand;
+    }
+    private Animation.Play play;
+    private static final float weight = 10.0f;
+    static final float normalSpeed = 1.0f;
+    float speed = normalSpeed;
+    private static final long maxMoveStraightDuration = 1000000000L;
+    private static final long minMoveStraightDuration = 500000000L;
+    private static final long invincibleAfterHurtDuration = 10000000000L;
+    private static final float size = World.distanceUnit * 8.0f;
+    private long nextChangeDirectionTime = 0;
+    private static final long dyingDuration = 10000000000L;
+    private long endOfDyingDuration = -1;
+    private long endOfInvincibilityDuration = -1;
+    private boolean isHurt = false;
+    World world;
+    private Vector2f directionVelocity;
+    private BossHand leftHand, rightHand;
+    private int lifePoints = 3;
+    private long nextExplosionTime;
+    private AnimationCollection texture;
+    private static final long timeBetweenExplosion = 300000000L;
 
-	public Boss(World world, float x, float y) {
-		super(new Circle(size / 2.0f), weight);
-		this.world = world;
-		setRotatable(false);
-		setGravityEffected(false);
-		leftHand = new BossHand(this, BossHand.Side.LEFT, world);
-		leftHand.setPosition(getHandPosition(BossHand.Side.LEFT).x,
-				getHandPosition(BossHand.Side.LEFT).y);
-		rightHand = new BossHand(this, BossHand.Side.RIGHT,
-				world);
-		rightHand.setPosition(getHandPosition(BossHand.Side.RIGHT).x,
-				getHandPosition(BossHand.Side.RIGHT).y);
-		setPosition(x, y);
-	}
+    public Boss(World world, float x, float y) {
+        super(new Circle(size / 2.0f), weight);
+        this.world = world;
+        setRotatable(false);
+        setGravityEffected(false);
+        leftHand = new BossHand(this, BossHand.Side.LEFT, world);
+        leftHand.setPosition(getHandPosition(BossHand.Side.LEFT).x,
+                getHandPosition(BossHand.Side.LEFT).y);
+        rightHand = new BossHand(this, BossHand.Side.RIGHT,
+                world);
+        rightHand.setPosition(getHandPosition(BossHand.Side.RIGHT).x,
+                getHandPosition(BossHand.Side.RIGHT).y);
+        setPosition(x, y);
+    }
 
-	final Vector2f getHandPosition(BossHand.Side side) {
-		Vector2f pos = new Vector2f(this.getPosition());
-		pos.y -= 0.327005f * size;
-		if (side == BossHand.Side.LEFT) {
-			pos.x -= 0.35f * size;
-		} else {
-			pos.x += 0.35f * size;
-		}
-		return pos;
-	}
+    final Vector2f getHandPosition(BossHand.Side side) {
+        Vector2f pos = new Vector2f(this.getPosition());
+        pos.y -= 0.327005f * size;
+        if (side == BossHand.Side.LEFT) {
+            pos.x -= 0.35f * size;
+        } else {
+            pos.x += 0.35f * size;
+        }
+        return pos;
+    }
 
-	public void setTexture(AnimationCollection texture) {
-		this.play = texture.getAnimationByName("boss_body").start();
-		this.texture = texture;
-		leftHand.setTexture(texture);
-		rightHand.setTexture(texture);
-	}
+    public void setTexture(AnimationCollection texture) {
+        this.play = texture.getAnimationByName("boss_body").start();
+        this.texture = texture;
+        leftHand.setTexture(texture);
+        rightHand.setTexture(texture);
+    }
 
-	public boolean isDead() {
-		return lifePoints <= 0;
-	}
+    public void setExplosionTexture(AnimationCollection explosionTexture) {
+        this.explosionTexture = explosionTexture;
+    }
 
-	@Override
-	public strictfp void collided(Body other) {
-		if (other instanceof Hero) {
+    public boolean isDead() {
+        return lifePoints <= 0;
+    }
 
-			CollisionEvent[] events = world.getContacts(this);
-			Hero hero = (Hero) other;
-			boolean isBossHurt = false;
-			boolean isHeroHurt = false;
-			for (int i = 0; i < events.length; i++) {
-				CollisionEvent event = events[i];
-				Vector2f normal = new Vector2f(event.getNormal());
-				float angle = Vector.angle(normal, world.getGravityVector());
-				if (event.getBodyB() == hero) {
-					if (angle < Math.PI / 4.0f) {
-						isHeroHurt = true;
-					} else {
-						isBossHurt = true;
-					}
-					// normal.scale(world.getGravityForce() * 100.0f);
-					// hero.addForce(normal);
-				} else if (event.getBodyA() == hero) {
-					if (angle > Math.PI / 4.0f) {
-						isHeroHurt = true;
-					} else {
-						isBossHurt = true;
-					}
-					// normal.scale(world.getGravityForce() * -100.0f);
-					// hero.addForce(normal);
-				}
-				if (isBossHurt) {
-					if (!isHurt) {
-						if (hero.getPosition().getY() > getPosition().getY()) {
-							--lifePoints;
-							isHurt = true;
-							endOfInvincibilityDuration = -1;
-							if (lifePoints == 0)
-								hero.killedEgyptianBoss();
-						}
-					}
-				}
+    @Override
+    public strictfp void collided(Body other) {
+        if (other instanceof Hero) {
 
-				if (!isBossHurt && isHeroHurt) {
-					hero.hurtByEgyptianBoss();
-				}
+            CollisionEvent[] events = world.getContacts(this);
+            Hero hero = (Hero) other;
+            boolean isBossHurt = false;
+            boolean isHeroHurt = false;
+            for (int i = 0; i < events.length; i++) {
+                CollisionEvent event = events[i];
+                Vector2f normal = new Vector2f(event.getNormal());
+                float angle = Vector.angle(normal, world.getGravityVector());
+                if (event.getBodyB() == hero) {
+                    if (angle < Math.PI / 4.0f) {
+                        isHeroHurt = true;
+                    } else {
+                        isBossHurt = true;
+                    }
+                    // normal.scale(world.getGravityForce() * 100.0f);
+                    // hero.addForce(normal);
+                } else if (event.getBodyA() == hero) {
+                    if (angle > Math.PI / 4.0f) {
+                        isHeroHurt = true;
+                    } else {
+                        isBossHurt = true;
+                    }
+                    // normal.scale(world.getGravityForce() * -100.0f);
+                    // hero.addForce(normal);
+                }
+                if (isBossHurt) {
+                    if (!isHurt) {
+                        if (hero.getPosition().getY() > getPosition().getY()) {
+                            --lifePoints;
+                            isHurt = true;
+                            endOfInvincibilityDuration = -1;
+                            if (lifePoints == 0) {
+                                hero.killedEgyptianBoss();
+                            }
+                        }
+                    }
+                }
 
-			}
+                if (!isBossHurt && isHeroHurt) {
+                    hero.hurtByEgyptianBoss();
+                }
 
-		}
+            }
 
-		if (isDead()) {
-			setMoveable(false);
-		}
-	}
+        }
 
-	@Override
-	public void draw() {
-		world.getView().drawBoss(this, play.getCurrentFrame());
-	}
+        if (isDead()) {
+            setMoveable(false);
+        }
+    }
 
-	@Override
-	public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
-		play.update(frameTimeInfos.elapsedTime / 1000000);
-		if (isDead()) {
-			if (endOfDyingDuration < 0) {
-				world.remove(leftHand);
-				world.remove(rightHand);
-				endOfDyingDuration = frameTimeInfos.currentTime + dyingDuration;
-				nextExplosionTime = frameTimeInfos.currentTime
-						+ timeBetweenExplosion;
-			} else {
+    @Override
+    public void draw() {
+        world.getView().drawBoss(this, play.getCurrentFrame());
+    }
 
-				if (endOfDyingDuration > frameTimeInfos.currentTime) {
-					if (nextExplosionTime < frameTimeInfos.currentTime) {
-						AABox bounds = getShape().getBounds();
-						float x1 = getPosition().getX() + -bounds.getWidth()
-								/ 2.0f;
-						float y1 = getPosition().getY() + -bounds.getHeight()
-								/ 2.0f;
-						Vector2f pos = new Vector2f(x1
-								+ frameTimeInfos.random.nextFloat()
-								* bounds.getWidth(), y1
-								+ frameTimeInfos.random.nextFloat()
-								* bounds.getHeight() / 2.0f);
-						world.addTopLevelEntities(new Explosion(world, pos));
-						nextExplosionTime = frameTimeInfos.currentTime
-								+ timeBetweenExplosion;
-					}
-				} else {
-					BodyList bodies = world.getBodies();
-					for (int i = 0; i < bodies.size(); ++i) {
-						Body body = bodies.get(i);
-						if (body instanceof Door) {
-							((Door) body).open();
-						}
-					}
-					world.remove(this);
-				}
-			}
-			return;
-		}
+    @Override
+    public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+        play.update(frameTimeInfos.elapsedTime / 1000000);
+        if (isDead()) {
+            if (endOfDyingDuration < 0) {
+                world.remove(leftHand);
+                world.remove(rightHand);
+                endOfDyingDuration = frameTimeInfos.currentTime + dyingDuration;
+                nextExplosionTime = frameTimeInfos.currentTime
+                        + timeBetweenExplosion;
+            } else {
 
-		if (isHurt) {
-			if (endOfInvincibilityDuration < 0) {
-				play = texture.getAnimationByName("angry_boss_body").start();
-				speed = normalSpeed * 2.0f;
-				endOfInvincibilityDuration = frameTimeInfos.currentTime
-						+ invincibleAfterHurtDuration;
-			} else if (frameTimeInfos.currentTime > endOfInvincibilityDuration) {
-				play = texture.getAnimationByName("boss_body").start();
-				isHurt = false;
-				speed = 1.0f;
-			}
-		}
+                if (endOfDyingDuration > frameTimeInfos.currentTime) {
+                    if (nextExplosionTime < frameTimeInfos.currentTime) {
+                        AABox bounds = getShape().getBounds();
+                        float x1 = getPosition().getX() + -bounds.getWidth()
+                                / 2.0f;
+                        float y1 = getPosition().getY() + -bounds.getHeight()
+                                / 2.0f;
+                        Vector2f pos = new Vector2f(x1
+                                + frameTimeInfos.random.nextFloat()
+                                * bounds.getWidth(), y1
+                                + frameTimeInfos.random.nextFloat()
+                                * bounds.getHeight() / 2.0f);
+                        world.addTopLevelEntities(new Explosion(world, pos, explosionTexture));
+                        nextExplosionTime = frameTimeInfos.currentTime
+                                + timeBetweenExplosion;
+                    }
+                } else {
+                    BodyList bodies = world.getBodies();
+                    for (int i = 0; i < bodies.size(); ++i) {
+                        Body body = bodies.get(i);
+                        if (body instanceof Door) {
+                            ((Door) body).open();
+                        }
+                    }
+                    world.remove(this);
+                }
+            }
+            return;
+        }
 
-		if (frameTimeInfos.currentTime > nextChangeDirectionTime) {
-			nextChangeDirectionTime = frameTimeInfos.currentTime
-					+ minMoveStraightDuration
-					+ (long) (Math.random() * (maxMoveStraightDuration - minMoveStraightDuration));
+        if (isHurt) {
+            if (endOfInvincibilityDuration < 0) {
+                play = texture.getAnimationByName("angry_boss_body").start();
+                speed = normalSpeed * 2.0f;
+                endOfInvincibilityDuration = frameTimeInfos.currentTime
+                        + invincibleAfterHurtDuration;
+            } else if (frameTimeInfos.currentTime > endOfInvincibilityDuration) {
+                play = texture.getAnimationByName("boss_body").start();
+                isHurt = false;
+                speed = 1.0f;
+            }
+        }
 
-			directionVelocity = new Vector2f(world.getHero().getPosition());
-			directionVelocity.sub(this.getPosition());
-			directionVelocity.normalise();
-			directionVelocity.scale(world.getGravityForce() * speed);
-		} else {
-			adjustBiasedVelocity(directionVelocity);
-		}
-	}
+        if (frameTimeInfos.currentTime > nextChangeDirectionTime) {
+            nextChangeDirectionTime = frameTimeInfos.currentTime
+                    + minMoveStraightDuration
+                    + (long) (Math.random() * (maxMoveStraightDuration - minMoveStraightDuration));
+
+            directionVelocity = new Vector2f(world.getHero().getPosition());
+            directionVelocity.sub(this.getPosition());
+            directionVelocity.normalise();
+            directionVelocity.scale(world.getGravityForce() * speed);
+        } else {
+            adjustBiasedVelocity(directionVelocity);
+        }
+    }
 }

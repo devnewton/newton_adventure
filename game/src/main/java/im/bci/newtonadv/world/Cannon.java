@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.newtonadv.anim.AnimationCollection;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -41,20 +42,22 @@ import im.bci.newtonadv.game.Updatable;
  * @author bci
  */
 public strictfp class Cannon extends Platform implements Updatable {
-
+    
     private static final long durationBetweenFireballGeneration = 2000000000;
     private long nextFireballTime = 0;
     private static final float shotForce = 10000.0f;
-
+    private AnimationCollection fireBallTexture;
+    private AnimationCollection explosionTexture;
+    
     public enum Orientation {
-
+        
         UP,
         DOWN,
         LEFT,
         RIGHT
     }
     private Orientation orientation;
-
+    
     public Cannon(World world, Orientation orientation, float w, float h) {
         super(world, w, h);
         this.orientation = orientation;
@@ -66,10 +69,18 @@ public strictfp class Cannon extends Platform implements Updatable {
         this.orientation = orientation;
         setEnabled(false);
     }
-
+    
+    public void setFireBallTexture(AnimationCollection texture) {
+        this.fireBallTexture = texture;
+    }
+    
+    public void setExplosionTexture(AnimationCollection texture) {
+        this.explosionTexture = texture;
+    }
+    
     @Override
-	public void update(FrameTimeInfos frameTimeInfos) {
-        if( frameTimeInfos.currentTime > nextFireballTime) {
+    public void update(FrameTimeInfos frameTimeInfos) {
+        if (frameTimeInfos.currentTime > nextFireballTime) {
             throwFireball();
             nextFireballTime = frameTimeInfos.currentTime + durationBetweenFireballGeneration;
         }
@@ -80,9 +91,10 @@ public strictfp class Cannon extends Platform implements Updatable {
         //pos.add( new Vector2f( size, size));
         FireBall fireBall = new FireBall(world, w / 2.0f);
         fireBall.setPosition(pos.x, pos.y);
-        fireBall.setTexture(world.getFireBallTexture());
+        fireBall.setTexture(fireBallTexture);
+        fireBall.setExplosionTexture(explosionTexture);
         world.add(fireBall);
-        switch(orientation) {
+        switch (orientation) {
             case UP:
                 fireBall.addForce(new Vector2f(0, shotForce));
                 break;
