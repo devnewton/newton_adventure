@@ -10,6 +10,6 @@ package im.bci.newtonadv.game;
  */
 public interface PreloadableSequence {
     
-    void preload();
+    void prestart();
     
 }

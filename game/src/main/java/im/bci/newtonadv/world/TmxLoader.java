@@ -33,6 +33,7 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.util.MultidimensionnalIterator;
 import im.bci.newtonadv.util.NewtonColor;
@@ -87,7 +88,7 @@ public class TmxLoader {
     private AnimationCollection fireBallTexture;
     private AnimationCollection bombTexture;
     private AnimationCollection crateTexture;
-    private final World world;
+    private World world;
     private final Game game;
     private final String questName;
     private final String levelName;
@@ -99,11 +100,8 @@ public class TmxLoader {
     private static final Circle defaultPickableObjectShape = new Circle(
             defaultPickableObjectSize / 2.0f);
     private ExecutorService executor = Executors.newSingleThreadExecutor();
-    
 
-    public TmxLoader(Game game, World world, String questName, String levelName) throws Exception {
-
-        this.world = world;
+    public TmxLoader(Game game, String questName, String levelName) throws Exception {
         this.game = game;
         this.questName = questName;
         this.levelName = levelName;
@@ -129,65 +127,11 @@ public class TmxLoader {
         });
     }
 
-    public void startLoading() throws FileNotFoundException, IOException, Exception {
-
+    public void startLoading(World world) throws FileNotFoundException, IOException, Exception {
+        this.world = world;
         this.map = futureMap.get();
-
-        final ITextureCache textureCache = game.getView().getTextureCache();
-        explosionAnimation = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.explosion"));
-        mummyAnimation = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.mummy"));
-        batAnimation = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.bat"));
-        appleIconTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.apple"));
-        world.setAppleIcon(appleIconTexture);
-        coinTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.coin"));
-        worldMapTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.world_map"));
-        compassTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.compass"));
-        fireBallTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.fireball"));
-        bombTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.bomb"));
-        crateTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.crate"));
-        keyTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.key"));
-        doorTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.door"));
-        doorToBonusWorldTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map,
-                "newton_adventure.door_to_bonus_world"));
-        mobilePikesTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.mobilePikes"));
-        axeTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.axe"));
-        activator1OnTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.activator1.on"));
-        activator2OnTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.activator2.on"));
-        activator3OnTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.activator3.on"));
-        activator1OffTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.activator1.off"));
-        activator2OffTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.activator2.off"));
-        activator3OffTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.activator3.off"));
-        memoryActivatorHiddenTexture = game.getView().loadFromAnimation(
-                getFileFromMap(map,
-                "newton_adventure.memory_activator.hidden"));
-        blocker1Texture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.blocker1"));
-        blocker2Texture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.blocker2"));
-        blocker3Texture = game.getView().loadFromAnimation(
-                getFileFromMap(map, "newton_adventure.blocker3"));
-
+        final IGameView view = game.getView();
+        world.setAppleIcon(getAppleIconTexture());
         iterator = new MultidimensionnalIterator(new int[]{map.getLayerCount(), map.getWidth(), map.getHeight()});
     }
 
@@ -318,27 +262,26 @@ public class TmxLoader {
                 LOGGER.log(Level.WARNING, "One hero is enough for level {0} in quest {1}", new Object[]{levelName, questName});
             }
         } else if (c.equals("mummy")) {
-            Mummy mummy = new Mummy(world, new Circle(World.distanceUnit),
-                    mummyAnimation);
+            Mummy mummy = new Mummy(world, new Circle(World.distanceUnit), getMummyAnimation());
             mummy.setPosition(tileX, tileY);
             mummy.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(mummy);
         } else if (c.equals("bat")) {
             Bat bat = new Bat(world, new Box(World.distanceUnit * 1.0f,
-                    World.distanceUnit * 0.5f), batAnimation);
+                    World.distanceUnit * 0.5f), getBatAnimation());
             bat.setPosition(tileX, tileY);
             bat.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(bat);
         } else if (c.equals("apple")) {
             Apple apple = new Apple(world, defaultPickableObjectShape);
             apple.setPosition(tileX, tileY);
-            apple.setTexture(appleIconTexture);
+            apple.setTexture(getAppleIconTexture());
             apple.setZOrder(getTileZOrder(tile, zOrderBase));
             world.addApple(apple);
         } else if (c.equals("coin")) {
             Coin coin = new Coin(world, defaultPickableObjectShape);
             coin.setPosition(tileX, tileY);
-            coin.setTexture(coinTexture);
+            coin.setTexture(getCoinTexture());
             coin.setZOrder(getTileZOrder(tile, zOrderBase));
             world.addCoin(coin);
         } else if (c.equals("letter")) {
@@ -350,19 +293,19 @@ public class TmxLoader {
         } else if (c.equals("world_map")) {
             WorldMap worldMap = new WorldMap(world, defaultPickableObjectShape);
             worldMap.setPosition(tileX, tileY);
-            worldMap.setTexture(worldMapTexture);
+            worldMap.setTexture(getWorldMapTexture());
             worldMap.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(worldMap);
         } else if (c.equals("compass")) {
             Compass compass = new Compass(world, defaultPickableObjectShape);
             compass.setPosition(tileX, tileY);
-            compass.setTexture(compassTexture);
+            compass.setTexture(getCompassTexture());
             compass.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(compass);
         } else if (c.equals("key")) {
             Key key = new Key(world);
             key.setPosition(tileX, tileY);
-            key.setTexture(keyTexture);
+            key.setTexture(getKeyTexture());
             key.setZOrder(getTileZOrder(tile, zOrderBase));
             key.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
                     "newton_adventure.color", "white")));
@@ -371,7 +314,7 @@ public class TmxLoader {
         } else if (c.equals("door")) {
             Door door = new Door(world, tileWidth, tileHeight);
             door.setPosition(tileX, tileY);
-            door.setTexture(doorTexture);
+            door.setTexture(getDoorTexture());
             door.setZOrder(getTileZOrder(tile, zOrderBase));
             if (tile.getProperties().containsKey("newton_adventure.color")) {
                 door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
@@ -382,7 +325,7 @@ public class TmxLoader {
             DoorToBonusWorld door = new DoorToBonusWorld(world, tileWidth,
                     tileHeight);
             door.setPosition(tileX, tileY);
-            door.setTexture(doorToBonusWorldTexture);
+            door.setTexture(getDoorToBonusWorldTexture());
             door.setZOrder(getTileZOrder(tile, zOrderBase));
             door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
                     "newton_adventure.color", "white")));
@@ -427,8 +370,8 @@ public class TmxLoader {
             Cannon cannon = new Cannon(world, Cannon.Orientation.UP, tileWidth,
                     tileHeight);
             cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-            cannon.setFireBallTexture(fireBallTexture);
-            cannon.setExplosionTexture(explosionAnimation);
+            cannon.setFireBallTexture(getFireBallTexture());
+            cannon.setExplosionTexture(getExplosionAnimation());
             cannon.setPosition(tileX, tileY);
             cannon.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(cannon);
@@ -436,8 +379,8 @@ public class TmxLoader {
             Cannon cannon = new Cannon(world, Cannon.Orientation.DOWN,
                     tileWidth, tileHeight);
             cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-            cannon.setFireBallTexture(fireBallTexture);
-            cannon.setExplosionTexture(explosionAnimation);
+            cannon.setFireBallTexture(getFireBallTexture());
+            cannon.setExplosionTexture(getExplosionAnimation());
             cannon.setPosition(tileX, tileY);
             cannon.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(cannon);
@@ -445,8 +388,8 @@ public class TmxLoader {
             Cannon cannon = new Cannon(world, Cannon.Orientation.RIGHT,
                     tileWidth, tileHeight);
             cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-            cannon.setFireBallTexture(fireBallTexture);
-            cannon.setExplosionTexture(explosionAnimation);
+            cannon.setFireBallTexture(getFireBallTexture());
+            cannon.setExplosionTexture(getExplosionAnimation());
             cannon.setPosition(tileX, tileY);
             cannon.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(cannon);
@@ -454,8 +397,8 @@ public class TmxLoader {
             Cannon cannon = new Cannon(world, Cannon.Orientation.LEFT,
                     tileWidth, tileHeight);
             cannon.setTexture(getAnimationForTile(map, tile, textureCache));
-            cannon.setFireBallTexture(fireBallTexture);
-            cannon.setExplosionTexture(explosionAnimation);
+            cannon.setFireBallTexture(getFireBallTexture());
+            cannon.setExplosionTexture(getExplosionAnimation());
             cannon.setPosition(tileX, tileY);
             cannon.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(cannon);
@@ -467,7 +410,7 @@ public class TmxLoader {
             world.add(anchor);
 
             MobilePikes pikes = new MobilePikes(world);
-            pikes.setTexture(mobilePikesTexture);
+            pikes.setTexture(getMobilePikesTexture());
             pikes.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY()
                     - MobilePikes.height
                     / 2.0f
@@ -487,7 +430,7 @@ public class TmxLoader {
             world.add(anchor);
 
             Axe axe = new Axe(world);
-            axe.setTexture(axeTexture);
+            axe.setTexture(getAxeTexture());
             axe.setPosition(anchor.getPosition().getX(), anchor.getPosition().getY()
                     - MobilePikes.height
                     / 2.0f
@@ -507,65 +450,56 @@ public class TmxLoader {
             platform.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(platform);
         } else if (c.equals("activator1")) {
-            Activator activator = new Activator(world, 1, activator1OnTexture,
-                    activator1OffTexture, tileWidth, tileHeight);
+            Activator activator = new Activator(world, 1, getActivator1OnTexture(), getActivator1OffTexture(), tileWidth, tileHeight);
             activator.setPosition(tileX, tileY);
             activator.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activator);
         } else if (c.equals("activator2")) {
-            Activator activator = new Activator(world, 2, activator2OnTexture,
-                    activator2OffTexture, tileWidth, tileHeight);
+            Activator activator = new Activator(world, 2, getActivator2OnTexture(), getActivator2OffTexture(), tileWidth, tileHeight);
             activator.setPosition(tileX, tileY);
             activator.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activator);
         } else if (c.equals("activator3")) {
-            Activator activator = new Activator(world, 3, activator3OnTexture,
-                    activator3OffTexture, tileWidth, tileHeight);
+            Activator activator = new Activator(world, 3, getActivator3OnTexture(), getActivator3OffTexture(), tileWidth, tileHeight);
             activator.setPosition(tileX, tileY);
             activator.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activator);
         } else if (c.equals("memory_activator1")) {
-            MemoryActivator activator = new MemoryActivator(world, 1,
-                    activator1OnTexture, activator1OffTexture,
-                    memoryActivatorHiddenTexture, tileWidth, tileHeight);
+            MemoryActivator activator = new MemoryActivator(world, 1, getActivator1OnTexture(), getActivator1OffTexture(), getMemoryActivatorHiddenTexture(), tileWidth, tileHeight);
             activator.setPosition(tileX, tileY);
             activator.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activator);
         } else if (c.equals("memory_activator2")) {
-            MemoryActivator activator = new MemoryActivator(world, 2,
-                    activator2OnTexture, activator2OffTexture,
-                    memoryActivatorHiddenTexture, tileWidth, tileHeight);
+            MemoryActivator activator = new MemoryActivator(world, 2, getActivator2OnTexture(), getActivator2OffTexture(), getMemoryActivatorHiddenTexture(), tileWidth, tileHeight);
             activator.setPosition(tileX, tileY);
             activator.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activator);
         } else if (c.equals("memory_activator3")) {
-            MemoryActivator activator = new MemoryActivator(world, 3,
-                    activator3OnTexture, activator3OffTexture,
-                    memoryActivatorHiddenTexture, tileWidth, tileHeight);
+            MemoryActivator activator = new MemoryActivator(world, 3, getActivator3OnTexture(), getActivator3OffTexture(), getMemoryActivatorHiddenTexture(), tileWidth, tileHeight);
             activator.setPosition(tileX, tileY);
             activator.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activator);
         } else if (c.equals("blocker1")) {
             Blocker activable = new Blocker(world, 1, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker1Texture));
+            activable.setTexture(getAnimationForTile(map, tile, textureCache, getBlocker1Texture()));
             activable.setPosition(tileX, tileY);
             activable.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activable);
         } else if (c.equals("blocker2")) {
             Blocker activable = new Blocker(world, 2, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker2Texture));
+            activable.setTexture(getAnimationForTile(map, tile, textureCache, getBlocker2Texture()));
             activable.setPosition(tileX, tileY);
             activable.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activable);
         } else if (c.equals("blocker3")) {
             Blocker activable = new Blocker(world, 3, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker3Texture));
+            activable.setTexture(getAnimationForTile(map, tile, textureCache, getBlocker3Texture()));
             activable.setPosition(tileX, tileY);
             activable.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activable);
         } else if (c.equals("laser_blocker")) {
             LaserBlocker activable = new LaserBlocker(world, 1, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, blocker1Texture));
+            activable.setTexture(getAnimationForTile(map, tile, textureCache, getBlocker1Texture()));
             activable.setPosition(tileX, tileY);
             activable.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activable);
@@ -639,31 +573,31 @@ public class TmxLoader {
             world.add(helpSign);
         } else if (c.equals("bomb")) {
             Bomb bomb = new Bomb(world);
-            bomb.setTexture(bombTexture);
-            bomb.setFireBallTexture(fireBallTexture);
-            bomb.setExplosionTexture(explosionAnimation);
+            bomb.setTexture(getBombTexture());
+            bomb.setFireBallTexture(getFireBallTexture());
+            bomb.setExplosionTexture(getExplosionAnimation());
             bomb.setPosition(tileX, tileY);
             bomb.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(bomb);
         } else if (c.equals("bomb_hole")) {
             BombHole bombHole = new BombHole(world, tileWidth, tileHeight);
-            bombHole.setBombTexture(bombTexture);
-            bombHole.setFireBallTexture(fireBallTexture);
-            bombHole.setExplosionTexture(explosionAnimation);
+            bombHole.setBombTexture(getBombTexture());
+            bombHole.setFireBallTexture(getFireBallTexture());
+            bombHole.setExplosionTexture(getExplosionAnimation());
             bombHole.setTexture(getAnimationForTile(map, tile, textureCache));
             bombHole.setPosition(tileX, tileY);
             bombHole.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(bombHole);
         } else if (c.equals("crate")) {
             Crate crate = new Crate(world, tileWidth, tileHeight);
-            crate.setTexture(crateTexture);
+            crate.setTexture(getCrateTexture());
             crate.setPosition(tileX, tileY);
             crate.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(crate);
         } else if (c.equals("boss")) {
             Boss boss = new Boss(world, tileX, tileY);
             boss.setTexture(getAnimationForTile(map, tile, textureCache));
-            boss.setExplosionTexture(explosionAnimation);
+            boss.setExplosionTexture(getExplosionAnimation());
             boss.setZOrder(getTileZOrder(tile, zOrderBase));
             boss.getLeftHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
             boss.getRightHand().setZOrder(getTileZOrder(tile, zOrderBase + 1));
@@ -834,5 +768,210 @@ public class TmxLoader {
             return defaultMapProperties.getProperty(prop);
         }
         return value;
+    }
+
+    private AnimationCollection getExplosionAnimation() throws IOException {
+        if (null == explosionAnimation) {
+            explosionAnimation = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.explosion"));
+        }
+        return explosionAnimation;
+    }
+
+    private AnimationCollection getMummyAnimation() throws IOException {
+        if (null == mummyAnimation) {
+            mummyAnimation = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.mummy"));
+        }
+        return mummyAnimation;
+    }
+
+    private AnimationCollection getBatAnimation() throws IOException {
+        if (null == batAnimation) {
+            batAnimation = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.bat"));
+        }
+        return batAnimation;
+    }
+
+    private AnimationCollection getKeyTexture() throws IOException {
+        if (null == keyTexture) {
+            keyTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.key"));
+        }
+        return keyTexture;
+    }
+
+    private AnimationCollection getDoorTexture() throws IOException {
+        if (null == doorTexture) {
+            doorTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.door"));
+        }
+        return doorTexture;
+    }
+
+    private AnimationCollection getDoorToBonusWorldTexture() throws IOException {
+        if (null == doorToBonusWorldTexture) {
+            doorToBonusWorldTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map,
+                    "newton_adventure.door_to_bonus_world"));
+        }
+        return doorToBonusWorldTexture;
+    }
+
+    private AnimationCollection getMobilePikesTexture() throws IOException {
+        if (null == mobilePikesTexture) {
+            mobilePikesTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.mobilePikes"));
+        }
+        return mobilePikesTexture;
+    }
+
+    private AnimationCollection getAxeTexture() throws IOException {
+
+        if (null == axeTexture) {
+            axeTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.axe"));
+        }
+        return axeTexture;
+    }
+
+    private AnimationCollection getActivator1OnTexture() throws IOException {
+        if (null == activator1OnTexture) {
+            activator1OnTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.activator1.on"));
+        }
+        return activator1OnTexture;
+    }
+
+    private AnimationCollection getActivator2OnTexture() throws IOException {
+        if (null == activator2OnTexture) {
+            activator2OnTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.activator2.on"));
+        }
+        return activator2OnTexture;
+    }
+
+    private AnimationCollection getActivator3OnTexture() throws IOException {
+        if (null == activator3OnTexture) {
+            activator3OnTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.activator3.on"));
+        }
+        return activator3OnTexture;
+    }
+
+    private AnimationCollection getActivator1OffTexture() throws IOException {
+        if (null == activator1OffTexture) {
+            activator1OffTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.activator1.off"));
+        }
+        return activator1OffTexture;
+    }
+
+    private AnimationCollection getActivator2OffTexture() throws IOException {
+        if (null == activator2OffTexture) {
+            activator2OffTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.activator2.off"));
+        }
+        return activator2OffTexture;
+    }
+
+    private AnimationCollection getActivator3OffTexture() throws IOException {
+        if (null == activator3OffTexture) {
+            activator3OffTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.activator3.off"));
+        }
+        return activator3OffTexture;
+    }
+
+    private AnimationCollection getMemoryActivatorHiddenTexture() throws IOException {
+        if (null == memoryActivatorHiddenTexture) {
+            memoryActivatorHiddenTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map,
+                    "newton_adventure.memory_activator.hidden"));
+        }
+        return memoryActivatorHiddenTexture;
+    }
+
+    private AnimationCollection getBlocker1Texture() throws IOException {
+        if (null == blocker1Texture) {
+            blocker1Texture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.blocker1"));
+        }
+        return blocker1Texture;
+    }
+
+    private AnimationCollection getBlocker2Texture() throws IOException {
+        if (null == blocker2Texture) {
+            blocker2Texture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.blocker2"));
+        }
+        return blocker2Texture;
+    }
+
+    private AnimationCollection getBlocker3Texture() throws IOException {
+        if (null == blocker3Texture) {
+            blocker3Texture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.blocker3"));
+        }
+        return blocker3Texture;
+    }
+
+    private AnimationCollection getAppleIconTexture() throws IOException {
+        if (null == appleIconTexture) {
+            appleIconTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.apple"));
+        }
+        return appleIconTexture;
+    }
+
+    private AnimationCollection getCoinTexture() throws IOException {
+        if (null == coinTexture) {
+            coinTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.coin"));
+        }
+        return coinTexture;
+
+    }
+
+    private AnimationCollection getWorldMapTexture() throws IOException {
+        if (null == worldMapTexture) {
+            worldMapTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.world_map"));
+        }
+        return worldMapTexture;
+    }
+
+    private AnimationCollection getCompassTexture() throws IOException {
+        if (null == compassTexture) {
+            compassTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.compass"));
+
+        }
+        return compassTexture;
+    }
+
+    private AnimationCollection getFireBallTexture() throws IOException {
+        if (null == fireBallTexture) {
+            fireBallTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.fireball"));
+        }
+        return fireBallTexture;
+    }
+
+    private AnimationCollection getBombTexture() throws IOException {
+        if (null == bombTexture) {
+            bombTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.bomb"));
+        }
+        return bombTexture;
+    }
+
+    private AnimationCollection getCrateTexture() throws IOException {
+        if (null == crateTexture) {
+            crateTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.crate"));
+        }
+        return crateTexture;
     }
 }

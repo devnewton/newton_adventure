@@ -48,5 +48,7 @@ public interface ITextureCache {
     ITexture getTexture(String questName, String levelName, Map map, Tile tile);
 
     ITexture getTexture(String name);
+    
+    ITexture grabScreenToTexture();
 
 }

@@ -162,7 +162,7 @@ public interface IGameView {
     AnimationCollection loadSomeAnimations(String file, String... animationNames)
             throws IOException;
 
-    void drawFadeSequence(float r, float g, float b, float a);
+    void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a);
 
     void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture);
 

@@ -35,7 +35,7 @@ import im.bci.newtonadv.Game;
 
 public class GameOverSequence extends StoryboardSequence {
 
-    GameOverSequence(Game game, final LevelSequence level) {
+    GameOverSequence(final Game game, final LevelSequence level) {
         super(game, game.getData().getFile("gameover.png"), game.getData().getFile("Game_Over.ogg"), new NormalTransitionException(game.getMainMenuSequence()));
         
        Button retryButton = new Button() {
@@ -43,7 +43,7 @@ public class GameOverSequence extends StoryboardSequence {
             @Override
             void activate() throws NormalTransitionException,
                     ResumeTransitionException, ResumableTransitionException {
-                throw new NormalTransitionException(level);
+                throw new NormalTransitionException(new FadeSequence(game, new Sequence.NormalTransitionException(level), 0, 0, 0, 1000000000L));
             }
         };
         retryButton.offTextureName = game.getData().getFile("bt-retry-off.png");

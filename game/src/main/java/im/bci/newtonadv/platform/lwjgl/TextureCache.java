@@ -60,7 +60,10 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -68,7 +71,8 @@ import org.lwjgl.opengl.GL11;
  * @author devnewton
  */
 public class TextureCache implements ITextureCache {
-
+    
+    private static final Logger logger = Logger.getLogger(TextureCache.class.getName());
     private HashMap<String/* name */, TextureWeakReference> textures = new HashMap<String, TextureWeakReference>();
     private ReferenceQueue<Texture> referenceQueue = new ReferenceQueue<Texture>();
     private final IGameData data;
@@ -83,40 +87,40 @@ public class TextureCache implements ITextureCache {
             new int[]{8, 8, 8, 0}, false, false, ComponentColorModel.OPAQUE,
             DataBuffer.TYPE_BYTE);
     private GameViewQuality quality = GameViewQuality.DEFAULT;
-
+    
     TextureCache(IGameData data) {
         this.data = data;
     }
-
+    
     public void setQuality(GameViewQuality newQuality) {
         if (newQuality != quality) {
             quality = newQuality;
             updateQuality();
         }
     }
-
+    
     @Override
     public void clearAll() {
         for (TextureWeakReference ref : textures.values()) {
-            deleteTexture(ref.textureId);
+            deleteTexture(ref);
         }
         textures.clear();
     }
-
+    
     @Override
     public void clearUseless() {
         TextureWeakReference ref;
         while ((ref = (TextureWeakReference) referenceQueue.poll()) != null) {
-            deleteTexture(ref.textureId);
+            deleteTexture(ref);
         }
     }
-
+    
     public ITexture createTexture(String name, BufferedImage bufferedImage) {
         Texture texture = convertImageToTexture(bufferedImage, false);
-        textures.put(name, new TextureWeakReference(texture, referenceQueue));
+        putTexture(name, texture);
         return texture;
     }
-
+    
     @Override
     public ITexture getTexture(String questName, String levelName,
             tiled.core.Map map, tiled.core.Tile tile) {
@@ -132,10 +136,11 @@ public class TextureCache implements ITextureCache {
         }
         BufferedImage loaded = convertToBufferedImage(tile.getImage());
         Texture texture = convertImageToTexture(loaded, false);
-        textures.put(name, new TextureWeakReference(texture, referenceQueue));
+        putTexture(name, texture);
+        
         return texture;
     }
-
+    
     public Map<String, ITexture> getTextures(String nanimName, Nanim nanim) {
         String baseName = nanimName + "#nanim_";
         Map<String, ITexture> nanimTextures = new HashMap<String, ITexture>();
@@ -151,19 +156,18 @@ public class TextureCache implements ITextureCache {
                     textures.remove(nanimName);
                 }
             }
-
             Texture texture = convertNImageToTexture(nimage);
-            textures.put(name, new TextureWeakReference(texture, referenceQueue));
+            putTexture(name, texture);
             nanimTextures.put(nimage.getName(), texture);
         }
         return nanimTextures;
     }
-
+    
     @Override
     public ITexture getTexture(String name) {
         return getTexture(name, false);
     }
-
+    
     private Texture getTexture(String name, boolean usePowerOfTwoTexture) {
         TextureWeakReference textureRef = textures.get(name);
         if (textureRef != null) {
@@ -181,16 +185,16 @@ public class TextureCache implements ITextureCache {
             BufferedImage loaded = loadImage(name);
             texture = convertImageToTexture(loaded, usePowerOfTwoTexture);
         }
-        textures.put(name, new TextureWeakReference(texture, referenceQueue));
+        putTexture(name, texture);        
         return texture;
     }
-
+    
     private Texture convertImageToTexture(BufferedImage bufferedImage,
             boolean usePowerOfTwoTexture) {
         ByteBuffer imageBuffer = null;
         WritableRaster raster;
         BufferedImage texImage;
-
+        
         int texWidth;
         int texHeight;
         if (usePowerOfTwoTexture) {
@@ -233,12 +237,12 @@ public class TextureCache implements ITextureCache {
         // build a byte buffer from the temporary image
         // that be used by OpenGL to produce a texture.
         byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData();
-
+        
         imageBuffer = ByteBuffer.allocateDirect(data.length);
         imageBuffer.order(ByteOrder.nativeOrder());
         imageBuffer.put(data, 0, data.length);
         imageBuffer.flip();
-
+        
         Texture texture = new Texture(texWidth, texHeight, texImage.getColorModel().hasAlpha());
 
         // produce a texture from the byte buffer
@@ -251,7 +255,7 @@ public class TextureCache implements ITextureCache {
                 texHeight, 0, pixelFormat, GL11.GL_UNSIGNED_BYTE, imageBuffer);
         return texture;
     }
-
+    
     private static boolean hasUsefullAlphaChannel(BufferedImage image) {
         int w = image.getWidth();
         int h = image.getHeight();
@@ -266,12 +270,12 @@ public class TextureCache implements ITextureCache {
         }
         return false;
     }
-
+    
     private Texture convertNImageToTexture(im.bci.nanim.NanimParser.Image nimage) {
         int texWidth = nimage.getWidth();
         int texHeight = nimage.getHeight();
         Texture texture = new Texture(texWidth, texHeight, nimage.getFormat().equals(PixelFormat.RGBA_8888));
-
+        
         ByteBuffer imageBuffer = ByteBuffer.allocateDirect(nimage.getPixels().size());
         imageBuffer.order(ByteOrder.nativeOrder());
         imageBuffer.put(nimage.getPixels().asReadOnlyByteBuffer());
@@ -287,7 +291,7 @@ public class TextureCache implements ITextureCache {
                 texHeight, 0, pixelFormat, GL11.GL_UNSIGNED_BYTE, imageBuffer);
         return texture;
     }
-
+    
     private Texture loadPngTexture(InputStream is) throws IOException {
         PNGDecoder decoder = new PNGDecoder(is);
         int bpp;
@@ -305,7 +309,7 @@ public class TextureCache implements ITextureCache {
             format = PNGDecoder.Format.RGB;
             pixelFormat = GL11.GL_RGB;
         }
-
+        
         int stride = bpp * texWidth;
         ByteBuffer buffer = ByteBuffer.allocateDirect(stride * texHeight);
         decoder.decode(buffer, stride, format);
@@ -318,7 +322,7 @@ public class TextureCache implements ITextureCache {
                 texHeight, 0, pixelFormat, GL11.GL_UNSIGNED_BYTE, buffer);
         return texture;
     }
-
+    
     private void setupGLTextureParams() {
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
                 GL11.GL_CLAMP);
@@ -328,22 +332,33 @@ public class TextureCache implements ITextureCache {
         GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
                 GL11.GL_MODULATE);
     }
-
+    
     private void setupGLTextureQualityParams() {
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER,
                 quality.toGLTextureFilter());
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER,
                 quality.toGLTextureFilter());
     }
-
-    private void deleteTexture(int textureId) {
+    
+    private void deleteTexture(TextureWeakReference texture) {
         ByteBuffer temp = ByteBuffer.allocateDirect(4);
         temp.order(ByteOrder.nativeOrder());
         IntBuffer intBuffer = temp.asIntBuffer();
-        intBuffer.put(textureId);
+        intBuffer.put(texture.textureId);
         GL11.glDeleteTextures(intBuffer);
+        
+        if (logger.isLoggable(Level.FINEST)) {
+            logger.log(Level.FINEST, "texture {0} unallocated", texture.name);
+        }
     }
 
+    private void putTexture(String name, Texture texture) {
+        textures.put(name, new TextureWeakReference(name, texture, referenceQueue));
+        if (logger.isLoggable(Level.FINEST)) {
+            logger.log(Level.FINEST, "texture {0} allocated", name);
+        }        
+    }
+    
     private BufferedImage loadImage(String filename) {
         try {
             InputStream is = data.openFile(filename);
@@ -359,7 +374,7 @@ public class TextureCache implements ITextureCache {
             throw new RuntimeException("Impossible de charger la texture " + filename, e);
         }
     }
-
+    
     private BufferedImage convertToBufferedImage(Image image) {
         BufferedImage bi = new BufferedImage(image.getWidth(null),
                 image.getHeight(null), hasAlpha(image) ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
@@ -368,7 +383,7 @@ public class TextureCache implements ITextureCache {
         bg.dispose();
         return bi;
     }
-
+    
     private static boolean hasAlpha(Image image) {
         if (image instanceof BufferedImage) {
             BufferedImage bimage = (BufferedImage) image;
@@ -384,14 +399,14 @@ public class TextureCache implements ITextureCache {
         ColorModel cm = pg.getColorModel();
         return cm.hasAlpha();
     }
-
+    
     private void updateQuality() {
         for (TextureWeakReference ref : textures.values()) {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, ref.textureId);
             setupGLTextureQualityParams();
         }
     }
-
+    
     private Texture loadPngTexture(String filename) {
         try {
             InputStream is = data.openFile(filename);
@@ -406,16 +421,29 @@ public class TextureCache implements ITextureCache {
         } catch (Exception e) {
             throw new RuntimeException("Impossible de charger la texture " + filename, e);
         }
-
+        
     }
-
+    
+    @Override
+    public ITexture grabScreenToTexture() {
+        
+        Texture texture = new Texture(Display.getWidth(), Display.getHeight(), false);
+        putTexture("!screenCapture", texture);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
+        setupGLTextureParams();
+        GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 0, 0, texture.getWidth(), texture.getHeight(), 0);
+        return texture;
+    }
+    
     private static final class TextureWeakReference extends WeakReference<Texture> {
-
+        
         int textureId;
-
-        TextureWeakReference(Texture texture, ReferenceQueue<Texture> queue) {
+        String name;
+        
+        TextureWeakReference(String name, Texture texture, ReferenceQueue<Texture> queue) {
             super(texture, queue);
             textureId = texture.getId();
+            this.name = name;
         }
     }
 }

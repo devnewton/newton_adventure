@@ -36,11 +36,11 @@ package im.bci.newtonadv.game;
  * @author devnewton
  */
 public interface Sequence {
-    
-	static public abstract class AbstractTransitionException extends Throwable {
 
-		private static final long serialVersionUID = -5802470623539315494L;
-		private Sequence nextSequence;
+    static public abstract class AbstractTransitionException extends Throwable {
+
+        private static final long serialVersionUID = -5802470623539315494L;
+        protected Sequence nextSequence;
 
         public AbstractTransitionException(Sequence nextSequence) {
             this.nextSequence = nextSequence;
@@ -50,59 +50,77 @@ public interface Sequence {
             return nextSequence;
         }
 
-		public abstract void throwMe() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException;
+        public abstract void throwMe() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException;
 
-        void startPreload() {
-            if(nextSequence instanceof PreloadableSequence) {
-                ((PreloadableSequence)nextSequence).preload();
+        public abstract void startPreload();
+    }
+
+    static public class NormalTransitionException extends AbstractTransitionException {
+
+        private static final long serialVersionUID = 8455803096542664269L;
+
+        public NormalTransitionException(Sequence nextSequence) {
+            super(nextSequence);
+        }
+
+        @Override
+        public void throwMe() throws NormalTransitionException {
+            throw this;
+        }
+
+        @Override
+        public void startPreload() {
+            if (nextSequence instanceof PreloadableSequence) {
+                ((PreloadableSequence) nextSequence).prestart();
             }
         }
     }
-    
-    static public class NormalTransitionException extends AbstractTransitionException {
-		private static final long serialVersionUID = 8455803096542664269L;
 
-		public NormalTransitionException(Sequence nextSequence) {
-			super(nextSequence);
-		}
-
-		@Override
-		public void throwMe() throws NormalTransitionException {
-			throw this;
-		}
-
-    }
-    
     static public class ResumableTransitionException extends AbstractTransitionException {
-		private static final long serialVersionUID = -1975859829767781443L;
-		
-		public ResumableTransitionException(Sequence nextSequence) {
-			super(nextSequence);
-		}
-		@Override
-		public void throwMe() throws ResumableTransitionException {
-			throw this;
-		}
 
-	}
-    
+        private static final long serialVersionUID = -1975859829767781443L;
+
+        public ResumableTransitionException(Sequence nextSequence) {
+            super(nextSequence);
+        }
+
+        @Override
+        public void throwMe() throws ResumableTransitionException {
+            throw this;
+        }
+
+        @Override
+        public void startPreload() {
+        }
+    }
+
     static public class ResumeTransitionException extends AbstractTransitionException {
-		private static final long serialVersionUID = -1654173561106215285L;
 
-		public ResumeTransitionException(Sequence nextSequence) {
-			super(nextSequence);
-		}
+        private static final long serialVersionUID = -1654173561106215285L;
 
-		@Override
-		public void throwMe() throws ResumeTransitionException {
-			throw this;
-		}
+        public ResumeTransitionException(Sequence nextSequence) {
+            super(nextSequence);
+        }
+
+        @Override
+        public void throwMe() throws ResumeTransitionException {
+            throw this;
+        }
+
+        @Override
+        public void startPreload() {
+        }
     }
 
     void start();
+
     void draw();
+
     void stop();
+
     void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
+
     void processInputs() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
+
     void resume();
 }

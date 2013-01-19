@@ -33,6 +33,7 @@ package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation.Play;
+import im.bci.newtonadv.platform.interfaces.ITexture;
 
 /**
  *
@@ -44,9 +45,10 @@ public class FadeSequence implements Sequence {
     private float a;
     private final Game game;
     private final long duration;
-    private long endTime;
+    private long endTime = -1;
     private AbstractTransitionException transition;
     private Play loadingPlay;
+    private ITexture backgroundTexture;
 
     public FadeSequence(Game game, AbstractTransitionException transition, float r, float g, float b, long duration) {
         this.game = game;
@@ -60,7 +62,7 @@ public class FadeSequence implements Sequence {
     @Override
     public void start() {
         try {
-            endTime = game.getFrameTimeInfos().currentTime + duration;
+            backgroundTexture = game.getView().getTextureCache().grabScreenToTexture();
             transition.startPreload();
             loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.nanim")).getFirst().start();
         } catch (Exception ex) {
@@ -70,18 +72,22 @@ public class FadeSequence implements Sequence {
 
     @Override
     public void draw() {
-        game.getView().drawFadeSequence(r, g, b, a);
+        game.getView().drawFadeSequence(backgroundTexture, loadingPlay, r, g, b, a);
     }
 
     @Override
     public void stop() {
+        backgroundTexture = null;
         loadingPlay = null;
     }
 
     @Override
     public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
         final FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
-        loadingPlay.update(frameTimeInfos.currentTime / 1000000);
+        if(endTime < 0) {
+            endTime = game.getFrameTimeInfos().currentTime + duration;
+        }
+        loadingPlay.update(frameTimeInfos.elapsedTime / 1000000);
         long remaining = endTime - frameTimeInfos.currentTime;
         if (remaining <= 0) {
             transition.throwMe();

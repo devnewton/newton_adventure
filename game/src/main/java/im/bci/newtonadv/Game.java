@@ -82,19 +82,19 @@ public strictfp class Game {
     private IPlatformSpecific platform;
     private GameProgression progression;
 
-    public Properties getConfig() {
+    public final Properties getConfig() {
         return config;
     }
 
-    public FrameTimeInfos getFrameTimeInfos() {
+    public final FrameTimeInfos getFrameTimeInfos() {
         return frameTimeInfos;
     }
 
-    public IGameView getView() {
+    public final IGameView getView() {
         return view;
     }
 
-    public ISoundCache getSoundCache() {
+    public final ISoundCache getSoundCache() {
         return soundCache;
     }
 

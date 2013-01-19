@@ -1432,18 +1432,64 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawFadeSequence(float r, float g, float b, float a) {
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+    public void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a) {
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glPushMatrix();
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, 1, 0, 1, -1, 1);
+        final float aspectRatio = (float) Display.getWidth()
+                / (float) Display.getHeight();
+        final float screenWidth = Game.DEFAULT_SCREEN_WIDTH
+                * aspectRatio;
+        GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, backgroundTexture.getId());
+        drawFadeBackground(screenWidth);
+
         GL11.glColor4f(r, g, b, a);
-        GL11.glRectf(0, 0, 1, 1);
-        GL11.glPopMatrix();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glRectf(0, 0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT);
         GL11.glColor4f(1f, 1f, 1f, 1f);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        drawLoadingIcon(loadingPlay, screenWidth, aspectRatio);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glPopMatrix();
+    }
+
+    private void drawFadeBackground(final float screenWidth) {
+
+        final float x1 = 0;
+        final float x2 = screenWidth;
+        final float y1 = 0;
+        final float y2 = Game.DEFAULT_SCREEN_HEIGHT;
+        final float u1 = 0.0f, u2 = 1.0f;
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(u1, 0.0f);
+        GL11.glVertex2f(x1, y2);
+        GL11.glTexCoord2f(u2, 0.0f);
+        GL11.glVertex2f(x2, y2);
+        GL11.glTexCoord2f(u2, 1.0f);
+        GL11.glVertex2f(x2, y1);
+        GL11.glTexCoord2f(u1, 1.0f);
+        GL11.glVertex2f(x1, y1);
+        GL11.glEnd();
+    }
+
+    private void drawLoadingIcon(Play loadingPlay, final float screenWidth, final float aspectRatio) {
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, loadingPlay.getCurrentFrame().getImage().getId());
+        final float x1 = screenWidth - 256;
+        final float x2 = screenWidth;
+        final float y1 = Game.DEFAULT_SCREEN_HEIGHT - 256;
+        final float y2 = Game.DEFAULT_SCREEN_HEIGHT;
+        final float u1 = 0.0f, u2 = 1.0f;
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(u1, 1.0f);
+        GL11.glVertex2f(x1, y2);
+        GL11.glTexCoord2f(u2, 1.0f);
+        GL11.glVertex2f(x2, y2);
+        GL11.glTexCoord2f(u2, 0.0f);
+        GL11.glVertex2f(x2, y1);
+        GL11.glTexCoord2f(u1, 0.0f);
+        GL11.glVertex2f(x1, y1);
+        GL11.glEnd();
     }
 
     @Override
@@ -1637,23 +1683,7 @@ public strictfp class GameView implements IGameView {
         final float screenWidth = Game.DEFAULT_SCREEN_WIDTH
                 * aspectRatio;
         GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, loadingPlay.getCurrentFrame().getImage().getId());
-
-        final float x1 = screenWidth - 100 * aspectRatio;
-        final float x2 = screenWidth;
-        final float y1 = Game.DEFAULT_SCREEN_HEIGHT - 100;
-        final float y2 = Game.DEFAULT_SCREEN_HEIGHT;
-        final float u1 = 0.0f, u2 = 1.0f;
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
-        GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
-        GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
-        GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
-        GL11.glVertex2f(x1, y1);
-        GL11.glEnd();
+        drawLoadingIcon(loadingPlay, screenWidth, aspectRatio);
         GL11.glPopMatrix();
     }
 }

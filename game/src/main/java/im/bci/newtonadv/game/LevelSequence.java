@@ -73,10 +73,9 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
     }
 
     @Override
-    public void preload() {
+    public void prestart() {
         try {
-            world = new World(game, questName, levelName, scoreIndicatorsFont);
-            worldLoader = new TmxLoader(game, world, questName, levelName);
+            worldLoader = new TmxLoader(game, questName, levelName);
             worldLoader.preloading();
         } catch (Exception ex) {
             Logger.getLogger(LevelSequence.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,11 +89,11 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
             cheatCodeGotoNextLevel = false;
             cheatCodeGotoNextBonusLevel = false;
             indicatorsFont = game.getView().createAppleFont(questName, levelName);
-            scoreIndicatorsFont = game.getView().createScoreIndicatorFont(questName, levelName);
-
             frameTimeInfos = game.getFrameTimeInfos();
             loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.nanim")).getFirst().start();
-            worldLoader.startLoading();
+            scoreIndicatorsFont = game.getView().createScoreIndicatorFont(questName, levelName);
+            world = new World(game, questName, levelName, scoreIndicatorsFont);
+            worldLoader.startLoading(world);
             String minimapPath = game.getData().getLevelFilePath(questName, levelName, "minimap.png");
             if (game.getData().fileExists(minimapPath)) {
                 minimapTexture = game.getView().getTextureCache().getTexture(minimapPath);
@@ -150,7 +149,7 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
                 throw new NormalTransitionException(new GameOverSequence(game, this));
             }
         } else {
-            loadingPlay.update(frameTimeInfos.currentTime / 1000000);
+            loadingPlay.update(frameTimeInfos.elapsedTime / 1000000);
             try {
                 long startLoadingTime = System.nanoTime();
                 for (;;) {
