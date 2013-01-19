@@ -1633,12 +1633,6 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public ITrueTypeFont createScoreIndicatorFont(String questName,
-            String levelName) {
-        return new TrueTypeFont(this.data, new Font("arial", Font.BOLD, 24), true);
-    }
-
-    @Override
     public void drawBomb(Bomb bomb, AnimationFrame texture, World world) {
         AABox bounds = bomb.getShape().getBounds();
 

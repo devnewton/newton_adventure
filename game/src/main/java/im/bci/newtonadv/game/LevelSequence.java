@@ -33,7 +33,6 @@ package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation.Play;
-import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
@@ -62,7 +61,6 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
     private boolean cheatCodeGotoNextLevel = false;
     private boolean cheatCodeGotoNextBonusLevel = false;
     private ITexture minimapTexture;
-    private ITrueTypeFont scoreIndicatorsFont;
     private TmxLoader worldLoader;
     private Play loadingPlay;
 
@@ -91,8 +89,7 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
             indicatorsFont = game.getView().createAppleFont(questName, levelName);
             frameTimeInfos = game.getFrameTimeInfos();
             loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.nanim")).getFirst().start();
-            scoreIndicatorsFont = game.getView().createScoreIndicatorFont(questName, levelName);
-            world = new World(game, questName, levelName, scoreIndicatorsFont);
+            world = new World(game, questName, levelName, indicatorsFont);
             worldLoader.startLoading(world);
             String minimapPath = game.getData().getLevelFilePath(questName, levelName, "minimap.png");
             if (game.getData().fileExists(minimapPath)) {
@@ -109,8 +106,6 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
     @Override
     public void stop() {
         indicatorsFont.destroy();
-        scoreIndicatorsFont.destroy();
-        scoreIndicatorsFont = null;
         indicatorsFont = null;
         world = null;
         worldLoader = null;

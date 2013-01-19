@@ -130,7 +130,6 @@ public class TmxLoader {
     public void startLoading(World world) throws FileNotFoundException, IOException, Exception {
         this.world = world;
         this.map = futureMap.get();
-        final IGameView view = game.getView();
         world.setAppleIcon(getAppleIconTexture());
         iterator = new MultidimensionnalIterator(new int[]{map.getLayerCount(), map.getWidth(), map.getHeight()});
     }

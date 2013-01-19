@@ -178,8 +178,6 @@ public interface IGameView {
 
     void drawScoreVisualIndicator(World world, ScoreVisualIndicator scoreVisualIndicator);
 
-    ITrueTypeFont createScoreIndicatorFont(String questName, String levelName);
-
     void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
 
     void drawLoading(Play loadingPlay);
