@@ -33,6 +33,7 @@ package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.nanim.NanimParser;
 import im.bci.nanim.NanimParser.Nanim;
+import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
@@ -137,7 +138,6 @@ public strictfp class GameView implements IGameView {
     public void setRotateViewWithGravity(boolean rotateViewWithGravity) {
         this.rotateViewWithGravity = rotateViewWithGravity;
     }
-        
 
     @Override
     public void toggleFullscreen() {
@@ -1229,7 +1229,7 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawMenuButton(Button button, ITrueTypeFont questNameFont,
-             String leftLabel, String rightLabel) {
+            String leftLabel, String rightLabel) {
         drawButton(button);
         GL11.glPushMatrix();
         GL11.glTranslatef(button.x,
@@ -1239,7 +1239,7 @@ public strictfp class GameView implements IGameView {
         questNameFont.drawString(leftLabel, ITrueTypeFont.Align.LEFT);
 
         GL11.glPopMatrix();
-        
+
         GL11.glPushMatrix();
         GL11.glTranslatef(button.x + QuestMenuSequence.QUEST_MINIATURE_WIDTH,
                 button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
@@ -1260,9 +1260,9 @@ public strictfp class GameView implements IGameView {
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-        if(rotateViewWithGravity) {
+        if (rotateViewWithGravity) {
             GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
-                1.0f);
+                    1.0f);
         }
         drawWorldBackground(world, aspectRatio);
 
@@ -1311,7 +1311,7 @@ public strictfp class GameView implements IGameView {
 
             xt *= 0.1f;
             yt *= 0.1f;
-            
+
             xt = Math.max(xt, -World.ortho2DBaseSize / 2.0f);
             xt = Math.min(xt, World.ortho2DBaseSize / 2.0f);
             yt = Math.max(yt, -World.ortho2DBaseSize / 2.0f);
@@ -1479,9 +1479,9 @@ public strictfp class GameView implements IGameView {
         GL11.glTranslatef(100 - minimapSize / 1.5f, minimapSize / 1.5f, 0);
 
         GL11.glPushMatrix();
-        if(rotateViewWithGravity) {
+        if (rotateViewWithGravity) {
             GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
-                1.0f);
+                    1.0f);
         }
         if (world.getHero().hasMap()) {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -1626,5 +1626,34 @@ public strictfp class GameView implements IGameView {
         GL11.glPopMatrix();
         GL11.glDisable(GL11.GL_BLEND);
 
+    }
+
+    @Override
+    public void drawLoading(Play loadingPlay) {
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glPushMatrix();
+        final float aspectRatio = (float) Display.getWidth()
+                / (float) Display.getHeight();
+        final float screenWidth = Game.DEFAULT_SCREEN_WIDTH
+                * aspectRatio;
+        GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, loadingPlay.getCurrentFrame().getImage().getId());
+
+        final float x1 = screenWidth - 100 * aspectRatio;
+        final float x2 = screenWidth;
+        final float y1 = Game.DEFAULT_SCREEN_HEIGHT - 100;
+        final float y2 = Game.DEFAULT_SCREEN_HEIGHT;
+        final float u1 = 0.0f, u2 = 1.0f;
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(u1, 0.0f);
+        GL11.glVertex2f(x1, y2);
+        GL11.glTexCoord2f(u2, 0.0f);
+        GL11.glVertex2f(x2, y2);
+        GL11.glTexCoord2f(u2, 1.0f);
+        GL11.glVertex2f(x2, y1);
+        GL11.glTexCoord2f(u1, 1.0f);
+        GL11.glVertex2f(x1, y1);
+        GL11.glEnd();
+        GL11.glPopMatrix();
     }
 }

@@ -32,7 +32,6 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.anim.Animation;
@@ -86,9 +85,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITexture backgroundTexture;
     private List<Updatable> updatableBodies = new LinkedList<Updatable>();
     protected EntityList topLevelEntities = new EntityList();
-
-
-        private Animation.Play appleIconPlay;
+    private Animation.Play appleIconPlay;
     private boolean objectivesCompleted = false;
     private float nonProgressiveGravityRotationStep;
     private final String questName;
@@ -102,8 +99,8 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITrueTypeFont scoreIndicatorFont;
     private EnumMap<NewtonColor, BodyList> coloredStaticBodies;
     private Playable explodeSound;
-    
-        public void setAppleIcon(AnimationCollection appleIcon) {
+
+    public void setAppleIcon(AnimationCollection appleIcon) {
         this.appleIconPlay = appleIcon.getFirst().start();
     }
 
@@ -204,7 +201,7 @@ public strictfp class World extends net.phys2d.raw.World {
             ((StaticQuadSpaceStrategy) collisionStrategy).removeBody(body);
         }
         if (body instanceof Updatable) {
-            updatableBodies.remove((Updatable)body);
+            updatableBodies.remove((Updatable) body);
         }
         super.remove(body);
     }
@@ -232,44 +229,6 @@ public strictfp class World extends net.phys2d.raw.World {
             runnable.run();
         }
         postStepActions.clear();
-    }
-
-
-
-    private boolean loadNalLevel() {
-        NalLoader loader = null;
-        try {
-            InputStream input = game.getData().openLevelNal(questName,
-                    levelName);
-            if (null == input) {
-                return false;
-            }
-            loader = new NalLoader(game, this, questName,
-                    levelName, input);
-        } catch (Exception e) {
-            LOGGER.log(java.util.logging.Level.WARNING, "Cannot load nal file for quest " + questName + " and level " + levelName, e);
-            return false;
-        }
-        loader.load();
-        return true;
-    }
-
-    public boolean loadLevel() {
-        return loadNalLevel() || loadTmxLevel();
-    }
-
-    private boolean loadTmxLevel() {
-        try {
-            TmxLoader loader = new TmxLoader(game, this, questName, levelName);
-            loader.startLoading();
-            loader.load();
-            loader.finishLoading();
-            return true;
-        } catch (Exception e) {
-            LOGGER.log(java.util.logging.Level.WARNING, "Cannot load level " + levelName + " in quest "
-                    + questName, e);
-            return false;
-        }
     }
 
     public float getGravityAngle() {
@@ -308,8 +267,6 @@ public strictfp class World extends net.phys2d.raw.World {
     void setIsRotateGravityPossible(boolean isRotateGravityPossible) {
         this.isRotateGravityPossible = isRotateGravityPossible;
     }
-
-
 
     public BodyList getColoredStaticBodyList(NewtonColor color) {
         return coloredStaticBodies.get(color);
@@ -377,7 +334,6 @@ public strictfp class World extends net.phys2d.raw.World {
         }
     }
 
-
     public LevelScore getLevelScore() {
         return hero.getLevelScore();
     }
@@ -418,12 +374,12 @@ public strictfp class World extends net.phys2d.raw.World {
             }
         }
     }
-    
+
     void removeCoin(Coin coin) {
         remove(coin);
         --nbCollectableCoin;
         if (nbCollectableCoin <= 0) {
-           setObjectivesCompleted(true);
+            setObjectivesCompleted(true);
         }
     }
 

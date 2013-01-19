@@ -29,22 +29,24 @@
  *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.anim.Animation.Play;
 
 /**
  *
  * @author devnewton
  */
 public class FadeSequence implements Sequence {
+
     private final float r, g, b;
     private float a;
     private final Game game;
     private final long duration;
     private long endTime;
-	private AbstractTransitionException transition;
+    private AbstractTransitionException transition;
+    private Play loadingPlay;
 
     public FadeSequence(Game game, AbstractTransitionException transition, float r, float g, float b, long duration) {
         this.game = game;
@@ -56,36 +58,43 @@ public class FadeSequence implements Sequence {
     }
 
     @Override
-	public void start() {
-        endTime = game.getFrameTimeInfos().currentTime + duration;
-    }
-
-    @Override
-	public void draw() {
-        game.getView().drawFadeSequence(r,g,b,a);
-    }
-
-    @Override
-	public void stop() {
-    }
-
-    @Override
-	public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
-        long remaining = endTime - game.getFrameTimeInfos().currentTime;
-        if(remaining <= 0) {
-        	transition.throwMe();
+    public void start() {
+        try {
+            endTime = game.getFrameTimeInfos().currentTime + duration;
+            transition.startPreload();
+            loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.nanim")).getFirst().start();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
-        a = 1.0f - (float)remaining / (float)duration;
     }
 
     @Override
-	public void processInputs() {
+    public void draw() {
+        game.getView().drawFadeSequence(r, g, b, a);
     }
 
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void stop() {
+        loadingPlay = null;
+    }
 
+    @Override
+    public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
+        final FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
+        loadingPlay.update(frameTimeInfos.currentTime / 1000000);
+        long remaining = endTime - frameTimeInfos.currentTime;
+        if (remaining <= 0) {
+            transition.throwMe();
+        }
+        a = 1.0f - (float) remaining / (float) duration;
+    }
+
+    @Override
+    public void processInputs() {
+    }
+
+    @Override
+    public void resume() {
+        // TODO Auto-generated method stub
+    }
 }

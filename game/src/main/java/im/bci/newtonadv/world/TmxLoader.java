@@ -34,11 +34,16 @@ package im.bci.newtonadv.world;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import im.bci.newtonadv.util.MultidimensionnalIterator;
 import im.bci.newtonadv.util.NewtonColor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.phys2d.math.Vector2f;
@@ -87,35 +92,46 @@ public class TmxLoader {
     private final String questName;
     private final String levelName;
     private Map map;
+    private Future<Map> futureMap;
     private Hero hero;
+    private MultidimensionnalIterator iterator;
     static final float defaultPickableObjectSize = 2.0f * World.distanceUnit;
     private static final Circle defaultPickableObjectShape = new Circle(
             defaultPickableObjectSize / 2.0f);
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    
 
-    TmxLoader(Game game, World world, String questName, String levelName) throws Exception {
+    public TmxLoader(Game game, World world, String questName, String levelName) throws Exception {
 
         this.world = world;
         this.game = game;
         this.questName = questName;
         this.levelName = levelName;
+    }
 
+    public void preloading() {
+        futureMap = executor.submit(new Callable<Map>() {
 
-
-
+            @Override
+            public Map call() throws Exception {
+                InputStream mapInputStream = game.getData().openLevelTmx(questName,
+                        levelName);
+                if (null == mapInputStream) {
+                    throw new RuntimeException("Cannot find tmx file for quest " + questName + " and level " + levelName);
+                }
+                try {
+                    TMXMapReader mapReader = new TMXMapReader();
+                    return mapReader.readMap(mapInputStream);
+                } finally {
+                    mapInputStream.close();
+                }
+            }
+        });
     }
 
     public void startLoading() throws FileNotFoundException, IOException, Exception {
-        InputStream mapInputStream = game.getData().openLevelTmx(questName,
-                levelName);
-        if (null == mapInputStream) {
-            throw new RuntimeException("Cannot find tmx file for quest " + questName + " and level " + levelName);
-        }
-        try {
-            TMXMapReader mapReader = new TMXMapReader();
-            this.map = mapReader.readMap(mapInputStream);
-        } finally {
-            mapInputStream.close();
-        }
+
+        this.map = futureMap.get();
 
         final ITextureCache textureCache = game.getView().getTextureCache();
         explosionAnimation = game.getView().loadFromAnimation(
@@ -171,25 +187,29 @@ public class TmxLoader {
                 getFileFromMap(map, "newton_adventure.blocker2"));
         blocker3Texture = game.getView().loadFromAnimation(
                 getFileFromMap(map, "newton_adventure.blocker3"));
+
+        iterator = new MultidimensionnalIterator(new int[]{map.getLayerCount(), map.getWidth(), map.getHeight()});
     }
 
-    public void load() throws IOException {
-        int zorderBase = 0;
-        for (tiled.core.MapLayer layer : map.getLayers()) {
+    public boolean loadSome() throws IOException {
+        if (iterator.hasNext()) {
+            int[] indexes = iterator.next();
+            final int layerIndex = indexes[0];
+            tiled.core.MapLayer layer = map.getLayer(layerIndex);
             if (layer instanceof tiled.core.TileLayer) {
                 tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
-                for (int x = 0; x < tileLayer.getWidth(); ++x) {
-                    for (int y = 0; y < tileLayer.getHeight(); ++y) {
-                        Tile tile = tileLayer.getTileAt(x, y);
-                        if (null != tile) {
-                            initFromTile(x - map.getWidth() / 2.0f, -y
-                                    + map.getHeight() / 2.0f, map, tile,
-                                    zorderBase);
-                        }
-                    }
+                int zorderBase = layerIndex * 1000000;
+                int x = indexes[1], y = indexes[2];
+                Tile tile = tileLayer.getTileAt(x, y);
+                if (null != tile) {
+                    initFromTile(x - map.getWidth() / 2.0f, -y
+                            + map.getHeight() / 2.0f, map, tile,
+                            zorderBase);
                 }
             }
-            zorderBase += 1000000;
+            return true;
+        } else {
+            return false;
         }
     }
 

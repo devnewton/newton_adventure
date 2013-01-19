@@ -51,6 +51,12 @@ public interface Sequence {
         }
 
 		public abstract void throwMe() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException;
+
+        void startPreload() {
+            if(nextSequence instanceof PreloadableSequence) {
+                ((PreloadableSequence)nextSequence).preload();
+            }
+        }
     }
     
     static public class NormalTransitionException extends AbstractTransitionException {
@@ -98,5 +104,5 @@ public interface Sequence {
     void stop();
     void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
     void processInputs() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
-	void resume();
+    void resume();
 }

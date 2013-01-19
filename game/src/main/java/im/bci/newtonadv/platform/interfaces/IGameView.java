@@ -31,15 +31,14 @@
  */
 package im.bci.newtonadv.platform.interfaces;
 
+import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
-import im.bci.newtonadv.game.GameOverSequence;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.MenuSequence.Button;
 import im.bci.newtonadv.game.ScoreSequence;
 import im.bci.newtonadv.game.Sequence;
-import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.world.Axe;
@@ -150,36 +149,38 @@ public interface IGameView {
 
     void toggleFullscreen();
 
-    public ITrueTypeFont createStoryBoardSequenceFont();
+    ITrueTypeFont createStoryBoardSequenceFont();
 
-    public ITrueTypeFont createQuestNameFont();
+    ITrueTypeFont createQuestNameFont();
 
-    public ITrueTypeFont createAppleFont(String questName, String levelName);
+    ITrueTypeFont createAppleFont(String questName, String levelName);
 
-    public ITrueTypeFont createScoreSequenceFont();
+    ITrueTypeFont createScoreSequenceFont();
 
-    public AnimationCollection loadFromAnimation(String name) throws FileNotFoundException, IOException;
-    
-	AnimationCollection loadSomeAnimations(String file, String... animationNames)
-			throws IOException;
+    AnimationCollection loadFromAnimation(String name) throws FileNotFoundException, IOException;
 
-    public void drawFadeSequence(float r, float g, float b, float a);
+    AnimationCollection loadSomeAnimations(String file, String... animationNames)
+            throws IOException;
 
-    public void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture);
+    void drawFadeSequence(float r, float g, float b, float a);
 
-	void drawMainMenuSequence(MainMenuSequence mainMenuSequence);
+    void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture);
 
-	float getWidth();
+    void drawMainMenuSequence(MainMenuSequence mainMenuSequence);
 
-	float getHeight();
+    float getWidth();
 
-	void drawMinimap(World world, ITexture minimapTexture);
+    float getHeight();
 
-	void drawKeyLock(KeyLock keyLock, float alpha);
+    void drawMinimap(World world, ITexture minimapTexture);
 
-	void drawScoreVisualIndicator(World world, ScoreVisualIndicator scoreVisualIndicator);
+    void drawKeyLock(KeyLock keyLock, float alpha);
 
-	ITrueTypeFont createScoreIndicatorFont(String questName, String levelName);
+    void drawScoreVisualIndicator(World world, ScoreVisualIndicator scoreVisualIndicator);
 
-	void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
+    ITrueTypeFont createScoreIndicatorFont(String questName, String levelName);
+
+    void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
+
+    void drawLoading(Play loadingPlay);
 }

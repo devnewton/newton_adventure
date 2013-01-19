@@ -109,7 +109,7 @@ public class QuestSequence implements Sequence {
 	public void gotoLevel(String newLevelName) throws NormalTransitionException {
 		for(LevelSequence level: levels) {
 			if(level.getLevelName().equals(newLevelName)) {
-				throw new NormalTransitionException(new FadeSequence(this.game, new Sequence.NormalTransitionException(level), 1, 1, 1, 1000000000L));
+				throw new NormalTransitionException(new FadeSequence(this.game, new Sequence.NormalTransitionException(level), 0, 0, 0, 1000000000L));
 			}
 		}
 		
