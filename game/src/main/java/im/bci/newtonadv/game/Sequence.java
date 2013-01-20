@@ -71,7 +71,7 @@ public interface Sequence {
         @Override
         public void startPreload() {
             if (nextSequence instanceof PreloadableSequence) {
-                ((PreloadableSequence) nextSequence).prestart();
+                ((PreloadableSequence) nextSequence).startPreload();
             }
         }
     }

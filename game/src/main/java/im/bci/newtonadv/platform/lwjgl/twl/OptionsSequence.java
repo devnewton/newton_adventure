@@ -308,7 +308,6 @@ public class OptionsSequence implements IOptionsSequence {
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -32,78 +32,56 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.anim.Animation.Play;
-import im.bci.newtonadv.platform.interfaces.ITexture;
 
 /**
  *
  * @author devnewton
  */
-public class FadeSequence implements Sequence {
+public class PreloaderFadeSequence extends FadeSequence {
 
-    private final float r, g, b;
-    private float a;
-    private final Game game;
-    private final long duration;
-    private long endTime = -1;
-    protected AbstractTransitionException transition;
-    private Play loadingPlay;
-    private ITexture backgroundTexture;
+    private final PreloadableSequence preloableSequence;
 
-    public FadeSequence(Game game, AbstractTransitionException transition, float r, float g, float b, long duration) {
-        this.game = game;
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.duration = duration;
-        this.transition = transition;
+    public PreloaderFadeSequence(Game game, PreloadableSequence preloableSequence, float r, float g, float b, long duration) {
+        super(game, new NormalTransitionException(preloableSequence), r, g, b, duration);
+        this.preloableSequence = preloableSequence;
     }
 
     @Override
     public void start() {
-        try {
-            backgroundTexture = game.getView().getTextureCache().grabScreenToTexture();
-            transition.startPreload();
-            loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.nanim")).getFirst().start();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        super.start();
+        preloableSequence.startPreload();
     }
 
     @Override
     public void draw() {
-        game.getView().drawFadeSequence(backgroundTexture, loadingPlay, r, g, b, a);
+        super.draw();
     }
 
     @Override
     public void stop() {
-        backgroundTexture = null;
-        loadingPlay = null;
+        super.stop();
+        preloableSequence.finishPreload();
     }
 
     @Override
     public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
-        final FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
-        if(endTime < 0) {
-            endTime = game.getFrameTimeInfos().currentTime + duration;
+        super.update();
+        if(preloableSequence.preloadSomeAndCheckIfTerminated()) {
+            transition.throwMe();
         }
-        loadingPlay.update(frameTimeInfos.elapsedTime / 1000000);
-        long remaining = endTime - frameTimeInfos.currentTime;
-        if (remaining <= 0) {
-            fadeDone();
-        }
-        a = 1.0f - (float) remaining / (float) duration;
     }
 
     @Override
     public void processInputs() {
+        super.processInputs();
     }
 
     @Override
     public void resume() {
+        super.resume();
     }
 
+    @Override
     protected void fadeDone() throws NormalTransitionException, ResumableTransitionException, ResumeTransitionException {
-        transition.throwMe();
     }
 }

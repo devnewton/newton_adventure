@@ -9,12 +9,10 @@ public strictfp abstract class AbstractDrawableStaticBody extends StaticBody imp
 
 	public AbstractDrawableStaticBody(Shape shape) {
 		super(shape);
-		// TODO Auto-generated constructor stub
 	}
 
 	public AbstractDrawableStaticBody(String name, Shape shape) {
 		super(name, shape);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -43,7 +43,8 @@ public class GameOverSequence extends StoryboardSequence {
             @Override
             void activate() throws NormalTransitionException,
                     ResumeTransitionException, ResumableTransitionException {
-                throw new NormalTransitionException(new FadeSequence(game, new Sequence.NormalTransitionException(level), 0, 0, 0, 1000000000L));
+                
+                throw new NormalTransitionException(new PreloaderFadeSequence(game, level, 0, 0, 0, 1000000000L));
             }
         };
         retryButton.offTextureName = game.getData().getFile("bt-retry-off.png");

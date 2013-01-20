@@ -225,7 +225,5 @@ public class QuestMenuSequence extends MenuSequence {
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-		
 	}
 }

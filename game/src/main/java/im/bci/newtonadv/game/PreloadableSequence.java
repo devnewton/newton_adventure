@@ -8,8 +8,12 @@ package im.bci.newtonadv.game;
  *
  * @author bob
  */
-public interface PreloadableSequence {
+public interface PreloadableSequence extends Sequence {
     
-    void prestart();
+    void startPreload();
+
+    boolean preloadSomeAndCheckIfTerminated();
+
+    void finishPreload();
     
 }

@@ -33,7 +33,6 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.util.MultidimensionnalIterator;
 import im.bci.newtonadv.util.NewtonColor;
@@ -134,25 +133,24 @@ public class TmxLoader {
         iterator = new MultidimensionnalIterator(new int[]{map.getLayerCount(), map.getWidth(), map.getHeight()});
     }
 
-    public boolean loadSome() throws IOException {
-        if (iterator.hasNext()) {
-            int[] indexes = iterator.next();
-            final int layerIndex = indexes[0];
-            tiled.core.MapLayer layer = map.getLayer(layerIndex);
-            if (layer instanceof tiled.core.TileLayer) {
-                tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
-                int zorderBase = layerIndex * 1000000;
-                int x = indexes[1], y = indexes[2];
-                Tile tile = tileLayer.getTileAt(x, y);
-                if (null != tile) {
-                    initFromTile(x - map.getWidth() / 2.0f, -y
-                            + map.getHeight() / 2.0f, map, tile,
-                            zorderBase);
-                }
+    public boolean hasMoreToLoad() {
+        return iterator.hasNext();
+    }
+
+    public void loadSome() throws IOException {
+        int[] indexes = iterator.next();
+        final int layerIndex = indexes[0];
+        tiled.core.MapLayer layer = map.getLayer(layerIndex);
+        if (layer instanceof tiled.core.TileLayer) {
+            tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
+            int zorderBase = layerIndex * 1000000;
+            int x = indexes[1], y = indexes[2];
+            Tile tile = tileLayer.getTileAt(x, y);
+            if (null != tile) {
+                initFromTile(x - map.getWidth() / 2.0f, -y
+                        + map.getHeight() / 2.0f, map, tile,
+                        zorderBase);
             }
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -972,5 +970,9 @@ public class TmxLoader {
                     getFileFromMap(map, "newton_adventure.crate"));
         }
         return crateTexture;
+    }
+
+    public boolean isReadyToLoad() {
+        return futureMap.isDone();
     }
 }

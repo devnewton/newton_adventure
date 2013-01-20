@@ -32,14 +32,12 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.TmxLoader;
 import im.bci.newtonadv.world.World;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +45,7 @@ import java.util.logging.Logger;
  * 
  * @author devnewton
  */
-strictfp public class LevelSequence implements Sequence, PreloadableSequence {
+strictfp public class LevelSequence implements PreloadableSequence {
 
     static final int nbWorldStepByFrame = 1;
     static final int maxWorldStepByFrame = 5;
@@ -62,7 +60,6 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
     private boolean cheatCodeGotoNextBonusLevel = false;
     private ITexture minimapTexture;
     private TmxLoader worldLoader;
-    private Play loadingPlay;
 
     public LevelSequence(Game game, String questName, String levelName) {
         this.game = game;
@@ -71,7 +68,7 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
     }
 
     @Override
-    public void prestart() {
+    public void startPreload() {
         try {
             worldLoader = new TmxLoader(game, questName, levelName);
             worldLoader.preloading();
@@ -82,21 +79,53 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
     }
 
     @Override
+    public boolean preloadSomeAndCheckIfTerminated() {
+        try {
+            if (null == world) {
+                if (worldLoader.isReadyToLoad()) {
+                    indicatorsFont = game.getView().createAppleFont(questName, levelName);
+                    world = new World(game, questName, levelName, indicatorsFont);
+                    worldLoader.startLoading(world);
+                }
+                return false;
+            } else {
+                long startLoadingTime = System.nanoTime();
+                for (;;) {
+                    if (worldLoader.hasMoreToLoad()) {
+                        worldLoader.loadSome();
+                        long currentLoadingTime = System.nanoTime();
+                        long elapsedLoadingDuration = currentLoadingTime - startLoadingTime;
+                        if (elapsedLoadingDuration > (1000000000L / 24L)) {
+                            return false;
+                        }
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Cannot load level " + levelName + " of quest " + questName, ex);
+        }
+    }
+
+    @Override
+    public void finishPreload() {
+        worldLoader.finishLoading();
+        worldLoader = null;
+        String minimapPath = game.getData().getLevelFilePath(questName, levelName, "minimap.png");
+        if (game.getData().fileExists(minimapPath)) {
+            minimapTexture = game.getView().getTextureCache().getTexture(minimapPath);
+        } else {
+            minimapTexture = null;
+        }
+    }
+
+    @Override
     public void start() {
         try {
             cheatCodeGotoNextLevel = false;
             cheatCodeGotoNextBonusLevel = false;
-            indicatorsFont = game.getView().createAppleFont(questName, levelName);
             frameTimeInfos = game.getFrameTimeInfos();
-            loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.nanim")).getFirst().start();
-            world = new World(game, questName, levelName, indicatorsFont);
-            worldLoader.startLoading(world);
-            String minimapPath = game.getData().getLevelFilePath(questName, levelName, "minimap.png");
-            if (game.getData().fileExists(minimapPath)) {
-                minimapTexture = game.getView().getTextureCache().getTexture(minimapPath);
-            } else {
-                minimapTexture = null;
-            }
         } catch (Exception ex) {
             Logger.getLogger(LevelSequence.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-1);
@@ -108,74 +137,57 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
         indicatorsFont.destroy();
         indicatorsFont = null;
         world = null;
-        worldLoader = null;
     }
 
     @Override
     public void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
-        if (worldLoader == null) {
-            try {
-                if (world.getHero().isDead()) {
-                    world.getHero().update(frameTimeInfos);
-                    return;
-                }
+        try {
+            if (world.getHero().isDead()) {
+                world.getHero().update(frameTimeInfos);
+                return;
+            }
 
-                stepTime += frameTimeInfos.elapsedTime;
-                if (stepTime >= 1000000000 / Game.FPS) {
-                    stepTime -= 1000000000 / Game.FPS;
-                    final int step = 5;
-                    for (int i = 0; i < step; ++i) {
-                        world.step();
-                    }
+            stepTime += frameTimeInfos.elapsedTime;
+            if (stepTime >= 1000000000 / Game.FPS) {
+                stepTime -= 1000000000 / Game.FPS;
+                final int step = 5;
+                for (int i = 0; i < step; ++i) {
+                    world.step();
                 }
-                world.update();
-                if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
-                    game.getScore().setLevelScore(questName, levelName,
-                            world.getLevelScore());
-                    game.saveScore();
-                    game.setLevelCompleted(questName, levelName);
+            }
+            world.update();
+            if (world.areObjectivesCompleted() || cheatCodeGotoNextLevel) {
+                game.getScore().setLevelScore(questName, levelName,
+                        world.getLevelScore());
+                game.saveScore();
+                game.setLevelCompleted(questName, levelName);
+                if(nextSequence instanceof PreloadableSequence) {
+                    throw new NormalTransitionException(new PreloaderFadeSequence(game,
+                        (PreloadableSequence)nextSequence, 0, 0, 0, 1000000000L));
+                } else {
                     throw new NormalTransitionException(new FadeSequence(game,
-                            new Sequence.NormalTransitionException(nextSequence), 0, 0, 0, 1000000000L));
+                        new Sequence.NormalTransitionException(nextSequence), 0, 0, 0, 1000000000L));
                 }
-                if (cheatCodeGotoNextBonusLevel) {
-                    game.goToNextBonusLevel(questName);
-                }
-            } catch (GameOverException ex) {
-                throw new NormalTransitionException(new GameOverSequence(game, this));
+                
             }
-        } else {
-            loadingPlay.update(frameTimeInfos.elapsedTime / 1000000);
-            try {
-                long startLoadingTime = System.nanoTime();
-                for (;;) {
-                    if (worldLoader.loadSome()) {
-                        long currentLoadingTime = System.nanoTime();
-                        long elapsedLoadingDuration = currentLoadingTime - startLoadingTime;
-                        if (elapsedLoadingDuration > (1000000000L / 24L)) {
-                            break;
-                        }
-                    } else {
-                        worldLoader.finishLoading();
-                        worldLoader = null;
-                        break;
-                    }
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException("Cannot load level " + levelName + " of quest " + questName, ex);
+            if (cheatCodeGotoNextBonusLevel) {
+                game.goToNextBonusLevel(questName);
             }
+        } catch (GameOverException ex) {
+            throw new NormalTransitionException(new GameOverSequence(game, this));
         }
+
     }
 
     @Override
     public void processInputs() {
-        if (null == worldLoader) {
             if (world.getHero().isDead()) {
                 return;
             }
             processRotateInputs();
             processMovingInput();
             processCheatInput();
-        }
+        
     }
 
     protected void processCheatInput() {
@@ -239,14 +251,10 @@ strictfp public class LevelSequence implements Sequence, PreloadableSequence {
 
     @Override
     public void draw() {
-        if (null == worldLoader) {
             world.draw();
             game.getView().drawFPS(game.getFrameTimeInfos().fps);
             drawIndicators();
             drawMinimap();
-        } else {
-            game.getView().drawLoading(loadingPlay);
-        }
     }
 
     private void drawMinimap() {

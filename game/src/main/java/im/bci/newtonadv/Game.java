@@ -45,6 +45,7 @@ import java.util.Properties;
 
 import im.bci.newtonadv.game.CustomTickSequence;
 import im.bci.newtonadv.game.MainMenuSequence;
+import im.bci.newtonadv.game.PreloaderFadeSequence;
 import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.ResumableTransitionException;
@@ -238,8 +239,8 @@ public strictfp class Game {
             BonusSequence bonusSequence = bonusSequences.get(frameTimeInfos.random.nextInt(bonusSequences.size()));
             bonusSequence.setCurrentQuestName(currentQuestName);
             bonusSequence.setNextSequence(currentSequence);
-            throw new Sequence.ResumableTransitionException(new FadeSequence(
-                    this, new Sequence.NormalTransitionException(bonusSequence), 1, 1, 1, 1000000000L));
+            throw new Sequence.ResumableTransitionException(new PreloaderFadeSequence(
+                    this, bonusSequence, 1, 1, 1, 1000000000L));
         }
     }
 
@@ -253,8 +254,8 @@ public strictfp class Game {
             lastBonusSequence = bonusSequences.get(i);
             lastBonusSequence.setCurrentQuestName(currentQuestName);
             lastBonusSequence.setNextSequence(currentSequence);
-            throw new Sequence.ResumableTransitionException(new FadeSequence(
-                    this, new Sequence.NormalTransitionException(lastBonusSequence), 1, 1, 1, 1000000000L));
+            throw new Sequence.ResumableTransitionException(new PreloaderFadeSequence(
+                    this, lastBonusSequence, 1, 1, 1, 1000000000L));
         }
     }
 
