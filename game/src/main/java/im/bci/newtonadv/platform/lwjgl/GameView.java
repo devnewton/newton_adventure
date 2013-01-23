@@ -83,7 +83,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import im.bci.newtonadv.game.Sequence;
-import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
@@ -121,10 +120,11 @@ import org.lwjgl.util.glu.GLU;
 public strictfp class GameView implements IGameView {
 
     private TextureCache textureCache;
-    private ITrueTypeFont fpsFont;
     private GameViewQuality quality = GameViewQuality.DEFAULT;
     private final IGameData data;
     private boolean rotateViewWithGravity = true;
+    private TrueTypeFont font;
+
 
     public GameView(IGameData data, Properties config) {
         this.data = data;
@@ -346,7 +346,7 @@ public strictfp class GameView implements IGameView {
         }
         this.quality = newQuality;
         textureCache.setQuality(newQuality);
-        fpsFont = new TrueTypeFont(this.data);
+        font = initFont();
     }
 
     @Override
@@ -380,9 +380,9 @@ public strictfp class GameView implements IGameView {
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
         GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-        GL11.glTranslatef(Display.getWidth() - fpsFont.getWidth(fps),
+        GL11.glTranslatef(Display.getWidth() - font.getWidth(fps),
                 Display.getHeight() - 64, 0);
-        fpsFont.drawString(fps);
+        font.drawString(fps);
         GL11.glPopMatrix();
         GL11.glPopAttrib();
     }
@@ -1111,7 +1111,7 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font,
+    public void drawScoreSequence(ScoreSequence sequence,
             QuestScore questScore, long scorePerCentToShow) {
         if (Display.isVisible() || Display.isDirty() || Display.wasResized()
                 || sequence.isDirty()) {
@@ -1128,9 +1128,9 @@ public strictfp class GameView implements IGameView {
             font.drawString(
                     (ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
                     i++ * font.getHeight(), "SCORES", 1, -1,
-                    ITrueTypeFont.Align.CENTER);
+                    TrueTypeFont.Align.CENTER);
             font.drawString(0, i++ * font.getHeight(),
-                    questScore.getQuestName(), 1, -1, ITrueTypeFont.Align.LEFT);
+                    questScore.getQuestName(), 1, -1, TrueTypeFont.Align.LEFT);
             for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
                 String levelScoreStr = levelEntry.getKey()
                         + ": "
@@ -1139,14 +1139,14 @@ public strictfp class GameView implements IGameView {
                 font.drawString(
                         (ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
                         i++ * font.getHeight(), levelScoreStr, 1, -1,
-                        ITrueTypeFont.Align.CENTER);
+                        TrueTypeFont.Align.CENTER);
             }
             String questScoreStr = "Quest total: "
                     + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
-                    ITrueTypeFont.Align.LEFT);
+                    TrueTypeFont.Align.LEFT);
             font.drawString(0, i++ * font.getHeight(), "Share on " + sequence.getScoreServer().getServerUrl() + " !", 1, -1,
-                    ITrueTypeFont.Align.LEFT);
+                    TrueTypeFont.Align.LEFT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
         }
@@ -1178,17 +1178,16 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawLevelIndicators(String indicators,
-            ITrueTypeFont indicatorsFont) {
+    public void drawLevelIndicators(String indicators) {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_BLEND);
 
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
         GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-        GL11.glTranslatef(0, Display.getHeight() - indicatorsFont.getHeight(),
+        GL11.glTranslatef(0, Display.getHeight() - font.getHeight(),
                 0);
-        indicatorsFont.drawString(indicators);
+        font.drawString(indicators);
         GL11.glPopAttrib();
         GL11.glPopMatrix();
     }
@@ -1228,24 +1227,23 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawMenuButton(Button button, ITrueTypeFont questNameFont,
-            String leftLabel, String rightLabel) {
+    public void drawMenuButton(Button button, String leftLabel, String rightLabel) {
         drawButton(button);
         GL11.glPushMatrix();
         GL11.glTranslatef(button.x,
                 button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
-                + questNameFont.getHeight(), 0);
+                + font.getHeight(), 0);
         GL11.glScalef(1, -1, 1);
-        questNameFont.drawString(leftLabel, ITrueTypeFont.Align.LEFT);
+        font.drawString(leftLabel, TrueTypeFont.Align.LEFT);
 
         GL11.glPopMatrix();
 
         GL11.glPushMatrix();
         GL11.glTranslatef(button.x + QuestMenuSequence.QUEST_MINIATURE_WIDTH,
                 button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
-                + questNameFont.getHeight(), 0);
+                + font.getHeight(), 0);
         GL11.glScalef(1, -1, 1);
-        questNameFont.drawString(rightLabel, ITrueTypeFont.Align.RIGHT);
+        font.drawString(rightLabel, TrueTypeFont.Align.RIGHT);
         GL11.glPopMatrix();
     }
 
@@ -1337,31 +1335,6 @@ public strictfp class GameView implements IGameView {
         } else {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         }
-    }
-
-    @Override
-    public ITrueTypeFont createStoryBoardSequenceFont() {
-        return new TrueTypeFont(this.data,
-                new Font("monospaced", Font.BOLD, 32), false);
-    }
-
-    @Override
-    public ITrueTypeFont createQuestNameFont() {
-        return new TrueTypeFont(this.data);
-    }
-
-    @Override
-    public ITrueTypeFont createAppleFont(String questName, String levelName) {
-        HashMap<Character, String> fontSpecialCharacters = new HashMap<Character, String>();
-        fontSpecialCharacters.put('$',
-                data.getLevelFilePath(questName, levelName, "apple.png"));
-        return new TrueTypeFont(this.data, fontSpecialCharacters);
-    }
-
-    @Override
-    public ITrueTypeFont createScoreSequenceFont() {
-        return new TrueTypeFont(this.data,
-                new Font("monospaced", Font.BOLD, 32), false);
     }
 
     @Override
@@ -1615,7 +1588,6 @@ public strictfp class GameView implements IGameView {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_BLEND);
 
-        ITrueTypeFont font = world.getScoreIndicatorFont();
         String value = scoreVisualIndicator.getValue();
 
         GL11.glPushMatrix();
@@ -1679,5 +1651,11 @@ public strictfp class GameView implements IGameView {
         GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);
         drawLoadingIcon(loadingPlay, screenWidth, aspectRatio);
         GL11.glPopMatrix();
+    }
+
+    private TrueTypeFont initFont() {
+            HashMap<Character, String> fontSpecialCharacters = new HashMap<Character, String>();
+        fontSpecialCharacters.put('$',data.getFile("default_level_data/apple.png"));
+        return new TrueTypeFont(this.data, new Font("monospaced", Font.BOLD, 24), true, new char[0], fontSpecialCharacters);
     }
 }

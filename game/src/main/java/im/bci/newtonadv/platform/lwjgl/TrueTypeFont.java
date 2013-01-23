@@ -1,7 +1,6 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
-import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -36,8 +35,14 @@ import org.lwjgl.util.glu.GLU;
  * 
  * @new version edited by David Aaron Muhar (bobjob)
  */
-public class TrueTypeFont implements ITrueTypeFont {
+public class TrueTypeFont {
 
+    public enum Align {
+
+        CENTER,
+        LEFT,
+        RIGHT
+    }
     /** Array that holds necessary information about the font characters */
     private IntObject[] charArray = new IntObject[256];
     /** Map of user defined font characters (Character <-> IntObject) */
@@ -62,13 +67,10 @@ public class TrueTypeFont implements ITrueTypeFont {
     private final Map<Character, String> specialCharacters;
     private final IGameData gameData;
 
-    @Override
     public void drawString(String msg) {
         drawString(0, 0, msg, 1, 1);
     }
-    
-    
-    @Override
+
     public void drawString(String msg, Align format) {
         drawString(0, 0, msg, 1, 1, format);
     }
@@ -97,14 +99,19 @@ public class TrueTypeFont implements ITrueTypeFont {
                     RenderingHints.VALUE_ANTIALIAS_ON);
         }
         gt.setFont(font);
+        final int charx = 3;
+        final int chary = 1 + fontMetrics.getAscent();
+        final String str = String.valueOf(ch);
+        gt.setColor(Color.BLACK);
+        gt.drawString(str, charx - 1, chary);
+        gt.drawString(str, charx + 1, chary);
+        gt.drawString(str, charx, chary - 1);
+        gt.drawString(str, charx, chary + 1);
+
         gt.setColor(Color.WHITE);
-        int charx = 3;
-        int chary = 1;
-        gt.drawString(String.valueOf(ch), charx,
-                (chary) + fontMetrics.getAscent());
+        gt.drawString(str, charx, chary);
         return fontImage;
     }
-
 
     private class IntObject {
 
@@ -132,26 +139,6 @@ public class TrueTypeFont implements ITrueTypeFont {
         if (fontHeight <= 0) {
             fontHeight = 1;
         }
-    }
-
-    public TrueTypeFont(IGameData gameData, Font font, boolean antiAlias,
-            Map<Character, String> specialCharacters) {
-        this(gameData, font, antiAlias, null, specialCharacters);
-    }
-
-    public TrueTypeFont(IGameData gameData, Font font, boolean antiAlias) {
-        this(gameData, font, antiAlias, null, Collections.<Character, String>emptyMap());
-    }
-
-    public TrueTypeFont(IGameData gameData,
-            Map<Character, String> specialCharacters) {
-        this(gameData, new Font("monospaced", Font.PLAIN, 24), false,
-                specialCharacters);
-    }
-
-    public TrueTypeFont(IGameData gameData) {
-        this(gameData, new Font("monospaced", Font.PLAIN, 24), false,
-                Collections.<Character, String>emptyMap());
     }
 
     public void setCorrection(boolean on) {
@@ -281,7 +268,6 @@ public class TrueTypeFont implements ITrueTypeFont {
         GL11.glVertex2f(drawX + DrawWidth, drawY);
     }
 
-    @Override
     public int getWidth(String whatchars) {
         int totalwidth = 0;
         IntObject intObject = null;
@@ -301,17 +287,14 @@ public class TrueTypeFont implements ITrueTypeFont {
         return totalwidth;
     }
 
-    @Override
     public int getHeight() {
         return fontHeight;
     }
 
-    @Override
     public int getHeight(String HeightString) {
         return fontHeight;
     }
 
-    @Override
     public int getLineHeight() {
         return fontHeight;
     }
@@ -322,7 +305,6 @@ public class TrueTypeFont implements ITrueTypeFont {
                 Align.LEFT);
     }
 
-    @Override
     public void drawString(float x, float y, String whatchars, float scaleX,
             float scaleY, Align format) {
         drawString(x, y, whatchars, 0, whatchars.length() - 1, scaleX, scaleY,
@@ -498,7 +480,6 @@ public class TrueTypeFont implements ITrueTypeFont {
                     (byte) (value >>> 8), (byte) value};
     }
 
-    @Override
     public void destroy() {
         IntBuffer scratch = BufferUtils.createIntBuffer(1);
         scratch.put(0, fontTextureID);

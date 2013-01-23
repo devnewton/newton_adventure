@@ -34,7 +34,6 @@ package im.bci.newtonadv.game;
 import im.bci.newtonadv.score.LevelScore;
 import java.util.Iterator;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 
 /**
  * 
@@ -42,7 +41,6 @@ import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
  */
 public class LevelMenuSequence extends MenuSequence {
 
-    ITrueTypeFont levelNameFont;
     private QuestSequence questSequence;
     static final int LEVEL_MINIATURE_ON_X = 2;
     static final int LEVEL_MINIATURE_ON_Y = 3;
@@ -62,7 +60,6 @@ public class LevelMenuSequence extends MenuSequence {
 
     @Override
     public void start() {
-        levelNameFont = game.getView().createQuestNameFont();
         loadLevels();
         Button returnToPreviousSequence = new Button() {
 
@@ -79,12 +76,6 @@ public class LevelMenuSequence extends MenuSequence {
         returnToPreviousSequence.h = LEVEL_MINIATURE_SPACING;
         addButton(returnToPreviousSequence);
         super.start();
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-        levelNameFont.destroy();
     }
 
     private void loadLevels() {
@@ -125,8 +116,7 @@ public class LevelMenuSequence extends MenuSequence {
                         scoreLabel += score;
                     }
                 }
-                game.getView().drawMenuButton(this, levelNameFont,
-                        levelName, scoreLabel);
+                game.getView().drawMenuButton(this, levelName, scoreLabel);
             }
         };
         questButton.offTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),

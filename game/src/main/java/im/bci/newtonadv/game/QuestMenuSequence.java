@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 
 /**
  * 
@@ -43,187 +42,170 @@ import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
  */
 public class QuestMenuSequence extends MenuSequence {
 
-	List<QuestSequence> quests;
-	ITrueTypeFont questNameFont;
-	private List<QuestMenuSequence> questMenuSequences = new ArrayList<QuestMenuSequence>();
-	private static final int NB_BUTTONS_ON_X = 2;
-	private static final int NB_BUTTONS_ON_Y = 3;
-	private static final float QUEST_MINIATURE_SPACING = 60;
-	public static final float QUEST_MINIATURE_WIDTH = (ortho2DRight - QUEST_MINIATURE_SPACING
-			* (NB_BUTTONS_ON_X + 1))
-			/ NB_BUTTONS_ON_X;
-	public static final float QUEST_MINIATURE_HEIGHT = (ortho2DBottom - QUEST_MINIATURE_SPACING
-			* (NB_BUTTONS_ON_Y + 1))
-			/ NB_BUTTONS_ON_Y;
+    List<QuestSequence> quests;
+    private List<QuestMenuSequence> questMenuSequences = new ArrayList<QuestMenuSequence>();
+    private static final int NB_BUTTONS_ON_X = 2;
+    private static final int NB_BUTTONS_ON_Y = 3;
+    private static final float QUEST_MINIATURE_SPACING = 60;
+    public static final float QUEST_MINIATURE_WIDTH = (ortho2DRight - QUEST_MINIATURE_SPACING
+            * (NB_BUTTONS_ON_X + 1))
+            / NB_BUTTONS_ON_X;
+    public static final float QUEST_MINIATURE_HEIGHT = (ortho2DBottom - QUEST_MINIATURE_SPACING
+            * (NB_BUTTONS_ON_Y + 1))
+            / NB_BUTTONS_ON_Y;
 
-	public QuestMenuSequence(Game game) {
-		super(game);
-		verticalIncrement = NB_BUTTONS_ON_X;
-		loadQuests(game.getData().listQuests()
-				.iterator(), null);
-	}
-	
-	public QuestMenuSequence(Game game, QuestMenuSequence previousSequence, Iterator<String> questNamesIterator) {
-		super(game);
-		verticalIncrement = NB_BUTTONS_ON_X;		
-		loadQuests(questNamesIterator,previousSequence);
-	}
+    public QuestMenuSequence(Game game) {
+        super(game);
+        verticalIncrement = NB_BUTTONS_ON_X;
+        loadQuests(game.getData().listQuests().iterator(), null);
+    }
 
-	@Override
-	public void start() {
-		super.start();
-		questNameFont = game.getView().createQuestNameFont();
-	}
+    public QuestMenuSequence(Game game, QuestMenuSequence previousSequence, Iterator<String> questNamesIterator) {
+        super(game);
+        verticalIncrement = NB_BUTTONS_ON_X;
+        loadQuests(questNamesIterator, previousSequence);
+    }
 
-	@Override
-	public void stop() {
-		super.stop();
-		questNameFont.destroy();
-	}
+    private void loadQuests(Iterator<String> questNamesIterator, QuestMenuSequence previousSequence) {
+        quests = new ArrayList<QuestSequence>();
 
-	private void loadQuests(Iterator<String> questNamesIterator, QuestMenuSequence previousSequence) {
-		quests = new ArrayList<QuestSequence>();
-		
-		int nbQuestButtonCreated = 0;
-		final int maxQuestButtons = NB_BUTTONS_ON_X * NB_BUTTONS_ON_Y - (null == previousSequence ? 1 : 2);
-		for (int j = 0; j < NB_BUTTONS_ON_Y; ++j) {
-			for (int i = 0; i < NB_BUTTONS_ON_X; ++i) {
-				if (questNamesIterator.hasNext() && nbQuestButtonCreated < maxQuestButtons) {
-					String questName = questNamesIterator.next();
-					QuestSequence questSequence = new QuestSequence(game, questName);
-					quests.add(questSequence);
-					createQuestButton(i, j, questName, questSequence);
-					++nbQuestButtonCreated;
-				} else if(null != previousSequence){
-					createNavigateButton(i, j, previousSequence, "bt-previous");
-					previousSequence = null;
-				} else if(questNamesIterator.hasNext()) {
-					QuestMenuSequence nextQuestMenu = new QuestMenuSequence(game, this, questNamesIterator);
-					questMenuSequences .add(nextQuestMenu);
-					createNavigateButton(i, j, nextQuestMenu, "bt-next");
-					return;
-				} else {
-					createReturnToMenuButton(i, j);
-					return;
-				}
-			}
-		}
-	}
+        int nbQuestButtonCreated = 0;
+        final int maxQuestButtons = NB_BUTTONS_ON_X * NB_BUTTONS_ON_Y - (null == previousSequence ? 1 : 2);
+        for (int j = 0; j < NB_BUTTONS_ON_Y; ++j) {
+            for (int i = 0; i < NB_BUTTONS_ON_X; ++i) {
+                if (questNamesIterator.hasNext() && nbQuestButtonCreated < maxQuestButtons) {
+                    String questName = questNamesIterator.next();
+                    QuestSequence questSequence = new QuestSequence(game, questName);
+                    quests.add(questSequence);
+                    createQuestButton(i, j, questName, questSequence);
+                    ++nbQuestButtonCreated;
+                } else if (null != previousSequence) {
+                    createNavigateButton(i, j, previousSequence, "bt-previous");
+                    previousSequence = null;
+                } else if (questNamesIterator.hasNext()) {
+                    QuestMenuSequence nextQuestMenu = new QuestMenuSequence(game, this, questNamesIterator);
+                    questMenuSequences.add(nextQuestMenu);
+                    createNavigateButton(i, j, nextQuestMenu, "bt-next");
+                    return;
+                } else {
+                    createReturnToMenuButton(i, j);
+                    return;
+                }
+            }
+        }
+    }
 
-	private void createNavigateButton(int i, int j,
-			final QuestMenuSequence sequence, String textureBaseName) {
-		Button button = new Button() {
+    private void createNavigateButton(int i, int j,
+            final QuestMenuSequence sequence, String textureBaseName) {
+        Button button = new Button() {
 
-			@Override
-			void activate() throws NormalTransitionException,
-					ResumeTransitionException {
-				throw new NormalTransitionException(sequence);				
-			}
-			
-		};
-		button.offTextureName = game.getData().getFile("quest_menu/" + textureBaseName + "-off.png");
-		button.onTextureName = game.getData().getFile("quest_menu/" + textureBaseName + "-on.png");
-		
-		button.x = QUEST_MINIATURE_SPACING + i
-				* (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
-		button.y = QUEST_MINIATURE_SPACING + j
-				* (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);
-		button.w = QUEST_MINIATURE_WIDTH;
-		button.h = QUEST_MINIATURE_HEIGHT;
-		
-		addButton(button);
-	}
+            @Override
+            void activate() throws NormalTransitionException,
+                    ResumeTransitionException {
+                throw new NormalTransitionException(sequence);
+            }
+        };
+        button.offTextureName = game.getData().getFile("quest_menu/" + textureBaseName + "-off.png");
+        button.onTextureName = game.getData().getFile("quest_menu/" + textureBaseName + "-on.png");
 
-	private void createReturnToMenuButton(int i, int j) {
-		Button returnToMenuButton = new Button() {
+        button.x = QUEST_MINIATURE_SPACING + i
+                * (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
+        button.y = QUEST_MINIATURE_SPACING + j
+                * (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);
+        button.w = QUEST_MINIATURE_WIDTH;
+        button.h = QUEST_MINIATURE_HEIGHT;
 
-			@Override
-			void activate() throws NormalTransitionException,
-					ResumeTransitionException {
-				throw new NormalTransitionException(game.getMainMenuSequence());				
-			}
-			
-		};
-		returnToMenuButton.offTextureName = game.getData().getFile("quest_menu/bt-menu-off.png");
-		returnToMenuButton.onTextureName = game.getData().getFile("quest_menu/bt-menu-on.png");
-		
-		returnToMenuButton.x = QUEST_MINIATURE_SPACING + i
-				* (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
-		returnToMenuButton.y = QUEST_MINIATURE_SPACING + j
-				* (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);
-		returnToMenuButton.w = QUEST_MINIATURE_WIDTH;
-		returnToMenuButton.h = QUEST_MINIATURE_HEIGHT;
-		
-		addButton(returnToMenuButton);
-		
-	}
+        addButton(button);
+    }
 
-	public void setNextSequence(Sequence sequence) {
-		for (QuestSequence quest : quests) {
-			quest.setNextSequence(sequence);
-		}
-		for(QuestMenuSequence questMenu : questMenuSequences) {
-			questMenu.setNextSequence(sequence);
-		}
-	}
+    private void createReturnToMenuButton(int i, int j) {
+        Button returnToMenuButton = new Button() {
 
-	private void createQuestButton(int i, int j, final String questName,
-			QuestSequence questSequence) {
-		final LevelMenuSequence levelMenuSequence = new LevelMenuSequence(game, questSequence);
-		Button questButton = new Button() {
+            @Override
+            void activate() throws NormalTransitionException,
+                    ResumeTransitionException {
+                throw new NormalTransitionException(game.getMainMenuSequence());
+            }
+        };
+        returnToMenuButton.offTextureName = game.getData().getFile("quest_menu/bt-menu-off.png");
+        returnToMenuButton.onTextureName = game.getData().getFile("quest_menu/bt-menu-on.png");
 
-			@Override
-			void activate() throws Sequence.NormalTransitionException {
-				if(!game.isQuestBlocked(questName)) {
-					throw new Sequence.NormalTransitionException(levelMenuSequence);
-				}
-			}
+        returnToMenuButton.x = QUEST_MINIATURE_SPACING + i
+                * (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
+        returnToMenuButton.y = QUEST_MINIATURE_SPACING + j
+                * (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);
+        returnToMenuButton.w = QUEST_MINIATURE_WIDTH;
+        returnToMenuButton.h = QUEST_MINIATURE_HEIGHT;
 
-			@Override
-			public void draw() {
-				String scoreLabel = "";
-                                int score = game.getScore().getQuestScore(questName).computeScore();
-                                if(score>0) {
-                                    scoreLabel += score;
-                                }
-                                game.getView().drawMenuButton(this, questNameFont,
-						questName, scoreLabel);
-			}
-			
-			@Override
-			public void start() {
-				if(game.isQuestBlocked(questName)) {
-					onTextureName = game.getData().getFile("btn-blocked.png");
-				} else {
-					onTextureName = game.getData().getQuestFile(questName,
-							"bt-quest-on.png");
-				}
-			}
-		};
-		questButton.offTextureName = game.getData().getQuestFile(questName,
-				"bt-quest-off.png");
-		questButton.onTextureName = game.getData().getQuestFile(questName,
-				"bt-quest-on.png");
+        addButton(returnToMenuButton);
 
-		questButton.x = QUEST_MINIATURE_SPACING + i
-				* (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
-		questButton.y = QUEST_MINIATURE_SPACING + j
-				* (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);
-		questButton.w = QUEST_MINIATURE_WIDTH;
-		questButton.h = QUEST_MINIATURE_HEIGHT;
-		addButton(questButton);
-	}
+    }
 
-	public void gotoLevel(String newQuestName, String newLevelName) throws Sequence.NormalTransitionException {
-		for(QuestSequence quest: quests) {
-			if(quest.getQuestName().equals(newLevelName)) {
-				quest.gotoLevel(newLevelName);
-			}
-		}
-		
-	}
+    public void setNextSequence(Sequence sequence) {
+        for (QuestSequence quest : quests) {
+            quest.setNextSequence(sequence);
+        }
+        for (QuestMenuSequence questMenu : questMenuSequences) {
+            questMenu.setNextSequence(sequence);
+        }
+    }
 
-	@Override
-	public void resume() {
-	}
+    private void createQuestButton(int i, int j, final String questName,
+            QuestSequence questSequence) {
+        final LevelMenuSequence levelMenuSequence = new LevelMenuSequence(game, questSequence);
+        Button questButton = new Button() {
+
+            @Override
+            void activate() throws Sequence.NormalTransitionException {
+                if (!game.isQuestBlocked(questName)) {
+                    throw new Sequence.NormalTransitionException(levelMenuSequence);
+                }
+            }
+
+            @Override
+            public void draw() {
+                String scoreLabel = "";
+                int score = game.getScore().getQuestScore(questName).computeScore();
+                if (score > 0) {
+                    scoreLabel += score;
+                }
+                game.getView().drawMenuButton(this, questName, scoreLabel);
+            }
+
+            @Override
+            public void start() {
+                if (game.isQuestBlocked(questName)) {
+                    onTextureName = game.getData().getFile("btn-blocked.png");
+                } else {
+                    onTextureName = game.getData().getQuestFile(questName,
+                            "bt-quest-on.png");
+                }
+            }
+        };
+        questButton.offTextureName = game.getData().getQuestFile(questName,
+                "bt-quest-off.png");
+        questButton.onTextureName = game.getData().getQuestFile(questName,
+                "bt-quest-on.png");
+
+        questButton.x = QUEST_MINIATURE_SPACING + i
+                * (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
+        questButton.y = QUEST_MINIATURE_SPACING + j
+                * (QUEST_MINIATURE_HEIGHT + QUEST_MINIATURE_SPACING);
+        questButton.w = QUEST_MINIATURE_WIDTH;
+        questButton.h = QUEST_MINIATURE_HEIGHT;
+        addButton(questButton);
+    }
+
+    public void gotoLevel(String newQuestName, String newLevelName) throws Sequence.NormalTransitionException {
+        for (QuestSequence quest : quests) {
+            if (quest.getQuestName().equals(newLevelName)) {
+                quest.gotoLevel(newLevelName);
+            }
+        }
+
+    }
+
+    @Override
+    public void resume() {
+    }
 }

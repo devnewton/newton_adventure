@@ -34,7 +34,6 @@ package im.bci.newtonadv.game;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.score.ScoreServer;
-import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 
 /**
  *
@@ -42,7 +41,6 @@ import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
  */
 public class ScoreSequence extends MenuSequence {
 
-    ITrueTypeFont font;
     private final QuestScore questScore;
     private Sequence nextSequence;
     private FrameTimeInfos timeInfos;
@@ -98,7 +96,6 @@ public class ScoreSequence extends MenuSequence {
     @Override
     public void start() {
         super.start();
-        font = game.getView().createScoreSequenceFont();
 
         timeInfos = new FrameTimeInfos();
         scorePerCentToShow = 0;
@@ -107,13 +104,12 @@ public class ScoreSequence extends MenuSequence {
     @Override
     public void stop() {
         super.stop();
-        font.destroy();
         game.saveScore();
     }
 
     @Override
     public void draw() {
-        game.getView().drawScoreSequence(this,font,questScore,scorePerCentToShow);
+        game.getView().drawScoreSequence(this,questScore,scorePerCentToShow);
     }
 
     @Override

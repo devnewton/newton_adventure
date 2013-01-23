@@ -115,7 +115,7 @@ public interface IGameView {
 
     void drawKey(Key key, AnimationFrame texture, World world);
 
-    void drawLevelIndicators(String indicators, ITrueTypeFont appleFont);
+    void drawLevelIndicators(String indicators);
 
     void drawLosedApple(LosedApple apple, World world, AnimationFrame texture, float alpha);
 
@@ -131,9 +131,9 @@ public interface IGameView {
 
     void drawPlatform(Platform platform);
 
-    void drawMenuButton(Button button, ITrueTypeFont questNameFont, String leftLabel, String rightLabel);
+    void drawMenuButton(Button button, String leftLabel, String rightLabel);
 
-    void drawScoreSequence(ScoreSequence sequence, ITrueTypeFont font, QuestScore questScore, long scorePerCentToShow);
+    void drawScoreSequence(ScoreSequence sequence, QuestScore questScore, long scorePerCentToShow);
 
     void drawSnowLayer(SnowLayer layer);
 
@@ -148,14 +148,6 @@ public interface IGameView {
     ITextureCache getTextureCache();
 
     void toggleFullscreen();
-
-    ITrueTypeFont createStoryBoardSequenceFont();
-
-    ITrueTypeFont createQuestNameFont();
-
-    ITrueTypeFont createAppleFont(String questName, String levelName);
-
-    ITrueTypeFont createScoreSequenceFont();
 
     AnimationCollection loadFromAnimation(String name) throws FileNotFoundException, IOException;
 

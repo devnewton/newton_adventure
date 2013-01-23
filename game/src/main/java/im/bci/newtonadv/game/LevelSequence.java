@@ -33,7 +33,6 @@ package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.platform.interfaces.ITrueTypeFont;
 import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.TmxLoader;
 import im.bci.newtonadv.world.World;
@@ -52,7 +51,6 @@ strictfp public class LevelSequence implements PreloadableSequence {
     private FrameTimeInfos frameTimeInfos;
     protected World world;
     public long stepTime = 0;
-    protected ITrueTypeFont indicatorsFont;
     protected Sequence nextSequence;
     protected Game game;
     protected String questName, levelName;
@@ -83,8 +81,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
         try {
             if (null == world) {
                 if (worldLoader.isReadyToLoad()) {
-                    indicatorsFont = game.getView().createAppleFont(questName, levelName);
-                    world = new World(game, questName, levelName, indicatorsFont);
+                    world = new World(game, questName, levelName);
                     worldLoader.startLoading(world);
                 }
                 return false;
@@ -134,8 +131,6 @@ strictfp public class LevelSequence implements PreloadableSequence {
 
     @Override
     public void stop() {
-        indicatorsFont.destroy();
-        indicatorsFont = null;
         world = null;
     }
 
@@ -161,14 +156,14 @@ strictfp public class LevelSequence implements PreloadableSequence {
                         world.getLevelScore());
                 game.saveScore();
                 game.setLevelCompleted(questName, levelName);
-                if(nextSequence instanceof PreloadableSequence) {
+                if (nextSequence instanceof PreloadableSequence) {
                     throw new NormalTransitionException(new PreloaderFadeSequence(game,
-                        (PreloadableSequence)nextSequence, 0, 0, 0, 1000000000L));
+                            (PreloadableSequence) nextSequence, 0, 0, 0, 1000000000L));
                 } else {
                     throw new NormalTransitionException(new FadeSequence(game,
-                        new Sequence.NormalTransitionException(nextSequence), 0, 0, 0, 1000000000L));
+                            new Sequence.NormalTransitionException(nextSequence), 0, 0, 0, 1000000000L));
                 }
-                
+
             }
             if (cheatCodeGotoNextBonusLevel) {
                 game.goToNextBonusLevel(questName);
@@ -181,13 +176,13 @@ strictfp public class LevelSequence implements PreloadableSequence {
 
     @Override
     public void processInputs() {
-            if (world.getHero().isDead()) {
-                return;
-            }
-            processRotateInputs();
-            processMovingInput();
-            processCheatInput();
-        
+        if (world.getHero().isDead()) {
+            return;
+        }
+        processRotateInputs();
+        processMovingInput();
+        processCheatInput();
+
     }
 
     protected void processCheatInput() {
@@ -251,10 +246,10 @@ strictfp public class LevelSequence implements PreloadableSequence {
 
     @Override
     public void draw() {
-            world.draw();
-            game.getView().drawFPS(game.getFrameTimeInfos().fps);
-            drawIndicators();
-            drawMinimap();
+        world.draw();
+        game.getView().drawFPS(game.getFrameTimeInfos().fps);
+        drawIndicators();
+        drawMinimap();
     }
 
     private void drawMinimap() {
@@ -264,8 +259,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
     }
 
     protected void drawIndicators() {
-        game.getView().drawLevelIndicators(world.getHero().getNbApple() + "$ score: " + world.getHero().getLevelScore().computeScore(),
-                indicatorsFont);
+        game.getView().drawLevelIndicators(world.getHero().getNbApple() + "$ score: " + world.getHero().getLevelScore().computeScore());
     }
 
     public void setNextSequence(Sequence nextSequence) {
