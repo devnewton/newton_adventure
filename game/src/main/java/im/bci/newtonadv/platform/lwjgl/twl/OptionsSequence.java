@@ -143,6 +143,7 @@ public class OptionsSequence implements IOptionsSequence {
 		scoreServer.setPlayer(optionsGui.scorePlayer.getText());
 		scoreServer.setSecret(optionsGui.scoreSecret.getText());
 		scoreServer.setServerUrl(optionsGui.scoreServerUrl.getText());
+                scoreServer.setScoreShareEnabled(optionsGui.scoreShareEnabled.isActive());
 		soundCache.setSoundEnabled(optionsGui.soundEnabled.isActive());
 		soundCache.setMusicEnabled(optionsGui.musicEnabled.isActive());
 	}
@@ -263,6 +264,7 @@ public class OptionsSequence implements IOptionsSequence {
 		config.setProperty("scoreserver.url", scoreServer.getServerUrl());
 		config.setProperty("scoreserver.player", scoreServer.getPlayer());
 		config.setProperty("scoreserver.secret", scoreServer.getSecret());
+                config.setProperty("scoreserver.share", "" + scoreServer.isScoreShareEnabled());
 		config.setProperty("sound.enabled", "" + soundCache.isSoundEnabled());
 		config.setProperty("music.enabled", "" + soundCache.isMusicEnabled());
 

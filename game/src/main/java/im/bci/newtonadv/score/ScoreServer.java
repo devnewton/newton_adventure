@@ -47,80 +47,94 @@ import java.util.logging.Logger;
  * @author devnewton
  */
 public class ScoreServer {
+    private static final Logger logger = Logger.getLogger(ScoreServer.class.getName());
 
-	private String serverUrl = "http://devnewton.bci.im/scoreserver";
-	private String player = "anonymous";
-	private String secret = "c20d29ce-36dd-11e1-94e7-0016cba93a68";
+    private String serverUrl = "http://devnewton.bci.im/scoreserver";
+    private String player = "anonymous";
+    private String secret = "c20d29ce-36dd-11e1-94e7-0016cba93a68";
+    private boolean scoreShareEnabled = true;
 
-	public ScoreServer(Properties config) {
-		serverUrl = config.getProperty("scoreserver.url", serverUrl);
-		player = config.getProperty("scoreserver.player", player);
-		secret = config.getProperty("scoreserver.secret", secret);
-	}
+    public ScoreServer(Properties config) {
+        serverUrl = config.getProperty("scoreserver.url", serverUrl);
+        player = config.getProperty("scoreserver.player", player);
+        secret = config.getProperty("scoreserver.secret", secret);
+        scoreShareEnabled = "true".equals(config.getProperty("scoreserver.share", "" + scoreShareEnabled));
+    }
 
-	public String getServerUrl() {
-		return serverUrl;
-	}
+    public String getServerUrl() {
+        return serverUrl;
+    }
 
-	public void setServerUrl(String serverUrl) {
-		this.serverUrl = serverUrl;
-	}
+    public void setServerUrl(String serverUrl) {
+        this.serverUrl = serverUrl;
+    }
 
-	public String getPlayer() {
-		return player;
-	}
+    public String getPlayer() {
+        return player;
+    }
 
-	public void setPlayer(String player) {
-		this.player = player;
-	}
+    public void setPlayer(String player) {
+        this.player = player;
+    }
 
-	public String getSecret() {
-		return secret;
-	}
+    public String getSecret() {
+        return secret;
+    }
 
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
 
-	public void sendScore(String level, int score) {
-		try {
-			String hurle = serverUrl + "/score/";
-			URL url = new URL(hurle);
-			URLConnection conn = url.openConnection();
-			conn.setDoOutput(true);
-			OutputStreamWriter writer = new OutputStreamWriter(
-					conn.getOutputStream());
-			try {
-				String parameters = encodeScore(level, score);
-				writer.write(parameters);
-				writer.flush();
-			} finally {
-				writer.close();
-			}
-			String line;
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream()));
-			while ((line = reader.readLine()) != null) {
-				Logger.getLogger(ScoreServer.class.getName()).log(Level.INFO,
-						line);
-			}
-		} catch (Exception ex) {
-			Logger.getLogger(ScoreServer.class.getName()).log(Level.SEVERE,
-					null, ex);
-		}
-	}
+    public boolean isScoreShareEnabled() {
+        return scoreShareEnabled;
+    }
 
-	private String encodeScore(String level, int score)
-			throws UnsupportedEncodingException {
-		return encodeParameter("level", level) + '&'
-				+ encodeParameter("player", player) + '&'
-				+ encodeParameter("secret", secret) + '&'
-				+ encodeParameter("score", "" + score);
-	}
+    public void setScoreShareEnabled(boolean scoreShareEnabled) {
+        this.scoreShareEnabled = scoreShareEnabled;
+    }
 
-	private String encodeParameter(String key, String value)
-			throws UnsupportedEncodingException {
-		return URLEncoder.encode(key, "UTF-8") + "="
-				+ URLEncoder.encode(value, "UTF-8");
-	}
+    public void sendScore(String level, int score) {
+        if (scoreShareEnabled) {
+            try {
+                logger.log(Level.INFO, "Send score to " + serverUrl);
+                String hurle = serverUrl + "/score/";
+                URL url = new URL(hurle);
+                URLConnection conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter writer = new OutputStreamWriter(
+                        conn.getOutputStream());
+                try {
+                    String parameters = encodeScore(level, score);
+                    writer.write(parameters);
+                    writer.flush();
+                } finally {
+                    writer.close();
+                }
+                String line;
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        conn.getInputStream()));
+                while ((line = reader.readLine()) != null) {
+                    logger.log(Level.INFO,
+                            line);
+                }
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE,
+                        null, ex);
+            }
+        }
+    }
+
+    private String encodeScore(String level, int score)
+            throws UnsupportedEncodingException {
+        return encodeParameter("level", level) + '&'
+                + encodeParameter("player", player) + '&'
+                + encodeParameter("secret", secret) + '&'
+                + encodeParameter("score", "" + score);
+    }
+
+    private String encodeParameter(String key, String value)
+            throws UnsupportedEncodingException {
+        return URLEncoder.encode(key, "UTF-8") + "="
+                + URLEncoder.encode(value, "UTF-8");
+    }
 }

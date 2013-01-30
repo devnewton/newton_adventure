@@ -57,28 +57,12 @@ public class ScoreSequence extends MenuSequence {
         this.nextSequence = nextSequence;
         this.scoreServer = game.getScoreServer();
                
-       Button shareButton = new Button() {
+       Button continueButton = new Button() {
 
             @Override
             void activate() throws NormalTransitionException,
                     ResumeTransitionException, ResumableTransitionException {
                 scoreServer.sendScore(questScore.getQuestName(), questScore.computeScore());
-                throw new NormalTransitionException(ScoreSequence.this.nextSequence);
-            }
-        };
-        shareButton.offTextureName = game.getData().getFile("bt-share-off.png");
-        shareButton.onTextureName = game.getData().getFile("bt-share-on.png");
-        shareButton.x = 640;
-        shareButton.y = 700;
-        shareButton.w = 312;
-        shareButton.h = 90;
-        addButton(shareButton);
-        
-        Button continueButton = new Button() {
-
-            @Override
-            void activate() throws NormalTransitionException,
-                    ResumeTransitionException, ResumableTransitionException {
                 throw new NormalTransitionException(ScoreSequence.this.nextSequence);
             }
         };
@@ -89,8 +73,6 @@ public class ScoreSequence extends MenuSequence {
         continueButton.w = 312;
         continueButton.h = 90;
         addButton(continueButton);
-        
-        setDefaultButton(shareButton);
     }
 
     @Override

@@ -32,7 +32,6 @@
 package im.bci.newtonadv;
 
 import im.bci.newtonadv.game.BonusSequence;
-import im.bci.newtonadv.game.FadeSequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
@@ -71,7 +70,6 @@ public strictfp class Game {
     static public final int DEFAULT_SCREEN_WIDTH = 1280;
     static public final int DEFAULT_SCREEN_HEIGHT = 800;
     private FrameTimeInfos frameTimeInfos = new FrameTimeInfos();
-    private Properties config;
     private ISoundCache soundCache = null;
     private MainMenuSequence mainMenuSequence;
     private GameScore score;
@@ -82,10 +80,6 @@ public strictfp class Game {
     private QuestMenuSequence questMenuSequence;
     private IPlatformSpecific platform;
     private GameProgression progression;
-
-    public final Properties getConfig() {
-        return config;
-    }
 
     public final FrameTimeInfos getFrameTimeInfos() {
         return frameTimeInfos;
@@ -100,7 +94,6 @@ public strictfp class Game {
     }
 
     public Game(IPlatformSpecific platform) throws Exception {
-        this.config = platform.getConfig();
         this.data = platform.getGameData();
         this.score = platform.loadScore();
         this.progression = platform.loadProgression();

@@ -48,6 +48,7 @@ public class OptionsGUI extends Widget {
 	InputChoice keyPause;
 	InputChoice keyReturn;
 	InputChoice keyReturnToMenu;
+        ToggleButton scoreShareEnabled;
 	EditField scoreServerUrl, scorePlayer, scoreSecret;
 	ToggleButton musicEnabled;
 	ComboBox<ControllerItem> joypad;
@@ -160,10 +161,12 @@ public class OptionsGUI extends Widget {
 		keyReturnToMenu = addInputChoice(layout, "Return to menu",
 				gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
 
+                scoreShareEnabled = new ToggleButton("Share score");
+                scoreShareEnabled.setActive(scoreServer.isScoreShareEnabled());
 		scoreServerUrl = new EditField();
 		scoreServerUrl.setText(scoreServer.getServerUrl());
-		layout.addRow("label", "widget").addWithLabel("Score server",
-				scoreServerUrl);
+		layout.addRow("label", "widget", "share").addWithLabel("Score server",
+				scoreServerUrl).add(scoreShareEnabled);
 
 		scorePlayer = new EditField();
 		scorePlayer.setText(scoreServer.getPlayer());
