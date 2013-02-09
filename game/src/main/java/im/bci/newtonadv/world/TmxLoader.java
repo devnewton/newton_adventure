@@ -66,6 +66,7 @@ public class TmxLoader {
     private AnimationCollection mummyAnimation;
     private AnimationCollection batAnimation;
     private AnimationCollection keyTexture;
+    private AnimationCollection clueTexture;
     private AnimationCollection doorTexture;
     private AnimationCollection doorToBonusWorldTexture;
     private AnimationCollection mobilePikesTexture;
@@ -568,6 +569,13 @@ public class TmxLoader {
             helpSign.setPosition(tileX, tileY);
             helpSign.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(helpSign);
+            
+            Clue clue = new Clue(world, tileWidth / 2.0f, tileHeight / 2.0f);
+            clue.setTexture(getClueTexture());
+            clue.setAnchor(tileX, tileY + tileHeight);
+            clue.setZOrder(getTileZOrder(tile, zOrderBase));
+            world.add(clue);
+            
         } else if (c.equals("bomb")) {
             Bomb bomb = new Bomb(world);
             bomb.setTexture(getBombTexture());
@@ -732,6 +740,7 @@ public class TmxLoader {
                 "door_to_bonus_world.nanim");
         defaultMapProperties.put("newton_adventure.door", "door.nanim");
         defaultMapProperties.put("newton_adventure.key", "key.nanim");
+        defaultMapProperties.put("newton_adventure.clue", "clue.nanim");
         defaultMapProperties.put("newton_adventure.hero", "hero.nanim");
         defaultMapProperties.put("newton_adventure.apple", "apple.png");
         defaultMapProperties.put("newton_adventure.coin", "coin.png");
@@ -797,6 +806,14 @@ public class TmxLoader {
                     getFileFromMap(map, "newton_adventure.key"));
         }
         return keyTexture;
+    }
+    
+        private AnimationCollection getClueTexture() throws IOException {
+        if (null == clueTexture) {
+            clueTexture = game.getView().loadFromAnimation(
+                    getFileFromMap(map, "newton_adventure.clue"));
+        }
+        return clueTexture;
     }
 
     private AnimationCollection getDoorTexture() throws IOException {

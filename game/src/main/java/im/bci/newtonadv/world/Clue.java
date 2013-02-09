@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2013 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,56 +33,47 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
-import net.phys2d.raw.Body;
+import im.bci.newtonadv.game.time.PingPongTimedAction;
+import im.bci.newtonadv.game.time.TimedAction;
+import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Shape;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class HelpSign extends Platform implements CollisionDetectionOnly, Updatable {
+public strictfp class Clue extends Platform implements CollisionDetectionOnly, Updatable {
+    
+    private static final float CLUE_VISIBLE_AT_DISTANCE = World.distanceUnit * 10f * World.distanceUnit * 10f;
+    private Vector2f anchor;
+    private TimedAction move = new PingPongTimedAction(500000000L);
 
-    private String color;
-    private boolean collideHero = false;
-    private static final long durationBeforeShowHelp = 2000000000L;
-    private long showHelpTime = -1;
-
-    HelpSign(World world, float w, float h) {
+    Clue(World world, float w, float h) {
         super(world, w, h);
     }
 
-    public HelpSign(World world, Shape shape) {
+    public Clue(World world, Shape shape) {
         super(world, shape);
     }
-
-    @Override
-    public strictfp void collided(Body body) {
-        if (body instanceof Hero) {
-            collideHero = true;
-        }
-
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
+    
+    public void setAnchor(float x, float y) {
+        this.anchor = new Vector2f(x, y);
     }
 
     @Override
     public void update(FrameTimeInfos frameTimeInfos) {
-        if (collideHero) {
-            if (showHelpTime < 0) {
-                showHelpTime = frameTimeInfos.currentTime + durationBeforeShowHelp;
-            } else if (frameTimeInfos.currentTime > showHelpTime) {
-                showHelpTime = -1;
-                world.showHelp();
-            }
-        } else {
-            showHelpTime = -1;
-        }
-        collideHero = false;
+        super.update(frameTimeInfos);
+        move.update(frameTimeInfos);
+        
+        setPosition(anchor.x, anchor.y + this.h/4.0f * move.getProgress());
+        
     }
+
+    @Override
+    public strictfp void draw() {
+        if(world.getHero().getPosition().distanceSquared(this.getPosition()) < CLUE_VISIBLE_AT_DISTANCE) {
+            super.draw();
+        }
+    }
+    
 }

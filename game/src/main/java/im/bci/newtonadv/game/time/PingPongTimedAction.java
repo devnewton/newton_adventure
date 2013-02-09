@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2013 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,60 +29,46 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.world;
+package im.bci.newtonadv.game.time;
 
 import im.bci.newtonadv.game.FrameTimeInfos;
-import im.bci.newtonadv.game.Updatable;
-import net.phys2d.raw.Body;
-import net.phys2d.raw.shapes.Shape;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class HelpSign extends Platform implements CollisionDetectionOnly, Updatable {
+public strictfp class PingPongTimedAction extends TimedAction{
 
-    private String color;
-    private boolean collideHero = false;
-    private static final long durationBeforeShowHelp = 2000000000L;
-    private long showHelpTime = -1;
+    private float progress;
+    private final long duration;
+    private long time;
+    private boolean goForward = true;
 
-    HelpSign(World world, float w, float h) {
-        super(world, w, h);
-    }
-
-    public HelpSign(World world, Shape shape) {
-        super(world, shape);
+    public PingPongTimedAction(long duration) {
+        this.duration = duration;
     }
 
     @Override
-    public strictfp void collided(Body body) {
-        if (body instanceof Hero) {
-            collideHero = true;
-        }
-
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    @Override
-    public void update(FrameTimeInfos frameTimeInfos) {
-        if (collideHero) {
-            if (showHelpTime < 0) {
-                showHelpTime = frameTimeInfos.currentTime + durationBeforeShowHelp;
-            } else if (frameTimeInfos.currentTime > showHelpTime) {
-                showHelpTime = -1;
-                world.showHelp();
+    public void update(FrameTimeInfos f) {
+        if (goForward) {
+            time += f.elapsedTime;
+            if (time > duration) {
+                time = duration;
+                goForward = false;
             }
         } else {
-            showHelpTime = -1;
+            time -= f.elapsedTime;
+            if (time < 0) {
+                time = 0;
+                goForward = true;
+            }
+
         }
-        collideHero = false;
+        progress = (float) time / (float) duration;
+    }
+
+    @Override
+    public float getProgress() {
+        return progress;
     }
 }
