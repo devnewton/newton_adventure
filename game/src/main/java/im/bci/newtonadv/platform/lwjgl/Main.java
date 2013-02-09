@@ -34,15 +34,19 @@ package im.bci.newtonadv.platform.lwjgl;
 import im.bci.newtonadv.Game;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
 /**
- * 
+ *
  * @author devnewton
  */
 public class Main {
@@ -88,6 +92,38 @@ public class Main {
                     "Cannot find 'native' library folder, try system libraries",
                     e);
         }
+        fuckNetbeans();
+    }
+
+    public static void fuckNetbeans() {
+        if ("true".equals(System.getProperty("netbeans.fuck", "false"))) {
+            try {
+                File libDir = new File(getApplicationDir() + File.separator
+                        + "lib");
+                if (!libDir.exists()) {
+                    libDir = new File(getApplicationParentDir() + File.separator
+                            + "lib");
+                }
+                File[] jars = libDir.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return name.endsWith(".jar");
+                    }
+                });
+                for (File jar : jars) {
+                    addJarToClassPath(jar);
+                }
+            } catch (Exception e) {
+                Logger.getLogger(Main.class.getName()).log(Level.WARNING,
+                        "Cannot fuck netbeans", e);
+            }
+        }
+    }
+
+    private static void addJarToClassPath(File file) throws Exception {
+        Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
+        method.setAccessible(true);
+        method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{file.toURI().toURL()});
     }
 
     private static String getApplicationDir() throws IOException {
@@ -98,6 +134,10 @@ public class Main {
                     "Cannot find application directory, try current", uriEx);
             return new File(".").getCanonicalPath();
         }
+    }
+
+    private static String getApplicationParentDir() throws IOException {
+        return (new File(getApplicationDir())).getParent();
     }
 
     public static void main(String[] args) throws IOException,
