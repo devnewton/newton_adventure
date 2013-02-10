@@ -32,7 +32,6 @@
 package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.util.AbsoluteAABox;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
