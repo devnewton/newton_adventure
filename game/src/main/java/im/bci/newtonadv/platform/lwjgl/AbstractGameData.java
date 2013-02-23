@@ -1,10 +1,9 @@
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
-import im.bci.newtonadv.platform.interfaces.IGameData;
 
 abstract class AbstractGameData implements IGameData {
 
@@ -24,13 +23,6 @@ abstract class AbstractGameData implements IGameData {
 		return dataDir + "quests/" + questName + "/" + file;
 	}
 
-	@Override
-	public InputStream openLevelTmx(String questName, String levelName)
-			throws Exception {
-				String path = dataDir + "quests/" + questName + "/levels/" + levelName
-						+ "/" + levelName + ".tmx";
-				return openFile(path);
-			}
 	@Override
 	public InputStream openLevelNal(String questName, String levelName) throws Exception {
 		String path = dataDir + "quests/" + questName + "/levels/" + levelName

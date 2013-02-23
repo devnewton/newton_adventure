@@ -39,6 +39,7 @@ import im.bci.newtonadv.util.NewtonColor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -112,17 +113,8 @@ public class TmxLoader {
 
             @Override
             public Map call() throws Exception {
-                InputStream mapInputStream = game.getData().openLevelTmx(questName,
+                return game.getData().openLevelTmx(questName,
                         levelName);
-                if (null == mapInputStream) {
-                    throw new RuntimeException("Cannot find tmx file for quest " + questName + " and level " + levelName);
-                }
-                try {
-                    TMXMapReader mapReader = new TMXMapReader();
-                    return mapReader.readMap(mapInputStream);
-                } finally {
-                    mapInputStream.close();
-                }
             }
         });
     }

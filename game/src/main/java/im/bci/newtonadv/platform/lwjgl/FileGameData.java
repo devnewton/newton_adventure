@@ -29,68 +29,133 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package im.bci.newtonadv.platform.lwjgl;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import tiled.core.Map;
+import tiled.io.TMXMapReader;
 
 /**
- * 
+ *
  * @author devnewton
  */
 class FileGameData extends AbstractGameData {
 
-	public FileGameData(String dataDir) {
-		super(addSeparator(dataDir));
-	}
+    private String version = "normal";
 
-	private static String addSeparator(String dataDir) {
-		File f = new File(dataDir);
-		return f.getAbsolutePath() + "/";
-	}
+    public FileGameData(String dataDir) {
+        super(addSeparator(dataDir));
+        loadVersionInfo();
+    }
 
-	@Override
-	public List<String> listQuests() {
-		return listSubDirectories(dataDir + "quests");
-	}
+    private static String addSeparator(String dataDir) {
+        try {
+            File f = new File(dataDir);
+            return f.getCanonicalPath() + File.separator;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-	@Override
-	public List<String> listQuestLevels(String questName) {
-		return listSubDirectories(dataDir + "quests/" + questName + "/levels");
-	}
+    @Override
+    public List<String> listQuests() {
+        List<String> quests = listSubDirectories(dataDir + "quests", getConfiguredQuestsOrder());
+        if (!isDeluxe()) {
+            quests.remove("bonus");
+        }
+        return quests;
+    }
 
-	@Override
-	public InputStream openFile(String path) throws IOException {
-		File f = new File(path);
-		if (f.exists()) {
-			return new FileInputStream(f);
-		} else {
-			return null;
-		}
-	}
+    @Override
+    public List<String> listQuestLevels(String questName) {
+        return listSubDirectories(dataDir + "quests/" + questName + "/levels", getConfiguredLevelsOrder(questName));
+    }
 
-	private static List<String> listSubDirectories(String path) {
-		File dir = new File(path);
-		ArrayList<String> subdirs = new ArrayList<String>();
-		if (dir.exists()) {
-			for (File f : dir.listFiles()) {
-				if (f.isDirectory()) {
-					subdirs.add(f.getName());
-				}
-			}
-		}
-		return subdirs;
-	}
+    @Override
+    public InputStream openFile(String path) throws IOException {
+        File f = new File(path);
+        if (f.exists()) {
+            return new FileInputStream(f);
+        } else {
+            return null;
+        }
+    }
 
-	@Override
-	public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
-		return Collections.emptyList();
-	}
+    private static List<String> listSubDirectories(String path, List<String> order) {
+        File dir = new File(path);
+        ArrayList<String> subdirs = new ArrayList<String>();
+        if (dir.exists()) {
+            for (File f : dir.listFiles()) {
+                if (f.isDirectory()) {
+                    subdirs.add(f.getName());
+                }
+            }
+        }
+        reorderList(subdirs, order);
+        return subdirs;
+    }
 
+    @Override
+    public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
+        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(dataDir + "quests/" + questName + "/quest.properties");
+        return RuntimeUtils.getPropertyAsList(questsProperties,("locked.by"));
+    }
+
+    @Override
+    public Map openLevelTmx(String questName, String levelName) throws Exception {
+        TMXMapReader mapReader = new TMXMapReader();
+        return mapReader.readMap(dataDir + "quests/" + questName + "/levels/" + levelName + "/" + levelName + ".tmx");
+    }
+
+    private static void reorderList(List<String> list, final List<String> order) {
+        Collections.sort(list, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return Integer.compare(order.indexOf(o1), order.indexOf(o2));
+            }
+        });
+    }
+
+    private List<String> getConfiguredQuestsOrder() {
+        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(dataDir + "quests/quests.properties");
+        return RuntimeUtils.getPropertyAsList(questsProperties,("quests"));
+    }
+
+    private List<String> getConfiguredLevelsOrder(String questName) {
+        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(dataDir + "quests/" + questName + "/quest.properties");
+        return RuntimeUtils.getPropertyAsList(questsProperties,("levels"));
+    }
+
+    private boolean isDeluxe() {
+        return "deluxe".equals(version);
+    }
+
+    private void loadVersionInfo() {
+        try {
+            URL configFilePath = getClass().getClassLoader().getResource(
+                    "version.properties");
+            InputStream f = configFilePath.openStream();
+            try {
+                Properties prop = new Properties();
+                prop.load(f);
+                version = prop.getProperty("newton.adventure.version", version);
+            } finally {
+                f.close();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- /* * Copyright (c) 2009-2010 devnewton <devnewton@bci.im> * All rights 
-	reserved. * * Redistribution and use in source and binary forms, with or 
-	without * modification, are permitted provided that the following conditions 
-	are * met: * * * Redistributions of source code must retain the above copyright 
-	* notice, this list of conditions and the following disclaimer. * * * Redistributions 
-	in binary form must reproduce the above copyright * notice, this list of 
-	conditions and the following disclaimer in the * documentation and/or other 
-	materials provided with the distribution. * * * Neither the name of 'devnewton 
-	<devnewton@bci.im>' nor the names of * its contributors may be used to endorse 
-	or promote products derived * from this software without specific prior written 
-	permission. * * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
-	* TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
-	* PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR * CONTRIBUTORS 
-	BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, * EXEMPLARY, OR 
-	CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, * PROCUREMENT OF SUBSTITUTE 
-	GOODS OR SERVICES; LOSS OF USE, DATA, OR * PROFITS; OR BUSINESS INTERRUPTION) 
-	HOWEVER CAUSED AND ON ANY THEORY OF * LIABILITY, WHETHER IN CONTRACT, STRICT 
-	LIABILITY, OR TORT (INCLUDING * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
-	OUT OF THE USE OF THIS * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
-	SUCH DAMAGE. */ -->
+reserved. * * Redistribution and use in source and binary forms, with or 
+without * modification, are permitted provided that the following conditions 
+are * met: * * * Redistributions of source code must retain the above copyright 
+* notice, this list of conditions and the following disclaimer. * * * Redistributions 
+in binary form must reproduce the above copyright * notice, this list of 
+conditions and the following disclaimer in the * documentation and/or other 
+materials provided with the distribution. * * * Neither the name of 'devnewton 
+<devnewton@bci.im>' nor the names of * its contributors may be used to endorse 
+or promote products derived * from this software without specific prior written 
+permission. * * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
+* TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+* PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR * CONTRIBUTORS 
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, * EXEMPLARY, OR 
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, * PROCUREMENT OF SUBSTITUTE 
+GOODS OR SERVICES; LOSS OF USE, DATA, OR * PROFITS; OR BUSINESS INTERRUPTION) 
+HOWEVER CAUSED AND ON ANY THEORY OF * LIABILITY, WHETHER IN CONTRACT, STRICT 
+LIABILITY, OR TORT (INCLUDING * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
+OUT OF THE USE OF THIS * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
+SUCH DAMAGE. */ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>im.bci.newtonadv</groupId>
     <artifactId>newton_adventure</artifactId>
@@ -30,18 +30,16 @@
     <name>newton_adventure</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--<newton.adventure.version>deluxe</newton.adventure.version>-->
         <newton.adventure.version>normal</newton.adventure.version>
-        <newton.adventure.quests.exclude>%regex[.*(bridge|lab|prison)\/.*]</newton.adventure.quests.exclude>
+        <newton.adventure.quests.exclude.wildcards>**/bridge,**/lab,**/prison,**/bridge/**/*,**/lab/**/*,**/prison/**/*</newton.adventure.quests.exclude.wildcards>
+        <newton.adventure.rpm.quests.exclude>%regex[.*\/(bridge|lab|prison).*]</newton.adventure.rpm.quests.exclude>
+        <newton.adventure.jdeb.quests.exclude>${newton.adventure.quests.exclude.wildcards}</newton.adventure.jdeb.quests.exclude>
+        <newton.adventure.izpack.quests.excludes>${newton.adventure.quests.exclude.wildcards}</newton.adventure.izpack.quests.excludes>
     </properties>
     <build>
         <resources>
-            <resource>
-                <directory>data</directory>
-                <excludes>
-                    <exclude>${newton.adventure.quests.exclude}</exclude>
-                </excludes>
-            </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -323,7 +321,7 @@
                                     <groupname>root</groupname>
                                     <sources>
                                         <source>
-                                            <location>${basedir}/data/icon.png</location>
+                                            <location>${basedir}/src/main/resources/icon.png</location>
                                         </source>
                                     </sources>
                                 </mapping>
@@ -335,7 +333,20 @@
                                         <source>
                                             <location>${basedir}/lib</location>
                                             <excludes>
-                                                <exclude>AppleJavaExtensions.jar,libtiled-android.jar,asm-debug-all.jar</exclude>
+                                                <exclude>AppleJavaExtensions.jar,asm-debug-all.jar</exclude>
+                                            </excludes>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/${project.name}/data</directory>
+                                    <username>root</username>
+                                    <groupname>root</groupname>
+                                    <sources>
+                                        <source>
+                                            <location>${basedir}/data</location>
+                                            <excludes>
+                                                <exclude>${newton.adventure.rpm.quests.exclude}</exclude>
                                             </excludes>
                                         </source>
                                     </sources>
@@ -475,7 +486,7 @@
                                             </mapper>  
                                         </data>
                                         <data>
-                                            <src>${basedir}/data/icon.png</src>
+                                            <src>${basedir}/src/main/resources/icon.png</src>
                                             <type>file</type>
                                             <mapper>
                                                 <type>perm</type>
@@ -485,10 +496,19 @@
                                         <data>
                                             <src>${basedir}/lib</src>
                                             <type>directory</type>
-                                            <excludes>AppleJavaExtensions.jar,libtiled-android.jar,asm-debug-all.jar</excludes>
+                                            <excludes>AppleJavaExtensions.jar,asm-debug-all.jar</excludes>
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/opt/${project.name}/lib</prefix>
+                                            </mapper>                                
+                                        </data>
+                                        <data>
+                                            <src>${basedir}/data</src>
+                                            <type>directory</type>
+                                            <excludes>${newton.adventure.jdeb.quests.exclude}</excludes>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/opt/${project.name}/data</prefix>
                                             </mapper>                                
                                         </data>
                                         <data>

@@ -68,6 +68,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
     @Override
     public void startPreload() {
         try {
+            world = null;
             worldLoader = new TmxLoader(game, questName, levelName);
             worldLoader.preloading();
         } catch (Exception ex) {

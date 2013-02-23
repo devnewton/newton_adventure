@@ -14,7 +14,7 @@ public interface IGameData {
 
     List<String> listQuestLevels(String questName);
 
-    InputStream openLevelTmx(String questName, String levelName) throws Exception;
+    tiled.core.Map openLevelTmx(String questName, String levelName) throws Exception;
 
 	String getLevelFilePath(String questName, String levelName, String filename);
 

@@ -42,7 +42,6 @@ import im.bci.newtonadv.platform.lwjgl.openal.OpenALSoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.score.ScoreServer;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -56,11 +55,10 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.lwjgl.Sys;
 
 /**
- * 
+ *
  * @author devnewton
  */
 public class PlatformSpecific implements IPlatformSpecific {
@@ -133,12 +131,8 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     private IGameData createGameData() {
         if (data == null) {
-            String dataDir = config.getProperty("data.dir");
-            if (null != dataDir) {
-                data = new FileGameData(dataDir);
-            } else {
-                data = new EmbeddedGameData();
-            }
+            String dataDir = config.getProperty("data.dir", getDefaultDataDir());
+            data = new FileGameData(dataDir);
         }
         return data;
     }
@@ -193,7 +187,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     public static String getUserScoreFilePath() {
         return getUserScoreDirPath() + File.separator + "scores";
     }
-    
+
     public static String getUserProgressionFilePath() {
         return getUserScoreDirPath() + File.separator + "progression";
     }
@@ -298,8 +292,8 @@ public class PlatformSpecific implements IPlatformSpecific {
                 try {
                     ObjectInputStream is = new ObjectInputStream(fs);
                     Object o = is.readObject();
-                    if(o instanceof GameScore) {
-                        return (GameScore)o;
+                    if (o instanceof GameScore) {
+                        return (GameScore) o;
                     }
                 } finally {
                     fs.close();
@@ -341,8 +335,8 @@ public class PlatformSpecific implements IPlatformSpecific {
                 try {
                     ObjectInputStream is = new ObjectInputStream(fs);
                     Object o = is.readObject();
-                    if(o instanceof GameProgression) {
-                        return (GameProgression)o;
+                    if (o instanceof GameProgression) {
+                        return (GameProgression) o;
                     }
                 } finally {
                     fs.close();
@@ -373,5 +367,21 @@ public class PlatformSpecific implements IPlatformSpecific {
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
         }
+    }
+
+    private String getDefaultDataDir() {
+        try {
+            File d = new File(RuntimeUtils.getApplicationDir() + File.separator + "data");
+            if (d.exists()) {
+                return d.getCanonicalPath();
+            }
+            d = new File(RuntimeUtils.getApplicationParentDir() + File.separator + "data");
+            if (d.exists()) {
+                return d.getCanonicalPath();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, "Cannot get default data dir", ex);
+        }
+        return null;
     }
 }

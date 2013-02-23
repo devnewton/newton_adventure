@@ -78,7 +78,7 @@ public class Main {
             return;
         }
         try {
-            File nativeDir = new File(getApplicationDir() + File.separator
+            File nativeDir = new File(RuntimeUtils.getApplicationDir() + File.separator
                     + "native" + File.separator + osDir);
             if (!nativeDir.exists()) {
                 nativeDir = new File("native" + File.separator + osDir);
@@ -98,10 +98,10 @@ public class Main {
     public static void fuckNetbeans() {
         if ("true".equals(System.getProperty("netbeans.fuck", "false"))) {
             try {
-                File libDir = new File(getApplicationDir() + File.separator
+                File libDir = new File(RuntimeUtils.getApplicationDir() + File.separator
                         + "lib");
                 if (!libDir.exists()) {
-                    libDir = new File(getApplicationParentDir() + File.separator
+                    libDir = new File(RuntimeUtils.getApplicationParentDir() + File.separator
                             + "lib");
                 }
                 File[] jars = libDir.listFiles(new FilenameFilter() {
@@ -124,20 +124,6 @@ public class Main {
         Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
         method.setAccessible(true);
         method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{file.toURI().toURL()});
-    }
-
-    private static String getApplicationDir() throws IOException {
-        try {
-            return new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
-        } catch (URISyntaxException uriEx) {
-            Logger.getLogger(Main.class.getName()).log(Level.WARNING,
-                    "Cannot find application directory, try current", uriEx);
-            return new File(".").getCanonicalPath();
-        }
-    }
-
-    private static String getApplicationParentDir() throws IOException {
-        return (new File(getApplicationDir())).getParent();
     }
 
     public static void main(String[] args) throws IOException,
