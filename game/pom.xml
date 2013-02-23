@@ -204,7 +204,7 @@ SUCH DAMAGE. */ -->
         <dependency>
             <groupId>tiled</groupId>
             <artifactId>libtiled</artifactId>
-            <version>0.8.0</version>
+            <version>0.9.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/libtiled.jar</systemPath>
         </dependency>
