@@ -35,8 +35,8 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 import im.bci.nanim.NanimParser.Nanim;
 import im.bci.nanim.NanimParser.PixelFormat;
 import im.bci.newtonadv.platform.interfaces.IGameData;
-import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.platform.interfaces.ITexture;
+import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -191,7 +191,6 @@ public class TextureCache implements ITextureCache {
     
     private Texture convertImageToTexture(BufferedImage bufferedImage,
             boolean usePowerOfTwoTexture) {
-        ByteBuffer imageBuffer = null;
         WritableRaster raster;
         BufferedImage texImage;
         
@@ -216,7 +215,7 @@ public class TextureCache implements ITextureCache {
 
         // create a raster that can be used by OpenGL as a source
         // for a texture
-        if (bufferedImage.getColorModel().hasAlpha() && hasUsefullAlphaChannel(bufferedImage)) {
+        if (bufferedImage.getColorModel().hasAlpha()) {
             raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
                     texWidth, texHeight, 4, null);
             texImage = new BufferedImage(glAlphaColorModel, raster, false,
@@ -236,11 +235,11 @@ public class TextureCache implements ITextureCache {
 
         // build a byte buffer from the temporary image
         // that be used by OpenGL to produce a texture.
-        byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData();
+        byte[] bytes = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData();
         
-        imageBuffer = ByteBuffer.allocateDirect(data.length);
+        ByteBuffer imageBuffer = ByteBuffer.allocateDirect(bytes.length);
         imageBuffer.order(ByteOrder.nativeOrder());
-        imageBuffer.put(data, 0, data.length);
+        imageBuffer.put(bytes, 0, bytes.length);
         imageBuffer.flip();
         
         Texture texture = new Texture(texWidth, texHeight, texImage.getColorModel().hasAlpha());
@@ -254,21 +253,6 @@ public class TextureCache implements ITextureCache {
         GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, pixelFormat, texWidth,
                 texHeight, 0, pixelFormat, GL11.GL_UNSIGNED_BYTE, imageBuffer);
         return texture;
-    }
-    
-    private static boolean hasUsefullAlphaChannel(BufferedImage image) {
-        int w = image.getWidth();
-        int h = image.getHeight();
-        for (int y = 0; y < h; ++y) {
-            for (int x = 0; x < w; ++x) {
-                int rgba = image.getRGB(x, y);
-                byte a = (byte) ((rgba >> 24) & 0xff);
-                if (a != -1) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
     
     private Texture convertNImageToTexture(im.bci.nanim.NanimParser.Image nimage) {
