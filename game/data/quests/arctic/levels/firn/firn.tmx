@@ -6,14 +6,10 @@
   <property name="newton_adventure.mummy" value="toad.gif"/>
  </properties>
  <tileset firstgid="1" source="../../arctic.tsx"/>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="64" height="64">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAO2X20rFMBBFg3fQFy8g6oOC1///QnvAwiE07aTumaRlLdhwHjqZrKHJoSkBAAAA
-2HgsJKpmqU5Jqf9Vlrm9KmvGuiiien1XPBvtfxLYz0LUGWhx3qxE+Uf1qiXK/yzr9RXQ10KU/0Wy
-3dNjLgtR1qTstxejfw2fE/lZWWfZnyc9nvtj9up/+pclevW37v+/9OofxR7887t96h4sxfv7KF9n
-zX4sNWpUaz4NuROtFYnS/yNtbwZK/5e0vRmo/WtncC3qvxYP/17eg3PDM17+njO4HfJamblvJgVT
-/h4zOLi/F3rV5Fm4pwMlf+UMVO7R/ooZKN1b+C/N4GZmbbV7K/8174GHe0v/0gymvoG93Fv7jzNY
-+s/ycu/Bv3Xwx1/Jw5C3DeW+wg0AAAAAAAAAAAAAAPbJLxBvgJ0AQAAA
+   H4sIAAAAAAAAAO2X0UrEMBBFg7oq6MuqIOqDgrsq/v8H2gULEpp2Uu9M2nIOXFiWnUzO0HRJSgAAAAA2HguJqpmqU1Lqf51lbK/Kmr4uiqhenxW/jfY/C+xnIeoMtDhvVqL8o3rVEuV/kfX6COhrIcr/Mtne032uClHWpOyzF71/DceBfM2ss+zPkyWe+79s1f/8N1Ms1d+6//+yVP8otuCfv9uH3oOleN+P8nXm7MdSo0a15lOXO9FakSj9D2l9M1D6v6T1zUDtXzuDG1H/uXj4Rz8H34Xvd4ZaL3/PGey7vFZm7M6kYMjfYwYn9/dCr5o8C/d0ouSvnIHKPdpfMQOlewv/qRncjqytdm/lP+c58HBv6V+awdAd2Mu9tX8/g6n/LC/3Jfi3Dv74K3no8rai3Fe4AQAAAAAAAAAAAADANvkBI2ro0wBAAAA=
   </data>
  </layer>
 </map>

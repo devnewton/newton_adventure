@@ -6,19 +6,10 @@
   <property name="newton_adventure.mummy" value="toad.gif"/>
  </properties>
  <tileset firstgid="1" source="../../arctic.tsx"/>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="64" height="64">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAO2bfU8DIQzGiW/xXadLzPSPberU7/8JvcY1YqVQOAp3WZ+k0c2j5ffA4DjVOZPJ
-ZDKZTCaTyQRaDLEujKeOUUurIV4y43WIx4p9yFVP/t7soF78U2AH9eAPse/2X2NryEOg5nXgvVCO
-UFtQa/7YuEO/3/bXbEhsh3h3PAfNQetybVvyS9nhmrshPvc/g++XTubByv33b+t4D1rx++w70o6y
-c5J4AH14HuLcC2xHPTh1bfhzxj2llAfIz7WD/rTc/2uyo2IecPx+O79/3LUlovwa7KiQB5gzxkQ9
-0OLXZEf5HqwTOY+Zfmrwt2BH+ePp58R7AJwbLfiXrh77ceI1rbtxf9nxHiDEp8UP4tbTC/e7N0vG
-neaRrtP0HipUqwc/1oV6t5Vr0hopj7X5LyN1a9crqdGbX2v87900+GN1JWeYUkn2fxDcf2vyh9Zq
-XP9iZ7GQjoTXpdZ8X5r8wMixceeQkHLWf59dsr9o88fYpB5I9/9cdpA2f4otZx7EVMK+cHrnH5C/
-tnJssE7DfB7jgYSdPhsLPRvS5NeaB6XjHnoups3vs90Ers/1oCZ7K35k49ZwqQe15nwP/rGfhdrj
-3oM/14OdFxrsPfglHmzcD+MX8z5V7pzvzT92348ph70nv4YHuey9+Wt6UMI+Bf4SDz7I61L2qfBL
-PIj9XriUfUr8qb6MyWv8xj8XfrzfQ+HrQ+HXyGv88+E/Y8L4D4NfI6/xz5P/qlLeufLXyjsXfjwD
-nZCcY853c+JHD2qe7+bG3zqMv65Cf2M51dD6HwR8Vj31KGH/BhGqEWQAQAAA
+   H4sIAAAAAAAAAO2b2U7EMAxFIzax7xICHhiWAR4Q//951GIsgrFTJ42TVvhKFsyQ2jk3maQpEILL5XK5XC6Xy+UCXQzxUBg3HaOWboe4z4ynIa4q9iFXPfl7s4N68WvYPyv2TVIPfo59vfmaWkMumZrHzHtcDu5aUGv+1LhDv583bVYkHod4CTIHzUHrSte25NeyQ5uzId42P4Pvr4POg9vw17/HIHvQij9mX5PrKLskjQfQh7sh9qPA66gHu6ENf864j2nMA+SXroP+tNz/a7KjUh5I/PF1cf+ktiWi/BbsKM4DzJlioh5Y8Vuyo2IPHpicH1HbbaGfFvwt2FHxeMY58R4A50YL/utQj3175DWtuwq/2fEegOOz4gdJ6+lB+NmbNeNO82jXaXoPxdXqwY91od5p5Zq0xpjH1vyHibq165XU6M1vNf7nYR78qbqaM0ypNPs/CO6/Lfm5tRrXv9RZjNOWst3Ymh/Lkh8YJTbpHMIpZ/2P2TX7izV/ik3rgXb/z2UHWfOPseXMg5RK2C+C3fkHFK+tEhus0zCfp3igYafPxrhnQ5b8VvOgdNy552LW/DHbCdM+14Oa7K34kU1aw7Ue1JrzPfinfhZqj3sP/lwP1lFYsPfg13iwCt+M78L7VLlzvjf/1H0/pRz2nvwWHuSy9+av6UEJ+xz4Szx4Ja9L2efCr/Eg9XvhUvY58Y/1ZUpe53f+pfDj/R4KX/8Xfou8zr8c/j0hnP9/8Fvkdf5l8h9VyrtU/lp5l8KPZ6AdknPK+W5J/OhBzfPd0vhbh/PXFfc3lnMNq/+/wGfVc48S9i+UT9b4AEAAAA==
   </data>
  </layer>
 </map>

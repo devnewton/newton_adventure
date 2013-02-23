@@ -252,4 +252,19 @@
    <property name="newton_adventure.type" value="help_sign"/>
   </properties>
  </tile>
+  <tile id="41">
+  <image source="snowman_41.png"/>
+ </tile>
+   <tile id="42">
+  <image source="snowman_42.png"/>
+ </tile>
+   <tile id="43">
+  <image source="snowman_43.png"/>
+ </tile>
+   <tile id="44">
+  <image source="snowman_44.png"/>
+ </tile>
+   <tile id="45">
+  <image source="snowman_45.png"/>
+ </tile>
 </tileset>

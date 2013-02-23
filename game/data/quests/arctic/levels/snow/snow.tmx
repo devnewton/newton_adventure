@@ -5,12 +5,10 @@
   <property name="newton_adventure.background" value="arctic_background.png"/>
  </properties>
  <tileset firstgid="1" source="../../arctic.tsx"/>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="24" height="24">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAM2VyQrDMAxERddzF+iSJm3aXPr/P1jpYBiCJUsJDh14kIP1NPYlRETXSkhapgny
-Zl4KPZzrwJ+b6SnvPpGeM8wlvzaDZ0vuHXzfRv57oU+6j+XewA7Lv1UcF6ND2pFi+UseTyLvgzu9
-u6N+ydrpnuJfon8k/9jf+/4H5hP0e/ujO9p/FXRH/bnuX8Md8cv80yDn9vq1bh5K/jlu9A/MkdkD
-c93j/9fgfNOp/hos4Zc8KiH5AdoDoGAACQAA
+   H4sIAAAAAAAAAM2VyQrDMAxERddzF+iSJm3aXPr/P1jpYBiCJUsJDh14kIP1NPYlRETXSkhapgnyZl4KPZzrwJ+b6SnvPpGeM8wlvzaDZ0vuHXzfRv57oU+6j+XewA7Lv1UcF6ND2pFi+UseTyLvgzu9u6N+ydrpnuJfon8k/9jf+/4H5hP0e/ujO9p/FXRH/bnuX8Md8cv80yDn9vq1bh5K/jlu9A/MkdkDc93j/9fgfNOp/hos4Zc8KiH5AdoDoGAACQAA
   </data>
  </layer>
 </map>
