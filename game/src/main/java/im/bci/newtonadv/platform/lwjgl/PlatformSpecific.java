@@ -131,7 +131,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     private IGameData createGameData() {
         if (data == null) {
-            String dataDir = config.getProperty("data.dir", getDefaultDataDir());
+            String dataDir = System.getProperty("newton_adventure.data.dir", getDefaultDataDir());
             data = new FileGameData(dataDir);
         }
         return data;

@@ -1,16 +1,5 @@
 package im.bci.newtonadv.platform.lwjgl.twl;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Controller;
-import org.lwjgl.input.Controllers;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-
 import de.matthiasmann.twl.ComboBox;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
@@ -28,9 +17,17 @@ import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.JoyButtonItem;
 import im.bci.newtonadv.score.ScoreServer;
-
 import java.lang.reflect.Field;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Controller;
+import org.lwjgl.input.Controllers;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 
 public class OptionsSequence implements IOptionsSequence {
 
@@ -60,8 +57,7 @@ public class OptionsSequence implements IOptionsSequence {
 		LWJGLRenderer renderer;
 		try {
 			renderer = new LWJGLRenderer();
-			optionsGui = new OptionsGUI(view, input, scoreServer, soundCache,
-					config.getProperty("data.dir"));
+			optionsGui = new OptionsGUI(view, input, scoreServer, soundCache);
 			gui = new GUI(optionsGui, renderer);
 			ThemeManager themeManager = ThemeManager.createThemeManager(
 					getClass().getClassLoader().getResource("twl/theme.xml"),
@@ -267,12 +263,6 @@ public class OptionsSequence implements IOptionsSequence {
                 config.setProperty("scoreserver.share", "" + scoreServer.isScoreShareEnabled());
 		config.setProperty("sound.enabled", "" + soundCache.isSoundEnabled());
 		config.setProperty("music.enabled", "" + soundCache.isMusicEnabled());
-
-		if (optionsGui.dataDir.getText().isEmpty()) {
-			config.remove("data.dir");
-		} else {
-			config.setProperty("data.dir", optionsGui.dataDir.getText());
-		}
 	}
 
 	private String getJoypadAxisName(int joypadXAxis) {
