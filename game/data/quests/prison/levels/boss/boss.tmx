@@ -6,10 +6,10 @@
   <property name="newton_adventure.music" value="Lava_City.ogg"/>
  </properties>
  <tileset firstgid="1" source="../../prison.tsx"/>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="24" height="16">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAGNgGB5ABogZycDEAmlqOnbU/FHzCQBVGptPKqCX+Uw0Mp/W5cNQBQBSlhSBAAYA
-AA==
+   H4sIAAAAAAAAAGNgGB5ABogZqYRlsJgvTUW3YjNr1PxR85GBKo3NxwcG0nwmMs1kJWA+rcuHoQoARIgEiwAGAAA=
   </data>
  </layer>
 </map>
