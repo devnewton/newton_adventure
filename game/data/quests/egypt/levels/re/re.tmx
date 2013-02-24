@@ -6,15 +6,10 @@
   <property name="newton_adventure.music" value="caravan.ogg"/>
  </properties>
  <tileset firstgid="1" source="../../egypt.tsx"/>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="63" height="31">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAN2YC27CMAyGHSYBm3aAMaB0sMH9b7hGJJJXJWnqx+rmkyxV5OWfJq5jBwBnhh1h
-vbjBDhX99iOLfBLX/SaOk6Rjjqdqd8x1JeD6MKX9CnbPirb2C6TPigW89rfw/IIsRa79BPn3+SXj
-pgpYO5dX+Ps/eLsJza2BpPa14YJ1UD77bmRU3hljpanREfXGeBXHlGLDGpjSnnrPUntgaXK+byvH
-+/zsPtjPYI/wm98Lu2CW4WrHjGN8LqfZEueXRlL7FB/wzIWsaL9W9sNxjeM3Nf/X4FLZr0XtPWFM
-K9pxvp36XkufS6/dSvzv0fN/aPfUxhhtpu5ZGtp7hTkpLHHPqo2v2lByUu6evRHXlYbiQy/txEJQ
-tFvZs1zmat+A7TrUHGq143uK5TrUHEpxq1SDbIFW9i+FVvYvhdR5t5Jva4PPtK8/+doTrkHl6i9d
-oQ3Xse5hHofa4/PS/ALy4I6thB4AAA==
+   H4sIAAAAAAAAAM1Z23ICMQglvVk7fe99XbXV///DylRmEMmNkGzPDKPuJiEHSEIwAMBXg3yAPz4H6Q0neSto9yiE8G7U+32Sw0l+znJgcizoL+1jscVk6MNh5R4a9UpfoGjxkrJJ6xxy3HfKfHqtlRhiNunNfQP6WknhQYgXbpmEszwp73J9ObhdpT+3hjk+MD2juLdiDdfxtc/00fSP8PsU0T0S2pob6XcUskNqjlyseBa/J7heQ7Xc+VkVlO/0qXHPgdrRfiXHakFQxijlXusD3j7na2ov23jFAI2lcU+t91ada0jPvXSd8fyM8jHksjpLCXaF7bzgxZ2jNA+Xfk2dg54xRujBPYdX+MuFJHd+DvbaUzmIe2m88X2txS6xPLBm31wJsQC5bwrb/ifuHrGBPp8N/Zbkrp23Fhugz/k+o+n3XvfIXYtTr1yBBM8fqgsc4do+M1z6fQR3hLbHeHCvwRby96we3Gfl2WjuGPO5e1YvvUsDfW7ZJ1vzsD345ysc/G4WG39j1D0b5xSDpx20MbRns1Ffr5iV92k6D+4r+iPkPUirUcxQz/0GbHWoWtTmL5wfcr6Dy31ajrFXnsXA7ylL7I85G2CscO65elcun0/VIJdArq5UU3vD9iPi1wup/1FqueNYS8SvFS1+j9WeJKz3QiteCtvxucp7bI47jxlqz9c0z/+pBhWrv0yJd7yOxe8S9D6IceQ8+H9Gk/LOQ3D8X06h8cWEHgAA
   </data>
  </layer>
 </map>
