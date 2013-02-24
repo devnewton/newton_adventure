@@ -11,11 +11,9 @@ import im.bci.newtonadv.Game;
  * @author bob
  */
 class HelpSequence extends StoryboardSequence {
-    
-    private boolean cheatUnlockAll = false;
 
     public HelpSequence(Game game, String file, Object object, AbstractTransitionException transition) {
-        super(game, file, file, transition);
+        super(game, file, null, transition);
     }
 
     @Override
