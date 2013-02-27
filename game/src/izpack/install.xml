@@ -19,6 +19,7 @@
 
     <variables>
         <variable name="newton_adventure_build_final_name" value="@{project.build.finalName}"/>
+	<variable name="ShowCreateDirectoryMessage" value="false"/>
     </variables>
 
     <resources>

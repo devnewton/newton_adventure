@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<installation version="1.0">
+    <info>
+        <appname>@{project.name}</appname>
+        <appversion>@{project.version}</appversion>
+        <authors>
+            <author name="devnewton" email="devnewton@bci.Im" />
+        </authors>
+        <url>http://devnewton.bci.im</url>
+        <javaversion>1.6</javaversion>
+        <requiresjdk>no</requiresjdk>
+    </info>
+ 
+    <guiprefs width="640" height="480" resizable="yes" />
+ 
+    <locale>
+        <langpack iso3="eng" />
+    </locale>
+    
+    <variables>
+	<variable name="TargetPanel.dir.unix" value="$USER_HOME/.config/newton_adventure/mods/deluxe"/>
+	<variable name="ShowCreateDirectoryMessage" value="false"/>
+    </variables>
+ 
+    <panels>
+        <panel classname="HelloPanel" />
+        <panel classname="TargetPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="SimpleFinishPanel" />
+    </panels>
+ 
+    <packs>
+        <pack name="Core" required="yes">
+            <description>Core installation files</description>
+	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH" override="true"/>
+	    <fileset dir="../../data" targetdir="$INSTALL_PATH" override="true"/>
+        </pack>
+    </packs> 
+</installation>
+
