@@ -6,12 +6,10 @@
   <property name="newton_adventure.rotate_gravity_possible" value="false"/>
  </properties>
  <tileset firstgid="1" source="../../bonus.tsx"/>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="48" height="24">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAO2Y3QqAIAyFR6/RRT/2/s9YFw7sMGrYdBP6YJSmdRxHDTciSldsV+zFlevwym3K
-Oqwvn7UmQXnJMQqYo19/X0b3D+o/coxCjzWiJW/61xxRqc1/lHliqd9jPLvhuzzGg+uPhNYrHvo1
-+cc1dYVg5oc+rbDcv+b3JuZY7l8e+i33rwj5l9D6yUO/dv5qiOCfherncIT8H1Q/h6P6X4uXf75+
-l/0WwT8TlDWaJP29/uXw7IPvE93PUaRzFalNgv6tOQFyqkHoABIAAA==
+   H4sIAAAAAAAAANVY0Q6DIAxs9rCf8EEF//8b5wNNbt2JRbCZlzRMKHCUo2SsIpJ3W3dLUGqdLdUH62w965dNOxsnmTIbHzSsR8zFngBdB+IJ/JWj7gFri8BGzAPlqDpnbRHYYL5Z2vkz/bfEoRct/NHvXYzp51+BvN+lTvNUDUuxaFgNI29FT/xbzwlqxaNPz9ie+NfGt3PU5rzKn8VdkYqNAluPcmV5ciEm4H8Gln+OeHn2s8a/FZ5+3vjbnLoIj9lE+ozmj3l09P01nbu4cZV/T8wi+OO+jr6/7uJ/pAkWfwavnu7ijznU6sd7fj2I0r+uh91fuL5WROgH7zIW/568F6EfhPf+8mIkfw80//TOq/sbxb92fl/m28OJ8Z8PyrM2D+z/30R+Z/l+R2HvKswnm/5Jft8/7Hz6vVQsC39X+QBoYbGaABIAAA==
   </data>
  </layer>
 </map>
