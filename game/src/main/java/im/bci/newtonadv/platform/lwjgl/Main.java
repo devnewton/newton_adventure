@@ -151,6 +151,8 @@ public class Main {
                     } catch (RestartGameException e) {
                         game = new Game(platform);
                         game.start();
+                        game.tick();
+                        platform.saveConfig();//only save config if everything seems ok
                     }
                 }
             } catch (GameCloseException e) {

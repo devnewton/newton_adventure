@@ -433,7 +433,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     @Override
-    public void loadMod(String modName) throws RestartGameException {
+    public void loadModIfNeeded(String modName) throws RestartGameException {
         IMod mod = findModByName(modName);
         IMod currentMod = getCurrentMod();
         String modPath = null != mod ? mod.getPath() : getDefaultDataDir();

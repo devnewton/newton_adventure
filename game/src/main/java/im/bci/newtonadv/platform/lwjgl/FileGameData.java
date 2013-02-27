@@ -71,16 +71,13 @@ class FileGameData extends AbstractGameData {
 
     @Override
     public List<String> listQuests() {
-        List<String> quests = listSubDirectories(dataDir + "quests", getConfiguredQuestsOrder());
-        if (!isDeluxe()) {
-            quests.remove("bonus");
-        }
+        List<String> quests = listSubDirectories(dataDir + "quests", getConfiguredQuests());
         return quests;
     }
 
     @Override
     public List<String> listQuestLevels(String questName) {
-        return listSubDirectories(dataDir + "quests/" + questName + "/levels", getConfiguredLevelsOrder(questName));
+        return listSubDirectories(dataDir + "quests/" + questName + "/levels", getConfiguredLevels(questName));
     }
 
     @Override
@@ -103,6 +100,7 @@ class FileGameData extends AbstractGameData {
                 }
             }
         }
+        subdirs.retainAll(order);
         reorderList(subdirs, order);
         return subdirs;
     }
@@ -128,12 +126,12 @@ class FileGameData extends AbstractGameData {
         });
     }
 
-    private List<String> getConfiguredQuestsOrder() {
+    private List<String> getConfiguredQuests() {
         Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(dataDir + "quests/quests.properties");
         return RuntimeUtils.getPropertyAsList(questsProperties,("quests"));
     }
 
-    private List<String> getConfiguredLevelsOrder(String questName) {
+    private List<String> getConfiguredLevels(String questName) {
         Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(dataDir + "quests/" + questName + "/quest.properties");
         return RuntimeUtils.getPropertyAsList(questsProperties,("levels"));
     }

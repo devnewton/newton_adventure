@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2013 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,50 +29,12 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.platform.interfaces;
-
-import im.bci.newtonadv.GameProgression;
-import im.bci.newtonadv.game.RestartGameException;
-import im.bci.newtonadv.score.GameScore;
-import im.bci.newtonadv.score.ScoreServer;
-import java.util.List;
-import java.util.Properties;
+package im.bci.newtonadv.game;
 
 /**
  *
  * @author devnewton
  */
-public interface IPlatformSpecific {
+public class RestartGameException extends Exception {
 
-    Properties getConfig();
-
-    void saveConfig();
-
-    IGameInput getGameInput();
-
-    IGameView getGameView();
-
-    ISoundCache getSoundCache();
-
-    IGameData getGameData();
-
-    IOptionsSequence getOptionsSequence();
-
-    ScoreServer getScoreServer();
-
-    void openUrl(String string);
-
-    GameScore loadScore();
-
-    void saveScore(GameScore score);
-
-    GameProgression loadProgression();
-
-    void saveProgression(GameProgression progression);
-    
-    List<IMod> listMods();
-
-    void loadModIfNeeded(String selectedModName) throws RestartGameException;
-
-    public IMod getCurrentMod();
 }

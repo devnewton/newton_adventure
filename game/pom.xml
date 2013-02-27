@@ -31,6 +31,10 @@ SUCH DAMAGE. */ -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <newton.adventure.quests.exclude.wildcards>**/bridge,**/lab,**/prison,**/bridge/**/*,**/lab/**/*,**/prison/**/*</newton.adventure.quests.exclude.wildcards>
+        <newton.adventure.rpm.quests.exclude>%regex[.*\/(bridge|lab|prison).*]</newton.adventure.rpm.quests.exclude>
+        <newton.adventure.jdeb.quests.exclude>${newton.adventure.quests.exclude.wildcards}</newton.adventure.jdeb.quests.exclude>
+        <newton.adventure.izpack.quests.excludes>${newton.adventure.quests.exclude.wildcards}</newton.adventure.izpack.quests.excludes>
     </properties>
     <build>
         <resources>
@@ -232,38 +236,6 @@ SUCH DAMAGE. */ -->
         </dependency>
     </dependencies>
     <profiles>
-        <profile>
-            <id>normal-version</id>
-            <properties>
-                <!--<newton.adventure.version>deluxe</newton.adventure.version>-->
-                <newton.adventure.version>normal</newton.adventure.version>
-                <newton.adventure.quests.exclude.wildcards>**/bridge,**/lab,**/prison,**/bridge/**/*,**/lab/**/*,**/prison/**/*</newton.adventure.quests.exclude.wildcards>
-                <newton.adventure.rpm.quests.exclude>%regex[.*\/(bridge|lab|prison).*]</newton.adventure.rpm.quests.exclude>
-                <newton.adventure.jdeb.quests.exclude>${newton.adventure.quests.exclude.wildcards}</newton.adventure.jdeb.quests.exclude>
-                <newton.adventure.izpack.quests.excludes>${newton.adventure.quests.exclude.wildcards}</newton.adventure.izpack.quests.excludes>
-            </properties>
-            <activation>
-                <property>
-                    <name>!newton.adventure.version</name>
-                </property>
-            </activation>
-        </profile>
-        <profile>
-            <id>deluxe-version</id>
-            <properties>
-                <newton.adventure.version>deluxe</newton.adventure.version>
-                <newton.adventure.quests.exclude.wildcards></newton.adventure.quests.exclude.wildcards>
-                <newton.adventure.rpm.quests.exclude></newton.adventure.rpm.quests.exclude>
-                <newton.adventure.jdeb.quests.exclude></newton.adventure.jdeb.quests.exclude>
-                <newton.adventure.izpack.quests.excludes></newton.adventure.izpack.quests.excludes>
-            </properties>
-            <activation>
-                <property>
-                    <name>newton.adventure.version</name>
-                    <value>deluxe</value>
-                </property>
-            </activation>
-        </profile>
         <profile>
             <id>win</id>
             <build>

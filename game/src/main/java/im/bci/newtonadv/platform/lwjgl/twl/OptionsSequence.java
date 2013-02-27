@@ -119,7 +119,6 @@ public class OptionsSequence implements IOptionsSequence {
 	}
 
 	private void applyOptions() throws LWJGLException, RestartGameException {
-                platform.loadMod(optionsGui.getSelectedModName());
                 view.setRotateViewWithGravity(optionsGui.rotateViewWithGravity.isActive());
 		view.setDisplayMode(optionsGui.fullscreen.isActive(),
 				getSelectedQuality(), getSelectedMode());
@@ -368,6 +367,7 @@ public class OptionsSequence implements IOptionsSequence {
 						"cannot apply options", e);
 			}
 			updateConfig();
+                        platform.loadModIfNeeded(optionsGui.getSelectedModName());
 			platform.saveConfig();
 			throw new Sequence.NormalTransitionException(nextSequence);
 		}

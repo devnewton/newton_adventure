@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2013 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,50 +29,59 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.platform.interfaces;
+package im.bci.newtonadv.platform.lwjgl;
 
-import im.bci.newtonadv.GameProgression;
-import im.bci.newtonadv.game.RestartGameException;
-import im.bci.newtonadv.score.GameScore;
-import im.bci.newtonadv.score.ScoreServer;
-import java.util.List;
-import java.util.Properties;
+import im.bci.newtonadv.platform.interfaces.IMod;
 
 /**
  *
  * @author devnewton
  */
-public interface IPlatformSpecific {
+public class Mod implements IMod {
+    private String name, path;
 
-    Properties getConfig();
+    @Override
+    public String getName() {
+        return name;
+    }
 
-    void saveConfig();
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    IGameInput getGameInput();
+    @Override
+    public String getPath() {
+        return path;
+    }
 
-    IGameView getGameView();
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-    ISoundCache getSoundCache();
+    @Override
+    public String toString() {
+        return name;
+    }
 
-    IGameData getGameData();
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 83 * hash + (this.path != null ? this.path.hashCode() : 0);
+        return hash;
+    }
 
-    IOptionsSequence getOptionsSequence();
-
-    ScoreServer getScoreServer();
-
-    void openUrl(String string);
-
-    GameScore loadScore();
-
-    void saveScore(GameScore score);
-
-    GameProgression loadProgression();
-
-    void saveProgression(GameProgression progression);
-    
-    List<IMod> listMods();
-
-    void loadModIfNeeded(String selectedModName) throws RestartGameException;
-
-    public IMod getCurrentMod();
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Mod other = (Mod) obj;
+        if ((this.path == null) ? (other.path != null) : !this.path.equals(other.path)) {
+            return false;
+        }
+        return true;
+    }
 }
