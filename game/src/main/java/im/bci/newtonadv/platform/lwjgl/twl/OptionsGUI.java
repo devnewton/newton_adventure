@@ -1,3 +1,34 @@
+/*
+ * Copyright (c) 2013 devnewton <devnewton@bci.im>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'devnewton <devnewton@bci.im>' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package im.bci.newtonadv.platform.lwjgl.twl;
 
 import de.matthiasmann.twl.Button;
@@ -9,6 +40,8 @@ import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.EnumListModel;
 import de.matthiasmann.twl.model.SimpleChangableListModel;
+import im.bci.newtonadv.platform.interfaces.IMod;
+import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
@@ -51,14 +84,16 @@ public class OptionsGUI extends Widget {
     ComboBox<ControllerItem> joypad;
     ComboBox<String> joypadXAxis;
     ComboBox<String> joypadYAxis;
+    ComboBox<IMod> mod;
     private final ColumnLayout layout;
     private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
     private SimpleChangableListModel<ControllerItem> controllerModel = buildControllerListModel();
+    private SimpleChangableListModel<IMod> modModel = new SimpleChangableListModel<IMod>();
     private SimpleChangableListModel<String> joyAxisModel = new SimpleChangableListModel<String>();
     private SimpleChangableListModel<JoyButtonItem> joyButtonModel = new SimpleChangableListModel<JoyButtonItem>();
 
     OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
-            ISoundCache soundCache) throws LWJGLException {
+            ISoundCache soundCache, IPlatformSpecific platform) throws LWJGLException {
         setSize(Display.getWidth(), Display.getHeight());
         this.layout = new ColumnLayout();
         layout.setSize(Display.getWidth(), Display.getHeight());
@@ -172,6 +207,19 @@ public class OptionsGUI extends Widget {
         layout.addRow("label", "widget").addWithLabel("Player password",
                 scoreSecret);
 
+        modModel.addElement(new NullMod());
+        modModel.addElements(platform.listMods());
+        mod = new ComboBox<IMod>(modModel);
+        mod.setNoSelectionIsError(false);
+        if(null != platform.getCurrentMod()) {
+            mod.setSelected(modModel.findElement(platform.getCurrentMod()));
+        } else {
+            mod.setSelected(0);
+        }
+        mod.setTooltipContent("Restart game to play mod");
+        layout.addRow("label", "widget", "play").addWithLabel("Mods",
+                mod);
+
         Button ok = new Button("OK");
         Button cancel = new Button("Cancel");
         Row okCancelRow = layout.addRow("Parameter", "Value");
@@ -245,6 +293,14 @@ public class OptionsGUI extends Widget {
         keyJump.joyButton.setSelected(1);
         keyRotateCounterClockwise.joyButton.setSelected(2);
         keyRotateClockwise.joyButton.setSelected(3);
+    }
+
+    String getSelectedModName() {
+        if (mod.getSelected() >= 0) {
+            return mod.getModel().getEntry(mod.getSelected()).getName();
+        } else {
+            return "";
+        }
     }
 
     public static class ControllerItem {
@@ -353,6 +409,24 @@ public class OptionsGUI extends Widget {
     protected void layout() {
         layout.setPosition((getWidth() - layout.getPreferredWidth()) / 2,
                 (getHeight() - layout.getPreferredHeight()) / 2);
+    }
+
+    private static class NullMod implements IMod {
+
+        @Override
+        public String getName() {
+            return "";
+        }
+
+        @Override
+        public String getPath() {
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return "default game";
+        }
     }
 
     public class InputChoice {

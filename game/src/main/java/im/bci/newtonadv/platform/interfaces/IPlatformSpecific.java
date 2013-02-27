@@ -32,9 +32,10 @@
 package im.bci.newtonadv.platform.interfaces;
 
 import im.bci.newtonadv.GameProgression;
+import im.bci.newtonadv.game.RestartGameException;
 import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.score.ScoreServer;
-
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -61,11 +62,17 @@ public interface IPlatformSpecific {
 
     void openUrl(String string);
 
-    public GameScore loadScore();
+    GameScore loadScore();
 
-    public void saveScore(GameScore score);
+    void saveScore(GameScore score);
 
-    public GameProgression loadProgression();
+    GameProgression loadProgression();
 
-    public void saveProgression(GameProgression progression);
+    void saveProgression(GameProgression progression);
+    
+    List<IMod> listMods();
+
+    void loadMod(String selectedModName) throws RestartGameException;
+
+    public IMod getCurrentMod();
 }

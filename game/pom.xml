@@ -252,7 +252,6 @@ SUCH DAMAGE. */ -->
             <id>deluxe-version</id>
             <properties>
                 <newton.adventure.version>deluxe</newton.adventure.version>
-                <newton.adventure.version>normal</newton.adventure.version>
                 <newton.adventure.quests.exclude.wildcards></newton.adventure.quests.exclude.wildcards>
                 <newton.adventure.rpm.quests.exclude></newton.adventure.rpm.quests.exclude>
                 <newton.adventure.jdeb.quests.exclude></newton.adventure.jdeb.quests.exclude>

@@ -16,13 +16,17 @@ public interface IGameData {
 
     tiled.core.Map openLevelTmx(String questName, String levelName) throws Exception;
 
-	String getLevelFilePath(String questName, String levelName, String filename);
+    String getLevelFilePath(String questName, String levelName, String filename);
 
-	InputStream openFile(String path) throws IOException;
+    InputStream openFile(String path) throws IOException;
 
-	boolean fileExists(String minimapPath);
+    boolean fileExists(String minimapPath);
 
-	InputStream openLevelNal(String questName, String levelName) throws Exception;
+    InputStream openLevelNal(String questName, String levelName) throws Exception;
 
-	List<String> listQuestsToCompleteToUnlockQuest(String questName);
+    List<String> listQuestsToCompleteToUnlockQuest(String questName);
+
+    void setDataDir(String dataDir);
+
+    String getDataDir();
 }

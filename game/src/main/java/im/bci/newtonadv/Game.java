@@ -32,26 +32,24 @@
 package im.bci.newtonadv;
 
 import im.bci.newtonadv.game.BonusSequence;
+import im.bci.newtonadv.game.CustomTickSequence;
+import im.bci.newtonadv.game.FrameTimeInfos;
+import im.bci.newtonadv.game.MainMenuSequence;
+import im.bci.newtonadv.game.PreloaderFadeSequence;
+import im.bci.newtonadv.game.QuestMenuSequence;
+import im.bci.newtonadv.game.RestartGameException;
+import im.bci.newtonadv.game.Sequence;
+import im.bci.newtonadv.game.Sequence.ResumableTransitionException;
+import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
-import im.bci.newtonadv.game.FrameTimeInfos;
-import java.io.IOException;
-import java.util.Properties;
-
-import im.bci.newtonadv.game.CustomTickSequence;
-import im.bci.newtonadv.game.MainMenuSequence;
-import im.bci.newtonadv.game.PreloaderFadeSequence;
-import im.bci.newtonadv.game.QuestMenuSequence;
-import im.bci.newtonadv.game.Sequence;
-import im.bci.newtonadv.game.Sequence.ResumableTransitionException;
-import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.score.ScoreServer;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +104,7 @@ public strictfp class Game {
         this.platform = platform;
     }
 
-    public void tick() {
+    public void tick() throws RestartGameException {
         try {
             if (bShowMainMenu) {
                 bShowMainMenu = false;
@@ -153,6 +151,11 @@ public strictfp class Game {
             collectGarbage();
             currentSequence.start();
             collectGarbage();
+        }
+        catch(RestartGameException e) {
+            currentSequence.stop();
+            stopGame();
+            throw e;            
         }
     }
 

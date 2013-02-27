@@ -54,8 +54,9 @@ class FileGameData extends AbstractGameData {
 
     private String version = "normal";
 
-    public FileGameData(String dataDir) {
-        super(addSeparator(dataDir));
+    @Override
+    public void setDataDir(String dataDir) {
+        super.setDataDir(addSeparator(dataDir));
         loadVersionInfo();
     }
 

@@ -32,9 +32,11 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.GameProgression;
+import im.bci.newtonadv.game.RestartGameException;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
+import im.bci.newtonadv.platform.interfaces.IMod;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
@@ -52,6 +54,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -131,8 +135,9 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     private IGameData createGameData() {
         if (data == null) {
-            String dataDir = System.getProperty("newton_adventure.data.dir", getDefaultDataDir());
-            data = new FileGameData(dataDir);
+            String dataDir = System.getProperty("newton_adventure.data.dir", getModOrDefaultDataDir());
+            data = new FileGameData();
+            data.setDataDir(dataDir);
         }
         return data;
     }
@@ -381,6 +386,76 @@ public class PlatformSpecific implements IPlatformSpecific {
             }
         } catch (IOException ex) {
             Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, "Cannot get default data dir", ex);
+        }
+        return null;
+    }
+
+    private String getModOrDefaultDataDir() {
+        IMod mod = findModByName(config.getProperty("newton_adventure.mod"));
+        if (null != mod) {
+            return mod.getPath();
+        }
+        return getDefaultDataDir();
+    }
+
+    @Override
+    public List<IMod> listMods() {
+        String modsDir = getUserConfigDirPath() + File.separator + "mods";
+        File dir = new File(modsDir);
+        List<IMod> mods = new ArrayList<IMod>();
+        if (dir.exists()) {
+            for (File f : dir.listFiles()) {
+                if (f.isDirectory()) {
+                    try {
+                        Mod mod = new Mod();
+                        mod.setName(f.getName());
+                        mod.setPath(f.getCanonicalPath());
+                        mods.add(mod);
+                    } catch (IOException ex) {
+                        Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return mods;
+    }
+
+    private IMod findModByName(String modName) {
+        if (null != modName) {
+            List<IMod> mods = listMods();
+            for (IMod mod : mods) {
+                if (modName.equals(mod.getName())) {
+                    return mod;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void loadMod(String modName) throws RestartGameException {
+        IMod mod = findModByName(modName);
+        IMod currentMod = getCurrentMod();
+        String modPath = null != mod ? mod.getPath() : getDefaultDataDir();
+        String currentModPath = null != currentMod ? currentMod.getPath() : getDefaultDataDir();
+        if (!(new File(modPath)).equals(new File(currentModPath))) {
+            data.setDataDir(modPath);
+            throw new RestartGameException();
+        }
+    }
+
+    @Override
+    public IMod getCurrentMod() {
+        return findModByPath(data.getDataDir());
+    }
+
+    private IMod findModByPath(String pathStr) {
+        File path = new File(pathStr);
+        List<IMod> mods = listMods();
+        for (IMod mod : mods) {
+            if (path.equals(new File(mod.getPath()))) {
+                return mod;
+            }
         }
         return null;
     }

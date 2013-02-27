@@ -31,10 +31,10 @@
  */
 package im.bci.newtonadv.game;
 
+import im.bci.newtonadv.Game;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import im.bci.newtonadv.Game;
 
 /**
  * 

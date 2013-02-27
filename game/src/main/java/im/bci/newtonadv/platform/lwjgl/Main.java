@@ -32,17 +32,15 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.Game;
-
+import im.bci.newtonadv.game.RestartGameException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.JOptionPane;
 
 /**
@@ -148,13 +146,16 @@ public class Main {
 
             try {
                 while (game.isRunning()) {
-                    game.tick();
+                    try {
+                        game.tick();
+                    } catch (RestartGameException e) {
+                        game = new Game(platform);
+                        game.start();
+                    }
                 }
             } catch (GameCloseException e) {
-                return;
             } catch (Throwable e) {
                 handleError(e, "Unexpected error during newton adventure execution.\n");
-                return;
             }
         } finally {
             if (null != platform) {
