@@ -18,7 +18,7 @@
     </locale>
     
     <variables>
-	<variable name="TargetPanel.dir.unix" value="$USER_HOME/.config/newton_adventure/mods/deluxe"/>
+	<variable name="TargetPanel.dir" value="$USER_HOME/.config/newton_adventure/mods/deluxe"/>
 	<variable name="ShowCreateDirectoryMessage" value="false"/>
     </variables>
  
