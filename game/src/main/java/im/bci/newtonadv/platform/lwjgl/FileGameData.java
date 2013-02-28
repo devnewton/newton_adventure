@@ -121,7 +121,15 @@ class FileGameData extends AbstractGameData {
         Collections.sort(list, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
-                return Integer.compare(order.indexOf(o1), order.indexOf(o2));
+                int i1 = order.indexOf(o1);
+                int i2 = order.indexOf(o2);
+                if(i1 > i2) {
+                    return 1;
+                } else if(i1 < i2) {
+                    return -1;
+                } else {
+                    return 0;
+                }
             }
         });
     }
