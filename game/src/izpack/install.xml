@@ -11,7 +11,7 @@
         <requiresjdk>no</requiresjdk>
     </info>
  
-    <guiprefs width="640" height="480" resizable="yes" />
+    <guiprefs width="800" height="400" resizable="yes" />
  
     <locale>
         <langpack iso3="eng" />
