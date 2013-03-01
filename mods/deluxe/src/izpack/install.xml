@@ -21,6 +21,10 @@
 	<variable name="TargetPanel.dir" value="$USER_HOME/.config/newton_adventure/mods/deluxe"/>
 	<variable name="ShowCreateDirectoryMessage" value="false"/>
     </variables>
+    
+    <resources>
+	<res id="Installer.image" src="../../src/izpack/cover.png" />
+    </resources>
  
     <panels>
         <panel classname="HelloPanel" />
