@@ -23,6 +23,7 @@
     </variables>
 
     <resources>
+	<res id="Installer.image" src="../../src/izpack/cover.png" />
         <res src="../../src/izpack/Win_shortcutSpec.xml" id="Win_shortcutSpec.xml" parse="yes"/>
         <res src="../../src/izpack/Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml" parse="yes"/>
     </resources>
