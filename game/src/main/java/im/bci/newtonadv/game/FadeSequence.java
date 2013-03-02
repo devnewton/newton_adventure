@@ -63,7 +63,6 @@ public class FadeSequence implements Sequence {
     public void start() {
         try {
             backgroundTexture = game.getView().getTextureCache().grabScreenToTexture();
-            transition.startPreload();
             loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.nanim")).getFirst().start();
         } catch (Exception ex) {
             throw new RuntimeException(ex);

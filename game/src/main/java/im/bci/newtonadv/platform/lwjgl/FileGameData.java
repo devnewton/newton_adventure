@@ -114,7 +114,8 @@ class FileGameData extends AbstractGameData {
     @Override
     public Map openLevelTmx(String questName, String levelName) throws Exception {
         TMXMapReader mapReader = new TMXMapReader();
-        return mapReader.readMap(dataDir + "quests/" + questName + "/levels/" + levelName + "/" + levelName + ".tmx");
+        File file = new File(dataDir + "quests/" + questName + "/levels/" + levelName + "/" + levelName + ".tmx"); 
+        return mapReader.readMap(file.getCanonicalPath());
     }
 
     private static void reorderList(List<String> list, final List<String> order) {

@@ -72,12 +72,12 @@ public class TMXMapReader
         return error;
     }
 
-    private static String makeUrl(String filename) throws MalformedURLException {
+    private static String makeUrl(String filename) throws MalformedURLException, IOException {
         final String url;
         if (filename.indexOf("://") > 0 || filename.startsWith("file:")) {
             url = filename;
         } else {
-            url = new File(filename).toURI().toString();
+            url = new File(filename).getCanonicalFile().toURI().toString();
         }
         return url;
     }
@@ -281,7 +281,7 @@ public class TMXMapReader
         }
 
         if (source != null) {
-            String filename = tilesetBaseDir + source;
+            String filename = new File(tilesetBaseDir + source).getCanonicalPath();
             //if (checkRoot(source)) {
             //    filename = makeUrl(source);
             //}
@@ -734,9 +734,7 @@ public class TMXMapReader
             insrc.setEncoding("UTF-8");
             doc = builder.parse(insrc);
         } catch (SAXException e) {
-            e.printStackTrace();
-            throw new Exception("Error while parsing map file: " +
-                    e.toString());
+            throw new Exception("Error while parsing map file: ", e);
         }
 
         buildMap(doc);
