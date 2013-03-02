@@ -55,73 +55,26 @@ public class Main {
         }
 
         String libraryPath = System.getProperty("java.library.path");
-        if (libraryPath != null && libraryPath.contains("native")) {
+        if (libraryPath != null && libraryPath.contains("natives")) {
             return;
         }
 
-        String osName = System.getProperty("os.name");
-        String osDir;
-
-        if (osName.startsWith("Windows")) {
-            osDir = "windows";
-        } else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
-            osDir = "linux";
-        } else if (osName.startsWith("Mac OS X")) {
-            osDir = "macosx";
-        } else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
-            osDir = "solaris";
-        } else {
-            Logger.getLogger(Main.class.getName()).log(Level.WARNING,
-                    "Unknown platform: {0}", osName);
-            return;
-        }
         try {
             File nativeDir = new File(RuntimeUtils.getApplicationDir() + File.separator
-                    + "native" + File.separator + osDir);
-            if (!nativeDir.exists()) {
-                nativeDir = new File("native" + File.separator + osDir);
+                    + "natives");
+            if (nativeDir.exists()) {
+                String nativePath = nativeDir.getCanonicalPath();
+                System.setProperty("org.lwjgl.librarypath", nativePath);
+                System.setProperty("net.java.games.input.librarypath", nativePath);
+                return;
+            } else {
+                System.out.println("Cannot find 'natives' library folder, try system libraries");
             }
-
-            String nativePath = nativeDir.getCanonicalPath();
-            System.setProperty("org.lwjgl.librarypath", nativePath);
-            System.setProperty("net.java.games.input.librarypath", nativePath);
         } catch (IOException e) {
-            Logger.getLogger(Main.class.getName()).log(Level.WARNING,
-                    "Cannot find 'native' library folder, try system libraries",
-                    e);
+            Logger.getLogger(Main.class.getName()).log(Level.WARNING, "error", e);
         }
-        fuckNetbeans();
-    }
-
-    public static void fuckNetbeans() {
-        if ("true".equals(System.getProperty("netbeans.fuck", "false"))) {
-            try {
-                File libDir = new File(RuntimeUtils.getApplicationDir() + File.separator
-                        + "lib");
-                if (!libDir.exists()) {
-                    libDir = new File(RuntimeUtils.getApplicationParentDir() + File.separator
-                            + "lib");
-                }
-                File[] jars = libDir.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.endsWith(".jar");
-                    }
-                });
-                for (File jar : jars) {
-                    addJarToClassPath(jar);
-                }
-            } catch (Exception e) {
-                Logger.getLogger(Main.class.getName()).log(Level.WARNING,
-                        "Cannot fuck netbeans", e);
-            }
-        }
-    }
-
-    private static void addJarToClassPath(File file) throws Exception {
-        Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
-        method.setAccessible(true);
-        method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{file.toURI().toURL()});
+        Logger.getLogger(Main.class.getName()).log(Level.WARNING,
+                "Cannot find 'natives' library folder, try system libraries");
     }
 
     public static void main(String[] args) throws IOException,
