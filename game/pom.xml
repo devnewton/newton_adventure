@@ -68,7 +68,7 @@ SUCH DAMAGE. */ -->
                         <manifestEntries>
                             <mode>development</mode>
                             <url>${pom.url}</url>
-                            <Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar lib/jinput.jar lib/phys2d.jar lib/libtiled.jar lib/jorbis.jar lib/TWL.jar lib/xpp3-1.1.4c.jar lib/protobuf-java-2.4.1.jar</Class-Path>
+                            <Class-Path>lib/lwjgl.jar lib/lwjgl_test.jar lib/lwjgl_util.jar lib/jinput.jar lib/phys2d.jar lib/jorbis.jar lib/TWL.jar lib/xpp3-1.1.4c.jar lib/protobuf-java-2.4.1.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -158,13 +158,6 @@ SUCH DAMAGE. */ -->
             <version>2008.04.06</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/phys2d.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>tiled</groupId>
-            <artifactId>libtiled</artifactId>
-            <version>0.9.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/libtiled.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.jcraft</groupId>
