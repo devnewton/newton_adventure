@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+<skipIfNotSupported/>
+<programGroup defaultName="Newton Adventure"
+            location="applications"/>
+
+<shortcut
+	name="Uninstall Newton Adventure Deluxe Mod"
+	target="/usr/bin/java"
+	commandLine="-jar $INSTALL_PATH/Uninstaller/uninstaller.jar"
+	description="Uninstall Newton Adventure Deluxe Mod"
+	workingDirectory="$INSTALL_PATH/Uninstaller"
+	initialState="normal"
+	programGroup="yes"
+	desktop="no"
+	applications="no"
+	startMenu="no"
+	startup="no"
+	type="Application"
+	terminal="false"
+	encoding="UTF-8"
+	categories="Game">
+	<createForPack name="Core"/>
+</shortcut>
+
+</shortcuts>

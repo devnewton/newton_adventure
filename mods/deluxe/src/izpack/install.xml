@@ -11,7 +11,7 @@
         <requiresjdk>no</requiresjdk>
     </info>
  
-    <guiprefs width="640" height="480" resizable="yes" />
+    <guiprefs width="800" height="480" resizable="yes" />
  
     <locale>
         <langpack iso3="eng" />
@@ -24,12 +24,15 @@
     
     <resources>
 	<res id="Installer.image" src="../../src/izpack/cover.png" />
+	<res src="../../src/izpack/Win_shortcutSpec.xml" id="Win_shortcutSpec.xml" parse="yes"/>
+        <res src="../../src/izpack/Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml" parse="yes"/>
     </resources>
  
     <panels>
         <panel classname="HelloPanel" />
         <panel classname="TargetPanel"/>
         <panel classname="InstallPanel"/>
+	<panel classname="ShortcutPanel"/>
         <panel classname="SimpleFinishPanel" />
     </panels>
  

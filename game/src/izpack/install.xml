@@ -11,7 +11,7 @@
         <requiresjdk>no</requiresjdk>
     </info>
  
-    <guiprefs width="800" height="400" resizable="yes" />
+    <guiprefs width="800" height="480" resizable="yes" />
  
     <locale>
         <langpack iso3="eng" />
@@ -40,9 +40,6 @@
         <pack name="Core" required="yes">
             <description>Core installation files</description>
             <file src="../@{project.build.finalName}.jar" targetdir="$INSTALL_PATH" />
-            <file src="../@{project.build.finalName}.exe" targetdir="$INSTALL_PATH" >
-		<os family="windows"/>
-	    </file>
             <file src="../../src/izpack/icon.ico" targetdir="$INSTALL_PATH" />
             <file src="../../README_YOU_DONT_WANT_TO_BUT_YOU_HAVE_TO_README.txt" targetdir="$INSTALL_PATH" />
             <file src="../../run_linux.sh" targetdir="$INSTALL_PATH" >

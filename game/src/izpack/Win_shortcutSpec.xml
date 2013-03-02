@@ -4,7 +4,8 @@
 <skipIfNotSupported/>
 <programGroup defaultName="Newton Adventure" location="applications"/>
 <shortcut name="Newton Adventure"
-        target="$INSTALL_PATH\${newton_adventure_build_final_name}.exe"
+        target="$JAVA_HOME\bin\javaw.exe"
+	commandLine="-jar  &quot;$INSTALL_PATH\${newton_adventure_build_final_name}.jar &quot;"
         description="Launch Newton Adventure"
         workingDirectory="$INSTALL_PATH"
         iconFile="$INSTALL_PATH\icon.ico"
