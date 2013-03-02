@@ -26,15 +26,11 @@ SUCH DAMAGE. */ -->
     <groupId>im.bci.newtonadv</groupId>
     <artifactId>newton_adventure</artifactId>
     <packaging>jar</packaging>
-    <version>1.8</version>
+    <version>1.9</version>
     <name>newton_adventure</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <newton.adventure.quests.exclude.wildcards>**/bridge,**/lab,**/prison,**/bridge/**/*,**/lab/**/*,**/prison/**/*</newton.adventure.quests.exclude.wildcards>
-        <newton.adventure.rpm.quests.exclude>%regex[.*\/(bridge|lab|prison).*]</newton.adventure.rpm.quests.exclude>
-        <newton.adventure.jdeb.quests.exclude>${newton.adventure.quests.exclude.wildcards}</newton.adventure.jdeb.quests.exclude>
-        <newton.adventure.izpack.quests.excludes>${newton.adventure.quests.exclude.wildcards}</newton.adventure.izpack.quests.excludes>
     </properties>
     <build>
         <resources>
@@ -256,55 +252,39 @@ SUCH DAMAGE. */ -->
                                     </sources>
                                 </mapping>
                                 <mapping>
-                                    <directory>/opt/${project.name}/lib</directory>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>${basedir}/lib</location>
-                                            <excludes>
-                                                <exclude>AppleJavaExtensions.jar,asm-debug-all.jar</exclude>
-                                            </excludes>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                                <mapping>
                                     <directory>/opt/${project.name}/data</directory>
                                     <username>root</username>
                                     <groupname>root</groupname>
                                     <sources>
                                         <source>
                                             <location>${basedir}/data</location>
-                                            <excludes>
-                                                <exclude>${newton.adventure.rpm.quests.exclude}</exclude>
-                                            </excludes>
                                         </source>
                                     </sources>
                                 </mapping>
                                 <mapping>
-                                    <directory>/opt/${project.name}/native</directory>
+                                    <directory>/opt/${project.name}/natives</directory>
                                     <username>root</username>
                                     <groupname>root</groupname>
                                     <sources>
                                         <source>
-                                            <location>${basedir}/native</location>
+                                            <location>${basedir}/target/natives</location>
                                             <targetArchitecture>x86_64</targetArchitecture>
                                             <includes>
-                                                <include>linux/*64*</include>
+                                                <include>*64.so</include>
                                             </includes>
                                         </source>
                                         <source>
-                                            <location>${basedir}/native</location>
+                                            <location>${basedir}/target/natives</location>
                                             <targetArchitecture>i686</targetArchitecture>
                                             <includes>
-                                                <include>linux/*</include>
+                                                <include>*.so</include>
                                             </includes>
                                             <excludes>
-                                                <exclude>linux/*64*</exclude>
+                                                <exclude>*64.so*</exclude>
                                             </excludes>
                                         </source>
                                     </sources>
-                                </mapping>
+                                </mapping>-->
                                 <mapping>
                                     <directory>/opt/${project.name}/licences</directory>
                                     <username>root</username>
@@ -424,30 +404,20 @@ SUCH DAMAGE. */ -->
                                             </mapper>  
                                         </data>
                                         <data>
-                                            <src>${basedir}/lib</src>
-                                            <type>directory</type>
-                                            <excludes>AppleJavaExtensions.jar,asm-debug-all.jar</excludes>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <prefix>/opt/${project.name}/lib</prefix>
-                                            </mapper>                                
-                                        </data>
-                                        <data>
                                             <src>${basedir}/data</src>
                                             <type>directory</type>
-                                            <excludes>${newton.adventure.jdeb.quests.exclude}</excludes>
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/opt/${project.name}/data</prefix>
                                             </mapper>                                
                                         </data>
                                         <data>
-                                            <src>${basedir}/native</src>
+                                            <src>${project.build.directory}/natives</src>
                                             <type>directory</type>
-                                            <includes>linux/*</includes>
+                                            <includes>*.so</includes>
                                             <mapper>
                                                 <type>perm</type>
-                                                <prefix>/opt/${project.name}/native</prefix>
+                                                <prefix>/opt/${project.name}/natives</prefix>
                                             </mapper>                                
                                         </data>
                                         <data>

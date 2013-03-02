@@ -1,2 +1,2 @@
 #!/bin/sh
-java -jar newton_adventure-1.8.jar
+java -jar newton_adventure-1.9.jar
