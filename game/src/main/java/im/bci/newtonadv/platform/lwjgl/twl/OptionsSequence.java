@@ -120,6 +120,7 @@ public class OptionsSequence implements IOptionsSequence {
 
 	private void applyOptions() throws LWJGLException, RestartGameException {
                 view.setRotateViewWithGravity(optionsGui.rotateViewWithGravity.isActive());
+                view.setMustDrawFPS(optionsGui.mustDrawFPS.isActive());
 		view.setDisplayMode(optionsGui.fullscreen.isActive(),
 				getSelectedQuality(), getSelectedMode());
 		input.keyJump = findKeyIndex(optionsGui.keyJump);
@@ -241,6 +242,7 @@ public class OptionsSequence implements IOptionsSequence {
 				+ Display.getDisplayMode().getBitsPerPixel());
 		config.setProperty("view.fullscreen", "" + Display.isFullscreen());
                 config.setProperty("view.rotate", "" + view.isRotateViewWithGravity());
+                config.setProperty("view.draw.fps", "" + view.getMustDrawFPS());
 		config.setProperty("view.quality", view.getQuality().toString());
 
 		config.setProperty("key.jump", getKeyFieldName(input.keyJump));

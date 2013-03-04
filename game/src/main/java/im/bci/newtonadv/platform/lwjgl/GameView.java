@@ -114,7 +114,7 @@ import net.phys2d.raw.shapes.ConvexPolygon;
 import org.lwjgl.util.glu.GLU;
 
 /**
- * 
+ *
  * @author devnewton
  */
 public strictfp class GameView implements IGameView {
@@ -124,7 +124,7 @@ public strictfp class GameView implements IGameView {
     private final IGameData data;
     private boolean rotateViewWithGravity = true;
     private TrueTypeFont font;
-
+    private boolean mustDrawFPS = false;
 
     public GameView(IGameData data, Properties config) {
         this.data = data;
@@ -137,6 +137,14 @@ public strictfp class GameView implements IGameView {
 
     public void setRotateViewWithGravity(boolean rotateViewWithGravity) {
         this.rotateViewWithGravity = rotateViewWithGravity;
+    }
+
+    public boolean getMustDrawFPS() {
+        return mustDrawFPS;
+    }
+
+    public void setMustDrawFPS(boolean mustDrawFPS) {
+        this.mustDrawFPS = mustDrawFPS;
     }
 
     @Override
@@ -193,7 +201,6 @@ public strictfp class GameView implements IGameView {
         try {
             DisplayMode[] modes = Display.getAvailableDisplayModes();
             java.util.Arrays.sort(modes, new Comparator<DisplayMode>() {
-
                 @Override
                 public int compare(DisplayMode a, DisplayMode b) {
 
@@ -279,6 +286,7 @@ public strictfp class GameView implements IGameView {
                 "view.fullscreen", "false"));
         rotateViewWithGravity = Boolean.parseBoolean(config.getProperty(
                 "view.rotate", "true"));
+        mustDrawFPS = Boolean.parseBoolean(config.getProperty("view.draw.fps", "false"));
         GameViewQuality newQuality = GameViewQuality.valueOf(config.getProperty("view.quality"));
 
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
@@ -373,18 +381,20 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawFPS(int nbFps) {
-        String fps = nbFps + " FPS";
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
+        if (mustDrawFPS) {
+            String fps = nbFps + " FPS";
+            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+            GL11.glEnable(GL11.GL_BLEND);
 
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-        GL11.glTranslatef(Display.getWidth() - font.getWidth(fps),
-                Display.getHeight() - 64, 0);
-        font.drawString(fps);
-        GL11.glPopMatrix();
-        GL11.glPopAttrib();
+            GL11.glPushMatrix();
+            GL11.glLoadIdentity();
+            GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
+            GL11.glTranslatef(Display.getWidth() - font.getWidth(fps),
+                    Display.getHeight() - 64, 0);
+            font.drawString(fps);
+            GL11.glPopMatrix();
+            GL11.glPopAttrib();
+        }
     }
 
     public void close() {
@@ -1654,8 +1664,8 @@ public strictfp class GameView implements IGameView {
     }
 
     private TrueTypeFont initFont() {
-            HashMap<Character, String> fontSpecialCharacters = new HashMap<Character, String>();
-        fontSpecialCharacters.put('$',data.getFile("default_level_data/apple.png"));
+        HashMap<Character, String> fontSpecialCharacters = new HashMap<Character, String>();
+        fontSpecialCharacters.put('$', data.getFile("default_level_data/apple.png"));
         return new TrueTypeFont(this.data, new Font("monospaced", Font.BOLD, 24), true, new char[0], fontSpecialCharacters);
     }
 }

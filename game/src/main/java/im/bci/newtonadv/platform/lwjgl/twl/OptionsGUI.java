@@ -66,6 +66,7 @@ public class OptionsGUI extends Widget {
     ToggleButton soundEnabled;
     ToggleButton fullscreen;
     ToggleButton rotateViewWithGravity;
+    ToggleButton mustDrawFPS;
     ComboBox<DisplayMode> mode;
     ComboBox<GameViewQuality> quality;
     InputChoice keyJump;
@@ -125,7 +126,9 @@ public class OptionsGUI extends Widget {
 
         rotateViewWithGravity = new ToggleButton("Rotate view with gravity");
         rotateViewWithGravity.setActive(gameView.isRotateViewWithGravity());
-        layout.addRow("label", "widget").addWithLabel("View option", rotateViewWithGravity);
+        mustDrawFPS = new ToggleButton("DrawFPS");
+        mustDrawFPS.setActive(gameView.getMustDrawFPS());
+        layout.addRow("label", "rotate view", "fps").addWithLabel("View option", rotateViewWithGravity).add(mustDrawFPS);
 
 
         joypad = new ComboBox<ControllerItem>(controllerModel);
