@@ -401,23 +401,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     @Override
     public List<IMod> listMods() {
         String modsDir = getUserConfigDirPath() + File.separator + "mods";
-        File dir = new File(modsDir);
-        List<IMod> mods = new ArrayList<IMod>();
-        if (dir.exists()) {
-            for (File f : dir.listFiles()) {
-                if (f.isDirectory()) {
-                    try {
-                        Mod mod = new Mod();
-                        mod.setName(f.getName());
-                        mod.setPath(f.getCanonicalPath());
-                        mods.add(mod);
-                    } catch (IOException ex) {
-                        Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        return mods;
+        return listModsInDirs(new File(modsDir));
     }
 
     private IMod findModByName(String modName) {
@@ -458,5 +442,23 @@ public class PlatformSpecific implements IPlatformSpecific {
             }
         }
         return null;
+    }
+
+    private List<IMod> listModsInDirs(File... dirs) {
+        List<IMod> mods = new ArrayList<IMod>();
+        for (File dir : dirs) {
+            if (dir.exists()) {
+                for (File f : dir.listFiles()) {
+                    if (f.isDirectory()) {
+                        try {
+                            mods.add(new Mod().withName(f.getName()).withPath(f.getCanonicalPath()));
+                        } catch (IOException ex) {
+                            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        }
+        return mods;
     }
 }

@@ -38,6 +38,7 @@ import im.bci.newtonadv.platform.interfaces.IMod;
  * @author devnewton
  */
 public class Mod implements IMod {
+
     private String name, path;
 
     @Override
@@ -49,6 +50,11 @@ public class Mod implements IMod {
         this.name = name;
     }
 
+    public Mod withName(String name) {
+        setName(name);
+        return this;
+    }
+
     @Override
     public String getPath() {
         return path;
@@ -56,6 +62,11 @@ public class Mod implements IMod {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Mod withPath(String path) {
+        setPath(path);
+        return this;
     }
 
     @Override
