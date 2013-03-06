@@ -99,12 +99,12 @@ public class OptionsGUI extends Widget {
         this.layout = new ColumnLayout();
         layout.setSize(Display.getWidth(), Display.getHeight());
 
-        soundEnabled = new ToggleButton("Effect enabled");
+        soundEnabled = new ToggleButton(platform.getMessage("options.sound.effect.enabled"));
         soundEnabled.setActive(soundCache.isSoundEnabled());
-        musicEnabled = new ToggleButton("Music enabled");
+        musicEnabled = new ToggleButton(platform.getMessage("options.sound.music.enabled"));
         musicEnabled.setActive(soundCache.isMusicEnabled());
         Row soundRow = layout.addRow("label", "effect", "music");
-        soundRow.addLabel("Sound");
+        soundRow.addLabel(platform.getMessage("options.sound"));
         soundRow.add(soundEnabled);
         soundRow.add(musicEnabled);
 

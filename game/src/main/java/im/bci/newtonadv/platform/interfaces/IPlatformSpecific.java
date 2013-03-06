@@ -74,5 +74,7 @@ public interface IPlatformSpecific {
 
     void loadModIfNeeded(String selectedModName) throws RestartGameException;
 
-    public IMod getCurrentMod();
+    IMod getCurrentMod();
+    
+    String getMessage(String msg);
 }

@@ -57,6 +57,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.Sys;
@@ -74,8 +75,11 @@ public class PlatformSpecific implements IPlatformSpecific {
     private IGameData data;
     private ISoundCache soundCache;
     private IOptionsSequence options;
+    private ResourceBundle messages;
 
     public PlatformSpecific() throws Exception {
+        messages = ResourceBundle.getBundle("messages");
+        
         loadConfig();
 
         createGameData();
@@ -460,5 +464,10 @@ public class PlatformSpecific implements IPlatformSpecific {
             }
         }
         return mods;
+    }
+
+    @Override
+    public String getMessage(String msg) {
+        return messages.getString(msg);
     }
 }
