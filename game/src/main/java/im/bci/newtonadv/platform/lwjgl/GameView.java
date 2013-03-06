@@ -33,10 +33,9 @@ package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.nanim.NanimParser;
 import im.bci.nanim.NanimParser.Nanim;
-import im.bci.newtonadv.anim.Animation.Play;
-import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
+import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.Drawable;
@@ -45,21 +44,27 @@ import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.MenuSequence.Button;
 import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.ScoreSequence;
+import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import im.bci.newtonadv.score.LevelScore;
+import im.bci.newtonadv.score.QuestScore;
+import im.bci.newtonadv.util.AbsoluteAABox;
+import im.bci.newtonadv.util.NewtonColor;
 import im.bci.newtonadv.world.Axe;
 import im.bci.newtonadv.world.AxeAnchor;
 import im.bci.newtonadv.world.Bat;
 import im.bci.newtonadv.world.Blocker;
 import im.bci.newtonadv.world.Bomb;
+import im.bci.newtonadv.world.Boss;
+import im.bci.newtonadv.world.BossHand;
 import im.bci.newtonadv.world.Cloud;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
 import im.bci.newtonadv.world.DownRightHalfPlatform;
-import im.bci.newtonadv.world.Boss;
-import im.bci.newtonadv.world.BossHand;
 import im.bci.newtonadv.world.Explosion;
 import im.bci.newtonadv.world.FireBall;
 import im.bci.newtonadv.world.Hero;
@@ -70,40 +75,27 @@ import im.bci.newtonadv.world.MobilePikeAnchor;
 import im.bci.newtonadv.world.MobilePikes;
 import im.bci.newtonadv.world.MovingPlatform;
 import im.bci.newtonadv.world.Mummy;
+import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.Platform;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
+import im.bci.newtonadv.world.World;
+import java.awt.Font;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-
-import im.bci.newtonadv.game.Sequence;
-import im.bci.newtonadv.score.LevelScore;
-import im.bci.newtonadv.score.QuestScore;
-import im.bci.newtonadv.util.AbsoluteAABox;
-import im.bci.newtonadv.util.NewtonColor;
-import im.bci.newtonadv.world.PickableObject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Controllers;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-import im.bci.newtonadv.world.World;
-import java.awt.Font;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
@@ -111,6 +103,13 @@ import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.ConvexPolygon;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Controllers;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 /**
@@ -125,9 +124,11 @@ public strictfp class GameView implements IGameView {
     private boolean rotateViewWithGravity = true;
     private TrueTypeFont font;
     private boolean mustDrawFPS = false;
+    private final PlatformSpecific platformSpecific;
 
-    public GameView(IGameData data, Properties config) {
+    public GameView(IGameData data, Properties config, PlatformSpecific platformSpecific) {
         this.data = data;
+        this.platformSpecific = platformSpecific;
         initDisplay(config);
     }
 
@@ -1137,7 +1138,7 @@ public strictfp class GameView implements IGameView {
             int i = 1;
             font.drawString(
                     (ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
-                    i++ * font.getHeight(), "SCORES", 1, -1,
+                    i++ * font.getHeight(), platformSpecific.getMessage("score.sequence.title"), 1, -1,
                     TrueTypeFont.Align.CENTER);
             font.drawString(0, i++ * font.getHeight(),
                     questScore.getQuestName(), 1, -1, TrueTypeFont.Align.LEFT);
@@ -1151,11 +1152,11 @@ public strictfp class GameView implements IGameView {
                         i++ * font.getHeight(), levelScoreStr, 1, -1,
                         TrueTypeFont.Align.CENTER);
             }
-            String questScoreStr = "Quest total: "
+            String questScoreStr = platformSpecific.getMessage("score.sequence.quest.total") + ": "
                     + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
                     TrueTypeFont.Align.LEFT);
-            font.drawString(0, i++ * font.getHeight(), "See highscores on " + sequence.getScoreServer().getServerUrl() + " !", 1, -1,
+            font.drawString(0, i++ * font.getHeight(), platformSpecific.getMessage("score.sequence.see.hightscore.on") + " "+ sequence.getScoreServer().getServerUrl() + " !", 1, -1,
                     TrueTypeFont.Align.LEFT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();

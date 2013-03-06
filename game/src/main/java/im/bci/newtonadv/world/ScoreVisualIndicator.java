@@ -31,10 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
-import net.phys2d.math.ROVector2f;
-
 import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
+import net.phys2d.math.ROVector2f;
 
 public strictfp class ScoreVisualIndicator extends AbstractEntity {
 

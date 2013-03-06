@@ -54,4 +54,5 @@ public enum GameViewQuality {
     int toGLTextureFilter() {
         return glTextureFilter;
     }
+
 }

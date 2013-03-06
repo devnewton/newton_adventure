@@ -106,7 +106,7 @@ public class PlatformSpecific implements IPlatformSpecific {
             throw new RuntimeException("create IGameData before IGameView");
         }
         if (view == null) {
-            view = new GameView(data, config);
+            view = new GameView(data, config, this);
         }
         return view;
     }

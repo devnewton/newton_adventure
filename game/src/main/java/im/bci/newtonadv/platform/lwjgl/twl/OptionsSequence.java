@@ -224,7 +224,7 @@ public class OptionsSequence implements IOptionsSequence {
 		int selected = optionsGui.quality.getSelected();
 		if (selected >= 0
 				&& selected < optionsGui.quality.getModel().getNumEntries()) {
-			return optionsGui.quality.getModel().getEntry(selected);
+			return optionsGui.quality.getModel().getEntry(selected).getQuality();
 		} else {
 			return view.getQuality();
 		}
