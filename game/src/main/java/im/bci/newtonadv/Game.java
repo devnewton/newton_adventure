@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author devnewton
  */
 public strictfp class Game {
@@ -151,11 +151,10 @@ public strictfp class Game {
             collectGarbage();
             currentSequence.start();
             collectGarbage();
-        }
-        catch(RestartGameException e) {
+        } catch (RestartGameException e) {
             currentSequence.stop();
             stopGame();
-            throw e;            
+            throw e;
         }
     }
 
@@ -277,7 +276,7 @@ public strictfp class Game {
             throws Sequence.NormalTransitionException {
         this.questMenuSequence.gotoLevel(newQuestName, newLevelName);
     }
-    
+
     public void gotoQuestMenu()
             throws Sequence.NormalTransitionException {
         throw new Sequence.NormalTransitionException(this.questMenuSequence);
@@ -305,7 +304,7 @@ public strictfp class Game {
         String previousLevelName = null;
         for (String l : data.listQuestLevels(questName)) {
             if (l.equals(levelName)) {
-                if(null != previousLevelName) {
+                if (null != previousLevelName) {
                     return !progression.getQuest(questName).getLevel(previousLevelName).isCompleted();
                 } else {
                     return false;
@@ -320,12 +319,12 @@ public strictfp class Game {
         progression.getQuest(questName).getLevel(completedLevelName).setCompleted(true);
         platform.saveProgression(progression);
     }
-    
+
     public void cheatSetAllCompleted() {
         for (String q : data.listQuests()) {
-            for(String l : data.listQuestLevels(q)) {
+            for (String l : data.listQuestLevels(q)) {
                 setLevelCompleted(q, l);
-            }            
+            }
         }
     }
 
@@ -339,5 +338,15 @@ public strictfp class Game {
 
     public void saveScore() {
         platform.saveScore(score);
+    }
+
+    public String getButtonFile(String baseName) {
+        String localeSuffix = platform.getLocaleSuffix();
+        String localizedButton = baseName + localeSuffix + ".png";
+        if (data.fileExists(localizedButton)) {
+            return data.getFile(localizedButton);
+        } else {
+            return data.getFile(baseName + ".png");
+        }
     }
 }

@@ -77,4 +77,6 @@ public interface IPlatformSpecific {
     IMod getCurrentMod();
     
     String getMessage(String msg);
+
+    String getLocaleSuffix();
 }

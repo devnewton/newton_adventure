@@ -470,4 +470,9 @@ public class PlatformSpecific implements IPlatformSpecific {
     public String getMessage(String msg) {
         return messages.getString(msg);
     }
+
+    @Override
+    public String getLocaleSuffix() {
+        return "_jj" + messages.getLocale().getLanguage() + "_" + messages.getLocale().getCountry();
+    }
 }

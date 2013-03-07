@@ -81,10 +81,8 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 throw new Sequence.NormalTransitionException(playSequence);
             }
         };
-        playButton.offTextureName = game.getData().getFile(
-                "main_menu/bt-play-off.png");
-        playButton.onTextureName = game.getData()
-                .getFile("main_menu/bt-play-on.png");
+        playButton.offTextureName = game.getButtonFile("main_menu/bt-play-off");
+        playButton.onTextureName = game.getButtonFile("main_menu/bt-play-on");;
         playButton.setOn();
         playButton.x = 480;
         playButton.y = 267;

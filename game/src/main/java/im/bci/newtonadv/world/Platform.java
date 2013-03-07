@@ -31,10 +31,6 @@
  */
 package im.bci.newtonadv.world;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.Animation.PlayMode;
 import im.bci.newtonadv.anim.AnimationCollection;
@@ -43,6 +39,9 @@ import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.util.ShapeUtils;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Shape;
