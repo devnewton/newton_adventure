@@ -68,8 +68,8 @@ public class LevelMenuSequence extends MenuSequence {
                 game.gotoQuestMenu();
             }
         };
-        returnToPreviousSequence.offTextureName = game.getData().getFile("quest_menu/bt-menu-off.png");
-        returnToPreviousSequence.onTextureName = game.getData().getFile("quest_menu/bt-menu-on.png");
+        returnToPreviousSequence.offTextureName = game.getButtonFile("quest_menu/bt-menu-off");
+        returnToPreviousSequence.onTextureName = game.getButtonFile("quest_menu/bt-menu-on");
         returnToPreviousSequence.x = ortho2DRight - LEVEL_MINIATURE_WIDTH - LEVEL_MINIATURE_SPACING;
         returnToPreviousSequence.y = ortho2DBottom - LEVEL_MINIATURE_SPACING * 4.8f / 4.0f;
         returnToPreviousSequence.w = LEVEL_MINIATURE_WIDTH;
@@ -125,7 +125,7 @@ public class LevelMenuSequence extends MenuSequence {
             questButton.onTextureName = game.getData().getLevelFilePath(questSequence.getQuestName(),
                     levelName, "bt-level-on.png");
         } else {
-            questButton.onTextureName = game.getData().getFile("btn-blocked.png");
+            questButton.onTextureName = game.getData().getFile("bt-blocked.png");
         }
 
         questButton.x = LEVEL_MINIATURE_SPACING + i

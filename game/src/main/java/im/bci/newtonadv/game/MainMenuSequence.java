@@ -101,10 +101,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 }
             }
         };
-        resumeButton.offTextureName = game.getData()
-                .getFile("main_menu/bt-resume-off.png");
-        resumeButton.onTextureName = game.getData().getFile(
-                "main_menu/bt-resume-impossible.png");
+        resumeButton.offTextureName = game.getButtonFile("main_menu/bt-resume-off");
+        resumeButton.onTextureName = game.getButtonFile(
+                "main_menu/bt-resume-impossible");
         resumeButton.x = 480;
         resumeButton.y = 371;
         resumeButton.w = 312;
@@ -121,9 +120,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
             }
         };
         optionsButton.offTextureName = game
-                .getData().getFile("main_menu/bt-options-off.png");
-        optionsButton.onTextureName = game.getData().getFile(
-                "main_menu/bt-options-on.png");
+                .getButtonFile("main_menu/bt-options-off");
+        optionsButton.onTextureName = game.getButtonFile(
+                "main_menu/bt-options-on");
         optionsButton.x = 480;
         optionsButton.y = 475;
         optionsButton.w = 312;
@@ -138,10 +137,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 }
             }
         };
-        helpButton.offTextureName = game.getData()
-                .getFile("main_menu/bt-help-off.png");
-        helpButton.onTextureName = game.getData().getFile(
-                "main_menu/bt-help-on.png");
+        helpButton.offTextureName = game.getButtonFile("main_menu/bt-help-off");
+        helpButton.onTextureName = game.getButtonFile(
+                "main_menu/bt-help-on");
         helpButton.x = 480;
         helpButton.y = 579;
         helpButton.w = 312;
@@ -154,10 +152,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 throw new Sequence.NormalTransitionException(quitSequence);
             }
         };
-        quitButton.offTextureName = game.getData()
-                .getFile("main_menu/bt-quit-off.png");
-        quitButton.onTextureName = game.getData().getFile(
-                "main_menu/bt-quit-on.png");
+        quitButton.offTextureName = game.getButtonFile("main_menu/bt-quit-off");
+        quitButton.onTextureName = game.getButtonFile(
+                "main_menu/bt-quit-on");
         quitButton.x = 480;
         quitButton.y = 683;
         quitButton.w = 312;
@@ -170,10 +167,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
                 game.insertCoins();
             }
         };
-        insertCoinsButton.offTextureName = game.getData()
-                .getFile("main_menu/bt-insert-coins-off.png");
-        insertCoinsButton.onTextureName = game.getData().getFile(
-                "main_menu/bt-insert-coins-on.png");
+        insertCoinsButton.offTextureName = game.getButtonFile("main_menu/bt-insert-coins-off");
+        insertCoinsButton.onTextureName = game.getButtonFile(
+                "main_menu/bt-insert-coins-on");
         insertCoinsButton.x = 920;
         insertCoinsButton.y = 683;
         insertCoinsButton.w = 312;
@@ -198,9 +194,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
     public void setResumeSequence(Sequence s) {
         this.resumeSequence = s;
         if (null != resumeSequence) {
-            resumeButton.onTextureName = game.getData().getFile("main_menu/bt-resume-on.png");
+            resumeButton.onTextureName = game.getButtonFile("main_menu/bt-resume-on");
         } else {
-            resumeButton.onTextureName = game.getData().getFile("main_menu/bt-resume-impossible.png");
+            resumeButton.onTextureName = game.getButtonFile("main_menu/bt-resume-impossible");
         }
 
 

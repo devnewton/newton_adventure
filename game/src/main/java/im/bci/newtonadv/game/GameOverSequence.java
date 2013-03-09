@@ -47,8 +47,8 @@ public class GameOverSequence extends StoryboardSequence {
                 throw new NormalTransitionException(new PreloaderFadeSequence(game, level, 0, 0, 0, 1000000000L));
             }
         };
-        retryButton.offTextureName = game.getData().getFile("bt-retry-off.png");
-        retryButton.onTextureName = game.getData().getFile("bt-retry-on.png");
+        retryButton.offTextureName = game.getButtonFile("bt-retry-off");
+        retryButton.onTextureName = game.getButtonFile("bt-retry-on");
         retryButton.x = 640;
         retryButton.y = 700;
         retryButton.w = 312;

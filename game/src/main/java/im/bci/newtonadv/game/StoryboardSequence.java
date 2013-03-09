@@ -51,8 +51,8 @@ public class StoryboardSequence extends MenuSequence {
                 transition.throwMe();
             }
         };
-        continueButton.offTextureName = game.getData().getFile("bt-continue-off.png");
-        continueButton.onTextureName = game.getData().getFile("bt-continue-on.png");
+        continueButton.offTextureName = game.getButtonFile("bt-continue-off");
+        continueButton.onTextureName = game.getButtonFile("bt-continue-on");
         continueButton.x = 960;
         continueButton.y = 700;
         continueButton.w = 312;

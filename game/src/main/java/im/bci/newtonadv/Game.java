@@ -343,8 +343,9 @@ public strictfp class Game {
     public String getButtonFile(String baseName) {
         String localeSuffix = platform.getLocaleSuffix();
         String localizedButton = baseName + localeSuffix + ".png";
-        if (data.fileExists(localizedButton)) {
-            return data.getFile(localizedButton);
+        String localizedFile = data.getFile(localizedButton);
+        if (data.fileExists(localizedFile)) {
+            return localizedFile;
         } else {
             return data.getFile(baseName + ".png");
         }

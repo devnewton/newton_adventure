@@ -105,8 +105,8 @@ public class QuestMenuSequence extends MenuSequence {
                 throw new NormalTransitionException(sequence);
             }
         };
-        button.offTextureName = game.getData().getFile("quest_menu/" + textureBaseName + "-off.png");
-        button.onTextureName = game.getData().getFile("quest_menu/" + textureBaseName + "-on.png");
+        button.offTextureName = game.getButtonFile("quest_menu/" + textureBaseName + "-off.png");
+        button.onTextureName = game.getButtonFile("quest_menu/" + textureBaseName + "-on.png");
 
         button.x = QUEST_MINIATURE_SPACING + i
                 * (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
@@ -127,8 +127,8 @@ public class QuestMenuSequence extends MenuSequence {
                 throw new NormalTransitionException(game.getMainMenuSequence());
             }
         };
-        returnToMenuButton.offTextureName = game.getData().getFile("quest_menu/bt-menu-off.png");
-        returnToMenuButton.onTextureName = game.getData().getFile("quest_menu/bt-menu-on.png");
+        returnToMenuButton.offTextureName = game.getButtonFile("quest_menu/bt-menu-off");
+        returnToMenuButton.onTextureName = game.getButtonFile("quest_menu/bt-menu-on");
 
         returnToMenuButton.x = QUEST_MINIATURE_SPACING + i
                 * (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
@@ -175,7 +175,7 @@ public class QuestMenuSequence extends MenuSequence {
             @Override
             public void start() {
                 if (game.isQuestBlocked(questName)) {
-                    onTextureName = game.getData().getFile("btn-blocked.png");
+                    onTextureName = game.getData().getFile("bt-blocked.png");
                 } else {
                     onTextureName = game.getData().getQuestFile(questName,
                             "bt-quest-on.png");
