@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="newton_adventure.background" value="retro_background.png"/>
+  <property name="newton_adventure.mummy" value="toad.gif"/>
+  <property name="newton_adventure.music" value="game_on_0.ogg"/>
+ </properties>
+ <tileset firstgid="1" source="../../retro.tsx"/>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
+ <layer name="level" width="64" height="64">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAAO3Xyw6CMBAFUOLGxw/oSv//L5XEbkggyKMz2HOSLtgwc9tS0q5jzPMz7jPGK6rBnZTcv+SaO1dHmMPHhu+6DEaNmmtF9JIpf7+Xa+/HTPl7tfuJmPMptfNfA2pO6Xu5VazXev5SM4vW/wERvWQ6A6PWIssekH97p8Hz+Tv2rrvE0vvM8Pv9h3tR5Jpk2A/yt1m7kL/N2sXaM/zo5z8AAAAAAAAAAAAAebwBYzGYFgBAAAA=
+  </data>
+ </layer>
+</map>
