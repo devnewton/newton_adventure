@@ -62,7 +62,7 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 
 /**
- * 
+ *
  * @author devnewton
  */
 public strictfp class World extends net.phys2d.raw.World {
@@ -347,7 +347,6 @@ public strictfp class World extends net.phys2d.raw.World {
 
     void goToBonusWorld() {
         postUpdateActions.add(new PostUpdateAction() {
-
             @Override
             public void run() throws ResumableTransitionException {
                 game.getSoundCache().getSound(game.getData().getFile("go_to_bonus_world.wav")).play();
@@ -374,7 +373,17 @@ public strictfp class World extends net.phys2d.raw.World {
         remove(coin);
         --nbCollectableCoin;
         if (nbCollectableCoin <= 0) {
-            setObjectivesCompleted(true);
+            boolean levelWithDoor = false;
+            for (int i = 0; i < bodies.size(); ++i) {
+                Body body = bodies.get(i);
+                if (body instanceof Door) {
+                    ((Door) body).open();
+                    levelWithDoor = true;
+                }
+            }
+            if (!levelWithDoor) {
+                setObjectivesCompleted(true);
+            }
         }
     }
 
@@ -411,7 +420,6 @@ public strictfp class World extends net.phys2d.raw.World {
         final Teleporter teleporter = findNextTeleporter(previousTeleporter);
         remove(hero);
         postStepActions.add(new Runnable() {
-
             @Override
             public void run() {
                 hero.setEnabled(true);
@@ -427,7 +435,6 @@ public strictfp class World extends net.phys2d.raw.World {
 
 	public void gotoLevel(final String newQuestName, final String newLevelName) {
         postUpdateActions.add(new PostUpdateAction() {
-
             @Override
             public void run() throws NormalTransitionException {
                 game.gotoLevel(newQuestName, newLevelName);
@@ -447,7 +454,6 @@ public strictfp class World extends net.phys2d.raw.World {
     public void showHelp() {
 
         postUpdateActions.add(new PostUpdateAction() {
-
             @Override
             public void run() throws ResumableTransitionException {
                 game.showHelp();

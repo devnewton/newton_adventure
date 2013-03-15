@@ -735,7 +735,7 @@ public class TmxLoader {
         defaultMapProperties.put("newton_adventure.clue", "clue.nanim");
         defaultMapProperties.put("newton_adventure.hero", "hero.nanim");
         defaultMapProperties.put("newton_adventure.apple", "apple.png");
-        defaultMapProperties.put("newton_adventure.coin", "coin.png");
+        defaultMapProperties.put("newton_adventure.coin_  ", "coin.png");
         defaultMapProperties.put("newton_adventure.world_map", "map.png");
         defaultMapProperties.put("newton_adventure.compass", "compass.png");
         defaultMapProperties.put("newton_adventure.activator1.on",

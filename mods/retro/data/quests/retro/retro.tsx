@@ -195,7 +195,7 @@
  <tile id="32">
   <image source="retro_32.png"/>
   <properties>
-   <property name="newton_adventure.type" value="platform"/>
+   <property name="newton_adventure.type" value="coin"/>
   </properties>
  </tile>
  <tile id="33">

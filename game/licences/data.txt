@@ -158,12 +158,17 @@ Authors: devnewton (devnewton@bci.im, http://devnewton.bci.im), Julien Jorge ( j
 * egypt tiles
 
 License: CC-BY-SA 3.0
-Author: Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr), devnewton (devnewton@bci.im, http://devnewton.bci.im)
+Authors: Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr), devnewton (devnewton@bci.im, http://devnewton.bci.im)
 
 * snowball_*.png
 
 License: CC-BY-SA 3.0
-Authors: Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr)
+Author: Julien Jorge ( julien.jorge@gamned.org, http://julien.jorge.free.fr)
+
+*  game_on_0.ogg
+
+License: CC-BY-SA 3.0
+Author: crystalswordsman ( http://opengameart.org/content/game-0 )
 
 * Other files
 
