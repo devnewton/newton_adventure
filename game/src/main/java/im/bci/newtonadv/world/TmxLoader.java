@@ -110,7 +110,6 @@ public class TmxLoader {
 
     public void preloading() {
         futureMap = executor.submit(new Callable<Map>() {
-
             @Override
             public Map call() throws Exception {
                 return game.getData().openLevelTmx(questName,
@@ -247,6 +246,10 @@ public class TmxLoader {
                         game.getData().getFile("pickup.wav")));
                 hero.setHurtSound(game.getSoundCache().getSound(
                         game.getData().getFile("hurt.wav")));
+                Long deadClock = getMapDeadClock(map);
+                if (null != deadClock) {
+                    hero.setDeadClock(deadClock);
+                }
                 world.setHero(hero);
             } else {
                 LOGGER.log(Level.WARNING, "One hero is enough for level {0} in quest {1}", new Object[]{levelName, questName});
@@ -561,13 +564,13 @@ public class TmxLoader {
             helpSign.setPosition(tileX, tileY);
             helpSign.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(helpSign);
-            
+
             Clue clue = new Clue(world, tileWidth / 2.0f, tileHeight / 2.0f);
             clue.setTexture(getClueTexture());
             clue.setAnchor(tileX, tileY + tileHeight);
             clue.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(clue);
-            
+
         } else if (c.equals("bomb")) {
             Bomb bomb = new Bomb(world);
             bomb.setTexture(getBombTexture());
@@ -799,8 +802,8 @@ public class TmxLoader {
         }
         return keyTexture;
     }
-    
-        private AnimationCollection getClueTexture() throws IOException {
+
+    private AnimationCollection getClueTexture() throws IOException {
         if (null == clueTexture) {
             clueTexture = game.getView().loadFromAnimation(
                     getFileFromMap(map, "newton_adventure.clue"));
@@ -983,5 +986,14 @@ public class TmxLoader {
 
     public boolean isReadyToLoad() {
         return futureMap.isDone();
+    }
+
+    private Long getMapDeadClock(Map map) {
+        String deadclock = map.getProperties().getProperty("newton_adventure.deadclock");
+        if (null != deadclock) {
+            return Long.valueOf(deadclock) * 1000000000L;
+        } else {
+            return null;
+        }
     }
 }

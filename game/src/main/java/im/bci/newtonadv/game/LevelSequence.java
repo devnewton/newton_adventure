@@ -32,8 +32,10 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.game.time.OneShotTimedAction;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.world.GameOverException;
+import im.bci.newtonadv.world.Hero;
 import im.bci.newtonadv.world.TmxLoader;
 import im.bci.newtonadv.world.World;
 
@@ -41,7 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
+ *
  * @author devnewton
  */
 strictfp public class LevelSequence implements PreloadableSequence {
@@ -260,7 +262,18 @@ strictfp public class LevelSequence implements PreloadableSequence {
     }
 
     protected void drawIndicators() {
-        game.getView().drawLevelIndicators(world.getHero().getNbApple() + "$ score: " + world.getHero().getLevelScore().computeScore());
+        StringBuilder b = new StringBuilder();
+        final Hero hero = world.getHero();
+        b.append(hero.getNbApple());
+        b.append("$ ");
+        final OneShotTimedAction deadClock = hero.getDeadClock();
+        if (null != deadClock) {
+            long seconds = deadClock.getRemainingTime() / 1000000000L;
+            b.append(seconds / 60);
+            b.append(":");
+            b.append(String.format("%02d", seconds % 60));
+        }
+        game.getView().drawLevelIndicators(b.toString());
     }
 
     public void setNextSequence(Sequence nextSequence) {

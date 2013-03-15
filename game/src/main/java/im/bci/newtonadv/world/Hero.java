@@ -39,6 +39,7 @@ import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.game.time.OneShotTimedAction;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.NewtonColor;
@@ -50,7 +51,7 @@ import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.Shape;
 
 /**
- * 
+ *
  * @author devnewton
  */
 public strictfp class Hero extends AbstractDrawableBody implements Updatable {
@@ -75,6 +76,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     private float scale = 1;
     private LevelScore levelScore = new LevelScore();
     private Play play;
+    private OneShotTimedAction deadClock;
 
     public void setJumpSound(ISoundCache.Playable jumpSound) {
         this.jumpSound = jumpSound;
@@ -83,9 +85,17 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     public void setPickupSound(ISoundCache.Playable pickupSound) {
         this.pickupSound = pickupSound;
     }
-    
+
     public void setHurtSound(ISoundCache.Playable hurtSound) {
         this.hurtSound = hurtSound;
+    }
+
+    public void setDeadClock(long duration) {
+        deadClock = new OneShotTimedAction(duration);
+    }
+
+    public OneShotTimedAction getDeadClock() {
+        return deadClock;
     }
 
     public Movement getCurrentMovement() {
@@ -273,6 +283,13 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
                 if (scale <= 0) {
                     throw new GameOverException("Newton is dead");
                 }
+            }
+        }
+        if (!isDead && null != deadClock) {
+            deadClock.update(frameTimeInfos);
+            if (deadClock.getProgress() >= 1.0f) {
+                hurt(1);
+                deadClock = new OneShotTimedAction(1000000000L);
             }
         }
     }

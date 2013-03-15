@@ -47,6 +47,7 @@ public strictfp class OneShotTimedAction extends TimedAction {
         this.duration = duration;
     }
 
+    @Override
     public void update(FrameTimeInfos f) {
         time += f.elapsedTime;
         if (time >= duration) {
@@ -56,7 +57,16 @@ public strictfp class OneShotTimedAction extends TimedAction {
         }
     }
 
+    @Override
     public float getProgress() {
         return progress;
+    }
+
+    public long getRemainingTime() {
+        if (time >= duration) {
+            return 0;
+        } else {
+            return duration - time;
+        }
     }
 }
