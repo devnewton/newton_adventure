@@ -12,7 +12,7 @@
  <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="64" height="64">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAO3W2wqCQBAAUAn6hnoq/P+frH2QRNvaJcxmOgcWQUeYiwwOAwAAAAAAUFzu59RxrvukuZnzxvG/rqWecXb9x/qLqQdZ6z90xkdX23vL/dYaF82nc4z+HUz5jy+j1rLsgXn+rT2Yx2Wqv3jXg+XzbPV/+/29PdvrtZ3eExtZbabRZ91K/Q/Hyv3Msv7rAQAAAAAARHUDQOTf7QBAAAA=
+   H4sIAAAAAAAAAO3Y/QrCIBSH4RFEHzdQfxXe/02W1EBk6nFznmO9D0hUW+f8nFutaULK4z1ugvHUanAnc+5SLhcM6VyNMIf36ZOphXM0cjWtaJm/pqYVfi33Xo+W8nu9+9GY85ze+S8KNXN8L9fKfY4b6o2cf+m7b81atpb/H2qmaPRi6Rqokd8p1V1C/rTwd3+NQ/T89B3h51rJv/Z+Jj5/f+G+qPaYuOixZ+09hD3EmVIZJdlL21g5H+IeJMdXki233fy6xfyeNJ/kvdwcWM1f0ur/Awv5t17DR7/+AwAAAAAAAAAAAAAAAAAAwI4XyqR/8gBAAAA=
   </data>
  </layer>
 </map>

@@ -12,7 +12,7 @@
  <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="64" height="64">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAO3W2wqCQBAAUAn6hnoq/P+frH2QRNvaJcxmOgcWQUeYiwwOAwAAAAAAUFzu59RxrvukuZnzxvG/rqWecXb9x/qLqQdZ6z90xkdX23vL/dYaF82nc4z+HUz5jy+j1rLsgXn+rT2Yx2Wqv3jXg+XzbPV/+/29PdvrtZ3eExtZbabRZ91K/Q/Hyv3Msv7rAQAAAAAARHUDQOTf7QBAAAA=
+   H4sIAAAAAAAAAO2Yj2rEIAzG5WDs2Avs2P0Zvv9LboEGJJdo2t7VKN8PpMWqzRdtrEkJAAAAAAAAAAAAzOO/fB9Yfo+R5eLuaJOXYnEuimesi6PdEXi0vxL2YQT9UntO7XneSxT9R897Se/131M700t/Tbu1B8hY/TDqa+PJtr3035ZrVopl0zts7bn+b0Y92yTjoLQ1iytzrYxtvasXmp1r5l/TXhu75dMeSDu9+uX8X9MzrXUQQT9Bdn4uhW06iTZU/2X017QTrT0min5Cxn0tVmv6t2rnMaPQssXS/6PUkXbtH1LumTPoJ6QP6Hvy/ENH1G/Z3LJV84H3nRGQ+771vEbpg5G//636CfKB92wxo/6t7+yNZkvt7MLP9+SwousvoXW95n/Z4mNH33fijW/y7Cj7yTVRy6lGyn+uiW/l/i77nUVdpDmuYdmp5QPJB7X8x4j6ZazznuE1RtSvsdUHpLmVTxqFlg+ycj/L/DNr18Fs+okyR0KF83za9ZKe8ymj08qPWG0j7fEAAAAAAAAAAAAAAMzIH7EDXWcAQAAA
   </data>
  </layer>
 </map>
