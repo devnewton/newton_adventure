@@ -289,7 +289,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
             deadClock.update(frameTimeInfos);
             if (deadClock.getProgress() >= 1.0f) {
                 hurt(1);
-                deadClock = new OneShotTimedAction(1000000000L);
+                deadClock = new OneShotTimedAction(2000000000L);
             }
         }
     }
