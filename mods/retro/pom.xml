@@ -24,10 +24,10 @@ SUCH DAMAGE. */ -->
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>im.bci.newtonadv</groupId>
-    <artifactId>newton_adventure_deluxe_mod</artifactId>
+    <artifactId>newton_adventure_retro_mod</artifactId>
     <packaging>jar</packaging>
     <version>1.9</version>
-    <name>newton_adventure_deluxe_mod</name>
+    <name>newton_adventure_retro_mod</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -80,19 +80,19 @@ SUCH DAMAGE. */ -->
                                     <dontWrapJar>false</dontWrapJar>
                                     <outfile>${project.build.finalName}-installer.exe</outfile>
                                     <jar>${project.build.finalName}-installer.jar</jar><!-- Copy manually the file in ${basedir}. Without this, the generated exe will be bugged. -->
-                                    <errTitle>Newton Adventure Deluxe mod installer</errTitle>
+                                    <errTitle>Newton Adventure Retro mod installer</errTitle>
                                     <jre>
                                         <minVersion>1.6.0</minVersion>
                                     </jre>
                                     <versionInfo>
                                         <fileVersion>1.0.0.0</fileVersion>
                                         <txtFileVersion>${project.version}</txtFileVersion>
-                                        <fileDescription>Deluxe mod for Newton Adventure.</fileDescription>
+                                        <fileDescription>Retro mod for Newton Adventure.</fileDescription>
                                         <copyright>BSD, CC-BY-SA 3.0</copyright>
                                         <productVersion>1.0.0.0</productVersion>
                                         <txtProductVersion>${project.version}</txtProductVersion>
-                                        <productName>Newton Adventure Deluxe mod installer</productName>
-                                        <internalName>newton_adventure_deluxe_mod_installer</internalName>
+                                        <productName>Newton Adventure Retro mod installer</productName>
+                                        <internalName>newton_adventure_retro_mod_installer</internalName>
                                         <originalFilename>${project.build.finalName}-installer.exe</originalFilename>
                                     </versionInfo>
                                 </configuration>

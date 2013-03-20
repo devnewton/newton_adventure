@@ -6,10 +6,10 @@
             location="applications"/>
 
 <shortcut
-	name="Uninstall Newton Adventure Deluxe Mod"
+	name="Uninstall Newton Adventure Retro Mod"
 	target="/usr/bin/java"
 	commandLine="-jar $INSTALL_PATH/Uninstaller/uninstaller.jar"
-	description="Uninstall Newton Adventure Deluxe Mod"
+	description="Uninstall Newton Adventure Retro Mod"
 	workingDirectory="$INSTALL_PATH/Uninstaller"
 	initialState="normal"
 	programGroup="yes"
