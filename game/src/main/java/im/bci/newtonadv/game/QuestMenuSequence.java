@@ -105,8 +105,8 @@ public class QuestMenuSequence extends MenuSequence {
                 throw new NormalTransitionException(sequence);
             }
         };
-        button.offTextureName = game.getButtonFile("quest_menu/" + textureBaseName + "-off.png");
-        button.onTextureName = game.getButtonFile("quest_menu/" + textureBaseName + "-on.png");
+        button.offTextureName = game.getButtonFile("quest_menu/" + textureBaseName + "-off");
+        button.onTextureName = game.getButtonFile("quest_menu/" + textureBaseName + "-on");
 
         button.x = QUEST_MINIATURE_SPACING + i
                 * (QUEST_MINIATURE_WIDTH + QUEST_MINIATURE_SPACING);
