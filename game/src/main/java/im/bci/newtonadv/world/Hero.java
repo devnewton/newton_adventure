@@ -31,8 +31,6 @@
  */
 package im.bci.newtonadv.world;
 
-import net.phys2d.math.Matrix2f;
-import net.phys2d.math.ROVector2f;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
@@ -43,6 +41,8 @@ import im.bci.newtonadv.game.time.OneShotTimedAction;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.NewtonColor;
+import net.phys2d.math.Matrix2f;
+import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
@@ -128,7 +128,10 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
         if (nbAppleLose > 0) {
             levelScore.addLosedApple(nbAppleLose);
         }
-        world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), nbAppleLose * levelScore.getLosedAppleValue()));
+        int scoreDiff = nbAppleLose * levelScore.getLosedAppleValue();
+        if(scoreDiff != 0) {
+            world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), scoreDiff));
+        }
         final float losedAppleSize = getShape().getBounds().getWidth() / 4.0f;
         for (int i = 0; i < nbAppleLose; ++i) {
             world.addTopLevelEntities(new LosedApple(world, this.getPosition(), losedAppleSize));
