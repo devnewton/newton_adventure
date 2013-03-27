@@ -40,7 +40,9 @@
         <pack name="Core" required="yes">
             <description>Core installation files</description>
 	    <singlefile src="../../../../game/licences/data.txt" target="$INSTALL_PATH/licences.txt" override="true"/>
-	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH" override="true"/>
+	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH" override="true">
+		<exclude name="quests/**"/>
+	    </fileset>
 	    <fileset dir="../../data" targetdir="$INSTALL_PATH" override="true"/>
         </pack>
     </packs> 
