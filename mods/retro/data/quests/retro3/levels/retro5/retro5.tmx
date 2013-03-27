@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="newton_adventure.background" value="retro_background.png"/>
+  <property name="newton_adventure.coin" value="coin.png"/>
+  <property name="newton_adventure.deadclock" value="90"/>
+  <property name="newton_adventure.mummy" value="toad.gif"/>
+  <property name="newton_adventure.music" value="game_on_0.ogg"/>
+ </properties>
+ <tileset firstgid="1" source="../../retro.tsx"/>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
+ <layer name="level" width="64" height="64">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAAO2Z0arCMAxAe/Fp6vvA///Qi+CFUrsm6c2y6M6BIWx1yalZ29lSAAAAAADgbDyCj2xE5vTt/uvriIjlRS+ntcguW3y6f+1t6YOluUd7rhcrA3VOPd+ZOthqfwb/Ufvs/k+0/mt5Hye+YfxrvTS/vbZtxrWE9/z35O54zy2y+NeubQ3MzqE92hrz9PesOe2z82PMcy9/C0eOX2f3b8H/M2POzK975aKNoxn/Zp1m+yDSfwbJ6Sa01ayl9uahyKPl+vrUfm+0vh6R1b+UcU1Lz/9StZNy27sPrP7S8y+9S7XnpFiZ/DXjWH391rlmGUOj/LUxLO+JHkT4F0MMa538tx+i/k+3+l+HrfyIXv9IeNa2hoz7Fh7rWm2caP863iUwds1fvx6xl3b0Xl7tneE9NHLPNJM3AAAAAAAAAAAAAOTmF8zgpZEAQAAA
+  </data>
+ </layer>
+</map>
