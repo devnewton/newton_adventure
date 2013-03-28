@@ -2,11 +2,11 @@
 
 <shortcuts>
 <skipIfNotSupported/>
-<programGroup defaultName="Newton Adventure"
+<programGroup defaultName="Newton Adventure Deluxe Mod"
             location="applications"/>
 
 <shortcut
-	name="Uninstall Newton Adventure Deluxe Mod"
+	name="Newton Adventure Deluxe Mod Uninstaller"
 	target="/usr/bin/java"
 	commandLine="-jar $INSTALL_PATH/Uninstaller/uninstaller.jar"
 	description="Uninstall Newton Adventure Deluxe Mod"
