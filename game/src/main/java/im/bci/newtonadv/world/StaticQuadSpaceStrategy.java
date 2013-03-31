@@ -255,21 +255,14 @@ class StaticQuadSpaceStrategy implements BroadCollisionStrategy {
         }
 
         final void split() {
-            Space[] spaces = new Space[4];
             float width = (x2 - x1) / 2.0f;
             float height = (y2 - y1) / 2.0f;
 
-            spaces[0] = new Space(this, x1, y1, width, height);
-            spaces[1] = new Space(this, x1, y1 + height, width, height);
-            spaces[2] = new Space(this, x1 + width, y1, width, height);
-            spaces[3] = new Space(this, x1 + width, y1 + height, width, height);
-
             subSpaces.clear();
-            for (Space s : spaces) {
-                if (!s.staticBodiesInSpace.isEmpty()) {
-                    subSpaces.add(s);
-                }
-            }
+            subSpaces.add(new Space(this, x1, y1, width, height));
+            subSpaces.add(new Space(this, x1, y1 + height, width, height));
+            subSpaces.add(new Space(this, x1 + width, y1, width, height));
+            subSpaces.add(new Space(this, x1 + width, y1 + height, width, height));
         }
 
         final boolean isLeaf() {
