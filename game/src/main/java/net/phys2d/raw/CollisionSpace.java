@@ -23,6 +23,8 @@ public class CollisionSpace implements CollisionContext {
 	protected float totalTime;
 	/** The bitmask that determine which bits are used for collision detection */
 	private long bitmask = 0xFFFFFFFFFFFFFFFFL;
+	/** True if the bitmask provided on bodies is used for exclusion */
+	private boolean bitmaskExcludes = true;
 	
 	/**
 	 * Create a new collision space based on a given strategy for 
@@ -33,7 +35,27 @@ public class CollisionSpace implements CollisionContext {
 	public CollisionSpace(BroadCollisionStrategy strategy) {
 		this.collisionStrategy = strategy;
 	}
+
+	/**
+	 * Set whether the bitmask provided on the bodies is used to exclude collision 
+	 * between bodies or include bodies in collision.
+	 * 
+	 * @param bitmaskExcludes True if the bitmask is used to exclude one body from
+	 * another
+	 */
+	public void setBitmaskExclusion(boolean bitmaskExcludes) {
+		this.bitmaskExcludes = bitmaskExcludes;
+	}
 	
+	/**
+	 * Check if the bitmask on the bodies is used to exclude bodies from collision
+	 * on include them in each other's collision.
+	 * 
+	 * @return True to indicate exclusion via the bitmask
+	 */
+	public boolean bitmaskExcludes() {
+		return bitmaskExcludes;
+	}
 	/**
 	 * Add a listener to be notified of collisions
 	 * 
@@ -77,6 +99,7 @@ public class CollisionSpace implements CollisionContext {
 	 * @param body The body to be added
 	 */
 	public void add(Body body) {
+		body.setBitmask(bitmaskExcludes ? 0 : 0xFFFFFFFFFFFFFFFFL);
 		body.setAdded(true);
 		bodies.add(body);
 	}
@@ -149,9 +172,17 @@ public class CollisionSpace implements CollisionContext {
 				if (bj.disabled()) {
 					continue;
 				}
-				if ((bi.getBitmask() & bj.getBitmask()) != 0) {
-					continue;
+                                				
+				if (bitmaskExcludes) {
+					if ((bi.getBitmask() & bj.getBitmask()) != 0) {
+						continue;
+					}
+				} else {
+					if ((bi.getBitmask() & bj.getBitmask()) == 0) {
+						continue;
+					}
 				}
+				
 				if (bi.getExcludedList().contains(bj)) {
 					continue;
 				}

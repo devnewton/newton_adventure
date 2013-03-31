@@ -217,11 +217,12 @@ public strictfp class SpringJoint implements Joint {
 			float springImpulse =
 				invDT != 0 ? brokenSpringConst * (springLength - springSize) / invDT : 0;
 			
+			Vector2f temp = new Vector2f();
 			Vector2f impulse = MathUtil.scale(spring, springImpulse);
-			body1.adjustBiasedVelocity(MathUtil.scale(impulse, body1.getInvMass()));
+			body1.adjustBiasedVelocity(MathUtil.scale(impulse, body1.getInvMass(), temp));
 			body1.adjustBiasedAngularVelocity((body1.getInvI() * MathUtil.cross(r1, impulse)));
 
-			body2.adjustBiasedVelocity(MathUtil.scale(impulse, -body2.getInvMass()));
+			body2.adjustBiasedVelocity(MathUtil.scale(impulse, -body2.getInvMass(), temp));
 			body2.adjustBiasedAngularVelocity(-(body2.getInvI() * MathUtil.cross(r2, impulse)));
 			
 			isBroken = true;
@@ -239,11 +240,12 @@ public strictfp class SpringJoint implements Joint {
 			invDT != 0 ? springConst * (springLength - springSize) / invDT : 0;
 
 		// apply the spring's forces
+		Vector2f temp = new Vector2f();
 		Vector2f impulse = MathUtil.scale(spring, springImpulse);
-		body1.adjustVelocity(MathUtil.scale(impulse, body1.getInvMass()));
+		body1.adjustVelocity(MathUtil.scale(impulse, body1.getInvMass(), temp));
 		body1.adjustAngularVelocity((body1.getInvI() * MathUtil.cross(r1, impulse)));
 
-		body2.adjustVelocity(MathUtil.scale(impulse, -body2.getInvMass()));
+		body2.adjustVelocity(MathUtil.scale(impulse, -body2.getInvMass(), temp));
 		body2.adjustAngularVelocity(-(body2.getInvI() * MathUtil.cross(r2, impulse)));
 	}
 	
@@ -287,11 +289,12 @@ public strictfp class SpringJoint implements Joint {
 			if ( springLength < minSpringSize && normalImpulse < 0
 					|| springLength > maxSpringSize && normalImpulse > 0 ) {
 				// now apply the impulses to the bodies
+				Vector2f temp = new Vector2f();
 				Vector2f impulse = MathUtil.scale(spring, normalImpulse);
-				body1.adjustVelocity(MathUtil.scale(impulse, body1.getInvMass()));
+				body1.adjustVelocity(MathUtil.scale(impulse, body1.getInvMass(), temp));
 				body1.adjustAngularVelocity((body1.getInvI() * MathUtil.cross(r1, impulse)));
 		
-				body2.adjustVelocity(MathUtil.scale(impulse, -body2.getInvMass()));
+				body2.adjustVelocity(MathUtil.scale(impulse, -body2.getInvMass(), temp));
 				body2.adjustAngularVelocity(-(body2.getInvI() * MathUtil.cross(r2, impulse)));
 			}
 		}

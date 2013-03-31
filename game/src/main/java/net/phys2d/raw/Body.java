@@ -651,7 +651,7 @@ public strictfp class Body {
 	/**
 	 * Set the "restitution" of the body. Hard bodies transfer
 	 * momentum well. A value of 1.0 would be a pool ball. The 
-	 * default is 1f
+	 * default is 0f
 	 * 
 	 * @param rest The restitution of this body
 	 */
@@ -697,7 +697,6 @@ public strictfp class Body {
 	 */
 	public void setShape(Shape shape) {
 		this.shape = shape;
-		//setMass(mass);
 	}
 	
 	/**
@@ -705,7 +704,7 @@ public strictfp class Body {
 	 * 
 	 * @param m The new mass of the body
 	 */
-	private void setMass(float m) {
+	public void setMass(float m) {
 		mass = m;
 
 		if (mass < INFINITE_MASS)

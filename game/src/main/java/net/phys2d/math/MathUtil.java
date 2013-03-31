@@ -65,6 +65,34 @@ public final strictfp class MathUtil {
 		
 		return temp;
 	}
+
+	/**
+	 * Scale a vector by a given value
+	 * 
+	 * @param a The vector to be scaled
+	 * @param scale The amount to scale the vector by
+	 * @return The original vector instance scales
+	 */
+	public static Vector2f scaleInSitu(Vector2f a, float scale) {
+		a.scale(scale);
+		
+		return a;
+	}
+
+	/**
+	 * Scale a vector by a given value
+	 * 
+	 * @param a The vector to be scaled
+	 * @param scale The amount to scale the vector by
+	 * @param temp The vector to store the result in
+	 * @return The temp vector passed in
+	 */
+	public static Vector2f scale(ROVector2f a, float scale, Vector2f temp) {
+		temp.set(a);
+		temp.scale(scale);
+		
+		return temp;
+	}
 	
 	/**
 	 * Subtract one vector from another

@@ -158,7 +158,7 @@ public strictfp class BoxBoxCollider implements Collider {
 		{
 			// Find intersection point of edge and plane
 			float interp = distance0 / (distance0 - distance1);
-			vOut[numOut].v = MathUtil.scale(MathUtil.sub(vIn[1].v, vIn[0].v),interp);
+			vOut[numOut].v = MathUtil.scaleInSitu(MathUtil.sub(vIn[1].v, vIn[0].v),interp);
 			vOut[numOut].v.add(vIn[0].v);
 			
 			if (distance0 > 0.0f)
@@ -195,7 +195,7 @@ public strictfp class BoxBoxCollider implements Collider {
 		// The normal is from the reference box. Convert it
 		// to the incident boxe's frame and flip sign.
 		Matrix2f rotT = rot.transpose();
-		Vector2f n = MathUtil.scale(MathUtil.mul(rotT,normal),-1);
+		Vector2f n = MathUtil.scaleInSitu(MathUtil.mul(rotT,normal),-1);
 		Vector2f nAbs = MathUtil.abs(n);
 
 		if (nAbs.x > nAbs.y)
@@ -424,8 +424,9 @@ public strictfp class BoxBoxCollider implements Collider {
 		int np;
 
 		// Clip to box side 1
-		np = clipSegmentToLine(clipPoints1, incidentEdge, MathUtil.scale(sideNormal,-1), negSide, negEdge);
-
+		np = clipSegmentToLine(clipPoints1, incidentEdge, MathUtil.scaleInSitu(sideNormal,-1), negSide, negEdge);
+		MathUtil.scaleInSitu(sideNormal, -1);
+		
 		if (np < 2)
 			return 0;
 

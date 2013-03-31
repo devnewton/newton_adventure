@@ -73,8 +73,7 @@ public class SwapCollider implements Collider {
 		
 		// reverse the collision results by inverting normals
 		for ( int i = 0; i < count; i++ ) {
-			Vector2f vec = MathUtil.scale(contacts[i].getNormal(),-1);
-			contacts[i].setNormal(vec);
+			MathUtil.scaleInSitu((Vector2f) contacts[i].getNormal(),-1);
 		}
 		
 		return count;

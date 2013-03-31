@@ -79,8 +79,7 @@ public strictfp class CircleBoxCollider extends BoxCircleCollider {
 		// reverse the collision results by inverting normals
 		// and projecting the results onto the circle
 		for (int i=0;i<count;i++) {
-			Vector2f vec = MathUtil.scale(contacts[i].getNormal(),-1);
-			contacts[i].setNormal(vec);
+			MathUtil.scaleInSitu((Vector2f) contacts[i].getNormal(),-1);
 			
 			Vector2f pt = MathUtil.sub(contacts[i].getPosition(), circleBody.getPosition());
 			pt.normalise();
