@@ -1,18 +1,17 @@
-<title>Newton Adventure</title>  
+<title> </title>  
 
-Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.
-
-It runs on every Linux, Windows, Mac OS X or any OS with Java and OpenGL support.
-
-<small>Code is available under BSD licence, data under CC-BY-SA or more permissive licences.</small>
-
-If you like this game, you can make a [Donation] or better [Contribute] to his development.
-
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SV77ZDUH33R78"><img src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" alt="Donation"></a>
-
+<p>Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.</p>
+<p>It runs on every Linux, Windows, Mac OS X or any OS with Java and OpenGL support.</p>
+<p><small>Code is available under BSD licence, data under CC-BY-SA or more permissive licences.</small></p>
+<p>[Donation] or people wanting to [Contribute] to the game development are welcome.</p>
 <h1><a href="download.wiki">Download and play!</a></h1>
-
-<p><a href="http://www.dailymotion.com/devnewton">Videos</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/scoreserver/game/newton_adventure/">Highscores</a></p>
+<p>
+<video controls>
+	<source type="video/webm" src="http://dl.dropbox.com/s/mj17ib6n10hn04i/newton_adventure_1.10_trailer.webm"></source>
+	<source type="video/mp4" src="http://cdn.gameura.com/videos/games/1/17/16482/trailer4_high.mp4"></source>
+	<a href="http://www.dailymotion.com/devnewton">Videos</a>
+</video>
+</p>
 <p><img src="screenshots/montage_800_600.jpg" /></p>
-
 <h1><a href="contact.wiki">Contact the author.</a></h1>
+<h1><a href="http://devnewton.bci.im/scoreserver/game/newton_adventure/">Highscores</a></h1>
