@@ -48,12 +48,12 @@ Author: Harlad
 Author: Redshrike (Stephen Challener) ( http://opengameart.org/content/a-load-of-overworld-34-rpg-sprites ) 
 License: CC-BY 3.0
 
-* most of vatican quest tiles
+* vatican_[22-30,35-37,39-43,].png 
 
 Author: surt (Carl Olsson) (http://opengameart.org/content/classical-ruin-tiles)
 License: CC-BY-SA 3.0
 
-* most of bonus and credit levels tiles
+* bonus_[26,32-39].png prison_[49,54-61]
 
 Author: Scribe (Daniel Stephens) (http://opengameart.org/content/breakout-graphics-no-shadow)
 License: CC0
@@ -63,7 +63,7 @@ License: CC0
 Author: Lasse Öörni, Kalle Niemitalo, Olli Niemitalo Tuomas Mäkelä (http://opengameart.org/content/3-low-pixel-fonts)
 License: CC-BY-3.0
 
-* most of volcano quest tiles
+* volcano_[22-37,39-43,52-58,
 
 Author: surt (Carl Olsson) (http://opengameart.org/content/monsterboy-in-wonder-world-mockup-assets)
 License: CC-BY-SA 3.0
