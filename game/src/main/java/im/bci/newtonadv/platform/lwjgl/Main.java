@@ -34,13 +34,14 @@ package im.bci.newtonadv.platform.lwjgl;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.RestartGameException;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.lwjgl.Sys;
 
 /**
  *
@@ -79,18 +80,6 @@ public class Main {
     public static void main(String[] args) throws IOException,
             ClassNotFoundException, Exception {
 
-        System.out.println("java.library.path = " + System.getProperty("java.library.path"));
-        System.out.println("org.lwjgl.librarypath = " + System.getProperty("org.lwjgl.librarypath"));
-        System.out.println("net.java.games.input.librarypath = " + System.getProperty("net.java.games.input.librarypath"));
-        System.out.print("classpath = ");
-        ClassLoader cl = ClassLoader.getSystemClassLoader();
-        URL[] urls = ((URLClassLoader)cl).getURLs();
-        for(URL url: urls){
-        	System.out.print(url.getFile());
-                System.out.print(':');
-        }
-        System.out.println();
-        Sys.getTime();
         Game game;
         PlatformSpecific platform = null;
         try {

@@ -97,9 +97,9 @@ public class OptionsGUI extends Widget {
     OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer,
             ISoundCache soundCache, IPlatformSpecific platform) throws LWJGLException {
         this.platform = platform;
-        setSize(Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
+        setSize(Display.getWidth(), Display.getHeight());
         this.layout = new ColumnLayout();
-        layout.setSize(Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
+        layout.setSize(Display.getWidth(), Display.getHeight());
 
         soundEnabled = new ToggleButton(platform.getMessage("options.sound.effect.enabled"));
         soundEnabled.setActive(soundCache.isSoundEnabled());
