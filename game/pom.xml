@@ -31,6 +31,12 @@ SUCH DAMAGE. */ -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <lwjgl.jar.path>/usr/share/java/lwjgl.jar</lwjgl.jar.path>
+        <lwjgl_util.jar.path>/usr/share/java/lwjgl_util.jar</lwjgl_util.jar.path>
+        <xpp3.jar.path>/usr/share/java/xpp3.jar</xpp3.jar.path>
+        <jorbis.jar.path>/usr/share/java/jorbis.jar</jorbis.jar.path>
+        <jogg.jar.path>/usr/share/java/jogg.jar</jogg.jar.path>
+        <protobuf.jar.path>/usr/share/java/protobuf-java.jar</protobuf.jar.path>
     </properties>
     <build>
         <resources>
@@ -50,26 +56,23 @@ SUCH DAMAGE. */ -->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>im.bci.newtonadv.platform.lwjgl.Main</Main-Class>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <index>false</index>
+                        <manifest>
+                            <mainClass>im.bci.newtonadv.platform.lwjgl.Main</mainClass>
+                            <packageName>im.bci.newtonadv</packageName>
+                            <addClasspath>true</addClasspath>
+                            <addExtensions>true</addExtensions>
+                        </manifest>
+                        <manifestEntries>
+                            <mode>development</mode>
+                            <Class-Path>/usr/share/java/lwjgl.jar /usr/share/java/lwjgl_util.jar /usr/share/java/lwjgl_test.jar /usr/share/java/xpp3.jar /usr/share/java/jorbis.jar /usr/share/java/jogg.jar /usr/share/java/protobuf-java.jar</Class-Path>
+                        </manifestEntries> 
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -96,279 +99,53 @@ SUCH DAMAGE. */ -->
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.googlecode.mavennatives</groupId>
-                <artifactId>maven-nativedependencies-plugin</artifactId>
-                <version>0.0.7</version>
-                <executions>
-                    <execution>
-                        <id>unpacknatives</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <!--suppress MavenModelInspection (this line is for IDEA)-->
-                            <goal>copy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.izpack</groupId>
-                <artifactId>izpack-maven-plugin</artifactId>
-                <version>1.0-alpha-5</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>izpack</goal>
-                        </goals>
-                        <configuration>
-                            <installerFile>${project.build.directory}/${project.build.finalName}-installer.jar</installerFile>
-                        </configuration>
-                    </execution>
-                </executions>  
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.izpack</groupId>
-                        <artifactId>izpack-standalone-compiler</artifactId>
-                        <version>4.3.1</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
     <dependencies>
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
-            <version>2.9.0</version>
+            <version>2.7.1</version>
+            <scope>system</scope>
+            <systemPath>${lwjgl.jar.path}</systemPath>
         </dependency>
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl_util</artifactId>
-            <version>2.9.0</version>
+            <version>2.7.1</version>
+            <scope>system</scope>
+            <systemPath>${lwjgl_util.jar.path}</systemPath>
         </dependency>
         <dependency>
             <groupId>org.jcraft</groupId>
             <artifactId>jorbis</artifactId>
             <version>0.0.17</version>
+            <scope>system</scope>
+            <systemPath>${jorbis.jar.path}</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.jcraft</groupId>
+            <artifactId>jogg</artifactId>
+            <version>0.0.17</version>
+            <scope>system</scope>
+            <systemPath>${jogg.jar.path}</systemPath>
         </dependency>
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
             <version>1.1.4c</version>
+            <scope>system</scope>
+            <systemPath>${xpp3.jar.path}</systemPath>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>2.4.1</version>
+            <scope>system</scope>
+            <systemPath>${protobuf.jar.path}</systemPath>            
         </dependency>
     </dependencies>
     <profiles>
-        <profile>
-            <id>win</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                        <artifactId>launch4j-maven-plugin</artifactId>
-                        <version>1.5.2</version>
-                        <executions>
-                            <execution>
-                                <id>l4j-installer</id>
-                                <phase>install</phase><!-- how to create a custom phase? -->
-                                <goals>
-                                    <goal>launch4j</goal>
-                                </goals>
-                                <configuration>
-                                    <headerType>gui</headerType>
-                                    <dontWrapJar>false</dontWrapJar>
-                                    <outfile>${project.build.finalName}-installer.exe</outfile>
-                                    <jar>${project.build.finalName}-installer.jar</jar><!-- Copy manually the file in ${basedir}. Without this, the generated exe will be bugged. -->
-                                    <errTitle>Newton Adventure installer</errTitle>
-                                    <jre>
-                                        <minVersion>1.6.0</minVersion>
-                                    </jre>
-                                    <versionInfo>
-                                        <fileVersion>1.0.0.0</fileVersion>
-                                        <txtFileVersion>${project.version}</txtFileVersion>
-                                        <fileDescription>Newton Adventure is a free and open source 2D platform game. You play Newton, a very special hero who has the power to change gravity direction.</fileDescription>
-                                        <copyright>BSD, CC-BY-SA 3.0</copyright>
-                                        <productVersion>1.0.0.0</productVersion>
-                                        <txtProductVersion>${project.version}</txtProductVersion>
-                                        <productName>Newton Adventure installer</productName>
-                                        <internalName>newton_adventure_installer</internalName>
-                                        <originalFilename>${project.build.finalName}-installer.exe</originalFilename>
-                                    </versionInfo>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>rpm</id>
-            <build>
-                <plugins>            
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>rpm-maven-plugin</artifactId>
-                        <version>2.1-alpha-2</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>rpm</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <copyright>2012, devnewton@bci.im</copyright>
-                            <group>Application/Games</group>
-                            <packager>devnewton</packager>
-                            <requires>
-                                <require>java &gt; 1-1.6.0 </require>
-                            </requires>
-                            <mappings>
-                                <mapping>
-                                    <directory>/opt/${project.name}</directory>
-                                    <filemode>755</filemode>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>${project.build.directory}/${project.build.finalName}.jar</location>
-                                            <destination>${project.name}.jar</destination>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                                <mapping>
-                                    <directory>/opt/${project.name}</directory>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>${basedir}/src/main/resources/icon.png</location>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                                <mapping>
-                                    <directory>/opt/${project.name}/data</directory>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>${basedir}/data</location>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                                <mapping>
-                                    <directory>/opt/${project.name}/natives</directory>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>${basedir}/target/natives</location>
-                                            <targetArchitecture>x86_64</targetArchitecture>
-                                            <includes>
-                                                <include>*64.so</include>
-                                            </includes>
-                                        </source>
-                                        <source>
-                                            <location>${basedir}/target/natives</location>
-                                            <targetArchitecture>i686</targetArchitecture>
-                                            <includes>
-                                                <include>*.so</include>
-                                            </includes>
-                                            <excludes>
-                                                <exclude>*64.so*</exclude>
-                                            </excludes>
-                                        </source>
-                                    </sources>
-                                </mapping>-->
-                                <mapping>
-                                    <directory>/opt/${project.name}/licences</directory>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>${basedir}/licences</location>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                                <mapping>
-                                    <directory>/usr/share/applications</directory>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>${basedir}/src/rpm/newton_adventure.desktop</location>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                                <mapping>
-                                    <directory>/usr/bin</directory>
-                                    <filemode>755</filemode>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>${basedir}/src/rpm/run_newton_adventure.sh</location>
-                                            <destination>${project.name}</destination>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                            </mappings>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>rpm32</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>rpm-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>rpm-i686</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>attached-rpm</goal>
-                                </goals>
-                                <configuration>
-                                    <needarch>i686</needarch>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>rpm64</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>rpm-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>rpm-x86_64</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>attached-rpm</goal>
-                                </goals>
-                                <configuration>
-                                    <needarch>x86_64</needarch>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>deb</id>
             <build>

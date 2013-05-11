@@ -236,8 +236,8 @@ public class OptionsSequence implements IOptionsSequence {
 	}
 
 	private void updateConfig() {
-		config.setProperty("view.width", "" + Display.getWidth());
-		config.setProperty("view.height", "" + Display.getHeight());
+		config.setProperty("view.width", "" + Display.getDisplayMode().getWidth());
+		config.setProperty("view.height", "" + Display.getDisplayMode().getHeight());
 		config.setProperty("view.bpp", ""
 				+ Display.getDisplayMode().getBitsPerPixel());
 		config.setProperty("view.fullscreen", "" + Display.isFullscreen());
@@ -340,8 +340,8 @@ public class OptionsSequence implements IOptionsSequence {
 
 	@Override
 	public void tick() throws NormalTransitionException, RestartGameException {
-		if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
-			GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		if (Display.isVisible() || Display.isDirty()) {
+			GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
 		}
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);

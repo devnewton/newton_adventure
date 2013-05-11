@@ -318,7 +318,6 @@ public strictfp class GameView implements IGameView {
                 Display.setFullscreen(false);
                 Display.setDisplayMode(chosenMode);
             }
-            Display.setResizable(true);
             Display.setTitle("Newton adventure");
             if (!Display.isCreated()) {
                 Display.create();
@@ -360,8 +359,8 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void draw(Sequence sequence) {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
-            GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+        if (Display.isVisible() || Display.isDirty()) {
+            GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
         }
         sequence.draw();
 
@@ -389,9 +388,9 @@ public strictfp class GameView implements IGameView {
 
             GL11.glPushMatrix();
             GL11.glLoadIdentity();
-            GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-            GL11.glTranslatef(Display.getWidth() - font.getWidth(fps),
-                    Display.getHeight() - 64, 0);
+            GL11.glOrtho(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight(), -1, 1);
+            GL11.glTranslatef(Display.getDisplayMode().getWidth() - font.getWidth(fps),
+                    Display.getDisplayMode().getHeight() - 64, 0);
             font.drawString(fps);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
@@ -1124,7 +1123,7 @@ public strictfp class GameView implements IGameView {
     @Override
     public void drawScoreSequence(ScoreSequence sequence,
             QuestScore questScore, long scorePerCentToShow) {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized()
+        if (Display.isVisible() || Display.isDirty()
                 || sequence.isDirty()) {
             sequence.setDirty(false);
             doDrawMenuSequence(sequence);
@@ -1167,8 +1166,8 @@ public strictfp class GameView implements IGameView {
     public void drawSnowLayer(SnowLayer layer) {
         GL11.glPushMatrix();
 
-        float aspectRatio = (float) Display.getWidth()
-                / (float) Display.getHeight();
+        float aspectRatio = (float) Display.getDisplayMode().getWidth()
+                / (float) Display.getDisplayMode().getHeight();
         GLU.gluOrtho2D(SnowLayer.ortho2DLeft * aspectRatio,
                 SnowLayer.ortho2DRight * aspectRatio, SnowLayer.ortho2DBottom,
                 SnowLayer.ortho2DTop);
@@ -1195,8 +1194,8 @@ public strictfp class GameView implements IGameView {
 
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
-        GL11.glTranslatef(0, Display.getHeight() - font.getHeight(),
+        GL11.glOrtho(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight(), -1, 1);
+        GL11.glTranslatef(0, Display.getDisplayMode().getHeight() - font.getHeight(),
                 0);
         font.drawString(indicators);
         GL11.glPopAttrib();
@@ -1205,7 +1204,7 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawMenuSequence(MenuSequence sequence) {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized()
+        if (Display.isVisible() || Display.isDirty()
                 || sequence.isDirty()) {
             sequence.setDirty(false);
             doDrawMenuSequence(sequence);
@@ -1262,8 +1261,8 @@ public strictfp class GameView implements IGameView {
     public void drawWorld(World world) {
         GL11.glPushMatrix();
 
-        float aspectRatio = (float) Display.getWidth()
-                / (float) Display.getHeight();
+        float aspectRatio = (float) Display.getDisplayMode().getWidth()
+                / (float) Display.getDisplayMode().getHeight();
         GLU.gluOrtho2D(World.ortho2DLeft * aspectRatio, World.ortho2DRight
                 * aspectRatio, World.ortho2DBottom, World.ortho2DTop);
 
@@ -1419,8 +1418,8 @@ public strictfp class GameView implements IGameView {
     public void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glPushMatrix();
-        final float aspectRatio = (float) Display.getWidth()
-                / (float) Display.getHeight();
+        final float aspectRatio = (float) Display.getDisplayMode().getWidth()
+                / (float) Display.getDisplayMode().getHeight();
         final float screenWidth = Game.DEFAULT_SCREEN_WIDTH
                 * aspectRatio;
         GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);
@@ -1487,12 +1486,12 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public float getWidth() {
-        return Display.getWidth();
+        return Display.getDisplayMode().getWidth();
     }
 
     @Override
     public float getHeight() {
-        return Display.getHeight();
+        return Display.getDisplayMode().getHeight();
     }
     static final float minimapSize = 32;
 
@@ -1655,8 +1654,8 @@ public strictfp class GameView implements IGameView {
     public void drawLoading(Play loadingPlay) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glPushMatrix();
-        final float aspectRatio = (float) Display.getWidth()
-                / (float) Display.getHeight();
+        final float aspectRatio = (float) Display.getDisplayMode().getWidth()
+                / (float) Display.getDisplayMode().getHeight();
         final float screenWidth = Game.DEFAULT_SCREEN_WIDTH
                 * aspectRatio;
         GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);

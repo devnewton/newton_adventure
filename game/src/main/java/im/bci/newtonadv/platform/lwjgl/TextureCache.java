@@ -416,7 +416,7 @@ public class TextureCache implements ITextureCache {
     @Override
     public ITexture grabScreenToTexture() {
         
-        Texture texture = new Texture(Display.getWidth(), Display.getHeight(), false);
+        Texture texture = new Texture(Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight(), false);
         putTexture("!screenCapture", texture);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         setupGLTextureParams();
