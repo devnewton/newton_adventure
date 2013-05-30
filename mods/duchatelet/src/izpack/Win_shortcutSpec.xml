@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+<skipIfNotSupported/>
+<programGroup defaultName="Newton Adventure" location="applications"/>
+
+<shortcut
+ 		name="Uninstall Newton Adventure Du Chatelet Mod"
+		target="$JAVA_HOME\bin\javaw.exe"
+		workingDirectory=""
+		commandLine="-Dizpack.mode=privileged -jar &quot;$INSTALL_PATH\Uninstaller\uninstaller.jar&quot;"
+ 		description="Uninstall Newton Adventure Du Chatelet Mod"
+ 		initialState="normal"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no" >
+	<createForPack name="Core"/>
+</shortcut>
+
+
+</shortcuts>
