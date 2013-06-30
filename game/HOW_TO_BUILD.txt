@@ -1,0 +1,26 @@
+= Requirements =
+
+Java JDK 1.6+ (openjdk or Oracle version)
+Maven 2.2+
+
+= Compile =
+
+Go to the source folder and run maven with the following command:
+
+	mvn package
+
+This will generate an executable jar in target subfolder named newton_adventure-${version}.jar
+
+= Run =
+
+The game can be run using the following command:
+
+	java -jar newton_adventure-${version}.jar
+
+It will try to load the game data files in
+
+	./data
+
+or
+
+	../data
