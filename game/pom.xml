@@ -26,7 +26,7 @@ SUCH DAMAGE. */ -->
     <groupId>im.bci.newtonadv</groupId>
     <artifactId>newton_adventure</artifactId>
     <packaging>jar</packaging>
-    <version>1.10</version>
+    <version>1.11</version>
     <name>newton_adventure</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -88,6 +88,13 @@ SUCH DAMAGE. */ -->
                                     <directory>${basedir}/src/deb</directory>
                                     <includes>
                                         <include>**/*.desktop</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+				<resource>                                    
+                                    <directory>${basedir}</directory>
+                                    <includes>
+                                        <include>**/run_*</include>
                                     </includes>
                                     <filtering>true</filtering>
                                 </resource>

@@ -41,14 +41,14 @@
             <description>Core installation files</description>
             <file src="../@{project.build.finalName}.jar" targetdir="$INSTALL_PATH" />
             <file src="../../src/izpack/icon.ico" targetdir="$INSTALL_PATH" />
-            <file src="../../README_YOU_DONT_WANT_TO_BUT_YOU_HAVE_TO_README.txt" targetdir="$INSTALL_PATH" />
-            <file src="../../run_linux.sh" targetdir="$INSTALL_PATH" >
+            <file src="../../README.txt" targetdir="$INSTALL_PATH" />
+            <file src="../../target/run_linux.sh" targetdir="$INSTALL_PATH" >
 		<os family="unix"/>
 	    </file>
-            <file src="../../run_macosx.sh" targetdir="$INSTALL_PATH" >
+            <file src="../../target/run_macosx.sh" targetdir="$INSTALL_PATH" >
 		<os family="mac"/>
 	    </file>
-            <file src="../../run_windows.bat" targetdir="$INSTALL_PATH" >
+            <file src="../../target/run_windows.bat" targetdir="$INSTALL_PATH" >
 		<os family="windows"/>
 	    </file>
             <file src="../../src/main/resources/icon.png" targetdir="$INSTALL_PATH" />

@@ -1,6 +1,6 @@
 = Requirements =
 
-Java JDK, [openjdk](http://openjdk.java.net/) or [Oracle](http://java.com), 1.6+
+Java JDK, [openjdk](http://openjdk.java.net/) or [Oracle](http://java.com): 1.6+
 [Maven](http://www.maven.org) 2.2+
 
 = Compile =
@@ -20,7 +20,7 @@ This will generate an executable jar in target subfolder named newton_adventure-
 
 == Create packages and installers ==
 
-Using maven plugins, rpm and deb can be generated and also a generic [izpack](www.izpack.org) based installer.
+Using maven 3 plugins, rpm and deb can be generated and also a generic [izpack](www.izpack.org) based installer.
 
 	mvn clean package -Pizpack,deb,rpm,rpm32
 
@@ -40,4 +40,4 @@ or
 
 NB: lwjgl shared libraries must be loadable, check the [lwjgl](www.lwjgl.org) documentation for more information.
 
-
+NB2: openjdk 1.6 has a bug causing some brutal slowdown. 1.7 is fine.
