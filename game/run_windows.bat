@@ -1,1 +1,1 @@
-java -jar newton_adventure-1.10.jar
+java -jar newton_adventure-${project.version}.jar
