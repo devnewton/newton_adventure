@@ -67,6 +67,17 @@ SUCH DAMAGE. */ -->
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
+			   <filters>
+				    <filter>
+					<artifact>*:*</artifact>
+					<excludes>
+					    <exclude>*.dll</exclude>
+					    <exclude>*.so</exclude>
+					    <exclude>*.jnilib</exclude>
+					    <exclude>*.dylib</exclude>
+					</excludes>
+				    </filter>
+				    </filters>
                         </configuration>
                     </execution>
                 </executions>
