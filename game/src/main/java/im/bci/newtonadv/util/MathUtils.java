@@ -53,4 +53,14 @@ public class MathUtils {
 		return ((n & (n - 1)) == 0) && n > 0;
 	}
 
+	public static int max(int... values) {
+		int max = Integer.MIN_VALUE;
+		for(int value : values) {
+			if(value>max) {
+				max = value;
+			}
+		}
+		return max;
+	}
+
 }

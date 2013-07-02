@@ -162,6 +162,9 @@ public class OptionsSequence implements IOptionsSequence {
 						input.joypad, optionsGui.keyRotateClockwise);
 				input.joypadKeyRotateCounterClockwise = findJoypadButtonIndex(
 						input.joypad, optionsGui.keyRotateCounterClockwise);
+				if(null == JoypadPreset.find(input.joypad)) {
+					Logger.getLogger(JoypadPreset.class.getName()).log(Level.INFO, "This joypad has no preset. Please copy and send this message by mail to devnewton@bci.im to improve Newton Adventure joypad support:  name '"+ input.joypad.getName() +"', xAxis=" + input.joypadXAxis + ", yAxis=" + input.joypadYAxis + ", keyJump=" + input.joypadKeyJump + ", keyLeft=" + input.joypadKeyLeft + ", keyRight=" + input.joypadKeyRight + ", keyRotateClockwise=" + input.joypadKeyRotateClockwise + ", keyRotateCounterClock=" + input.joypadKeyRotateCounterClockwise+ ", keyRotate90Clockwise=" + input.joypadKeyRotate90Clockwise + ", keyRotate90CounterClock=" + input.joypadKeyRotate90CounterClockwise+ ", keyReturn=" + input.joypadKeyReturn + ", keyReturnToMenu=" + input.joypadKeyReturnToMenu + "]");
+				}
 			}
 		} else {
 			input.joypad = null;

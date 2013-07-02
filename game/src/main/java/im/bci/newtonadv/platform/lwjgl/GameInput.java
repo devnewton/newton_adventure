@@ -42,7 +42,6 @@ import java.util.logging.Logger;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
@@ -164,15 +163,9 @@ public class GameInput implements IGameInput {
 	}
 
 	private void autoconfigureJoypad() {
-		JoypadPreset preset = null;
-		for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
-			joypad = Controllers.getController(i);
-			preset = JoypadPreset.findByName(joypad.getName());
-			if (null != preset) {
-				break;
-			}
-		}
+		joypad = findJoypadToAutoConfigure();
 		if (null != joypad) {
+			JoypadPreset preset = JoypadPreset.find(joypad);
 			if(null == preset) {
 				preset = new JoypadPreset(joypad);
 			}
@@ -189,6 +182,36 @@ public class GameInput implements IGameInput {
 			joypadKeyRotate90CounterClockwise = preset.getKeyRotate90CounterClockWise();
 
 		}
+	}
+
+	private Controller findJoypadToAutoConfigure() {
+		Controller bestJoypad = null;
+		JoypadPreset bestJoypadPreset = null;
+		for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
+			Controller joypadCandidate = Controllers.getController(i);
+			JoypadPreset joypadCandidatePreset =  JoypadPreset.find(joypadCandidate);
+			if(isBetterJoypadCandidate(joypadCandidate, joypadCandidatePreset, bestJoypad, bestJoypadPreset)) {
+				bestJoypad = joypadCandidate;
+				bestJoypadPreset = joypadCandidatePreset;
+			}
+		}
+		return bestJoypad;
+	}
+
+	private boolean isBetterJoypadCandidate(Controller joypadCandidate, JoypadPreset joypadCandidatePreset, Controller bestJoypad, JoypadPreset bestJoypadPreset) {
+		if(null == bestJoypad) {
+			return true;
+		}
+		if(null == bestJoypadPreset && null != joypadCandidatePreset) {
+			return true;			
+		}
+		if(joypadCandidate.getAxisCount() >=2 &&  bestJoypad.getAxisCount() < 2) {
+			return true;
+		}
+		if(joypadCandidate.getButtonCount() > bestJoypad.getButtonCount()) {
+			return true;
+		}
+		return false;
 	}
 
 	public static int findJoypadButtonByName(Controller controller, String buttonName) {
