@@ -130,7 +130,6 @@ public class OptionsSequence implements IOptionsSequence {
 		input.keyRotate90CounterClockwise = findKeyIndex(optionsGui.keyRotate90CounterClockwise);
 		input.keyRotateClockwise = findKeyIndex(optionsGui.keyRotateClockwise);
 		input.keyRotateCounterClockwise = findKeyIndex(optionsGui.keyRotateCounterClockwise);
-		input.keyPause = findKeyIndex(optionsGui.keyPause);
 		input.keyReturn = findKeyIndex(optionsGui.keyReturn);
 		input.keyReturnToMenu = findKeyIndex(optionsGui.keyReturnToMenu);
 		if (optionsGui.joypad.getSelected() >= 0
@@ -151,8 +150,6 @@ public class OptionsSequence implements IOptionsSequence {
 						optionsGui.keyLeft);
 				input.joypadKeyRight = findJoypadButtonIndex(input.joypad,
 						optionsGui.keyRight);
-				input.joypadKeyPause = findJoypadButtonIndex(input.joypad,
-						optionsGui.keyPause);
 				input.joypadKeyReturn = findJoypadButtonIndex(input.joypad,
 						optionsGui.keyReturn);
 				input.joypadKeyReturnToMenu = findJoypadButtonIndex(
@@ -259,7 +256,6 @@ public class OptionsSequence implements IOptionsSequence {
 		config.setProperty("key.return", getKeyFieldName(input.keyReturn));
 		config.setProperty("key.return_to_menu",
 				getKeyFieldName(input.keyReturnToMenu));
-		config.setProperty("key.pause", getKeyFieldName(input.keyPause));
 
 		if (Controllers.getControllerCount() > 0) {
 			config.setProperty("joypad.name",
@@ -274,8 +270,6 @@ public class OptionsSequence implements IOptionsSequence {
 					getJoypadButtonName(input.joypadKeyRight));
 			config.setProperty("joypad.button.jump",
 					getJoypadButtonName(input.joypadKeyJump));
-			config.setProperty("joypad.button.pause",
-					getJoypadButtonName(input.joypadKeyPause));
 			config.setProperty("joypad.button.return",
 					getJoypadButtonName(input.joypadKeyReturn));
 			config.setProperty("joypad.button.return_to_menu",

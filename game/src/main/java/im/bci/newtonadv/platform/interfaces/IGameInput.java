@@ -50,8 +50,6 @@ public interface IGameInput {
 
     boolean isKeyLeftDown();
 
-    boolean isKeyPauseDown();
-
     boolean isKeyReturnDown();
 
     boolean isKeyReturnToMenuDown();

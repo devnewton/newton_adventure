@@ -190,7 +190,6 @@ public strictfp class Game {
         currentSequence.start();
     }
     private boolean bToggleFullscreen = false;
-    private boolean bTogglePause = false;
     private boolean bShowMainMenu = false;
     private ScoreServer scoreServer;
 
@@ -203,12 +202,6 @@ public strictfp class Game {
         } else if (bToggleFullscreen) {
             bToggleFullscreen = false;
             view.toggleFullscreen();
-        }
-        if (input.isKeyPauseDown()) {
-            bTogglePause = true;
-        } else if (bTogglePause) {
-            bTogglePause = false;
-            frameTimeInfos.togglePause();
         }
     }
 

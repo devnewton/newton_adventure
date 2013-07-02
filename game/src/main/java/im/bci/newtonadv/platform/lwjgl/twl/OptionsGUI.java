@@ -75,7 +75,6 @@ public class OptionsGUI extends Widget {
     InputChoice keyRotateCounterClockwise;
     InputChoice keyRotate90Clockwise;
     InputChoice keyRotate90CounterClockwise;
-    InputChoice keyPause;
     InputChoice keyReturn;
     InputChoice keyReturnToMenu;
     ToggleButton scoreShareEnabled;
@@ -186,8 +185,6 @@ public class OptionsGUI extends Widget {
                 platform.getMessage("options.input.rotate.counterclockwise90"),
                 gameInput.keyRotate90CounterClockwise,
                 gameInput.joypadKeyRotate90CounterClockwise);
-        keyPause = addInputChoice(layout, platform.getMessage("options.input.pause"),gameInput.keyPause,
-                gameInput.joypadKeyPause);
         keyReturn = addInputChoice(layout, platform.getMessage("options.input.return"), gameInput.keyReturn,
                 gameInput.joypadKeyReturn);
         keyReturnToMenu = addInputChoice(layout, platform.getMessage("options.return.to.menu"),
@@ -271,30 +268,19 @@ public class OptionsGUI extends Widget {
 
     private void presetControllers(Controller controller) {
         if (null != controller) {
-            if ("Mega World USB Game Controllers".equals(controller.getName())) {
-                presetMegaWorlUSBGameControllers();
-            } else {
-                presetUnknowControllers();
-            }
+        	JoypadPreset preset = JoypadPreset.findByName(controller.getName());
+        	if(null != preset) {
+	            joypadXAxis.setSelected(joyAxisModel.findElement(controller.getAxisName(preset.getxAxis())));
+	            joypadYAxis.setSelected(joyAxisModel.findElement(controller.getAxisName(preset.getyAxis())));
+	            keyJump.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem(controller.getButtonName(preset.getKeyJump()))));
+	            keyRotateCounterClockwise.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem(controller.getButtonName(preset.getKeyRotateCounterClockWise()))));
+	            keyRotateClockwise.joyButton.setSelected(joyButtonModel.findElement(controller.getButtonName(preset.getKeyRotateClockwise())));
+	            keyRotate90CounterClockwise.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem(controller.getButtonName(preset.getKeyRotate90CounterClockWise()))));
+	            keyRotate90Clockwise.joyButton.setSelected(joyButtonModel.findElement(controller.getButtonName(preset.getKeyRotate90Clockwise())));
+	            keyReturnToMenu.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem(controller.getButtonName(preset.getKeyReturnToMenu()))));
+	            keyReturn.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem(controller.getButtonName(preset.getKeyReturn()))));
+        	}
         }
-    }
-
-    private void presetMegaWorlUSBGameControllers() {
-        joypadXAxis.setSelected(joyAxisModel.findElement("x"));
-        joypadYAxis.setSelected(joyAxisModel.findElement("y"));
-        keyJump.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Trigger")));
-        keyRotateCounterClockwise.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Top 2")));
-        keyRotateClockwise.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Base")));
-        keyReturnToMenu.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Base 3")));
-        keyReturn.joyButton.setSelected(joyButtonModel.findElement(new JoyButtonItem("Base 4")));
-    }
-
-    private void presetUnknowControllers() {
-        joypadXAxis.setSelected(1);
-        joypadYAxis.setSelected(2);
-        keyJump.joyButton.setSelected(1);
-        keyRotateCounterClockwise.joyButton.setSelected(2);
-        keyRotateClockwise.joyButton.setSelected(3);
     }
 
     String getSelectedModName() {
