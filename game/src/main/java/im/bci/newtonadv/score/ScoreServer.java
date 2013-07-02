@@ -52,7 +52,7 @@ public class ScoreServer {
     private String serverUrl = "http://devnewton.bci.im/scoreserver";
     private String player = "anonymous";
     private String secret = "c20d29ce-36dd-11e1-94e7-0016cba93a68";
-    private boolean scoreShareEnabled = true;
+    private boolean scoreShareEnabled;
 
     public ScoreServer(Properties config) {
         serverUrl = config.getProperty("scoreserver.url", serverUrl);
