@@ -93,8 +93,8 @@ public class JoypadPreset {
 	static {
 		JoypadPreset megaWorld = new JoypadPreset();
 		megaWorld.setName("Mega World USB Game Controllers");
-		megaWorld.setxAxis(0);
-		megaWorld.setyAxis(1);
+		megaWorld.setxAxis(4);
+		megaWorld.setyAxis(5);
 		megaWorld.setKeyJump(0);
 		megaWorld.setKeyRotateCounterClockWise(6);
 		megaWorld.setKeyRotateClockwise(4);

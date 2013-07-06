@@ -336,7 +336,7 @@ public class OptionsSequence implements IOptionsSequence {
 	}
 
 	@Override
-	public void tick() throws NormalTransitionException, RestartGameException {
+	public void tick() throws NormalTransitionException, ResumeTransitionException, RestartGameException {
 		if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
 			GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		}
@@ -368,10 +368,10 @@ public class OptionsSequence implements IOptionsSequence {
 			updateConfig();
                         platform.loadModIfNeeded(optionsGui.getSelectedModName());
 			platform.saveConfig();
-			throw new Sequence.NormalTransitionException(nextSequence);
+			throw new Sequence.ResumeTransitionException(nextSequence);
 		}
 		if (optionsGui.cancelPressed) {
-			throw new Sequence.NormalTransitionException(nextSequence);
+			throw new Sequence.ResumeTransitionException(nextSequence);
 		}
 	}
 }

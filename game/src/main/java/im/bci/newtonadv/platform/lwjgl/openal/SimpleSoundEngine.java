@@ -216,10 +216,6 @@ public class SimpleSoundEngine {
         }
         return null;
     }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Music">
     public void playMusic(String path, boolean loop) throws IOException{
         musicStreamer.setSourceFile(path);
         musicStreamer.play(loop);
@@ -231,8 +227,5 @@ public class SimpleSoundEngine {
     
     public void pauseMusic(boolean pause){
         musicStreamer.setPause(pause);
-    }
-    //</editor-fold>
-
-    
+    }    
 }

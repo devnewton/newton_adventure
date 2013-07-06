@@ -112,9 +112,9 @@ public strictfp class MainMenuSequence extends MenuSequence {
 
         Button optionsButton = new Button() {
             @Override
-            void activate() throws Sequence.NormalTransitionException {
+            void activate() throws Sequence.ResumableTransitionException {
                 if (null != optionsSequence) {
-                    throw new Sequence.NormalTransitionException(
+                    throw new Sequence.ResumableTransitionException(
                             optionsSequence);
                 }
             }

@@ -1,9 +1,7 @@
 package im.bci.newtonadv.game;
 
-import im.bci.newtonadv.game.Sequence.NormalTransitionException;
-
 public interface CustomTickSequence {
 	
-	void tick() throws NormalTransitionException, RestartGameException;
+	void tick() throws Sequence.NormalTransitionException, Sequence.ResumeTransitionException, RestartGameException;
 
 }
