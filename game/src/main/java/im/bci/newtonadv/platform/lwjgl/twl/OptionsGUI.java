@@ -31,11 +31,12 @@
  */
 package im.bci.newtonadv.platform.lwjgl.twl;
 
+import com.esotericsoftware.tablelayout.twl.Table;
+import de.matthiasmann.twl.BoxLayout;
 import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.ColumnLayout;
-import de.matthiasmann.twl.ColumnLayout.Row;
 import de.matthiasmann.twl.ComboBox;
 import de.matthiasmann.twl.EditField;
+import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.SimpleChangableListModel;
@@ -59,447 +60,483 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-public class OptionsGUI extends Widget {
+public class OptionsGUI extends Table {
 
-	boolean okPressed, cancelPressed;
-	ToggleButton soundEnabled;
-	ToggleButton fullscreen;
-	ToggleButton rotateViewWithGravity;
-	ToggleButton mustDrawFPS;
-	ComboBox<DisplayMode> mode;
-	ComboBox<QualityItem> quality;
-	InputChoice keyJump;
-	InputChoice keyLeft;
-	InputChoice keyRight;
-	InputChoice keyRotateClockwise;
-	InputChoice keyRotateCounterClockwise;
-	InputChoice keyRotate90Clockwise;
-	InputChoice keyRotate90CounterClockwise;
-	InputChoice keyReturn;
-	InputChoice keyReturnToMenu;
-	ToggleButton scoreShareEnabled;
-	EditField scoreServerUrl, scorePlayer, scoreSecret;
-	ToggleButton musicEnabled;
-	ComboBox<ControllerItem> joypad;
-	ComboBox<String> joypadXAxis;
-	ComboBox<String> joypadYAxis;
-	ComboBox<IMod> mod;
-	private final ColumnLayout layout;
-	private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
-	private SimpleChangableListModel<ControllerItem> controllerModel = buildControllerListModel();
-	private SimpleChangableListModel<QualityItem> qualityModel = buildQualityListModel();
-	private SimpleChangableListModel<IMod> modModel = new SimpleChangableListModel<IMod>();
-	private SimpleChangableListModel<String> joyAxisModel = new SimpleChangableListModel<String>();
-	private SimpleChangableListModel<JoyButtonItem> joyButtonModel = new SimpleChangableListModel<JoyButtonItem>();
-	private final IPlatformSpecific platform;
+    boolean okPressed, cancelPressed;
+    ToggleButton soundEnabled;
+    ToggleButton fullscreen;
+    ToggleButton rotateViewWithGravity;
+    ToggleButton mustDrawFPS;
+    ComboBox<DisplayMode> mode;
+    ComboBox<QualityItem> quality;
+    InputChoice keyJump;
+    InputChoice keyLeft;
+    InputChoice keyRight;
+    InputChoice keyRotateClockwise;
+    InputChoice keyRotateCounterClockwise;
+    InputChoice keyRotate90Clockwise;
+    InputChoice keyRotate90CounterClockwise;
+    InputChoice keyReturn;
+    InputChoice keyReturnToMenu;
+    ToggleButton scoreShareEnabled;
+    EditField scoreServerUrl, scorePlayer, scoreSecret;
+    ToggleButton musicEnabled;
+    ComboBox<ControllerItem> joypad;
+    ComboBox<String> joypadXAxis;
+    ComboBox<String> joypadYAxis;
+    ComboBox<IMod> mod;
 
-	OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer, ISoundCache soundCache, IPlatformSpecific platform) throws LWJGLException {
-		this.platform = platform;
-		setSize(Display.getWidth(), Display.getHeight());
-		this.layout = new ColumnLayout();
-		layout.setSize(Display.getWidth(), Display.getHeight());
+    private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
+    private SimpleChangableListModel<ControllerItem> controllerModel = buildControllerListModel();
+    private SimpleChangableListModel<QualityItem> qualityModel = buildQualityListModel();
+    private SimpleChangableListModel<IMod> modModel = new SimpleChangableListModel<IMod>();
+    private SimpleChangableListModel<String> joyAxisModel = new SimpleChangableListModel<String>();
+    private SimpleChangableListModel<JoyButtonItem> joyButtonModel = new SimpleChangableListModel<JoyButtonItem>();
+    private final IPlatformSpecific platform;
 
-		soundEnabled = new ToggleButton(platform.getMessage("options.sound.effect.enabled"));
-		soundEnabled.setActive(soundCache.isSoundEnabled());
-		musicEnabled = new ToggleButton(platform.getMessage("options.sound.music.enabled"));
-		musicEnabled.setActive(soundCache.isMusicEnabled());
-		Row soundRow = layout.addRow("label", "effect", "music");
-		soundRow.addLabel(platform.getMessage("options.sound"));
-		soundRow.add(soundEnabled);
-		soundRow.add(musicEnabled);
+    OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer, ISoundCache soundCache, IPlatformSpecific platform) throws LWJGLException {
+        this.platform = platform;
+        setSize(Display.getWidth(), Display.getHeight());
+                Table table= this;
+        //this.table = new Table();
+        table.setSize(Display.getWidth(), Display.getHeight());
+        table.defaults().pad(3);
+        table.columnDefaults(1).expandX();
+        table.columnDefaults(2).expandX();
 
-		mode = new ComboBox<DisplayMode>(new SimpleChangableListModel<DisplayMode>(getDisplayModes()));
-		mode.setSelected(0);
-		fullscreen = new ToggleButton(platform.getMessage("options.fullscreen"));
-		fullscreen.setActive(Display.isFullscreen());
-		Row gfxRow = layout.addRow("label", "mode", "fullscreen");
-		gfxRow.addLabel(platform.getMessage("options.video.mode"));
-		gfxRow.add(mode);
-		gfxRow.add(fullscreen);
+        soundEnabled = new ToggleButton();
+        soundEnabled.setTheme("checkbox");
+        soundEnabled.setActive(soundCache.isSoundEnabled());
+        musicEnabled = new ToggleButton();
+        musicEnabled.setTheme("checkbox");
+        musicEnabled.setActive(soundCache.isMusicEnabled());
+        table.addCell(new Label(platform.getMessage("options.sound")));
+        table.addCell(addWithLabel(soundEnabled, platform.getMessage("options.sound.effect.enabled")));
+        table.addCell(addWithLabel(musicEnabled, platform.getMessage("options.sound.music.enabled")));
+        table.row();
 
-		quality = new ComboBox<QualityItem>(qualityModel);
-		quality.setSelected(qualityModel.findElement(new QualityItem(gameView.getQuality())));
-		layout.addRow("label", "widget").addWithLabel(platform.getMessage("options.quality"), quality);
+        mode = new ComboBox<DisplayMode>(new SimpleChangableListModel<DisplayMode>(getDisplayModes()));
+        mode.setSelected(0);
+        fullscreen = new ToggleButton();
+        fullscreen.setTheme("checkbox");
+        fullscreen.setActive(Display.isFullscreen());
+        table.addCell(new Label(platform.getMessage("options.video.mode")));
+        table.addCell(mode).fillX();
+        table.addCell(addWithLabel(fullscreen, platform.getMessage("options.fullscreen")));
+        table.row();
 
-		rotateViewWithGravity = new ToggleButton(platform.getMessage("options.view.rotate.with.gravity"));
-		rotateViewWithGravity.setActive(gameView.isRotateViewWithGravity());
-		mustDrawFPS = new ToggleButton(platform.getMessage("options.view.draw.fps"));
-		mustDrawFPS.setActive(gameView.getMustDrawFPS());
-		layout.addRow("label", "rotate view", "fps").addWithLabel(platform.getMessage("options.view"), rotateViewWithGravity).add(mustDrawFPS);
+        quality = new ComboBox<QualityItem>(qualityModel);
+        quality.setSelected(qualityModel.findElement(new QualityItem(gameView.getQuality())));
+        table.addCell(new Label(platform.getMessage("options.quality")));
+        table.addCell(quality).fillX();
+        table.row();
 
-		joypad = new ComboBox<ControllerItem>(controllerModel);
-		joypad.setNoSelectionIsError(false);
-		joypad.addCallback(new Runnable() {
-			@Override
-			public void run() {
-				ControllerItem item = joypad.getModel().getEntry(joypad.getSelected());
-				controllerSelected(item.getController());
-			}
-		});
-		joypadXAxis = new ComboBox<String>(joyAxisModel);
-		joypadYAxis = new ComboBox<String>(joyAxisModel);
-		layout.addRow("label", "joypad").addWithLabel(platform.getMessage("options.joypad"), joypad);
-		Row rowJoypadAxis = layout.addRow("label", "xaxis", "yaxis");
-		rowJoypadAxis.addLabel(platform.getMessage("options.joypad.xyaxis")).add(joypadXAxis).add(joypadYAxis);
-		if (null != gameInput.joypad) {
-			int joypadIndex = controllerModel.findElement(new ControllerItem(gameInput.joypad));
-			joypad.setSelected(joypadIndex);
-			controllerSelected(gameInput.joypad);
-			if (gameInput.joypadXAxis >= 0 && gameInput.joypadXAxis < gameInput.joypad.getAxisCount()) {
-				joypadXAxis.setSelected(joyAxisModel.findElement(gameInput.joypad.getAxisName(gameInput.joypadXAxis)));
-			}
-			if (gameInput.joypadYAxis >= 0 && gameInput.joypadYAxis < gameInput.joypad.getAxisCount()) {
-				joypadYAxis.setSelected(joyAxisModel.findElement(gameInput.joypad.getAxisName(gameInput.joypadYAxis)));
-			}
-		}
+        rotateViewWithGravity = new ToggleButton();
+        rotateViewWithGravity.setTheme("checkbox");
+        rotateViewWithGravity.setActive(gameView.isRotateViewWithGravity());
+        mustDrawFPS = new ToggleButton();
+        mustDrawFPS.setTheme("checkbox");
+        mustDrawFPS.setActive(gameView.getMustDrawFPS());
+        table.addCell(new Label(platform.getMessage("options.view")));
+        table.addCell(addWithLabel(rotateViewWithGravity, platform.getMessage("options.view.rotate.with.gravity")));
+        table.addCell(addWithLabel(mustDrawFPS,platform.getMessage("options.view.draw.fps")));
+        table.row();
 
-		keyJump = addInputChoice(layout, platform.getMessage("options.input.jump"), gameInput.keyJump, gameInput.joypadKeyJump);
-		keyLeft = addInputChoice(layout, platform.getMessage("options.input.left"), gameInput.keyLeft, gameInput.joypadKeyLeft);
-		keyRight = addInputChoice(layout, platform.getMessage("options.input.right"), gameInput.keyRight, gameInput.joypadKeyRight);
-		keyRotateClockwise = addInputChoice(layout, platform.getMessage("options.input.rotate.clockwise"), gameInput.keyRotateClockwise, gameInput.joypadKeyRotateClockwise);
-		keyRotateCounterClockwise = addInputChoice(layout, platform.getMessage("options.input.rotate.counterclockwise"), gameInput.keyRotateCounterClockwise, gameInput.joypadKeyRotateCounterClockwise);
-		keyRotate90Clockwise = addInputChoice(layout, platform.getMessage("options.input.rotate.clockwise90"), gameInput.keyRotate90Clockwise, gameInput.joypadKeyRotate90Clockwise);
-		keyRotate90CounterClockwise = addInputChoice(layout, platform.getMessage("options.input.rotate.counterclockwise90"), gameInput.keyRotate90CounterClockwise, gameInput.joypadKeyRotate90CounterClockwise);
-		keyReturn = addInputChoice(layout, platform.getMessage("options.input.return"), gameInput.keyReturn, gameInput.joypadKeyReturn);
-		keyReturnToMenu = addInputChoice(layout, platform.getMessage("options.return.to.menu"), gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
+        joypad = new ComboBox<ControllerItem>(controllerModel);
+        joypad.setNoSelectionIsError(false);
+        joypad.addCallback(new Runnable() {
+            @Override
+            public void run() {
+                ControllerItem item = joypad.getModel().getEntry(joypad.getSelected());
+                controllerSelected(item.getController());
+            }
+        });
+        joypadXAxis = new ComboBox<String>(joyAxisModel);
+        joypadYAxis = new ComboBox<String>(joyAxisModel);
+        table.addCell(new Label(platform.getMessage("options.joypad")));
+        table.addCell(joypad).fillX();
+        table.row();
 
-		scoreShareEnabled = new ToggleButton(platform.getMessage("options.share.score"));
-		scoreShareEnabled.setActive(scoreServer.isScoreShareEnabled());
-		scoreServerUrl = new EditField();
-		scoreServerUrl.setText(scoreServer.getServerUrl());
-		layout.addRow("label", "widget", "share").addWithLabel(platform.getMessage("options.score.server"), scoreServerUrl).add(scoreShareEnabled);
+        table.addCell(new Label(platform.getMessage("options.joypad.xyaxis")));
+        table.addCell(joypadXAxis).fillX();
+        table.addCell(joypadYAxis).fillX();
+        table.row();
+        if (null != gameInput.joypad) {
+            int joypadIndex = controllerModel.findElement(new ControllerItem(gameInput.joypad));
+            joypad.setSelected(joypadIndex);
+            controllerSelected(gameInput.joypad);
+            if (gameInput.joypadXAxis >= 0 && gameInput.joypadXAxis < gameInput.joypad.getAxisCount()) {
+                joypadXAxis.setSelected(joyAxisModel.findElement(gameInput.joypad.getAxisName(gameInput.joypadXAxis)));
+            }
+            if (gameInput.joypadYAxis >= 0 && gameInput.joypadYAxis < gameInput.joypad.getAxisCount()) {
+                joypadYAxis.setSelected(joyAxisModel.findElement(gameInput.joypad.getAxisName(gameInput.joypadYAxis)));
+            }
+        }
 
-		scorePlayer = new EditField();
-		scorePlayer.setText(scoreServer.getPlayer());
-		layout.addRow("label", "widget").addWithLabel(platform.getMessage("options.player.name"), scorePlayer);
+        keyJump = addInputChoice(table, platform.getMessage("options.input.jump"), gameInput.keyJump, gameInput.joypadKeyJump);
+        keyLeft = addInputChoice(table, platform.getMessage("options.input.left"), gameInput.keyLeft, gameInput.joypadKeyLeft);
+        keyRight = addInputChoice(table, platform.getMessage("options.input.right"), gameInput.keyRight, gameInput.joypadKeyRight);
+        keyRotateClockwise = addInputChoice(table, platform.getMessage("options.input.rotate.clockwise"), gameInput.keyRotateClockwise, gameInput.joypadKeyRotateClockwise);
+        keyRotateCounterClockwise = addInputChoice(table, platform.getMessage("options.input.rotate.counterclockwise"), gameInput.keyRotateCounterClockwise, gameInput.joypadKeyRotateCounterClockwise);
+        keyRotate90Clockwise = addInputChoice(table, platform.getMessage("options.input.rotate.clockwise90"), gameInput.keyRotate90Clockwise, gameInput.joypadKeyRotate90Clockwise);
+        keyRotate90CounterClockwise = addInputChoice(table, platform.getMessage("options.input.rotate.counterclockwise90"), gameInput.keyRotate90CounterClockwise, gameInput.joypadKeyRotate90CounterClockwise);
+        keyReturn = addInputChoice(table, platform.getMessage("options.input.return"), gameInput.keyReturn, gameInput.joypadKeyReturn);
+        keyReturnToMenu = addInputChoice(table, platform.getMessage("options.return.to.menu"), gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
 
-		scoreSecret = new EditField();
-		scoreSecret.setText(scoreServer.getSecret());
-		layout.addRow("label", "widget").addWithLabel(platform.getMessage("options.player.password"), scoreSecret);
+        scoreShareEnabled = new ToggleButton();
+        scoreShareEnabled.setTheme("checkbox");
+        scoreShareEnabled.setActive(scoreServer.isScoreShareEnabled());
+        scoreServerUrl = new EditField();
+        scoreServerUrl.setText(scoreServer.getServerUrl());
+        table.addCell(new Label(platform.getMessage("options.score.server")));
+        table.addCell(scoreServerUrl).fillX();
+        table.addCell(addWithLabel(scoreShareEnabled,platform.getMessage("options.share.score")));
+        table.row();
 
-		modModel.addElement(new NullMod());
-		modModel.addElements(platform.listMods());
-		mod = new ComboBox<IMod>(modModel);
-		mod.setNoSelectionIsError(false);
-		if (null != platform.getCurrentMod()) {
-			mod.setSelected(modModel.findElement(platform.getCurrentMod()));
-		} else {
-			mod.setSelected(0);
-		}
-		layout.addRow("label", "widget", "play").addWithLabel(platform.getMessage("options.mod"), mod);
+        scorePlayer = new EditField();
+        scorePlayer.setText(scoreServer.getPlayer());
+        table.addCell(new Label(platform.getMessage("options.player.name")));
+        table.addCell(scorePlayer).fillX();
+        table.row();
 
-		Button ok = new Button(platform.getMessage("options.ok"));
-		Button cancel = new Button(platform.getMessage("options.cancel"));
-		Row okCancelRow = layout.addRow("Parameter", "Value");
-		okCancelRow.add(ok);
-		okCancelRow.add(cancel);
+        scoreSecret = new EditField();
+        scoreSecret.setText(scoreServer.getSecret());
+        table.addCell(new Label(platform.getMessage("options.player.password")));
+        table.addCell(scoreSecret).fillX();
+        table.row();
 
-		add(layout);
+        modModel.addElement(new NullMod());
+        modModel.addElements(platform.listMods());
+        mod = new ComboBox<IMod>(modModel);
+        mod.setNoSelectionIsError(false);
+        if (null != platform.getCurrentMod()) {
+            mod.setSelected(modModel.findElement(platform.getCurrentMod()));
+        } else {
+            mod.setSelected(0);
+        }
+        table.addCell(new Label(platform.getMessage("options.mod")));
+        table.addCell(mod).fillX();
+        table.row();
 
-		ok.addCallback(new Runnable() {
-			@Override
-			public void run() {
-				okPressed = true;
-			}
-		});
-		cancel.addCallback(new Runnable() {
-			@Override
-			public void run() {
-				cancelPressed = true;
-			}
-		});
+        Button ok = new Button(platform.getMessage("options.ok"));
+        Button cancel = new Button(platform.getMessage("options.cancel"));
+        table.addCell(ok);
+        table.addCell(cancel);
+        table.row();
 
-		joypad.addCallback(new Runnable() {
-			@Override
-			public void run() {
-				ControllerItem item = joypad.getModel().getEntry(joypad.getSelected());
-				presetControllers(item.getController());
-			}
-		});
-	}
+        ok.addCallback(new Runnable() {
+            @Override
+            public void run() {
+                okPressed = true;
+            }
+        });
+        cancel.addCallback(new Runnable() {
+            @Override
+            public void run() {
+                cancelPressed = true;
+            }
+        });
 
-	private void controllerSelected(Controller controller) {
-		joyAxisModel.clear();
-		joyButtonModel.clear();
+        joypad.addCallback(new Runnable() {
+            @Override
+            public void run() {
+                ControllerItem item = joypad.getModel().getEntry(joypad.getSelected());
+                presetControllers(item.getController());
+            }
+        });
+    }
 
-		if (null != controller) {
-			joyAxisModel.addElement("");
-			for (int i = 0, n = controller.getAxisCount(); i < n; ++i) {
-				joyAxisModel.addElement(controller.getAxisName(i));
-			}
-			joyButtonModel.addElement(new JoyButtonItem());
-			for (int i = 0, n = controller.getButtonCount(); i < n; ++i) {
-				joyButtonModel.addElement(new JoyButtonItem(i, controller.getButtonName(i)));
-			}
-		}
-	}
+    private void controllerSelected(Controller controller) {
+        joyAxisModel.clear();
+        joyButtonModel.clear();
 
-	private void presetControllers(Controller controller) {
-		if (null != controller) {
-			JoypadPreset preset = JoypadPreset.find(controller);
-			if (null == preset) {
-				preset = new JoypadPreset(controller);
-			}
-			joypadXAxis.setSelected(preset.getxAxis() + 1);
-			joypadYAxis.setSelected(preset.getyAxis() + 1);
-			keyJump.joyButton.setSelected(preset.getKeyJump() + 1);
-			keyRotateCounterClockwise.joyButton.setSelected(preset.getKeyRotateCounterClockWise() + 1);
-			keyRotateClockwise.joyButton.setSelected(preset.getKeyRotateClockwise() + 1);
-			keyRotate90CounterClockwise.joyButton.setSelected(preset.getKeyRotate90CounterClockWise() + 1);
-			keyRotate90Clockwise.joyButton.setSelected(preset.getKeyRotate90Clockwise() + 1);
-			keyReturnToMenu.joyButton.setSelected(preset.getKeyReturnToMenu() + 1);
-			keyReturn.joyButton.setSelected(preset.getKeyReturn() + 1);
-		}
-	}
+        if (null != controller) {
+            joyAxisModel.addElement("");
+            for (int i = 0, n = controller.getAxisCount(); i < n; ++i) {
+                joyAxisModel.addElement(controller.getAxisName(i));
+            }
+            joyButtonModel.addElement(new JoyButtonItem());
+            for (int i = 0, n = controller.getButtonCount(); i < n; ++i) {
+                joyButtonModel.addElement(new JoyButtonItem(i, controller.getButtonName(i)));
+            }
+        }
+    }
 
-	String getSelectedModName() {
-		if (mod.getSelected() >= 0) {
-			return mod.getModel().getEntry(mod.getSelected()).getName();
-		} else {
-			return "";
-		}
-	}
+    private void presetControllers(Controller controller) {
+        if (null != controller) {
+            JoypadPreset preset = JoypadPreset.find(controller);
+            if (null == preset) {
+                preset = new JoypadPreset(controller);
+            }
+            joypadXAxis.setSelected(preset.getxAxis() + 1);
+            joypadYAxis.setSelected(preset.getyAxis() + 1);
+            keyJump.joyButton.setSelected(preset.getKeyJump() + 1);
+            keyRotateCounterClockwise.joyButton.setSelected(preset.getKeyRotateCounterClockWise() + 1);
+            keyRotateClockwise.joyButton.setSelected(preset.getKeyRotateClockwise() + 1);
+            keyRotate90CounterClockwise.joyButton.setSelected(preset.getKeyRotate90CounterClockWise() + 1);
+            keyRotate90Clockwise.joyButton.setSelected(preset.getKeyRotate90Clockwise() + 1);
+            keyReturnToMenu.joyButton.setSelected(preset.getKeyReturnToMenu() + 1);
+            keyReturn.joyButton.setSelected(preset.getKeyReturn() + 1);
+        }
+    }
 
-	private SimpleChangableListModel<QualityItem> buildQualityListModel() {
-		ArrayList<QualityItem> items = new ArrayList<QualityItem>();
-		for (GameViewQuality q : GameViewQuality.values()) {
-			items.add(new QualityItem(q));
-		}
-		return new SimpleChangableListModel<QualityItem>(items);
-	}
+    String getSelectedModName() {
+        if (mod.getSelected() >= 0) {
+            return mod.getModel().getEntry(mod.getSelected()).getName();
+        } else {
+            return "";
+        }
+    }
 
-	public class QualityItem {
-		private final GameViewQuality quality;
+    private SimpleChangableListModel<QualityItem> buildQualityListModel() {
+        ArrayList<QualityItem> items = new ArrayList<QualityItem>();
+        for (GameViewQuality q : GameViewQuality.values()) {
+            items.add(new QualityItem(q));
+        }
+        return new SimpleChangableListModel<QualityItem>(items);
+    }
 
-		public QualityItem(GameViewQuality quality) {
-			this.quality = quality;
-		}
+    private Widget addWithLabel(ToggleButton button, String message) {
+        BoxLayout b = new BoxLayout();
+        b.add(button);
+        b.add(new Label(" " + message));
+        return b;
+    }
 
-		public GameViewQuality getQuality() {
-			return quality;
-		}
+    public class QualityItem {
 
-		@Override
-		public boolean equals(Object obj) {
-			if (obj instanceof QualityItem) {
-				return quality == ((QualityItem) obj).quality;
-			} else {
-				return false;
-			}
-		}
+        private final GameViewQuality quality;
 
-		@Override
-		public int hashCode() {
-			int hash = 7;
-			hash = 67 * hash + (this.quality != null ? this.quality.hashCode() : 0);
-			return hash;
-		}
+        public QualityItem(GameViewQuality quality) {
+            this.quality = quality;
+        }
 
-		@Override
-		public String toString() {
-			return platform.getMessage("options.quality." + quality.name());
-		}
+        public GameViewQuality getQuality() {
+            return quality;
+        }
 
-	}
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof QualityItem) {
+                return quality == ((QualityItem) obj).quality;
+            } else {
+                return false;
+            }
+        }
 
-	public static class ControllerItem {
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 67 * hash + (this.quality != null ? this.quality.hashCode() : 0);
+            return hash;
+        }
 
-		private Controller controller;
+        @Override
+        public String toString() {
+            return platform.getMessage("options.quality." + quality.name());
+        }
+    }
 
-		ControllerItem(Controller controller) {
-			this.controller = controller;
-		}
+    public static class ControllerItem {
 
-		public ControllerItem() {
-		}
+        private Controller controller;
 
-		public Controller getController() {
-			return controller;
-		}
+        ControllerItem(Controller controller) {
+            this.controller = controller;
+        }
 
-		@Override
-		public boolean equals(Object o) {
-			if (o instanceof ControllerItem) {
-				Controller otherController = ((ControllerItem) o).getController();
-				if (null == controller) {
-					return null == otherController;
-				} else {
-					return controller.equals(otherController);
-				}
-			} else {
-				return super.equals(o);
-			}
-		}
+        public ControllerItem() {
+        }
 
-		@Override
-		public int hashCode() {
-			int hash = 7;
-			hash = 79 * hash + (this.controller != null ? this.controller.hashCode() : 0);
-			return hash;
-		}
+        public Controller getController() {
+            return controller;
+        }
 
-		@Override
-		public String toString() {
-			if (null != controller) {
-				return controller.getName();
-			} else {
-				return "";
-			}
-		}
-	}
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof ControllerItem) {
+                Controller otherController = ((ControllerItem) o).getController();
+                if (null == controller) {
+                    return null == otherController;
+                } else {
+                    return controller.equals(otherController);
+                }
+            } else {
+                return super.equals(o);
+            }
+        }
 
-	public static class JoyButtonItem {
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 79 * hash + (this.controller != null ? this.controller.hashCode() : 0);
+            return hash;
+        }
 
-		private final int buttonIndex;
-		private final String buttonName;
+        @Override
+        public String toString() {
+            if (null != controller) {
+                return controller.getName();
+            } else {
+                return "";
+            }
+        }
+    }
 
-		JoyButtonItem(int buttonIndex, String buttonName) {
-			this.buttonIndex = buttonIndex;
-			this.buttonName = buttonName;
-		}
+    public static class JoyButtonItem {
 
-		public JoyButtonItem() {
-			buttonIndex = -1;
-			buttonName = "";
-		}
+        private final int buttonIndex;
+        private final String buttonName;
 
-		// used only for searching...
-		public JoyButtonItem(String name) {
-			buttonIndex = -42;
-			buttonName = name;
-		}
+        JoyButtonItem(int buttonIndex, String buttonName) {
+            this.buttonIndex = buttonIndex;
+            this.buttonName = buttonName;
+        }
 
-		@Override
-		public boolean equals(Object o) {
-			if (o instanceof JoyButtonItem) {
-				return buttonName.equals(((JoyButtonItem) o).buttonName);
-			} else {
-				return super.equals(o);
-			}
-		}
+        public JoyButtonItem() {
+            buttonIndex = -1;
+            buttonName = "";
+        }
 
-		@Override
-		public int hashCode() {
-			int hash = 7;
-			hash = 37 * hash + (this.buttonName != null ? this.buttonName.hashCode() : 0);
-			return hash;
-		}
+        // used only for searching...
+        public JoyButtonItem(String name) {
+            buttonIndex = -42;
+            buttonName = name;
+        }
 
-		@Override
-		public String toString() {
-			return buttonName;
-		}
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof JoyButtonItem) {
+                return buttonName.equals(((JoyButtonItem) o).buttonName);
+            } else {
+                return super.equals(o);
+            }
+        }
 
-		public int getButtonIndex() {
-			return buttonIndex;
-		}
-	}
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 37 * hash + (this.buttonName != null ? this.buttonName.hashCode() : 0);
+            return hash;
+        }
 
-	private SimpleChangableListModel<ControllerItem> buildControllerListModel() {
-		SimpleChangableListModel<ControllerItem> model = new SimpleChangableListModel<ControllerItem>();
-		model.addElement(new ControllerItem());
-		for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
-			model.addElement(new ControllerItem(Controllers.getController(i)));
-		}
-		return model;
-	}
+        @Override
+        public String toString() {
+            return buttonName;
+        }
 
-	@Override
-	protected void layout() {
-		layout.setPosition((getWidth() - layout.getPreferredWidth()) / 2, (getHeight() - layout.getPreferredHeight()) / 2);
-	}
+        public int getButtonIndex() {
+            return buttonIndex;
+        }
+    }
 
-	private static class NullMod implements IMod {
+    private SimpleChangableListModel<ControllerItem> buildControllerListModel() {
+        SimpleChangableListModel<ControllerItem> model = new SimpleChangableListModel<ControllerItem>();
+        model.addElement(new ControllerItem());
+        for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
+            model.addElement(new ControllerItem(Controllers.getController(i)));
+        }
+        return model;
+    }
 
-		@Override
-		public String getName() {
-			return "";
-		}
+    /*@Override
+    protected void layout() {
+        table.setPosition((getWidth() - table.getPreferredWidth()) / 2, (getHeight() - table.getPreferredHeight()) / 2);
+    }*/
 
-		@Override
-		public String getPath() {
-			return null;
-		}
+    private static class NullMod implements IMod {
 
-		@Override
-		public String toString() {
-			return "default game";
-		}
-	}
+        @Override
+        public String getName() {
+            return "";
+        }
 
-	public class InputChoice {
+        @Override
+        public String getPath() {
+            return null;
+        }
 
-		ComboBox<String> key;
-		ComboBox<JoyButtonItem> joyButton;
-	}
+        @Override
+        public String toString() {
+            return "default game";
+        }
+    }
 
-	private InputChoice addInputChoice(ColumnLayout layout, String label, int key, int button) {
-		++button;
-		InputChoice choice = new InputChoice();
-		choice.key = new ComboBox<String>(keyModel);
-		choice.joyButton = new ComboBox<JoyButtonItem>(joyButtonModel);
-		Row rowKeys = layout.addRow("label", "key", "joyButton");
-		rowKeys.addLabel(label).add(choice.key).add(choice.joyButton);
-		choice.key.setSelected(keyModel.findElement((Keyboard.getKeyName(key))));
-		if (button >= 0 && button < choice.joyButton.getModel().getNumEntries()) {
-			choice.joyButton.setSelected(button);
-		}
-		return choice;
-	}
+    public class InputChoice {
 
-	private static SimpleChangableListModel<String> buildKeyListModel() {
-		SimpleChangableListModel<String> model = new SimpleChangableListModel<String>();
-		for (Field field : Keyboard.class.getFields()) {
-			String name = field.getName();
-			if (name.startsWith("KEY_")) {
-				try {
-					model.addElement(Keyboard.getKeyName(field.getInt(null)));
-				} catch (Exception e) {
-					Logger.getLogger(OptionsGUI.class.getName()).log(Level.SEVERE, "error retrieving key name", e);
-				}
-			}
-		}
-		return model;
-	}
+        ComboBox<String> key;
+        ComboBox<JoyButtonItem> joyButton;
+    }
 
-	private Collection<DisplayMode> getDisplayModes() throws LWJGLException {
-		ArrayList<DisplayMode> modes = new ArrayList<DisplayMode>(java.util.Arrays.asList(Display.getAvailableDisplayModes()));
-		java.util.Collections.sort(modes, new Comparator<DisplayMode>() {
-			@Override
-			public int compare(DisplayMode o1, DisplayMode o2) {
-				int w1 = o1.getWidth(), w2 = o2.getWidth();
-				if (w1 < w2) {
-					return -1;
-				} else if (w2 < w1) {
-					return 1;
-				}
+    private InputChoice addInputChoice(Table table, String label, int key, int button) {
+        ++button;
+        InputChoice choice = new InputChoice();
+        choice.key = new ComboBox<String>(keyModel);
+        choice.joyButton = new ComboBox<JoyButtonItem>(joyButtonModel);
+        table.addCell(new Label(label));
+        table.addCell(choice.key).fillX();
+        table.addCell(choice.joyButton).fillX();
+        table.row();
+        choice.key.setSelected(keyModel.findElement((Keyboard.getKeyName(key))));
+        if (button >= 0 && button < choice.joyButton.getModel().getNumEntries()) {
+            choice.joyButton.setSelected(button);
+        }
+        return choice;
+    }
 
-				int h1 = o1.getHeight(), h2 = o2.getHeight();
-				if (h1 < h2) {
-					return -1;
-				} else if (h2 < h1) {
-					return 1;
-				}
+    private static SimpleChangableListModel<String> buildKeyListModel() {
+        SimpleChangableListModel<String> model = new SimpleChangableListModel<String>();
+        for (Field field : Keyboard.class.getFields()) {
+            String name = field.getName();
+            if (name.startsWith("KEY_")) {
+                try {
+                    model.addElement(Keyboard.getKeyName(field.getInt(null)));
+                } catch (Exception e) {
+                    Logger.getLogger(OptionsGUI.class.getName()).log(Level.SEVERE, "error retrieving key name", e);
+                }
+            }
+        }
+        return model;
+    }
 
-				int b1 = o1.getBitsPerPixel(), b2 = o2.getBitsPerPixel();
-				if (b1 < b2) {
-					return -1;
-				} else if (b2 < b1) {
-					return 1;
-				}
+    private Collection<DisplayMode> getDisplayModes() throws LWJGLException {
+        ArrayList<DisplayMode> modes = new ArrayList<DisplayMode>(java.util.Arrays.asList(Display.getAvailableDisplayModes()));
+        java.util.Collections.sort(modes, new Comparator<DisplayMode>() {
+            @Override
+            public int compare(DisplayMode o1, DisplayMode o2) {
+                int w1 = o1.getWidth(), w2 = o2.getWidth();
+                if (w1 < w2) {
+                    return -1;
+                } else if (w2 < w1) {
+                    return 1;
+                }
 
-				int f1 = o1.getFrequency(), f2 = o2.getFrequency();
-				if (f1 < f2) {
-					return -1;
-				} else if (f2 < f1) {
-					return 1;
-				} else {
-					return 0;
-				}
+                int h1 = o1.getHeight(), h2 = o2.getHeight();
+                if (h1 < h2) {
+                    return -1;
+                } else if (h2 < h1) {
+                    return 1;
+                }
 
-			}
-		});
-		modes.add(0, Display.getDisplayMode());
-		return modes;
-	}
+                int b1 = o1.getBitsPerPixel(), b2 = o2.getBitsPerPixel();
+                if (b1 < b2) {
+                    return -1;
+                } else if (b2 < b1) {
+                    return 1;
+                }
+
+                int f1 = o1.getFrequency(), f2 = o2.getFrequency();
+                if (f1 < f2) {
+                    return -1;
+                } else if (f2 < f1) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+
+            }
+        });
+        modes.add(0, Display.getDisplayMode());
+        return modes;
+    }
 }
