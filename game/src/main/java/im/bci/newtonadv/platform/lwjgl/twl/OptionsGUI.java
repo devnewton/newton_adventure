@@ -37,6 +37,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ComboBox;
 import de.matthiasmann.twl.EditField;
 import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.TabbedPane;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.SimpleChangableListModel;
@@ -97,12 +98,12 @@ public class OptionsGUI extends Table {
     OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer, ISoundCache soundCache, IPlatformSpecific platform) throws LWJGLException {
         this.platform = platform;
         setSize(Display.getWidth(), Display.getHeight());
-                Table table= this;
-        //this.table = new Table();
-        table.setSize(Display.getWidth(), Display.getHeight());
-        table.defaults().pad(3);
-        table.columnDefaults(1).expandX();
-        table.columnDefaults(2).expandX();
+        
+        Table soundTable= new Table();
+        soundTable.defaults().pad(3);
+        soundTable.columnDefaults(0).pad(10);
+        soundTable.columnDefaults(1).expandX();
+        soundTable.columnDefaults(2).expandX();
 
         soundEnabled = new ToggleButton();
         soundEnabled.setTheme("checkbox");
@@ -110,26 +111,32 @@ public class OptionsGUI extends Table {
         musicEnabled = new ToggleButton();
         musicEnabled.setTheme("checkbox");
         musicEnabled.setActive(soundCache.isMusicEnabled());
-        table.addCell(new Label(platform.getMessage("options.sound")));
-        table.addCell(addWithLabel(soundEnabled, platform.getMessage("options.sound.effect.enabled")));
-        table.addCell(addWithLabel(musicEnabled, platform.getMessage("options.sound.music.enabled")));
-        table.row();
+        soundTable.addCell(addWithLabel(soundEnabled, platform.getMessage("options.sound.effect.enabled")));
+        soundTable.row();
+        soundTable.addCell(addWithLabel(musicEnabled, platform.getMessage("options.sound.music.enabled")));
+        soundTable.row();
+        
+        Table videoTable= new Table();
+        videoTable.defaults().pad(3);
+        videoTable.columnDefaults(0).pad(10);
+        videoTable.columnDefaults(1).expandX();
+        //videoTable.columnDefaults(2).expandX();
 
         mode = new ComboBox<DisplayMode>(new SimpleChangableListModel<DisplayMode>(getDisplayModes()));
         mode.setSelected(0);
         fullscreen = new ToggleButton();
         fullscreen.setTheme("checkbox");
         fullscreen.setActive(Display.isFullscreen());
-        table.addCell(new Label(platform.getMessage("options.video.mode")));
-        table.addCell(mode).fillX();
-        table.addCell(addWithLabel(fullscreen, platform.getMessage("options.fullscreen")));
-        table.row();
+        videoTable.addCell(new Label(platform.getMessage("options.video.mode")));
+        videoTable.addCell(mode).fillX();
+        videoTable.addCell(addWithLabel(fullscreen, platform.getMessage("options.fullscreen")));
+        videoTable.row();
 
         quality = new ComboBox<QualityItem>(qualityModel);
         quality.setSelected(qualityModel.findElement(new QualityItem(gameView.getQuality())));
-        table.addCell(new Label(platform.getMessage("options.quality")));
-        table.addCell(quality).fillX();
-        table.row();
+        videoTable.addCell(new Label(platform.getMessage("options.quality")));
+        videoTable.addCell(quality).fillX();
+        videoTable.row();
 
         rotateViewWithGravity = new ToggleButton();
         rotateViewWithGravity.setTheme("checkbox");
@@ -137,10 +144,18 @@ public class OptionsGUI extends Table {
         mustDrawFPS = new ToggleButton();
         mustDrawFPS.setTheme("checkbox");
         mustDrawFPS.setActive(gameView.getMustDrawFPS());
-        table.addCell(new Label(platform.getMessage("options.view")));
-        table.addCell(addWithLabel(rotateViewWithGravity, platform.getMessage("options.view.rotate.with.gravity")));
-        table.addCell(addWithLabel(mustDrawFPS,platform.getMessage("options.view.draw.fps")));
-        table.row();
+        videoTable.addCell(new Label());
+        videoTable.addCell(addWithLabel(rotateViewWithGravity, platform.getMessage("options.view.rotate.with.gravity")));
+        videoTable.row();
+        videoTable.addCell(new Label());
+        videoTable.addCell(addWithLabel(mustDrawFPS,platform.getMessage("options.view.draw.fps")));
+        videoTable.row();
+        
+        Table inputTable= new Table();
+        inputTable.defaults().pad(3);
+        inputTable.columnDefaults(0).pad(10);
+        inputTable.columnDefaults(1).expandX();
+        inputTable.columnDefaults(2).expandX();
 
         joypad = new ComboBox<ControllerItem>(controllerModel);
         joypad.setNoSelectionIsError(false);
@@ -153,14 +168,14 @@ public class OptionsGUI extends Table {
         });
         joypadXAxis = new ComboBox<String>(joyAxisModel);
         joypadYAxis = new ComboBox<String>(joyAxisModel);
-        table.addCell(new Label(platform.getMessage("options.joypad")));
-        table.addCell(joypad).fillX();
-        table.row();
+        inputTable.addCell(new Label(platform.getMessage("options.joypad")));
+        inputTable.addCell(joypad).fillX();
+        inputTable.row();
 
-        table.addCell(new Label(platform.getMessage("options.joypad.xyaxis")));
-        table.addCell(joypadXAxis).fillX();
-        table.addCell(joypadYAxis).fillX();
-        table.row();
+        inputTable.addCell(new Label(platform.getMessage("options.joypad.xyaxis")));
+        inputTable.addCell(joypadXAxis).fillX();
+        inputTable.addCell(joypadYAxis).fillX();
+        inputTable.row();
         if (null != gameInput.joypad) {
             int joypadIndex = controllerModel.findElement(new ControllerItem(gameInput.joypad));
             joypad.setSelected(joypadIndex);
@@ -173,38 +188,53 @@ public class OptionsGUI extends Table {
             }
         }
 
-        keyJump = addInputChoice(table, platform.getMessage("options.input.jump"), gameInput.keyJump, gameInput.joypadKeyJump);
-        keyLeft = addInputChoice(table, platform.getMessage("options.input.left"), gameInput.keyLeft, gameInput.joypadKeyLeft);
-        keyRight = addInputChoice(table, platform.getMessage("options.input.right"), gameInput.keyRight, gameInput.joypadKeyRight);
-        keyRotateClockwise = addInputChoice(table, platform.getMessage("options.input.rotate.clockwise"), gameInput.keyRotateClockwise, gameInput.joypadKeyRotateClockwise);
-        keyRotateCounterClockwise = addInputChoice(table, platform.getMessage("options.input.rotate.counterclockwise"), gameInput.keyRotateCounterClockwise, gameInput.joypadKeyRotateCounterClockwise);
-        keyRotate90Clockwise = addInputChoice(table, platform.getMessage("options.input.rotate.clockwise90"), gameInput.keyRotate90Clockwise, gameInput.joypadKeyRotate90Clockwise);
-        keyRotate90CounterClockwise = addInputChoice(table, platform.getMessage("options.input.rotate.counterclockwise90"), gameInput.keyRotate90CounterClockwise, gameInput.joypadKeyRotate90CounterClockwise);
-        keyReturn = addInputChoice(table, platform.getMessage("options.input.return"), gameInput.keyReturn, gameInput.joypadKeyReturn);
-        keyReturnToMenu = addInputChoice(table, platform.getMessage("options.return.to.menu"), gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
+        keyJump = addInputChoice(inputTable, platform.getMessage("options.input.jump"), gameInput.keyJump, gameInput.joypadKeyJump);
+        keyLeft = addInputChoice(inputTable, platform.getMessage("options.input.left"), gameInput.keyLeft, gameInput.joypadKeyLeft);
+        keyRight = addInputChoice(inputTable, platform.getMessage("options.input.right"), gameInput.keyRight, gameInput.joypadKeyRight);
+        keyRotateClockwise = addInputChoice(inputTable, platform.getMessage("options.input.rotate.clockwise"), gameInput.keyRotateClockwise, gameInput.joypadKeyRotateClockwise);
+        keyRotateCounterClockwise = addInputChoice(inputTable, platform.getMessage("options.input.rotate.counterclockwise"), gameInput.keyRotateCounterClockwise, gameInput.joypadKeyRotateCounterClockwise);
+        keyRotate90Clockwise = addInputChoice(inputTable, platform.getMessage("options.input.rotate.clockwise90"), gameInput.keyRotate90Clockwise, gameInput.joypadKeyRotate90Clockwise);
+        keyRotate90CounterClockwise = addInputChoice(inputTable, platform.getMessage("options.input.rotate.counterclockwise90"), gameInput.keyRotate90CounterClockwise, gameInput.joypadKeyRotate90CounterClockwise);
+        keyReturn = addInputChoice(inputTable, platform.getMessage("options.input.return"), gameInput.keyReturn, gameInput.joypadKeyReturn);
+        keyReturnToMenu = addInputChoice(inputTable, platform.getMessage("options.return.to.menu"), gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
 
+        Table scoreTable= new Table();
+        scoreTable.defaults().pad(3);
+        scoreTable.columnDefaults(0).pad(10);
+        scoreTable.columnDefaults(1).expandX();
+        scoreTable.columnDefaults(2).expandX();
+        
         scoreShareEnabled = new ToggleButton();
         scoreShareEnabled.setTheme("checkbox");
         scoreShareEnabled.setActive(scoreServer.isScoreShareEnabled());
+        scoreTable.addCell(new Widget());
+        scoreTable.addCell(addWithLabel(scoreShareEnabled,platform.getMessage("options.share.score")));
+        scoreTable.row();
+        
         scoreServerUrl = new EditField();
         scoreServerUrl.setText(scoreServer.getServerUrl());
-        table.addCell(new Label(platform.getMessage("options.score.server")));
-        table.addCell(scoreServerUrl).fillX();
-        table.addCell(addWithLabel(scoreShareEnabled,platform.getMessage("options.share.score")));
-        table.row();
+        scoreTable.addCell(new Label(platform.getMessage("options.score.server")));
+        scoreTable.addCell(scoreServerUrl).fillX();
+        scoreTable.row();
 
         scorePlayer = new EditField();
         scorePlayer.setText(scoreServer.getPlayer());
-        table.addCell(new Label(platform.getMessage("options.player.name")));
-        table.addCell(scorePlayer).fillX();
-        table.row();
+        scoreTable.addCell(new Label(platform.getMessage("options.player.name")));
+        scoreTable.addCell(scorePlayer).fillX();
+        scoreTable.row();
 
         scoreSecret = new EditField();
         scoreSecret.setText(scoreServer.getSecret());
-        table.addCell(new Label(platform.getMessage("options.player.password")));
-        table.addCell(scoreSecret).fillX();
-        table.row();
-
+        scoreTable.addCell(new Label(platform.getMessage("options.player.password")));
+        scoreTable.addCell(scoreSecret).fillX();
+        scoreTable.row();
+        
+        Table modTable= new Table();
+        modTable.defaults().pad(3);
+        modTable.columnDefaults(0).pad(10);
+        modTable.columnDefaults(1).expandX();
+        modTable.columnDefaults(2).expandX();
+        
         modModel.addElement(new NullMod());
         modModel.addElements(platform.listMods());
         mod = new ComboBox<IMod>(modModel);
@@ -214,16 +244,12 @@ public class OptionsGUI extends Table {
         } else {
             mod.setSelected(0);
         }
-        table.addCell(new Label(platform.getMessage("options.mod")));
-        table.addCell(mod).fillX();
-        table.row();
+        modTable.addCell(new Label(platform.getMessage("options.mod")));
+        modTable.addCell(mod).fillX();
+        modTable.row();
 
         Button ok = new Button(platform.getMessage("options.ok"));
         Button cancel = new Button(platform.getMessage("options.cancel"));
-        table.addCell(ok);
-        table.addCell(cancel);
-        table.row();
-
         ok.addCallback(new Runnable() {
             @Override
             public void run() {
@@ -244,6 +270,20 @@ public class OptionsGUI extends Table {
                 presetControllers(item.getController());
             }
         });
+        
+        TabbedPane tabbedPane = new TabbedPane();
+        tabbedPane.addTab(platform.getMessage("options.video"), videoTable);
+        tabbedPane.addTab(platform.getMessage("options.sound"), soundTable);
+        tabbedPane.addTab(platform.getMessage("options.input"), inputTable);
+        tabbedPane.addTab(platform.getMessage("options.score"), scoreTable);
+        tabbedPane.addTab(platform.getMessage("options.mod"), modTable);
+        
+        this.defaults().pad(10);
+        this.addCell(tabbedPane).colspan(2).expand().fill();
+        this.row();
+        this.addCell(ok).right();
+        this.addCell(cancel).left();
+        this.row();
     }
 
     private void controllerSelected(Controller controller) {

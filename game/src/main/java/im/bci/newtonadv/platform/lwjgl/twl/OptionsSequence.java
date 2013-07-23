@@ -100,7 +100,7 @@ public class OptionsSequence implements IOptionsSequence {
             gui = new GUI(root, renderer);
             gui.setSize();
             ThemeManager themeManager = ThemeManager.createThemeManager(
-                    getClass().getClassLoader().getResource("twl/theme.xml"),
+                    getClass().getClassLoader().getResource("twl/RadicalFish/RadicalFish.xml"),
                     renderer);
             gui.applyTheme(themeManager);
             Toolkit.instance = TwlToolkit.instance;
@@ -352,7 +352,13 @@ public class OptionsSequence implements IOptionsSequence {
         }
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        if(Display.wasResized()) {
+        	if(gui.getRenderer() instanceof LWJGLRenderer) {
+        		((LWJGLRenderer)gui.getRenderer()).setViewport(0, 0, Display.getWidth(), Display.getHeight());
+        	}
+        }
         gui.update();
         GL11.glPopAttrib();
         GL11.glPopMatrix();
