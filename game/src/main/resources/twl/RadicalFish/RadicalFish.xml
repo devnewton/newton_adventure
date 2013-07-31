@@ -49,7 +49,9 @@
 			nocenter="true" />
 		<alias name="border.slider" ref="border.white" if="keyboardFocus | pressed"
 			inset="-1" />
-
+		
+		<area name="tabbutton.box.high" xywh="1,89,14,14" splitx="L4,R4" splity="T4,B4" />
+		<area name="tabbutton.box.down" xywh="14,89,14,14" splitx="L4,R4" splity="T4,B4" />
 
 
 
@@ -99,6 +101,11 @@
 			</composed>
 			<alias ref="checkbox.bg2" if="armed" />
 			<alias ref="checkbox.bg1" />
+		</select>
+		<select name="tabbutton.select">
+			<alias ref="tabbutton.box.down" if="pressed" tint="#B2B2B2" />
+			<alias ref="tabbutton.box.down" if="selected" tint="#B2B2B2" />
+			<alias ref="tabbutton.box.high" border="3,4,4,5" />
 		</select>
 
 		<grid name="checkbox" weightsX="0,1" weightsY="1">
@@ -351,8 +358,8 @@
 		<fontParam if="disabled" color="#8F8F8F" />
 	</fontDef>
 	<fontDef name="buttons" filename="font3.fnt" color="white">
-		<fontParam if="selected" offsetX="0" offsetY="1" />
-		<fontParam if="pressed" offsetX="0" offsetY="1" />
+		<fontParam if="selected" offsetX="0" offsetY="1" color="yellow"/>
+		<fontParam if="pressed" offsetX="0" offsetY="1" color="yellow"/>
 	</fontDef>
 	<fontDef name="link" filename="font3.fnt" color="#517EDA"
 		underlineOffset="3">
@@ -1517,8 +1524,21 @@
 			<dimension>2,2</dimension>
 		</param>
 	</theme>
-	
-		<theme name="tabbutton" ref="togglebutton" />
+
+	<theme name="tabbutton" ref="-defaults">
+		<param name="background">
+			<image>tabbutton.select</image>
+		</param>
+		<param name="border">
+			<border>background.border</border>
+		</param>
+		<param name="font">
+			<font>buttons</font>
+		</param>
+		<param name="textAlignment">
+			<enum type="alignment">CENTER</enum>
+		</param>
+	</theme>
 
 	<theme name="tabbox" ref="-defaults">
 		<param name="spacing">
