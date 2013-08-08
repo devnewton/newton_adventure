@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+<skipIfNotSupported/>
+<programGroup defaultName="Newton Adventure Du Chatelet Mod"
+            location="applications"/>
+
+<shortcut
+	name="Newton Adventure Du Chatelet Mod Uninstaller"
+	target="/usr/bin/java"
+	commandLine="-jar $INSTALL_PATH/Uninstaller/uninstaller.jar"
+	description="Uninstall Newton Adventure Du Chatelet Mod"
+	workingDirectory="$INSTALL_PATH/Uninstaller"
+	initialState="normal"
+	programGroup="yes"
+	desktop="no"
+	applications="no"
+	startMenu="no"
+	startup="no"
+	type="Application"
+	terminal="false"
+	encoding="UTF-8"
+	categories="Game">
+	<createForPack name="Core"/>
+</shortcut>
+
+</shortcuts>

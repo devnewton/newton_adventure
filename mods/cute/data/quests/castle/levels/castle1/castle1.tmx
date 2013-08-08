@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="newton_adventure.background" value="castle_background.png"/>
+  <property name="newton_adventure.mummy" value="toad.gif"/>
+  <property name="newton_adventure.music" value="It_Is_0.ogg"/>
+ </properties>
+ <tileset firstgid="1" source="../../castle.tsx"/>
+ <layer name="objets" width="64" height="64">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAAO3PwQkAIAwEwfSmYv8diQ3ElyhhBvZ/FwEAAAAAAAAAAAAAAAAAwE9mUi9Q9m83klqBsn+nXm/333//7/5fWve9RQBAAAA=
+  </data>
+ </layer>
+ <layer name="newton_enemis" width="64" height="64">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAAO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAIC3AYbSVKsAQAAA
+  </data>
+ </layer>
+ <layer name="plateformes" width="64" height="64">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAAO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAIC3AYbSVKsAQAAA
+  </data>
+ </layer>
+</map>
