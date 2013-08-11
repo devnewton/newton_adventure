@@ -545,8 +545,8 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawPlatform(Platform platform) {
-        if (platform.frame.getImage().hasAlpha()) {
-            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
+        final boolean hasAlpha = platform.frame.getImage().hasAlpha();
+        if (hasAlpha) {
             GL11.glEnable(GL11.GL_BLEND);
         }
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, platform.frame.getImage().getId());
@@ -554,8 +554,8 @@ public strictfp class GameView implements IGameView {
         GL11.glVertexPointer(2, 0, platform.vertices);
         int nbVertices = platform.vertices.limit() / 2;
         GL11.glDrawArrays((nbVertices % 4) == 0 ? GL11.GL_QUADS : GL11.GL_TRIANGLES, 0, nbVertices);
-        if (platform.frame.getImage().hasAlpha()) {
-            GL11.glPopAttrib();
+        if (hasAlpha) {
+            GL11.glDisable(GL11.GL_BLEND);
         }
     }
 

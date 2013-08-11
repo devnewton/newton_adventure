@@ -67,7 +67,6 @@ import net.phys2d.raw.BodyList;
  */
 public strictfp class World extends net.phys2d.raw.World {
 
-    private static final Logger LOGGER = Logger.getLogger(World.class.getName());
     public static final int STATIC_BODY_COLLIDE_BIT = 1;
     boolean mustDrawContacts = false;
     boolean mustDrawNormals = false;
@@ -87,7 +86,6 @@ public strictfp class World extends net.phys2d.raw.World {
     private boolean objectivesCompleted = false;
     private float nonProgressiveGravityRotationStep;
     private final String questName;
-    private final String levelName;
     private int nbCollectableApple;
     private int nbCollectableCoin;
     private ArrayList<Key> keys = new ArrayList<Key>();
@@ -148,7 +146,6 @@ public strictfp class World extends net.phys2d.raw.World {
         this.game = game;
         progressiveRotateGravity(0.0f);
         this.questName = questName;
-        this.levelName = levelName;
         coloredStaticBodies = new EnumMap<NewtonColor, BodyList>(NewtonColor.class);
         for (NewtonColor color : NewtonColor.values()) {
             coloredStaticBodies.put(color, new BodyList());

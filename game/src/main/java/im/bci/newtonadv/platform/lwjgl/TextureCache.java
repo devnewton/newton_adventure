@@ -285,7 +285,7 @@ public class TextureCache implements ITextureCache {
         int pixelFormat;
         int texWidth = decoder.getWidth();
         int texHeight = decoder.getHeight();
-        boolean hasAlpha = true;//decoder.hasAlpha();
+        boolean hasAlpha = decoder.hasAlpha();
         if (hasAlpha) {
             bpp = 4;
             format = PNGDecoder.Format.RGBA;
