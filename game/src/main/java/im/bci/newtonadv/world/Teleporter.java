@@ -39,7 +39,7 @@ import net.phys2d.raw.Body;
  *
  * @author devnewton
  */
-public strictfp class Teleporter extends Platform implements CollisionDetectionOnly, Updatable {
+public strictfp class Teleporter extends AnimatedPlatform implements CollisionDetectionOnly, Updatable {
 
     private String color;
     private boolean collideHero = false;

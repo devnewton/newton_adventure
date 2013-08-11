@@ -37,7 +37,7 @@ import im.bci.newtonadv.anim.Animation.PlayMode;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
-public strictfp class Crate extends Platform implements Updatable {
+public strictfp class Crate extends AnimatedPlatform implements Updatable {
 
 	private boolean touched = false;
 

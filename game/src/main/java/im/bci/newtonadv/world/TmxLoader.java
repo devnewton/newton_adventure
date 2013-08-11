@@ -36,10 +36,9 @@ import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.util.MultidimensionnalIterator;
 import im.bci.newtonadv.util.NewtonColor;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -47,6 +46,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.BasicJoint;
 import net.phys2d.raw.shapes.Box;
@@ -54,7 +54,6 @@ import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.Line;
 import tiled.core.Map;
 import tiled.core.Tile;
-import tiled.io.TMXMapReader;
 
 /**
  *
@@ -177,14 +176,26 @@ public class TmxLoader {
         final float tileY = y * baseSize + tileHeight / 2.0f;
 
         if (c.equals("platform")) {
-            Platform platform = new Platform(world, tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            world.add(platform);
+            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            if (null != gfx) {
+                AnimationCollection animation = game.getView().loadFromAnimation(
+                        game.getData().getLevelFilePath(questName, levelName, gfx));
+                AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
+                platform.setTexture(animation);
+                platform.setPosition(tileX, tileY);
+                platform.setFriction(getTileFriction(tile));
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                world.add(platform);
+            } else {
+                Platform decoration = new Platform(world, tileWidth, tileHeight);
+                decoration.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                decoration.setPosition(tileX, tileY);
+                decoration.setZOrder(getTileZOrder(tile, zOrderBase));
+                decoration.setFriction(getTileFriction(tile));
+                world.add(decoration);
+            }
         } else if (c.equals("slash_platform")) {
-            Platform platform = new Platform(world, tileWidth, tileHeight);
+            AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
             platform.setTexture(getAnimationForTile(map, tile, textureCache));
             platform.setPosition(tileX, tileY);
             platform.setShape(new Line(-tileWidth / 2.0f, -tileHeight / 2.0f, tileWidth / 2.0f, tileHeight / 2.0f));
@@ -192,7 +203,7 @@ public class TmxLoader {
             platform.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(platform);
         } else if (c.equals("antislash_platform")) {
-            Platform platform = new Platform(world, tileWidth, tileHeight);
+            AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
             platform.setTexture(getAnimationForTile(map, tile, textureCache));
             platform.setPosition(tileX, tileY);
             platform.setShape(new Line(-tileWidth / 2.0f, tileHeight / 2.0f, tileWidth / 2.0f, -tileHeight / 2.0f));
@@ -605,12 +616,25 @@ public class TmxLoader {
             world.add(boss.getLeftHand());
             world.add(boss.getRightHand());
         } else {
-            Platform platform = new Platform(world, tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setEnabled(false);
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            world.add(platform);
+            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            if (null != gfx) {
+                AnimationCollection animation = game.getView().loadFromAnimation(
+                        game.getData().getLevelFilePath(questName, levelName, gfx));
+                AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
+                platform.setTexture(animation);
+                platform.setPosition(tileX, tileY);
+                platform.setEnabled(false);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                world.add(platform);
+            } else {
+                Platform decoration = new Platform(world, tileWidth, tileHeight);
+                decoration.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                decoration.setPosition(tileX, tileY);
+                decoration.setZOrder(getTileZOrder(tile, zOrderBase));
+                decoration.setEnabled(false);
+                world.add(decoration);
+            }
+
         }
     }
 

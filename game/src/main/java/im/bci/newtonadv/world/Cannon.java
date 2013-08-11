@@ -41,7 +41,7 @@ import im.bci.newtonadv.game.Updatable;
  *
  * @author bci
  */
-public strictfp class Cannon extends Platform implements Updatable {
+public strictfp class Cannon extends AnimatedPlatform implements Updatable {
     
     private static final long durationBetweenFireballGeneration = 2000000000;
     private long nextFireballTime = 0;

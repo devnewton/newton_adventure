@@ -40,7 +40,7 @@ import net.phys2d.raw.shapes.Shape;
  *
  * @author devnewton
  */
-public strictfp class HelpSign extends Platform implements CollisionDetectionOnly, Updatable {
+public strictfp class HelpSign extends AnimatedPlatform implements CollisionDetectionOnly, Updatable {
 
     private String color;
     private boolean collideHero = false;

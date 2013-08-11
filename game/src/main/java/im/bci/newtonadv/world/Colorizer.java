@@ -39,7 +39,7 @@ import net.phys2d.raw.Body;
  *
  * @author devnewton
  */
-public strictfp class Colorizer extends Platform implements CollisionDetectionOnly, Updatable {
+public strictfp class Colorizer extends AnimatedPlatform implements CollisionDetectionOnly, Updatable {
 
     private NewtonColor color;
 

@@ -87,7 +87,7 @@ public strictfp class BossHand extends AbstractDrawableBody implements Updatable
             ((Hero) other).hurtByEgyptianBoss();
             setGravityEffected(false);
             state = State.MOVING_TO_BOSS;
-        } else if (other instanceof Platform) {
+        } else if (other instanceof AnimatedPlatform) {
             setGravityEffected(false);
             state = State.MOVING_TO_BOSS;
         }

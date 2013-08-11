@@ -358,7 +358,7 @@
  <tile id="57">
   <image source="castle_57.png"/>
   <properties>
-   <property name="newton_adventure.type" value="platform"/>
+   <property name="newton_adventure.type" value="down_right_half_platform"/>
   </properties>
  </tile>
  <tile id="58">
@@ -370,7 +370,7 @@
  <tile id="59">
   <image source="castle_59.png"/>
   <properties>
-   <property name="newton_adventure.type" value="platform"/>
+   <property name="newton_adventure.type" value="down_left_half_platform"/>
   </properties>
  </tile>
  <tile id="60">
@@ -412,7 +412,6 @@
  <tile id="66">
   <image source="castle_66.png"/>
   <properties>
-   <property name="newton_adventure.type" value="platform"/>
   </properties>
  </tile>
  <tile id="67">
@@ -424,7 +423,6 @@
  <tile id="68">
   <image source="castle_68.png"/>
   <properties>
-   <property name="newton_adventure.type" value="platform"/>
   </properties>
  </tile>
  <tile id="69">

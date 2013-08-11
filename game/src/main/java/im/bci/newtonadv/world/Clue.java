@@ -42,7 +42,7 @@ import net.phys2d.raw.shapes.Shape;
  *
  * @author devnewton
  */
-public strictfp class Clue extends Platform implements CollisionDetectionOnly, Updatable {
+public strictfp class Clue extends AnimatedPlatform implements CollisionDetectionOnly, Updatable {
     
     private static final float CLUE_VISIBLE_AT_DISTANCE = World.distanceUnit * 10f * World.distanceUnit * 10f;
     private Vector2f anchor;

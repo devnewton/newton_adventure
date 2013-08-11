@@ -38,7 +38,7 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.Shape;
 
-class MemoryActivator extends Platform implements Updatable {
+class MemoryActivator extends AnimatedPlatform implements Updatable {
 	private final int activableId;
 	private final AnimationCollection onTexture, offTexture, hiddenTexture;
 	private State state = State.HIDDEN;

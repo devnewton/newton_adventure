@@ -38,7 +38,7 @@ import net.phys2d.raw.Body;
  * 
  * @author devnewton
  */
-public strictfp class Accelerator extends Platform implements
+public strictfp class Accelerator extends AnimatedPlatform implements
 		CollisionDetectionOnly {
     
     private final Vector2f force;

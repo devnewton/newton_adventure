@@ -41,7 +41,7 @@ import net.phys2d.raw.shapes.Shape;
  * @author devnewton
  *
  */
-public strictfp class BouncePlatform extends Platform {
+public strictfp class BouncePlatform extends AnimatedPlatform {
 
     public BouncePlatform(World world, float w, float h) {
         super(world, w, h);

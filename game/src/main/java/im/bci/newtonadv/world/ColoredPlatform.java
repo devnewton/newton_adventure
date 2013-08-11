@@ -35,7 +35,7 @@ package im.bci.newtonadv.world;
  *
  * @author devnewton
  */
-public strictfp class ColoredPlatform extends Platform {
+public strictfp class ColoredPlatform extends AnimatedPlatform {
 
     ColoredPlatform(World world, float w, float h) {
     	super(world, w, h);

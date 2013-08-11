@@ -62,6 +62,7 @@ import im.bci.newtonadv.world.Bomb;
 import im.bci.newtonadv.world.Boss;
 import im.bci.newtonadv.world.BossHand;
 import im.bci.newtonadv.world.Cloud;
+import im.bci.newtonadv.world.Platform;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
 import im.bci.newtonadv.world.DownRightHalfPlatform;
@@ -77,12 +78,13 @@ import im.bci.newtonadv.world.MovingPlatform;
 import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
-import im.bci.newtonadv.world.Platform;
+import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
+
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -96,6 +98,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
@@ -103,6 +106,7 @@ import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.ConvexPolygon;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
@@ -544,7 +548,7 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawPlatform(Platform platform) {
+    public void drawPlatform(AnimatedPlatform platform) {
         final boolean hasAlpha = platform.frame.getImage().hasAlpha();
         if (hasAlpha) {
             GL11.glEnable(GL11.GL_BLEND);
@@ -558,6 +562,22 @@ public strictfp class GameView implements IGameView {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
+    
+    @Override
+    public void drawDecoration(Platform decoration) {
+        final boolean hasAlpha = decoration.texture.hasAlpha();
+        if (hasAlpha) {
+            GL11.glEnable(GL11.GL_BLEND);
+        }
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, decoration.texture.getId());
+        GL11.glTexCoordPointer(2, 0, decoration.texCoords);
+        GL11.glVertexPointer(2, 0, decoration.vertices);
+        int nbVertices = decoration.vertices.limit() / 2;
+        GL11.glDrawArrays((nbVertices % 4) == 0 ? GL11.GL_QUADS : GL11.GL_TRIANGLES, 0, nbVertices);
+        if (hasAlpha) {
+            GL11.glDisable(GL11.GL_BLEND);
+        }
+	}
 
     @Override
     public void drawMovingPlatform(MovingPlatform platform, AnimationFrame texture) {
@@ -1190,7 +1210,6 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawLevelIndicators(String indicators) {
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_BLEND);
 
         GL11.glPushMatrix();
@@ -1199,7 +1218,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTranslatef(0, Display.getHeight() - font.getHeight(),
                 0);
         font.drawString(indicators);
-        GL11.glPopAttrib();
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 

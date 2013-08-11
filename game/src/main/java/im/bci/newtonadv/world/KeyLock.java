@@ -37,7 +37,7 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.util.NewtonColor;
 
-public class KeyLock extends Platform implements Updatable {
+public class KeyLock extends AnimatedPlatform implements Updatable {
 	private boolean opened = false;
 	private long disappearEndTime = -1;
 	private float alpha = 1.0f;

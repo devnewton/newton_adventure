@@ -36,7 +36,7 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.Shape;
 
-class Activator extends Platform {
+class Activator extends AnimatedPlatform {
     private final int activableId;
     private boolean activated;
     private final AnimationCollection onTexture;

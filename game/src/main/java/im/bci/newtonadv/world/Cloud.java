@@ -37,7 +37,7 @@ import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.util.NewtonColor;
 
-public strictfp class Cloud extends Platform implements Updatable {
+public strictfp class Cloud extends AnimatedPlatform implements Updatable {
 
     private boolean touched = false;
     private long disappearEndTime = -1;

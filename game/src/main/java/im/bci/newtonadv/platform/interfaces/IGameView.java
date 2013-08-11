@@ -47,6 +47,7 @@ import im.bci.newtonadv.world.Bat;
 import im.bci.newtonadv.world.Blocker;
 import im.bci.newtonadv.world.Bomb;
 import im.bci.newtonadv.world.Cloud;
+import im.bci.newtonadv.world.Platform;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
 import im.bci.newtonadv.world.DownRightHalfPlatform;
@@ -64,12 +65,13 @@ import im.bci.newtonadv.world.MovingPlatform;
 import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
-import im.bci.newtonadv.world.Platform;
+import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -129,7 +131,7 @@ public interface IGameView {
 
     void drawPickedUpObject(PickedUpObject apple, World world, AnimationFrame texture);
 
-    void drawPlatform(Platform platform);
+    void drawPlatform(AnimatedPlatform platform);
 
     void drawMenuButton(Button button, String leftLabel, String rightLabel);
 
@@ -173,4 +175,6 @@ public interface IGameView {
     void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
 
     void drawLoading(Play loadingPlay);
+
+	void drawDecoration(Platform decoration);
 }

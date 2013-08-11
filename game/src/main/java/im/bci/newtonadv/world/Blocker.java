@@ -36,7 +36,7 @@ import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 
-public class Blocker extends Platform implements Updatable {
+public class Blocker extends AnimatedPlatform implements Updatable {
     private final int activableId;
 
     private boolean activated = false;

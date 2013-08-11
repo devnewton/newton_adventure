@@ -41,7 +41,7 @@ import im.bci.newtonadv.game.Updatable;
  * 
  * @author bci
  */
-public strictfp class BombHole extends Platform implements Updatable {
+public strictfp class BombHole extends AnimatedPlatform implements Updatable {
     
     private boolean canThrowBomb = true;
     private AnimationCollection bombTexture;

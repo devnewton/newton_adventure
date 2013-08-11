@@ -41,7 +41,7 @@ import net.phys2d.raw.shapes.Shape;
  *
  * @author bci
  */
-public strictfp class Pikes extends Platform {
+public strictfp class Pikes extends AnimatedPlatform {
 
     public enum DangerousSide {
 
