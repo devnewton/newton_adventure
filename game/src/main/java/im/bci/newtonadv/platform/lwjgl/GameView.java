@@ -1278,7 +1278,9 @@ public strictfp class GameView implements IGameView {
         ROVector2f heroPos = world.getHero().getPosition();
         GL11.glTranslatef(-heroPos.getX(), -heroPos.getY(), 0.0f);
 
-        final float cameraSize = World.ortho2DBaseSize * 1.5f;
+        float cameraW = (World.ortho2DRight - World.ortho2DLeft) * aspectRatio;
+        float cameraH = World.ortho2DTop - World.ortho2DBottom;
+        final float cameraSize = (float)Math.sqrt(cameraW * cameraW + cameraH * cameraH);
         final BodyList visibleBodies = world.getVisibleBodies(heroPos.getX()
                 - cameraSize, heroPos.getY() - cameraSize, heroPos.getX()
                 + cameraSize, heroPos.getY() + cameraSize);
