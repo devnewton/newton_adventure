@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import net.phys2d.math.Matrix2f;
 import net.phys2d.math.Vector2f;

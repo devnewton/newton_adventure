@@ -145,10 +145,6 @@ class FileGameData extends AbstractGameData {
         return RuntimeUtils.getPropertyAsList(questsProperties,("levels"));
     }
 
-    private boolean isDeluxe() {
-        return "deluxe".equals(version);
-    }
-
     private void loadVersionInfo() {
         try {
             URL configFilePath = getClass().getClassLoader().getResource(

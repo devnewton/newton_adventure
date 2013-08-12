@@ -36,5 +36,7 @@ package im.bci.newtonadv.platform.lwjgl;
  * @author devnewton
  */
 public class GameCloseException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
     
 }

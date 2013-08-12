@@ -1,7 +1,6 @@
 package im.bci.newtonadv.platform.lwjgl.openal;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

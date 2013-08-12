@@ -141,7 +141,6 @@ class StaticQuadSpaceStrategy implements BroadCollisionStrategy {
                     recursiveFindVisibleBodies(s, camera_x1, camera_y1, camera_x2, camera_y2, visibleBodies);
                 }
             }
-
         }
     }
 

@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.GraphicsEnvironment;
