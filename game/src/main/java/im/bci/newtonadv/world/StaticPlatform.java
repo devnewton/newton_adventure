@@ -31,76 +31,40 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.util.ShapeUtils;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
-import net.phys2d.math.Vector2f;
+import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Box;
-import net.phys2d.raw.shapes.Shape;
 
 /**
  *
  * @author devnewton
  */
-public strictfp class Platform extends AbstractDrawableStaticBody {
+public strictfp class StaticPlatform extends StaticBody {
+	
+	private ITexture texture;
+	private int zOrder;
+	int vertexBufferIndex;
+	StaticPlatformDrawable drawable;
 
-    protected final World world;
-    protected float w;
-    protected float h;
-    public ITexture texture;
-    public FloatBuffer vertices = ByteBuffer
-            .allocateDirect(2 * 4 * Float.SIZE / 8)
-            .order(ByteOrder.nativeOrder()).asFloatBuffer();
-    public FloatBuffer texCoords = ByteBuffer
-            .allocateDirect(2 * 4 * Float.SIZE / 8)
-            .order(ByteOrder.nativeOrder()).asFloatBuffer();
-
-    Platform(World world, float w, float h) {
+    StaticPlatform(float w, float h) {
         super(new Box(w, h));
         setFriction(10.0f);
         addBit(World.STATIC_BODY_COLLIDE_BIT);
-        this.world = world;
-        this.w = w;
-        this.h = h;
     }
 
-    @Override
-    public void setPosition(float x, float y) {
-        super.setPosition(x, y);
+	public int getZOrder() {
+		return zOrder;
+	}
 
-        Shape shape = getShape();
-        Vector2f[] points = ShapeUtils.getVertices(shape, getPosition(),
-                getRotation());
-        int nbPoints = Math.min(points.length, vertices.capacity());
-        for (int i = 0; i < nbPoints; ++i) {
-            Vector2f point = points[i];
-            vertices.put(point.x);
-            vertices.put(point.y);
-        }
-        vertices.flip();
+	public void setZOrder(int zOrder) {
+		this.zOrder = zOrder;
+	}
 
-        texCoords.put(0);
-        texCoords.put(1);
-        texCoords.put(1);
-        texCoords.put(1);
-        texCoords.put(1);
-        texCoords.put(0);
-        texCoords.put(0);
-        texCoords.put(0);
-        texCoords.flip();
-    }
+	public ITexture getTexture() {
+		return texture;
+	}
 
-    public void setTexture(ITexture texture) {
-        this.texture = texture;
-    }
-
-    @Override
-    public void draw() {
-        world.getView().drawDecoration(this);
-    }
+	public void setTexture(ITexture texture) {
+		this.texture = texture;
+	}
 }

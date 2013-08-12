@@ -62,7 +62,6 @@ import im.bci.newtonadv.world.Bomb;
 import im.bci.newtonadv.world.Boss;
 import im.bci.newtonadv.world.BossHand;
 import im.bci.newtonadv.world.Cloud;
-import im.bci.newtonadv.world.Platform;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
 import im.bci.newtonadv.world.DownRightHalfPlatform;
@@ -80,6 +79,7 @@ import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
+import im.bci.newtonadv.world.StaticPlatform;
 import im.bci.newtonadv.world.UpLeftHalfPlatform;
 import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
@@ -562,22 +562,6 @@ public strictfp class GameView implements IGameView {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
-    
-    @Override
-    public void drawDecoration(Platform decoration) {
-        final boolean hasAlpha = decoration.texture.hasAlpha();
-        if (hasAlpha) {
-            GL11.glEnable(GL11.GL_BLEND);
-        }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, decoration.texture.getId());
-        GL11.glTexCoordPointer(2, 0, decoration.texCoords);
-        GL11.glVertexPointer(2, 0, decoration.vertices);
-        int nbVertices = decoration.vertices.limit() / 2;
-        GL11.glDrawArrays((nbVertices % 4) == 0 ? GL11.GL_QUADS : GL11.GL_TRIANGLES, 0, nbVertices);
-        if (hasAlpha) {
-            GL11.glDisable(GL11.GL_BLEND);
-        }
-	}
 
     @Override
     public void drawMovingPlatform(MovingPlatform platform, AnimationFrame texture) {
@@ -1305,12 +1289,17 @@ public strictfp class GameView implements IGameView {
                 + cameraSize, heroPos.getY() + cameraSize);
 
         ArrayList<Drawable> drawableBodies = new ArrayList<Drawable>();
+        world.staticPlatformDrawer.resetVisibles();
         for (int i = 0; i < visibleBodies.size(); i++) {
             Body body = visibleBodies.get(i);
             if (body instanceof Drawable) {
                 drawableBodies.add(((Drawable) body));
             }
+            if(body instanceof StaticPlatform) {
+            	world.staticPlatformDrawer.addVisible((StaticPlatform) body);
+            }
         }
+        world.staticPlatformDrawer.getVisibleDrawables(drawableBodies);
         java.util.Collections.sort(drawableBodies, Drawable.comparator);
         for (Drawable drawableBody : drawableBodies) {
             drawableBody.draw();

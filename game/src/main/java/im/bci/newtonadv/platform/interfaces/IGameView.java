@@ -47,7 +47,6 @@ import im.bci.newtonadv.world.Bat;
 import im.bci.newtonadv.world.Blocker;
 import im.bci.newtonadv.world.Bomb;
 import im.bci.newtonadv.world.Cloud;
-import im.bci.newtonadv.world.Platform;
 import im.bci.newtonadv.world.Door;
 import im.bci.newtonadv.world.DownLeftHalfPlatform;
 import im.bci.newtonadv.world.DownRightHalfPlatform;
@@ -175,6 +174,4 @@ public interface IGameView {
     void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
 
     void drawLoading(Play loadingPlay);
-
-	void drawDecoration(Platform decoration);
 }
