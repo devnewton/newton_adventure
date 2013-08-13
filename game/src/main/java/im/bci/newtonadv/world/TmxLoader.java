@@ -157,6 +157,8 @@ public class TmxLoader {
 
         world.setIsRotateGravityPossible("true".equals(getMapProperty(map,
                 "newton_adventure.rotate_gravity_possible")));
+        
+        world.staticPlatformDrawer.postConstruct();
     }
 
     private void initFromTile(float x, float y, tiled.core.Map map,

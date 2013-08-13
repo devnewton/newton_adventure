@@ -20,7 +20,8 @@ public class StaticPlatformDrawer {
 	
 	public void resetVisibles() {
 		for(StaticPlatformDrawable drawable : drawables) {
-			drawable.indices.limit(0);
+			drawable.indices.rewind();
+			drawable.indices.limit(drawable.indices.capacity());
 		}
 	}
 	
