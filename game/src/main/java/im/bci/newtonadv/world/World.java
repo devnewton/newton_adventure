@@ -93,6 +93,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private boolean isRotateGravityPossible = true;
     private EnumMap<NewtonColor, BodyList> coloredStaticBodies;
     private Playable explodeSound;
+    public StaticPlatformDrawer staticPlatformDrawer = new StaticPlatformDrawer();
 
     public void setAppleIcon(AnimationCollection appleIcon) {
         this.appleIconPlay = appleIcon.getFirst().start();
@@ -456,8 +457,13 @@ public strictfp class World extends net.phys2d.raw.World {
             }
         });
     }
+    
+    void addStaticPlatform(StaticPlatform platform) {
+    	staticPlatformDrawer.add(platform);
+    	add(platform);
+    }
 
-    public void addApple(im.bci.newtonadv.world.Apple apple) {
+    void addApple(im.bci.newtonadv.world.Apple apple) {
         ++nbCollectableApple;
         add(apple);
     }

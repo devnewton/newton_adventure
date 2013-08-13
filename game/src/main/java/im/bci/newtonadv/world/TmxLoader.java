@@ -157,6 +157,8 @@ public class TmxLoader {
 
         world.setIsRotateGravityPossible("true".equals(getMapProperty(map,
                 "newton_adventure.rotate_gravity_possible")));
+        
+        world.staticPlatformDrawer.postConstruct(world.getView());
     }
 
     private void initFromTile(float x, float y, tiled.core.Map map,
@@ -187,12 +189,12 @@ public class TmxLoader {
                 platform.setZOrder(getTileZOrder(tile, zOrderBase));
                 world.add(platform);
             } else {
-                Platform decoration = new Platform(world, tileWidth, tileHeight);
-                decoration.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-                decoration.setPosition(tileX, tileY);
-                decoration.setZOrder(getTileZOrder(tile, zOrderBase));
-                decoration.setFriction(getTileFriction(tile));
-                world.add(decoration);
+                StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
+                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                platform.setPosition(tileX, tileY);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                platform.setFriction(getTileFriction(tile));
+                world.addStaticPlatform(platform);
             }
         } else if (c.equals("slash_platform")) {
             AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
@@ -627,12 +629,12 @@ public class TmxLoader {
                 platform.setZOrder(getTileZOrder(tile, zOrderBase));
                 world.add(platform);
             } else {
-                Platform decoration = new Platform(world, tileWidth, tileHeight);
-                decoration.setTexture(textureCache.getTexture(questName, levelName, map, tile));
-                decoration.setPosition(tileX, tileY);
-                decoration.setZOrder(getTileZOrder(tile, zOrderBase));
-                decoration.setEnabled(false);
-                world.add(decoration);
+                StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
+                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                platform.setPosition(tileX, tileY);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                platform.setEnabled(false);
+                world.addStaticPlatform(platform);
             }
 
         }
