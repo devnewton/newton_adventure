@@ -197,14 +197,27 @@ public class TmxLoader {
                 world.addStaticPlatform(platform);
             }
         } else if (c.equals("slash_platform")) {
-            AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setShape(new Line(-tileWidth / 2.0f, -tileHeight / 2.0f, tileWidth / 2.0f, tileHeight / 2.0f));
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            world.add(platform);
+        	String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+        	if (null != gfx) {
+	            AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
+	            platform.setTexture(getAnimationForTile(map, tile, textureCache));
+	            platform.setPosition(tileX, tileY);
+	            platform.setShape(new Line(-tileWidth / 2.0f, -tileHeight / 2.0f, tileWidth / 2.0f, tileHeight / 2.0f));
+	            platform.setFriction(getTileFriction(tile));
+	            platform.setZOrder(getTileZOrder(tile, zOrderBase));
+	            world.add(platform);
+        	} else {
+                StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
+                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                platform.setShape(new Line(-tileWidth / 2.0f, -tileHeight / 2.0f, tileWidth / 2.0f, tileHeight / 2.0f));
+                platform.setPosition(tileX, tileY);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                platform.setFriction(getTileFriction(tile));
+                world.addStaticPlatform(platform);
+        	}
         } else if (c.equals("antislash_platform")) {
+        	String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+        	if (null != gfx) {
             AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
             platform.setTexture(getAnimationForTile(map, tile, textureCache));
             platform.setPosition(tileX, tileY);
@@ -212,6 +225,15 @@ public class TmxLoader {
             platform.setFriction(getTileFriction(tile));
             platform.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(platform);
+        	} else {
+                StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
+                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                platform.setShape(new Line(-tileWidth / 2.0f, tileHeight / 2.0f, tileWidth / 2.0f, -tileHeight / 2.0f));
+                platform.setPosition(tileX, tileY);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                platform.setFriction(getTileFriction(tile));
+                world.addStaticPlatform(platform);
+        	}
         } else if (c.equals("up_right_half_platform")) {
             UpRightHalfPlatform platform = new UpRightHalfPlatform(world,
                     tileWidth, tileHeight);

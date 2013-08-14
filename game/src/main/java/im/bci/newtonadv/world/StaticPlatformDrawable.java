@@ -96,7 +96,6 @@ public class StaticPlatformDrawable implements Drawable {
             vertices.put(point.x);
             vertices.put(point.y);
         }
-        
         texCoords.put(0);
         texCoords.put(1);
         texCoords.put(1);

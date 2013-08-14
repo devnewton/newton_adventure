@@ -5,6 +5,7 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.ConvexPolygon;
+import net.phys2d.raw.shapes.Line;
 import net.phys2d.raw.shapes.Shape;
 
 public class ShapeUtils {
@@ -16,13 +17,25 @@ public class ShapeUtils {
 		} else if(shape instanceof ConvexPolygon){
 			ConvexPolygon polygon = (ConvexPolygon) shape;
 			return polygon.getVertices(position, rotation);
-		} else {
-			AABox bounds = shape.getBounds();
-			final float x1 = position.getX() + -bounds.getWidth() / 2.0f;
+		}else if(shape instanceof Line) {
+			Line line = (Line) shape;
+			float width = Math.abs(line.getX2()-line.getX1());
+			float height = Math.abs(line.getY2()-line.getY1());
+			return new Box(width, height).getPoints(position, rotation);
+			/*final float x1 = position.getX() + -bounds.getWidth() / 2.0f;
 			final float x2 = position.getX() + bounds.getWidth() / 2.0f;
 			final float y1 = position.getY() + -bounds.getHeight() / 2.0f;
-			final float y2 = position.getY() + bounds.getHeight() / 2.0f;		
-			return new Vector2f[] { new Vector2f( x1, y2), new Vector2f(x2, y2), new Vector2f(x2, y1), new Vector2f(x1, y1) };
+			final float y2 = position.getY() + bounds.getHeight() / 2.0f;
+			return new Vector2f[] { new Vector2f( x1, y2), new Vector2f(x2, y2), new Vector2f(x2, y1), new Vector2f(x1, y1) };*/
+		} 
+		else {
+			AABox bounds = shape.getBounds();
+			return new Box(bounds.getWidth(), bounds.getHeight()).getPoints(position, rotation);
+			/*final float x1 = position.getX() + -bounds.getWidth() / 2.0f;
+			final float x2 = position.getX() + bounds.getWidth() / 2.0f;
+			final float y1 = position.getY() + -bounds.getHeight() / 2.0f;
+			final float y2 = position.getY() + bounds.getHeight() / 2.0f;
+			return new Vector2f[] { new Vector2f( x1, y2), new Vector2f(x2, y2), new Vector2f(x2, y1), new Vector2f(x1, y1) };*/
 		}
 	}
 
