@@ -47,10 +47,12 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.BasicJoint;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Circle;
+import net.phys2d.raw.shapes.ConvexPolygon;
 import net.phys2d.raw.shapes.Line;
 import tiled.core.Map;
 import tiled.core.Tile;
@@ -235,37 +237,93 @@ public class TmxLoader {
                 world.addStaticPlatform(platform);
         	}
         } else if (c.equals("up_right_half_platform")) {
-            UpRightHalfPlatform platform = new UpRightHalfPlatform(world,
-                    tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            world.add(platform);
+        	String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+        	if (null != gfx) {
+	            AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
+	            platform.setTexture(getAnimationForTile(map, tile, textureCache));
+	            platform.setPosition(tileX, tileY);
+	            platform.setShape(new ConvexPolygon(new ROVector2f[] { new Vector2f(-tileWidth / 2.0f, tileHeight / 2.0f),
+				new Vector2f(tileWidth / 2.0f, -tileHeight / 2.0f),
+				new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f) }));
+	            platform.setFriction(getTileFriction(tile));
+	            platform.setZOrder(getTileZOrder(tile, zOrderBase));
+	            world.add(platform);
+        	} else {
+                StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
+                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+	            platform.setShape(new ConvexPolygon(new ROVector2f[] { new Vector2f(-tileWidth / 2.0f, tileHeight / 2.0f),
+				new Vector2f(tileWidth / 2.0f, -tileHeight / 2.0f),
+				new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f) }));
+                platform.setPosition(tileX, tileY);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                platform.setFriction(getTileFriction(tile));
+                world.addStaticPlatform(platform);
+        	}
         } else if (c.equals("up_left_half_platform")) {
-            UpLeftHalfPlatform platform = new UpLeftHalfPlatform(world,
-                    tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            world.add(platform);
+        	String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+        	if (null != gfx) {
+	            AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
+	            platform.setTexture(getAnimationForTile(map, tile, textureCache));
+	            platform.setPosition(tileX, tileY);
+	            platform.setShape(new ConvexPolygon(new ROVector2f[] { new Vector2f(-tileWidth / 2.0f, tileHeight / 2.0f),
+	    				new Vector2f(-tileWidth / 2.0f, -tileHeight / 2.0f),
+	    				new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f) }));
+	            platform.setFriction(getTileFriction(tile));
+	            platform.setZOrder(getTileZOrder(tile, zOrderBase));
+	            world.add(platform);
+        	} else {
+                StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
+                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+	            platform.setShape(new ConvexPolygon(new ROVector2f[] { new Vector2f(-tileWidth / 2.0f, tileHeight / 2.0f),
+	    				new Vector2f(-tileWidth / 2.0f, -tileHeight / 2.0f),
+	    				new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f) }));
+                platform.setPosition(tileX, tileY);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                platform.setFriction(getTileFriction(tile));
+                world.addStaticPlatform(platform);
+        	}
         } else if (c.equals("down_left_half_platform")) {
-            DownLeftHalfPlatform platform = new DownLeftHalfPlatform(world,
-                    tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            world.add(platform);
+        	String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+        	if (null != gfx) {
+	            AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
+	            platform.setTexture(getAnimationForTile(map, tile, textureCache));
+	            platform.setPosition(tileX, tileY);
+	            platform.setShape(new ConvexPolygon(new ROVector2f[] { new Vector2f(-tileWidth/2.0f, tileHeight/2.0f), new Vector2f(-tileWidth/2.0f, -tileHeight/2.0f), new Vector2f(tileWidth/2.0f, -tileHeight/2.0f) }));
+	            platform.setFriction(getTileFriction(tile));
+	            platform.setZOrder(getTileZOrder(tile, zOrderBase));
+	            world.add(platform);
+        	} else {
+                StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
+                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                platform.setShape(new ConvexPolygon(new ROVector2f[] { new Vector2f(-tileWidth/2.0f, tileHeight/2.0f), new Vector2f(-tileWidth/2.0f, -tileHeight/2.0f), new Vector2f(tileWidth/2.0f, -tileHeight/2.0f) }));
+                platform.setPosition(tileX, tileY);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                platform.setFriction(getTileFriction(tile));
+                world.addStaticPlatform(platform);
+        	}
         } else if (c.equals("down_right_half_platform")) {
-            DownRightHalfPlatform platform = new DownRightHalfPlatform(world,
-                    tileWidth, tileHeight);
-            platform.setTexture(getAnimationForTile(map, tile, textureCache));
-            platform.setPosition(tileX, tileY);
-            platform.setFriction(getTileFriction(tile));
-            platform.setZOrder(getTileZOrder(tile, zOrderBase));
-            world.add(platform);
+        	String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+        	if (null != gfx) {
+	            AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
+	            platform.setTexture(getAnimationForTile(map, tile, textureCache));
+	            platform.setPosition(tileX, tileY);
+	            platform.setShape(new ConvexPolygon(new ROVector2f[] { new Vector2f(-tileWidth / 2.0f, -tileHeight / 2.0f),
+	    				new Vector2f(tileWidth / 2.0f, -tileHeight / 2.0f),
+	    				new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f) }));
+	            platform.setFriction(getTileFriction(tile));
+	            platform.setZOrder(getTileZOrder(tile, zOrderBase));
+	            world.add(platform);
+        	} else {
+                StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
+                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                platform.setShape(new ConvexPolygon(new ROVector2f[] { new Vector2f(-tileWidth / 2.0f, -tileHeight / 2.0f),
+	    				new Vector2f(tileWidth / 2.0f, -tileHeight / 2.0f),
+	    				new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f) }));
+                platform.setPosition(tileX, tileY);
+                platform.setZOrder(getTileZOrder(tile, zOrderBase));
+                platform.setFriction(getTileFriction(tile));
+                world.addStaticPlatform(platform);
+        	}
         } else if (c.equals("hero")) {
             if (null == hero) {
                 hero = new Hero(world);

@@ -48,8 +48,6 @@ import im.bci.newtonadv.world.Blocker;
 import im.bci.newtonadv.world.Bomb;
 import im.bci.newtonadv.world.Cloud;
 import im.bci.newtonadv.world.Door;
-import im.bci.newtonadv.world.DownLeftHalfPlatform;
-import im.bci.newtonadv.world.DownRightHalfPlatform;
 import im.bci.newtonadv.world.Boss;
 import im.bci.newtonadv.world.BossHand;
 import im.bci.newtonadv.world.Explosion;
@@ -67,8 +65,6 @@ import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.StaticPlatformDrawable;
-import im.bci.newtonadv.world.UpLeftHalfPlatform;
-import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
@@ -98,10 +94,6 @@ public interface IGameView {
     void drawCloud(Cloud cloud, float alpha);
 
     void drawDoor(Door door, AnimationFrame texture);
-
-    void drawDownLeftHalfPlatform(DownLeftHalfPlatform platform, AnimationFrame texture);
-
-    void drawDownRightHalfPlatform(DownRightHalfPlatform platform, AnimationFrame texture);
 
     void drawBoss(Boss boss, AnimationFrame bodyTexture);
 
@@ -138,11 +130,7 @@ public interface IGameView {
     void drawScoreSequence(ScoreSequence sequence, QuestScore questScore, long scorePerCentToShow);
 
     void drawSnowLayer(SnowLayer layer);
-
-    void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform, AnimationFrame texture);
-
-    void drawUpRightHalfPlatform(UpRightHalfPlatform platform, AnimationFrame texture);
-
+    
     void drawUsedKey(UsedKey key, AnimationFrame texture, World world);
 
     void drawWorld(World world);

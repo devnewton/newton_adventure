@@ -63,8 +63,6 @@ import im.bci.newtonadv.world.Boss;
 import im.bci.newtonadv.world.BossHand;
 import im.bci.newtonadv.world.Cloud;
 import im.bci.newtonadv.world.Door;
-import im.bci.newtonadv.world.DownLeftHalfPlatform;
-import im.bci.newtonadv.world.DownRightHalfPlatform;
 import im.bci.newtonadv.world.Explosion;
 import im.bci.newtonadv.world.FireBall;
 import im.bci.newtonadv.world.Hero;
@@ -81,8 +79,6 @@ import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.StaticPlatform;
 import im.bci.newtonadv.world.StaticPlatformDrawable;
-import im.bci.newtonadv.world.UpLeftHalfPlatform;
-import im.bci.newtonadv.world.UpRightHalfPlatform;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
@@ -106,7 +102,6 @@ import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
-import net.phys2d.raw.shapes.ConvexPolygon;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
@@ -634,100 +629,6 @@ public strictfp class GameView implements IGameView {
         GL11.glVertex2f(pts[3].x, pts[3].y);
         GL11.glEnd();
         GL11.glDisable(GL11.GL_BLEND);
-    }
-
-    @Override
-    public void drawDownLeftHalfPlatform(DownLeftHalfPlatform platform,
-            AnimationFrame texture) {
-        ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
-        Vector2f[] pts = polygon.getVertices(platform.getPosition(),
-                platform.getRotation());
-        if (texture.getImage().hasAlpha()) {
-            GL11.glEnable(GL11.GL_BLEND);
-        }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV1());
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV2());
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV2());
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        if (texture.getImage().hasAlpha()) {
-            GL11.glDisable(GL11.GL_BLEND);
-        }
-
-    }
-
-    @Override
-    public void drawDownRightHalfPlatform(DownRightHalfPlatform platform,
-            AnimationFrame texture) {
-        ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
-        Vector2f[] pts = polygon.getVertices(platform.getPosition(),
-                platform.getRotation());
-        if (texture.getImage().hasAlpha()) {
-            GL11.glEnable(GL11.GL_BLEND);
-        }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV2());
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV2());
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV1());
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        if (texture.getImage().hasAlpha()) {
-            GL11.glDisable(GL11.GL_BLEND);
-        }
-    }
-
-    @Override
-    public void drawUpLeftHalfPlatform(UpLeftHalfPlatform platform,
-            AnimationFrame texture) {
-        ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
-        Vector2f[] pts = polygon.getVertices(platform.getPosition(),
-                platform.getRotation());
-        if (texture.getImage().hasAlpha()) {
-            GL11.glEnable(GL11.GL_BLEND);
-        }
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.9999f);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV1());
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV2());
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV1());
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        if (texture.getImage().hasAlpha()) {
-            GL11.glDisable(GL11.GL_BLEND);
-        }
-    }
-
-    @Override
-    public void drawUpRightHalfPlatform(UpRightHalfPlatform platform,
-            AnimationFrame texture) {
-        ConvexPolygon polygon = (ConvexPolygon) platform.getShape();
-        Vector2f[] pts = polygon.getVertices(platform.getPosition(),
-                platform.getRotation());
-        if (texture.getImage().hasAlpha()) {
-            GL11.glEnable(GL11.GL_BLEND);
-        }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV1());
-        GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV2());
-        GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV1());
-        GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glEnd();
-        if (texture.getImage().hasAlpha()) {
-            GL11.glDisable(GL11.GL_BLEND);
-        }
     }
 
     @Override

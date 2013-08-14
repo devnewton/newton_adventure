@@ -16,26 +16,26 @@ public class ShapeUtils {
 			return box.getPoints(position, rotation);
 		} else if(shape instanceof ConvexPolygon){
 			ConvexPolygon polygon = (ConvexPolygon) shape;
-			return polygon.getVertices(position, rotation);
+			Vector2f[] vertices = polygon.getVertices(position, rotation);
+			float minX=vertices[0].x, maxX=vertices[0].x, minY=vertices[0].y, maxY=vertices[0].y;
+			for(int i=1; i<vertices.length; ++i) {
+				minX = Math.min(minX, vertices[i].x);
+				maxX = Math.max(maxX, vertices[i].x);
+				minY = Math.min(minY, vertices[i].y);
+				maxY = Math.max(maxY, vertices[i].y);
+			}
+			float width = maxX - minX;
+			float height = maxY - minY;
+			return new Box(width, height).getPoints(position, rotation);
 		}else if(shape instanceof Line) {
 			Line line = (Line) shape;
 			float width = Math.abs(line.getX2()-line.getX1());
 			float height = Math.abs(line.getY2()-line.getY1());
 			return new Box(width, height).getPoints(position, rotation);
-			/*final float x1 = position.getX() + -bounds.getWidth() / 2.0f;
-			final float x2 = position.getX() + bounds.getWidth() / 2.0f;
-			final float y1 = position.getY() + -bounds.getHeight() / 2.0f;
-			final float y2 = position.getY() + bounds.getHeight() / 2.0f;
-			return new Vector2f[] { new Vector2f( x1, y2), new Vector2f(x2, y2), new Vector2f(x2, y1), new Vector2f(x1, y1) };*/
 		} 
 		else {
 			AABox bounds = shape.getBounds();
 			return new Box(bounds.getWidth(), bounds.getHeight()).getPoints(position, rotation);
-			/*final float x1 = position.getX() + -bounds.getWidth() / 2.0f;
-			final float x2 = position.getX() + bounds.getWidth() / 2.0f;
-			final float y1 = position.getY() + -bounds.getHeight() / 2.0f;
-			final float y2 = position.getY() + bounds.getHeight() / 2.0f;
-			return new Vector2f[] { new Vector2f( x1, y2), new Vector2f(x2, y2), new Vector2f(x2, y1), new Vector2f(x1, y1) };*/
 		}
 	}
 
