@@ -142,6 +142,18 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     }
 
     private void setCurrentMovement(Movement currentMovement) {
+    	if(isFalling()) {
+    		if(!"falling".equals(play.getName())) {
+    			play = animations.getAnimationByName("falling").start();
+    		}
+    	} else {
+    		if(!"walk".equals(play.getName())) {
+    			play = animations.getAnimationByName("walk").start();
+    			if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
+    				play.stop();
+    			}
+    		}
+		}
         if (this.currentMovement != currentMovement) {
             this.previousMovement = this.currentMovement;
             this.currentMovement = currentMovement;
@@ -153,7 +165,19 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
         }
     }
 
-    void killedMummy() {
+    private boolean isFalling() {
+		Vector2f g = world.getGravityVector();
+		float dp = g.dot(this.getVelocity());
+		if(dp>0.1f) {
+	    	Vector2f v = new Vector2f();
+			v.x = dp * g.getX();
+			v.y = dp * g.getY();
+			return v.length() > 20.0f;
+		}
+		return false;   	
+	}
+
+	void killedMummy() {
         levelScore.addKilledMummy();
         world.addTopLevelEntities(new ScoreVisualIndicator(world, this.getPosition(), levelScore.getKilledMummyValue()));
     }
@@ -267,6 +291,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
 
     @Override
     public void update(FrameTimeInfos frameTimeInfos) throws GameOverException {
+
         getAnimation().update(frameTimeInfos.elapsedTime / 1000000);
         if (isHurt) {
             if (endOfInvincibilityDuration < 0) {
@@ -306,7 +331,6 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
         nbStepSinceLastJump = 0;
 
         CollisionEvent[] events = world.getContacts(this);
-        // return events.length > 0;
 
         for (int i = 0; i < events.length; i++) {
             float angle = im.bci.newtonadv.util.Vector.angle(
@@ -319,36 +343,15 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
             }
         }
         return false;
-        /*
-         * if (events[i].getNormal().getY() > 0) { if (events[i].getBodyB() ==
-         * hero) { return true; } } if (events[i].getNormal().getY() < 0) { if
-         * (events[i].getBodyA() == hero) { return true; } }
-         */
-        // }
-
-        /*
-         * BodyList connected = hero.getTouching(); for (int i = 0; i <
-         * connected.size(); ++i) { Body body = connected.get(i); if (body
-         * instanceof Platform) { Vector2f normal = new
-         * Vector2f(hero.getPosition()); normal.sub(body.getPosition()); float
-         * angle = im.bci.newtonadv.util.Vector.angle(gravityVector, normal); if
-         * (angle >= Math.PI / 1.35) { return true; } } }
-         */
-        // return false;
     }
 
     public void jump(float step) {
-        if (/* hero.isOnPlatform */canJump()) {
+        if (canJump()) {
             Matrix2f rot = new Matrix2f(world.getGravityAngle());
             Vector2f jump = net.phys2d.math.MathUtil.mul(rot, new Vector2f(
                     0.0f, /* stepRate * */ world.getGravityForce() * jumpForce));
             addForce(jump);
-
             jumpSound.play();
-
-            // Vector2f jump = net.phys2d.math.MathUtil.mul(rot, new Vector2f(0,
-            // /*stepRate **/ world.getGravityForce() * 1.0f));
-            // adjustVelocity(jump);
         }
     }
 

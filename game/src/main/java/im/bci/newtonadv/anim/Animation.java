@@ -48,6 +48,10 @@ public class Animation {
 		public long currentTime;
 		public PlayMode mode = PlayMode.LOOP;
 		public State state = State.STOPPED;
+		
+		public String getName() {
+			return Animation.this.name;
+		}
 
 		public AnimationFrame getCurrentFrame() {
 			return frames.get(currentFrameIndex);
