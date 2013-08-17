@@ -40,11 +40,11 @@ import net.phys2d.raw.shapes.Box;
  * @author devnewton
  */
 public strictfp class StaticPlatform extends StaticBody {
-	
-	private ITexture texture;
-	private int zOrder;
-	int vertexBufferIndex;
-	StaticPlatformDrawable drawable;
+
+    private ITexture texture;
+    private int zOrder;
+    int vertexBufferIndex;
+    StaticPlatformDrawable drawable;
 
     StaticPlatform(float w, float h) {
         super(new Box(w, h));
@@ -52,19 +52,19 @@ public strictfp class StaticPlatform extends StaticBody {
         addBit(World.STATIC_BODY_COLLIDE_BIT);
     }
 
-	public int getZOrder() {
-		return zOrder;
-	}
+    public int getZOrder() {
+        return zOrder;
+    }
 
-	public void setZOrder(int zOrder) {
-		this.zOrder = zOrder;
-	}
+    public void setZOrder(int zOrder) {
+        this.zOrder = zOrder;
+    }
 
-	public ITexture getTexture() {
-		return texture;
-	}
+    public ITexture getTexture() {
+        return texture;
+    }
 
-	public void setTexture(ITexture texture) {
-		this.texture = texture;
-	}
+    public void setTexture(ITexture texture) {
+        this.texture = texture;
+    }
 }

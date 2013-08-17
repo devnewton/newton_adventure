@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2013 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,14 +38,19 @@ import net.phys2d.raw.shapes.Shape;
  *
  * @author bci
  */
-public strictfp class Pikes extends AnimatedPlatform {
+public strictfp class StaticPikes extends StaticPlatform {
 
     PikesComponent pikes = new PikesComponent();
+    private final World world;
+    private final float w;
+    private final float h;
 
-    public Pikes(World world, PikesComponent.DangerousSide dangerousSide, float w, float h) {
-        super(world, w, h);
+    public StaticPikes(World world, PikesComponent.DangerousSide dangerousSide, float w, float h) {
+        super(w, h);
+        this.w = w;
+        this.h = h;
+        this.world = world;
         pikes.setDangerousSide(dangerousSide);
-
     }
 
     @Override
