@@ -33,13 +33,12 @@ package im.bci.newtonadv.platform.lwjgl.twl;
 
 import im.bci.newtonadv.util.MathUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.lwjgl.input.Controller;
 
 public class JoypadPreset {
 
-	private static final List<JoypadPreset> presets = new ArrayList<JoypadPreset>();
+	private static final List<JoypadPreset> presets = JoypadPresetFactory.create();
 
 	public JoypadPreset(Controller joypad) {
 		setName(joypad.getName());
@@ -89,19 +88,7 @@ public class JoypadPreset {
 	private int getAxisCount() {
 		return 1 + MathUtils.max(xAxis, yAxis);
 	}
-
-	static {
-		JoypadPreset megaWorld = new JoypadPreset();
-		megaWorld.setName("Mega World USB Game Controllers");
-		megaWorld.setxAxis(4);
-		megaWorld.setyAxis(5);
-		megaWorld.setKeyJump(0);
-		megaWorld.setKeyRotateCounterClockWise(6);
-		megaWorld.setKeyRotateClockwise(4);
-		megaWorld.setKeyReturn(0);
-		megaWorld.setKeyReturnToMenu(9);
-		presets.add(megaWorld);
-	}
+	
 	private String name;
 	private int xAxis = -1;
 	private int yAxis = -1;
