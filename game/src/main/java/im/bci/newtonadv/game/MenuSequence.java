@@ -212,6 +212,7 @@ public abstract class MenuSequence implements Sequence {
 			button.onTexture = textureCache.getTexture(button.onTextureName);
 			button.offTexture = textureCache.getTexture(button.offTextureName);
 		}
+		this.oldMousePos.set(game.getInput().getMousePos());
 	}
 
 	@Override

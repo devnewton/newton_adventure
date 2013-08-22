@@ -187,13 +187,9 @@ public strictfp class GameView implements IGameView {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         }
 
-        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-
         for (Button b : sequence.getButtons()) {
             b.draw();
         }
-        GL11.glPopAttrib();
         GL11.glPopMatrix();
     }
 
@@ -1138,6 +1134,7 @@ public strictfp class GameView implements IGameView {
     public void drawButton(Button button) {
         ITexture texture = button.getTexture();
         if (texture != null) {
+        	GL11.glEnable(GL11.GL_BLEND);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
             final float x1 = button.x;
             final float x2 = button.x
@@ -1156,6 +1153,7 @@ public strictfp class GameView implements IGameView {
             GL11.glTexCoord2f(u1, 1.0f);
             GL11.glVertex2f(x1, y1);
             GL11.glEnd();
+            GL11.glDisable(GL11.GL_BLEND);
         }
     }
 
