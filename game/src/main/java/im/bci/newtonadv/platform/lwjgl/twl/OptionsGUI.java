@@ -120,18 +120,20 @@ public class OptionsGUI extends Table {
         videoTable.defaults().pad(3);
         videoTable.columnDefaults(0).pad(10);
         videoTable.columnDefaults(1).expandX();
-        //videoTable.columnDefaults(2).expandX();
 
         mode = new ComboBox<DisplayMode>(new SimpleChangableListModel<DisplayMode>(getDisplayModes()));
         mode.setSelected(0);
+        videoTable.addCell(new Label(platform.getMessage("options.video.mode")));
+        videoTable.addCell(mode).fillX();
+        videoTable.row();
+
         fullscreen = new ToggleButton();
         fullscreen.setTheme("checkbox");
         fullscreen.setActive(Display.isFullscreen());
-        videoTable.addCell(new Label(platform.getMessage("options.video.mode")));
-        videoTable.addCell(mode).fillX();
+        videoTable.addCell(new Label());
         videoTable.addCell(addWithLabel(fullscreen, platform.getMessage("options.fullscreen")));
         videoTable.row();
-
+        
         quality = new ComboBox<QualityItem>(qualityModel);
         quality.setSelected(qualityModel.findElement(new QualityItem(gameView.getQuality())));
         videoTable.addCell(new Label(platform.getMessage("options.quality")));
@@ -151,11 +153,17 @@ public class OptionsGUI extends Table {
         videoTable.addCell(addWithLabel(mustDrawFPS,platform.getMessage("options.view.draw.fps")));
         videoTable.row();
         
-        Table inputTable= new Table();
-        inputTable.defaults().pad(3);
-        inputTable.columnDefaults(0).pad(10);
-        inputTable.columnDefaults(1).expandX();
-        inputTable.columnDefaults(2).expandX();
+        Table joypadTable= new Table();
+        joypadTable.defaults().pad(3);
+        joypadTable.columnDefaults(0).pad(10);
+        joypadTable.columnDefaults(1).expandX();
+        joypadTable.columnDefaults(2).expandX();
+        
+        Table keyboardTable= new Table();
+        keyboardTable.defaults().pad(3);
+        keyboardTable.columnDefaults(0).pad(10);
+        keyboardTable.columnDefaults(1).expandX();
+        keyboardTable.columnDefaults(2).expandX();
 
         joypad = new ComboBox<ControllerItem>(controllerModel);
         joypad.setNoSelectionIsError(false);
@@ -168,14 +176,16 @@ public class OptionsGUI extends Table {
         });
         joypadXAxis = new ComboBox<String>(joyAxisModel);
         joypadYAxis = new ComboBox<String>(joyAxisModel);
-        inputTable.addCell(new Label(platform.getMessage("options.joypad")));
-        inputTable.addCell(joypad).fillX();
-        inputTable.row();
+        joypadTable.addCell(new Label(platform.getMessage("options.joypad")));
+        joypadTable.addCell(joypad).fillX();
+        joypadTable.row();
 
-        inputTable.addCell(new Label(platform.getMessage("options.joypad.xyaxis")));
-        inputTable.addCell(joypadXAxis).fillX();
-        inputTable.addCell(joypadYAxis).fillX();
-        inputTable.row();
+        joypadTable.addCell(new Label(platform.getMessage("options.joypad.xaxis")));
+        joypadTable.addCell(joypadXAxis).fillX();
+        joypadTable.row();
+        joypadTable.addCell(new Label(platform.getMessage("options.joypad.xaxis")));
+        joypadTable.addCell(joypadYAxis).fillX();
+        joypadTable.row();
         if (null != gameInput.joypad) {
             int joypadIndex = controllerModel.findElement(new ControllerItem(gameInput.joypad));
             joypad.setSelected(joypadIndex);
@@ -188,15 +198,15 @@ public class OptionsGUI extends Table {
             }
         }
 
-        keyJump = addInputChoice(inputTable, platform.getMessage("options.input.jump"), gameInput.keyJump, gameInput.joypadKeyJump);
-        keyLeft = addInputChoice(inputTable, platform.getMessage("options.input.left"), gameInput.keyLeft, gameInput.joypadKeyLeft);
-        keyRight = addInputChoice(inputTable, platform.getMessage("options.input.right"), gameInput.keyRight, gameInput.joypadKeyRight);
-        keyRotateClockwise = addInputChoice(inputTable, platform.getMessage("options.input.rotate.clockwise"), gameInput.keyRotateClockwise, gameInput.joypadKeyRotateClockwise);
-        keyRotateCounterClockwise = addInputChoice(inputTable, platform.getMessage("options.input.rotate.counterclockwise"), gameInput.keyRotateCounterClockwise, gameInput.joypadKeyRotateCounterClockwise);
-        keyRotate90Clockwise = addInputChoice(inputTable, platform.getMessage("options.input.rotate.clockwise90"), gameInput.keyRotate90Clockwise, gameInput.joypadKeyRotate90Clockwise);
-        keyRotate90CounterClockwise = addInputChoice(inputTable, platform.getMessage("options.input.rotate.counterclockwise90"), gameInput.keyRotate90CounterClockwise, gameInput.joypadKeyRotate90CounterClockwise);
-        keyReturn = addInputChoice(inputTable, platform.getMessage("options.input.return"), gameInput.keyReturn, gameInput.joypadKeyReturn);
-        keyReturnToMenu = addInputChoice(inputTable, platform.getMessage("options.return.to.menu"), gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
+        keyJump = addInputChoice(joypadTable, keyboardTable, platform.getMessage("options.input.jump"), gameInput.keyJump, gameInput.joypadKeyJump);
+        keyLeft = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.left"), gameInput.keyLeft, gameInput.joypadKeyLeft);
+        keyRight = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.right"), gameInput.keyRight, gameInput.joypadKeyRight);
+        keyRotateClockwise = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.rotate.clockwise"), gameInput.keyRotateClockwise, gameInput.joypadKeyRotateClockwise);
+        keyRotateCounterClockwise = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.rotate.counterclockwise"), gameInput.keyRotateCounterClockwise, gameInput.joypadKeyRotateCounterClockwise);
+        keyRotate90Clockwise = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.rotate.clockwise90"), gameInput.keyRotate90Clockwise, gameInput.joypadKeyRotate90Clockwise);
+        keyRotate90CounterClockwise = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.rotate.counterclockwise90"), gameInput.keyRotate90CounterClockwise, gameInput.joypadKeyRotate90CounterClockwise);
+        keyReturn = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.return"), gameInput.keyReturn, gameInput.joypadKeyReturn);
+        keyReturnToMenu = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.return.to.menu"), gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
 
         Table scoreTable= new Table();
         scoreTable.defaults().pad(3);
@@ -274,7 +284,8 @@ public class OptionsGUI extends Table {
         TabbedPane tabbedPane = new TabbedPane();
         tabbedPane.addTab(platform.getMessage("options.video"), videoTable);
         tabbedPane.addTab(platform.getMessage("options.sound"), soundTable);
-        tabbedPane.addTab(platform.getMessage("options.input"), inputTable);
+        tabbedPane.addTab(platform.getMessage("options.input.keyboard"), keyboardTable);
+        tabbedPane.addTab(platform.getMessage("options.input.joypad"), joypadTable);
         tabbedPane.addTab(platform.getMessage("options.score"), scoreTable);
         tabbedPane.addTab(platform.getMessage("options.mod"), modTable);
         
@@ -508,15 +519,17 @@ public class OptionsGUI extends Table {
         ComboBox<JoyButtonItem> joyButton;
     }
 
-    private InputChoice addInputChoice(Table table, String label, int key, int button) {
+    private InputChoice addInputChoice(Table joypadTable, Table keyboardTable, String label, int key, int button) {
         ++button;
         InputChoice choice = new InputChoice();
         choice.key = new ComboBox<String>(keyModel);
         choice.joyButton = new ComboBox<JoyButtonItem>(joyButtonModel);
-        table.addCell(new Label(label));
-        table.addCell(choice.key).fillX();
-        table.addCell(choice.joyButton).fillX();
-        table.row();
+        joypadTable.addCell(new Label(label));
+        joypadTable.addCell(choice.joyButton).fillX();
+        joypadTable.row();
+        keyboardTable.addCell(new Label(label));
+        keyboardTable.addCell(choice.key).fillX();
+        keyboardTable.row();
         choice.key.setSelected(keyModel.findElement((Keyboard.getKeyName(key))));
         if (button >= 0 && button < choice.joyButton.getModel().getNumEntries()) {
             choice.joyButton.setSelected(button);

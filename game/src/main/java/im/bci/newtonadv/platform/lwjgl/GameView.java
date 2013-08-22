@@ -1160,6 +1160,7 @@ public strictfp class GameView implements IGameView {
     @Override
     public void drawMenuButton(Button button, String leftLabel, String rightLabel) {
         drawButton(button);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glPushMatrix();
         GL11.glTranslatef(button.x,
                 button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
@@ -1176,6 +1177,7 @@ public strictfp class GameView implements IGameView {
         GL11.glScalef(1, -1, 1);
         font.drawString(rightLabel, TrueTypeFont.Align.RIGHT);
         GL11.glPopMatrix();
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     @Override
