@@ -301,6 +301,7 @@ public class PlatformSpecific implements IPlatformSpecific {
                 try {
                     ObjectInputStream is = new ObjectInputStream(fs);
                     Object o = is.readObject();
+                    is.close();
                     if (o instanceof GameScore) {
                         return (GameScore) o;
                     }
@@ -327,6 +328,7 @@ public class PlatformSpecific implements IPlatformSpecific {
             try {
                 ObjectOutputStream os = new ObjectOutputStream(fs);
                 os.writeObject(score);
+                os.close();
             } finally {
                 fs.close();
             }
@@ -344,6 +346,7 @@ public class PlatformSpecific implements IPlatformSpecific {
                 try {
                     ObjectInputStream is = new ObjectInputStream(fs);
                     Object o = is.readObject();
+                    is.close();
                     if (o instanceof GameProgression) {
                         return (GameProgression) o;
                     }
@@ -370,6 +373,7 @@ public class PlatformSpecific implements IPlatformSpecific {
             try {
                 ObjectOutputStream os = new ObjectOutputStream(fs);
                 os.writeObject(progression);
+                os.close();
             } finally {
                 fs.close();
             }

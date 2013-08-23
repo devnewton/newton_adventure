@@ -105,7 +105,7 @@ public interface IGameView {
 
     void drawFireBall(FireBall fireball, AnimationFrame texture, World world);
 
-    void drawHero(Hero hero, AnimationFrame texture, World world, float scale);
+    void drawHero(Hero hero, AnimationFrame texture, World world);
 
     void drawKey(Key key, AnimationFrame texture, World world);
 

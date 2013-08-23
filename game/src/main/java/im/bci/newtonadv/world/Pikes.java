@@ -32,7 +32,6 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.raw.Body;
-import net.phys2d.raw.shapes.Shape;
 
 /**
  *

@@ -695,15 +695,26 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawHero(Hero hero, AnimationFrame frame, World world,
-            float scale) {
+    public void drawHero(Hero hero, AnimationFrame frame, World world) {
         AABox bounds = hero.getShape().getBounds();
-
+        float r = (float) Math.toDegrees(world.getGravityAngle());
+        float scale = 1.0f;
+        if(null != world.getHero().getDyingTimedAction()) {
+        	float p = world.getHero().getDyingTimedAction().getProgress();
+        	if(p >= 0.5f) {
+        		p -= 0.5f;
+        		p *= 2.0f;
+	        	r += 500 * p;
+	    		scale += Math.sin(p * 1.5f * Math.PI) * 4.0f;
+	    		if(scale<0.0f) {
+	    			return;
+	    		}
+        	}
+        }
         GL11.glPushMatrix();
         GL11.glTranslatef(hero.getPosition().getX(), hero.getPosition().getY(),
                 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef(r, 0, 0,1.0f);
         GL11.glScalef(scale, scale, 1);
         float x1 = -bounds.getWidth() / 2.0f;
         float x2 = bounds.getWidth() / 2.0f;
@@ -1235,6 +1246,15 @@ public strictfp class GameView implements IGameView {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, backgroundTexture.getId());
 
             ROVector2f heroPos = world.getHero().getPosition();
+            
+            float color = 1.0f;
+            if(null != world.getHero().getDyingTimedAction()) {
+            	color -= world.getHero().getDyingTimedAction().getProgress() * 2.0f;
+            	if(color <= 0.0f) {
+            		color = 0.0f;
+            	}
+            }
+            GL11.glColor4f(color, color, color, 1.0f);            
 
             AbsoluteAABox worldStaticBounds = world.getStaticBounds();
             AbsoluteAABox staticBounds = new AbsoluteAABox();
@@ -1272,6 +1292,7 @@ public strictfp class GameView implements IGameView {
             GL11.glVertex2f(staticBounds.x1, staticBounds.y1);
             GL11.glEnd();
             GL11.glPopMatrix();
+            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         } else {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         }
