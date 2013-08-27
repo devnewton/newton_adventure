@@ -4,7 +4,7 @@ Note that Newton Adventure requires <a href="http://java.com">Java</a> and a goo
 
 <table border="1" cellpadding="8px">
 <tr><th>Debian / Ubuntu</th>
-<td><a href="downloads/newton_adventure_1.11.deb">deb</a></td></td>
+<td><a href="downloads/newton-adventure_1.11.deb">deb</a></td></td>
 </tr>
 
 <tr><th>Windows XP / Vista /7</th>
