@@ -2,15 +2,15 @@
 
 <shortcuts>
 <skipIfNotSupported/>
-<programGroup defaultName="Newton Adventure Retro Mod"
-            location="applications" />
+<programGroup defaultName="Newton Adventure"
+            location="applications"/>
 
 <shortcut
-	name="Newton Adventure Retro Mod Uninstaller"
+	name="Uninstall Newton Adventure Mod Pack 1"
 	target="/usr/bin/java"
-	commandLine="-jar $INSTALL_PATH/Uninstaller/uninstaller.jar"
-	description="Uninstall Newton Adventure Retro Mod"
-	workingDirectory="$INSTALL_PATH/Uninstaller"
+	commandLine="-jar $INSTALL_PATH/pack1_uninstaller.jar"
+	description="Uninstall Newton Adventure Mod Pack 1"
+	workingDirectory="$INSTALL_PATH"
 	initialState="normal"
 	programGroup="yes"
 	desktop="no"
@@ -21,7 +21,6 @@
 	terminal="false"
 	encoding="UTF-8"
 	categories="Game">
-	<createForPack name="Core"/>
 </shortcut>
 
 </shortcuts>

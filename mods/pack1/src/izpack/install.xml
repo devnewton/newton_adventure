@@ -9,6 +9,7 @@
         <url>http://devnewton.bci.im</url>
         <javaversion>1.6</javaversion>
         <requiresjdk>no</requiresjdk>
+	<uninstaller name="pack1_uninstaller.jar" path="${INSTALL_PATH}" />
     </info>
  
     <guiprefs width="800" height="480" resizable="yes" />
@@ -18,7 +19,7 @@
     </locale>
     
     <variables>
-	<variable name="TargetPanel.dir" value="$USER_HOME/.config/newton_adventure/mods/deluxe"/>
+	<variable name="TargetPanel.dir" value="$USER_HOME/.config/newton_adventure/mods"/>
 	<variable name="ShowCreateDirectoryMessage" value="false"/>
     </variables>
     
@@ -38,12 +39,18 @@
     </panels>
  
     <packs>
-        <pack name="Core" required="yes">
-            <description>Core installation files</description>
-	    <singlefile src="../../../../game/licences/data.txt" target="$INSTALL_PATH/licences.txt" override="true"/>
-	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH" override="true"/>
-	    <fileset dir="../../data" targetdir="$INSTALL_PATH" override="true"/>
+        <pack name="Deluxe" required="no">
+            <description>Deluxe mod installation files</description>
+	    <singlefile src="../../../../game/licences/data.txt" target="$INSTALL_PATH/deluxe/licences.txt" override="true"/>
+	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/deluxe" override="true"/>
+	    <fileset dir="../../deluxe" targetdir="$INSTALL_PATH/deluxe" override="true"/>
+	</pack>
+        <pack name="Retro" required="no">
+            <description>Retro mod installation files</description>
+	    <singlefile src="../../../../game/licences/data.txt" target="$INSTALL_PATH/retro/licences.txt" override="true"/>
+	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/retro" override="true"/>
+	    <fileset dir="../../retro" targetdir="$INSTALL_PATH/retro" override="true"/>
         </pack>
-    </packs> 
+   </packs> 
 </installation>
 
