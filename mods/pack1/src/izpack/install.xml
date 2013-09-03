@@ -9,7 +9,7 @@
         <url>http://devnewton.bci.im</url>
         <javaversion>1.6</javaversion>
         <requiresjdk>no</requiresjdk>
-	<uninstaller name="pack1_uninstaller.jar" path="${INSTALL_PATH}" />
+        <uninstaller name="pack1_uninstaller.jar" path="${INSTALL_PATH}" />
     </info>
  
     <guiprefs width="800" height="480" resizable="yes" />
@@ -19,14 +19,14 @@
     </locale>
     
     <variables>
-	<variable name="TargetPanel.dir" value="$USER_HOME/.config/newton_adventure/mods"/>
-	<variable name="ShowCreateDirectoryMessage" value="false"/>
+        <variable name="TargetPanel.dir" value="$USER_HOME/.config/newton_adventure/mods"/>
+        <variable name="ShowCreateDirectoryMessage" value="false"/>
     </variables>
     
     <resources>
-	<res id="HTMLHelloPanel.info" src="../../src/izpack/hello.html"/>
-	<res id="Installer.image" src="../../src/izpack/cover.png" />
-	<res src="../../src/izpack/Win_shortcutSpec.xml" id="Win_shortcutSpec.xml" parse="yes"/>
+        <res id="HTMLHelloPanel.info" src="../../src/izpack/hello.html"/>
+        <res id="Installer.image" src="../../src/izpack/cover.png" />
+        <res src="../../src/izpack/Win_shortcutSpec.xml" id="Win_shortcutSpec.xml" parse="yes"/>
         <res src="../../src/izpack/Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml" parse="yes"/>
     </resources>
  
@@ -34,23 +34,24 @@
         <panel classname="HTMLHelloPanel" />
         <panel classname="TargetPanel"/>
         <panel classname="InstallPanel"/>
-	<panel classname="ShortcutPanel"/>
+        <panel classname="ShortcutPanel"/>
         <panel classname="SimpleFinishPanel" />
     </panels>
  
     <packs>
-        <pack name="Deluxe" required="no">
-            <description>Deluxe mod installation files</description>
-	    <singlefile src="../../../../game/licences/data.txt" target="$INSTALL_PATH/deluxe/licences.txt" override="true"/>
-	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/deluxe" override="true"/>
-	    <fileset dir="../../deluxe" targetdir="$INSTALL_PATH/deluxe" override="true"/>
-	</pack>
-        <pack name="Retro" required="no">
-            <description>Retro mod installation files</description>
-	    <singlefile src="../../../../game/licences/data.txt" target="$INSTALL_PATH/retro/licences.txt" override="true"/>
-	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/retro" override="true"/>
-	    <fileset dir="../../retro" targetdir="$INSTALL_PATH/retro" override="true"/>
+        <pack name="pack1" required="yes">
+            <description>pack1</description>
+            <singlefile src="../../../../game/licences/data.txt" target="$INSTALL_PATH/deluxe/licences.txt" override="true"/>
+            <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/deluxe" override="true"/>
+            <fileset dir="../../deluxe" targetdir="$INSTALL_PATH/deluxe" override="true"/>
+            <singlefile src="../../../../game/licences/data.txt" target="$INSTALL_PATH/retro/licences.txt" override="true"/>
+            <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/retro" override="true" excludes="quests/**" />
+            <fileset dir="../../retro" targetdir="$INSTALL_PATH/retro" override="true"/>
         </pack>
-   </packs> 
+    </packs> 
+    
+    <native type="izpack" name="ShellLink.dll"/>
+    <native type="izpack" name="ShellLink_x64.dll"/>
+ 
 </installation>
 
