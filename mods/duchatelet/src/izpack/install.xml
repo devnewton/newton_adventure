@@ -7,7 +7,7 @@
             <author name="devnewton" email="devnewton@bci.Im" />
         </authors>
         <url>http://devnewton.bci.im</url>
-        <javaversion>1.6</javaversion>
+        <javaversion>1.7</javaversion>
         <requiresjdk>no</requiresjdk>
     </info>
  

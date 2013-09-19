@@ -26,7 +26,7 @@ SUCH DAMAGE. */ -->
     <groupId>im.bci.newtonadv</groupId>
     <artifactId>newton_adventure_cute_mod</artifactId>
     <packaging>jar</packaging>
-    <version>1.11</version>
+    <version>1.12</version>
     <name>newton_adventure_cute_mod</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -82,7 +82,7 @@ SUCH DAMAGE. */ -->
                                     <jar>${project.build.finalName}-installer.jar</jar><!-- Copy manually the file in ${basedir}. Without this, the generated exe will be bugged. -->
                                     <errTitle>Newton Adventure Du Chatelet mod installer</errTitle>
                                     <jre>
-                                        <minVersion>1.6.0</minVersion>
+                                        <minVersion>1.7.0</minVersion>
                                     </jre>
                                     <versionInfo>
                                         <fileVersion>1.0.0.0</fileVersion>

@@ -48,6 +48,7 @@ import im.bci.newtonadv.platform.lwjgl.GameCloseException;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
+import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.JoyButtonItem;
@@ -247,8 +248,8 @@ public class OptionsSequence implements IOptionsSequence {
     }
 
     private void updateConfig() {
-        config.setProperty("view.width", "" + Display.getWidth());
-        config.setProperty("view.height", "" + Display.getHeight());
+        config.setProperty("view.width", "" + LwjglHelper.getWidth());
+        config.setProperty("view.height", "" + LwjglHelper.getHeight());
         config.setProperty("view.bpp", ""
                 + Display.getDisplayMode().getBitsPerPixel());
         config.setProperty("view.fullscreen", "" + Display.isFullscreen());
@@ -347,16 +348,16 @@ public class OptionsSequence implements IOptionsSequence {
 
     @Override
     public void tick() throws NormalTransitionException, ResumeTransitionException, RestartGameException {
-        if (Display.isVisible() || Display.isDirty() || Display.wasResized()) {
-            GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+        if (Display.isVisible() || Display.isDirty() || LwjglHelper.wasResized()) {
+            GL11.glViewport(0, 0, LwjglHelper.getWidth(), LwjglHelper.getHeight());
         }
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        if(Display.wasResized()) {
+        if(LwjglHelper.wasResized()) {
         	if(gui.getRenderer() instanceof LWJGLRenderer) {
-        		((LWJGLRenderer)gui.getRenderer()).setViewport(0, 0, Display.getWidth(), Display.getHeight());
+        		((LWJGLRenderer)gui.getRenderer()).setViewport(0, 0, LwjglHelper.getWidth(), LwjglHelper.getHeight());
         	}
         }
         gui.update();

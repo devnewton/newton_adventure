@@ -1,7 +1,7 @@
 = Requirements =
 
-Java JDK, [openjdk](http://openjdk.java.net/) or [Oracle](http://java.com): 1.6+
-[Maven](http://www.maven.org) 2.2+
+Java JDK, [openjdk](http://openjdk.java.net/) or [Oracle](http://java.com): 1.7+
+[Maven](http://www.maven.org) 3+
 
 = Compile =
 
@@ -39,5 +39,3 @@ or
 	../data
 
 NB: lwjgl shared libraries must be loadable, check the [lwjgl](www.lwjgl.org) documentation for more information.
-
-NB2: openjdk 1.6 has a bug causing some brutal slowdown. 1.7 is fine.

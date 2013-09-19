@@ -47,6 +47,7 @@ import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
+import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
 import im.bci.newtonadv.score.ScoreServer;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class OptionsGUI extends Table {
 
     OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer, ISoundCache soundCache, IPlatformSpecific platform) throws LWJGLException {
         this.platform = platform;
-        setSize(Display.getWidth(), Display.getHeight());
+        setSize(LwjglHelper.getWidth(), LwjglHelper.getHeight());
         
         Table soundTable= new Table();
         soundTable.defaults().pad(3);
