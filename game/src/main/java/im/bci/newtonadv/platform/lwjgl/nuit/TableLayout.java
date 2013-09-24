@@ -11,5 +11,4 @@ public class TableLayout extends BaseTableLayout<Widget, Table, TableLayout, Nui
     @Override
     public void invalidateHierarchy() {
     }
-
 }

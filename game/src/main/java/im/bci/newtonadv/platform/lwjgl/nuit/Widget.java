@@ -12,6 +12,48 @@ public class Widget {
     private float x, y, width, height;
     private List<Widget> children = new ArrayList<Widget>();
     
+    public void onLeft() {
+        Widget child = getFocusedChild();
+        if(null != child) {
+            child.onLeft();
+        }
+    }
+    
+    public void onRight() {
+        Widget child = getFocusedChild();
+        if(null != child) {
+            child.onRight();
+        }
+    }
+    
+    public void onUp() {
+        Widget child = getFocusedChild();
+        if(null != child) {
+            child.onUp();
+        }
+    }
+    
+    public void onDown() {
+        Widget child = getFocusedChild();
+        if(null != child) {
+            child.onDown();
+        }
+    }
+    
+    public void onOK() {
+        Widget child = getFocusedChild();
+        if(null != child) {
+            child.onOK();
+        }
+    }
+    
+    public void onCancel() {
+        Widget child = getFocusedChild();
+        if(null != child) {
+            child.onCancel();
+        }
+    }
+    
     public Widget getFocusedChild() {
         return null;
     }

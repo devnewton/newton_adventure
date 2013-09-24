@@ -16,7 +16,7 @@ public class ColoredRectangle extends Widget {
     @Override
     public void draw() {
         GL11.glColor3f(r, g, b);
-        GL11.glRectf(getX(), getX(), getX() + getWidth(), getY() + getHeight());    
+        GL11.glRectf(getX(), getY(), getX() + getWidth(), getY() + getHeight());    
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
     }
 

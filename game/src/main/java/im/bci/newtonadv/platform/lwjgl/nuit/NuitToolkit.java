@@ -5,12 +5,6 @@ import com.esotericsoftware.tablelayout.Cell;
 import com.esotericsoftware.tablelayout.Toolkit;
 
 public class NuitToolkit extends Toolkit<Widget, Table, TableLayout>{
-    
-    private Widget root = new Root();
-
-    public Widget getRoot() {
-        return root;
-    }  
 
     @Override
     public Cell obtainCell(TableLayout layout) {
