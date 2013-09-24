@@ -1,4 +1,4 @@
-package im.bci.newtonadv.platform.lwjgl.nuit;
+package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 
 import org.lwjgl.opengl.GL11;
 

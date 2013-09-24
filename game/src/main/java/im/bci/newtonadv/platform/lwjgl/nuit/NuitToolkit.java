@@ -1,5 +1,8 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Table;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Widget;
+
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 import com.esotericsoftware.tablelayout.BaseTableLayout;
 import com.esotericsoftware.tablelayout.Cell;

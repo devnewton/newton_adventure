@@ -1,6 +1,9 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
 import im.bci.newtonadv.platform.lwjgl.RuntimeUtils;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.ColoredRectangle;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Root;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Table;
 
 import java.io.File;
 import java.io.IOException;

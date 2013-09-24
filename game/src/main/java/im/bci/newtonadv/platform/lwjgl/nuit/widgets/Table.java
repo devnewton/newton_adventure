@@ -1,4 +1,6 @@
-package im.bci.newtonadv.platform.lwjgl.nuit;
+package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
+
+import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -90,7 +92,7 @@ public class Table extends Widget {
         return layout.right();
     }
 
-    Table(NuitToolkit toolkit) {
+    public Table(NuitToolkit toolkit) {
         layout = new TableLayout(toolkit);
         layout.setTable(this);
     }
