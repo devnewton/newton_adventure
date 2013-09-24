@@ -11,22 +11,27 @@ public class Widget {
 
     private float x, y, width, height;
     private List<Widget> children = new ArrayList<Widget>();
+    
+    public Widget getFocusedChild() {
+        return null;
+    }
 
     public void draw() {
         drawChildren();
     }
 
-    private void drawChildren() {
+    protected void drawChildren() {
         for(Widget child : children) {
             child.draw();
         }        
     }
 
     public void add(Widget child) {
-        children.add(child);        
+        children.remove(child);
+        children.add(child);
     }
 
-    public void removeChild(Widget child) {
+    public void remove(Widget child) {
         children.remove(child);
     }
 

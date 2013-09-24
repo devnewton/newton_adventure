@@ -1,18 +1,44 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.esotericsoftware.tablelayout.Cell;
 
 public class Table extends Widget {
     
-    final TableLayout layout;
+    private final TableLayout layout;
+    private Widget focusedChild;
     
     Table(NuitToolkit toolkit) {
         layout = new TableLayout(toolkit);
         layout.setTable(this);
     }
     
+    @Override
+    public Widget getFocusedChild() {
+        if(null == focusedChild) {
+            focusedChild = getTopLeftChild();
+
+        }
+        return focusedChild;
+    }
+    
+    private Widget getTopLeftChild() {
+        return Collections.min(getChildren(), new Comparator<Widget>() {
+
+            @Override
+            public int compare(Widget w1, Widget w2) {
+                int result = Float.compare(w1.getY(), w2.getY());
+                if(result == 0) {
+                    result = Float.compare(w1.getX(), w2.getX());
+                }
+                return result;
+            }
+        });
+    }
+
     @Override
     public void setX(float x) {
         super.setX(x);
@@ -56,6 +82,7 @@ public class Table extends Widget {
     }
 
     @Override
-    public void draw() {       
+    public void draw() {
+        super.drawChildren();
     }
 }

@@ -6,7 +6,7 @@ import com.esotericsoftware.tablelayout.Toolkit;
 
 public class NuitToolkit extends Toolkit<Widget, Table, TableLayout>{
     
-    private Root root = new Root();
+    private Widget root = new Root();
 
     public Widget getRoot() {
         return root;
@@ -30,7 +30,7 @@ public class NuitToolkit extends Toolkit<Widget, Table, TableLayout>{
 
     @Override
     public void removeChild(Widget parent, Widget child) {
-        parent.removeChild(child);
+        parent.remove(child);
     }
 
     @Override
