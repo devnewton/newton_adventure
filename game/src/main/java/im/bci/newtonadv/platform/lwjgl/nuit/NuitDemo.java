@@ -15,8 +15,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-import com.esotericsoftware.tablelayout.Toolkit;
-
 public class NuitDemo {
     static void setupLibraryPath() {
         if (System.getProperty("javawebstart.version") != null) {
@@ -61,7 +59,6 @@ public class NuitDemo {
                 Display.setFullscreen(false);
                 Display.create();
                 NuitToolkit tk = new NuitToolkit();
-                Toolkit.instance = tk;
                 Table table = new Table(tk);
                 table.cell(new ColoredRectangle(1, 0, 0)).expand().fill();
                 table.cell(new ColoredRectangle(0, 1, 0)).expand().fill();

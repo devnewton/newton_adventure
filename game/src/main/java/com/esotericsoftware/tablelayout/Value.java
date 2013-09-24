@@ -31,178 +31,76 @@ package com.esotericsoftware.tablelayout;
  * size taking into consideration the size of the table or the widget in the cell. Some values may be only valid for use with
  * either call.
  * @author Nathan Sweet */
-abstract public class Value {
+abstract public class Value<C, T extends C> {
+    
+    protected final Toolkit<C,T> toolkit;
+    
+    Value(Toolkit<C,T> toolkit) {
+        this.toolkit = toolkit;        
+    }
+    
 	/** Returns the value in the context of the specified table. */
-	abstract public float get (Object table);
+	abstract public float get (T table);
 
 	/** Returns the value in the context of the specified cell. */
-	abstract public float get (Cell cell);
+	abstract public float get (Cell<C, T> cell);
 
 	/** Returns the value in the context of a width for the specified table. */
-	public float width (Object table) {
-		return Toolkit.instance.width(get(table));
+	public float width (T table) {
+		return toolkit.width(get(table));
 	}
 
 	/** Returns the value in the context of a height for the specified table. */
-	public float height (Object table) {
-		return Toolkit.instance.height(get(table));
+	public float height (T table) {
+		return toolkit.height(get(table));
 	}
 
 	/** Returns the value in the context of a width for the specified cell. */
-	public float width (Cell cell) {
-		return Toolkit.instance.width(get(cell));
+	public float width (Cell<C, T> cell) {
+		return toolkit.width(get(cell));
 	}
 
 	/** Returns the value in the context of a height for the specified cell. */
-	public float height (Cell cell) {
-		return Toolkit.instance.height(get(cell));
+	public float height (Cell<C,T> cell) {
+		return toolkit.height(get(cell));
 	}
-
-	/** A value that is always zero. */
-	static public final Value zero = new CellValue() {
-		public float get (Cell cell) {
-			return 0;
-		}
-
-		public float get (Object table) {
-			return 0;
-		}
-	};
-
-	/** A value that is only valid for use with a cell.
-	 * @author Nathan Sweet */
-	static abstract public class CellValue extends Value {
-		public float get (Object table) {
-			throw new UnsupportedOperationException("This value can only be used for a cell property.");
-		}
-	}
-
-	/** A value that is valid for use with a table or a cell.
-	 * @author Nathan Sweet */
-	static abstract public class TableValue extends Value {
-		public float get (Cell cell) {
-			return get(cell.getLayout().getTable());
-		}
-	}
-
-	/** A fixed value that is not computed each time it is used.
-	 * @author Nathan Sweet */
-	static public class FixedValue extends Value {
-		private float value;
-
-		public FixedValue (float value) {
-			this.value = value;
-		}
-
-		public void set (float value) {
-			this.value = value;
-		}
-
-		public float get (Object table) {
-			return value;
-		}
-
-		public float get (Cell cell) {
-			return value;
-		}
-	}
-
-	/** Value for a cell that is the minWidth of the widget in the cell. */
-	static public Value minWidth = new CellValue() {
-		public float get (Cell cell) {
-			if (cell == null) throw new RuntimeException("minWidth can only be set on a cell property.");
-			Object widget = cell.widget;
-			if (widget == null) return 0;
-			return Toolkit.instance.getMinWidth(widget);
-		}
-	};
-
-	/** Value for a cell that is the minHeight of the widget in the cell. */
-	static public Value minHeight = new CellValue() {
-		public float get (Cell cell) {
-			if (cell == null) throw new RuntimeException("minHeight can only be set on a cell property.");
-			Object widget = cell.widget;
-			if (widget == null) return 0;
-			return Toolkit.instance.getMinHeight(widget);
-		}
-	};
-
-	/** Value for a cell that is the prefWidth of the widget in the cell. */
-	static public Value prefWidth = new CellValue() {
-		public float get (Cell cell) {
-			if (cell == null) throw new RuntimeException("prefWidth can only be set on a cell property.");
-			Object widget = cell.widget;
-			if (widget == null) return 0;
-			return Toolkit.instance.getPrefWidth(widget);
-		}
-	};
-
-	/** Value for a cell that is the prefHeight of the widget in the cell. */
-	static public Value prefHeight = new CellValue() {
-		public float get (Cell cell) {
-			if (cell == null) throw new RuntimeException("prefHeight can only be set on a cell property.");
-			Object widget = cell.widget;
-			if (widget == null) return 0;
-			return Toolkit.instance.getPrefHeight(widget);
-		}
-	};
-
-	/** Value for a cell that is the maxWidth of the widget in the cell. */
-	static public Value maxWidth = new CellValue() {
-		public float get (Cell cell) {
-			if (cell == null) throw new RuntimeException("maxWidth can only be set on a cell property.");
-			Object widget = cell.widget;
-			if (widget == null) return 0;
-			return Toolkit.instance.getMaxWidth(widget);
-		}
-	};
-
-	/** Value for a cell that is the maxHeight of the widget in the cell. */
-	static public Value maxHeight = new CellValue() {
-		public float get (Cell cell) {
-			if (cell == null) throw new RuntimeException("maxHeight can only be set on a cell property.");
-			Object widget = cell.widget;
-			if (widget == null) return 0;
-			return Toolkit.instance.getMaxHeight(widget);
-		}
-	};
 
 	/** Returns a value that is a percentage of the table's width. */
-	static public Value percentWidth (final float percent) {
-		return new TableValue() {
-			public float get (Object table) {
-				return Toolkit.instance.getWidth(table) * percent;
+	static public <C, T extends C> Value<C, T> percentWidth (Toolkit<C, T> toolkit, final float percent) {
+		return new TableValue<C, T>(toolkit) {
+			public float get (T table) {
+				return toolkit.getWidth(table) * percent;
 			}
 		};
 	}
 
 	/** Returns a value that is a percentage of the table's height. */
-	static public Value percentHeight (final float percent) {
-		return new TableValue() {
-			public float get (Object table) {
-				return Toolkit.instance.getHeight(table) * percent;
+	static public <C, T extends C> Value<C, T> percentHeight (Toolkit<C, T> toolkit, final float percent) {
+		return new TableValue<C, T>(toolkit) {
+			public float get (T table) {
+				return toolkit.getHeight(table) * percent;
 			}
 		};
 	}
 
 	/** Returns a value that is a percentage of the specified widget's width. */
-	static public Value percentWidth (final float percent, final Object widget) {
-		return new Value() {
-			public float get (Cell cell) {
-				return Toolkit.instance.getWidth(widget) * percent;
+	static public <C, T extends C> Value<C, T> percentWidth (Toolkit<C, T> toolkit, final float percent, final C widget) {
+		return new Value<C, T>(toolkit) {
+			public float get (Cell<C, T> cell) {
+				return toolkit.getWidth(widget) * percent;
 			}
 
 			public float get (Object table) {
-				return Toolkit.instance.getWidth(widget) * percent;
+				return toolkit.getWidth(widget) * percent;
 			}
 		};
 	}
 
 	/** Returns a value that is a percentage of the specified widget's height. */
-	static public Value percentHeight (final float percent, final Object widget) {
-		return new TableValue() {
+	static public <C, T extends C> Value<C, T> percentHeight (Toolkit<C, T> toolkit, final float percent, final C widget) {
+		return new TableValue<C, T>(toolkit) {
 			public float get (Object table) {
-				return Toolkit.instance.getHeight(widget) * percent;
+				return toolkit.getHeight(widget) * percent;
 			}
 		};
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
+import com.esotericsoftware.tablelayout.BaseTableLayout;
 import com.esotericsoftware.tablelayout.Cell;
 import com.esotericsoftware.tablelayout.Value;
 
@@ -16,16 +17,16 @@ public class Table extends Widget {
 
     private Widget focusedChild;
     
-    public Cell<Widget> cell(Widget widget) {
+    public Cell<Widget, Table> cell(Widget widget) {
         add(widget);
         return layout.add(widget);
     }
     
-    public Cell<Widget> row() {
+    public Cell<Widget, Table> row() {
         return layout.row();
     }
 
-    public Cell<Widget> columnDefaults(int column) {
+    public Cell<Widget, Table> columnDefaults(int column) {
         return layout.columnDefaults(column);
     }
 
@@ -33,59 +34,59 @@ public class Table extends Widget {
         layout.clear();
     }
 
-    public Cell defaults() {
+    public Cell<Widget, Table> defaults() {
         return layout.defaults();
     }
 
-    public TableLayout pad(Value top, Value left, Value bottom, Value right) {
+    public BaseTableLayout<Widget, Table> pad(Value<Widget, Table> top, Value<Widget, Table> left, Value<Widget, Table> bottom, Value<Widget, Table> right) {
         return layout.pad(top, left, bottom, right);
     }
 
-    public TableLayout pad(float pad) {
+    public BaseTableLayout<Widget, Table> pad(float pad) {
         return layout.pad(pad);
     }
 
-    public TableLayout pad(float top, float left, float bottom, float right) {
+    public BaseTableLayout<Widget, Table> pad(float top, float left, float bottom, float right) {
         return layout.pad(top, left, bottom, right);
     }
 
-    public TableLayout padTop(float padTop) {
+    public BaseTableLayout<Widget, Table> padTop(float padTop) {
         return layout.padTop(padTop);
     }
 
-    public TableLayout padLeft(float padLeft) {
+    public BaseTableLayout<Widget, Table> padLeft(float padLeft) {
         return layout.padLeft(padLeft);
     }
 
-    public TableLayout padBottom(float padBottom) {
+    public BaseTableLayout<Widget, Table> padBottom(float padBottom) {
         return layout.padBottom(padBottom);
     }
 
-    public TableLayout padRight(float padRight) {
+    public BaseTableLayout<Widget, Table> padRight(float padRight) {
         return layout.padRight(padRight);
     }
 
-    public TableLayout align(int align) {
+    public BaseTableLayout<Widget, Table> align(int align) {
         return layout.align(align);
     }
 
-    public TableLayout center() {
+    public BaseTableLayout<Widget, Table> center() {
         return layout.center();
     }
 
-    public TableLayout top() {
+    public BaseTableLayout<Widget, Table> top() {
         return layout.top();
     }
 
-    public TableLayout left() {
+    public BaseTableLayout<Widget, Table> left() {
         return layout.left();
     }
 
-    public TableLayout bottom() {
+    public BaseTableLayout<Widget, Table> bottom() {
         return layout.bottom();
     }
 
-    public TableLayout right() {
+    public BaseTableLayout<Widget, Table> right() {
         return layout.right();
     }
 
@@ -227,13 +228,13 @@ public class Table extends Widget {
 
     public void layout() {
         layout.layout(getX(), getY(), getWidth(), getHeight());
-        List<Cell> cells = layout.getCells();
+        List<Cell<Widget, Table>> cells = layout.getCells();
         for (int i = 0, n = cells.size(); i < n; i++) {
-            Cell c = cells.get(i);
+            Cell<Widget, Table> c = cells.get(i);
             if (c.getIgnore()) {
                 continue;
             }
-            Widget cellWidget = (Widget) c.getWidget();
+            Widget cellWidget = c.getWidget();
             cellWidget.setX(c.getWidgetX());
             cellWidget.setY(c.getWidgetY());
             cellWidget.setWidth(c.getWidgetWidth());

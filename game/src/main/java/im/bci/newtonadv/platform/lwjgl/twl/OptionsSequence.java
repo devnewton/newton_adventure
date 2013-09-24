@@ -31,8 +31,6 @@
  */
 package im.bci.newtonadv.platform.lwjgl.twl;
 
-import com.esotericsoftware.tablelayout.Toolkit;
-import com.esotericsoftware.tablelayout.twl.TwlToolkit;
 import de.matthiasmann.twl.ComboBox;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Widget;
@@ -104,7 +102,6 @@ public class OptionsSequence implements IOptionsSequence {
                     getClass().getClassLoader().getResource("twl/RadicalFish/RadicalFish.xml"),
                     renderer);
             gui.applyTheme(themeManager);
-            Toolkit.instance = TwlToolkit.instance;
             optionsGui = new OptionsGUI(view, input, scoreServer, soundCache, platform);
             root.add(optionsGui);
 

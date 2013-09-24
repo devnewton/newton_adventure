@@ -1,22 +1,23 @@
 
 package com.esotericsoftware.tablelayout.twl;
 
+import com.esotericsoftware.tablelayout.BaseTableLayout;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 import com.esotericsoftware.tablelayout.Cell;
 import com.esotericsoftware.tablelayout.Toolkit;
 
 import de.matthiasmann.twl.Widget;
 
-public class TwlToolkit extends Toolkit<Widget, Table, TableLayout> {
+public class TwlToolkit extends Toolkit<Widget, Table> {
 	static public final TwlToolkit instance = new TwlToolkit();
 
-	public Cell obtainCell (TableLayout layout) {
-		Cell cell = new Cell();
+	public Cell<Widget, Table> obtainCell (BaseTableLayout<Widget, Table> layout) {
+		Cell<Widget, Table> cell = new Cell<Widget, Table>();
 		cell.setLayout(layout);
 		return cell;
 	}
 
-	public void freeCell (Cell cell) {
+	public void freeCell (Cell<Widget, Table> cell) {
 	}
 
 	public void addChild (Widget parent, Widget child) {
@@ -60,9 +61,9 @@ public class TwlToolkit extends Toolkit<Widget, Table, TableLayout> {
 		return widget.getHeight();
 	}
 
-	public void clearDebugRectangles (TableLayout layout) {
+	public void clearDebugRectangles (BaseTableLayout<Widget, Table> layout) {
 	}
 
-	public void addDebugRectangle (TableLayout layout, Debug type, float x, float y, float w, float h) {
+	public void addDebugRectangle (BaseTableLayout<Widget, Table> layout, Debug type, float x, float y, float w, float h) {
 	}
 }

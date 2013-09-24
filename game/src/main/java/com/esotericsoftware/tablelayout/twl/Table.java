@@ -18,19 +18,19 @@ public class Table extends Widget {
 		setTheme("");
 	}
 
-	public Cell addCell (Widget widget) {
+	public Cell<Widget, Table> addCell (Widget widget) {
 		return layout.add(widget);
 	}
 
-	public Cell row () {
+	public Cell<Widget, Table> row () {
 		return layout.row();
 	}
 
-	public Cell columnDefaults (int column) {
+	public Cell<Widget, Table> columnDefaults (int column) {
 		return layout.columnDefaults(column);
 	}
 
-	public Cell defaults () {
+	public Cell<Widget, Table> defaults () {
 		return layout.defaults();
 	}
 

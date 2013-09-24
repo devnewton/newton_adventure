@@ -8,7 +8,7 @@ import com.esotericsoftware.tablelayout.Cell;
 
 import de.matthiasmann.twl.Widget;
 
-public class TableLayout extends BaseTableLayout<Widget, Table, TableLayout, TwlToolkit> {
+public class TableLayout extends BaseTableLayout<Widget, Table> {
 	public TableLayout () {
 		super(TwlToolkit.instance);
 	}
@@ -21,9 +21,9 @@ public class TableLayout extends BaseTableLayout<Widget, Table, TableLayout, Twl
 		Table table = getTable();
 		super.layout(table.getBorderLeft(), table.getBorderTop(), table.getInnerWidth(), table.getInnerHeight());
 
-		List<Cell> cells = getCells();
+		List<Cell<Widget, Table>> cells = getCells();
 		for (int i = 0, n = cells.size(); i < n; i++) {
-			Cell c = cells.get(i);
+			Cell<Widget, Table> c = cells.get(i);
 			if (c.getIgnore()) continue;
 			Widget cellWidget = (Widget)c.getWidget();
 			cellWidget.setPosition((int)c.getWidgetX(), (int)c.getWidgetY());

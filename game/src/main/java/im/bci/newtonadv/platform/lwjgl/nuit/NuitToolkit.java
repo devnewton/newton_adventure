@@ -1,20 +1,21 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
+import com.esotericsoftware.tablelayout.BaseTableLayout;
 import com.esotericsoftware.tablelayout.Cell;
 import com.esotericsoftware.tablelayout.Toolkit;
 
-public class NuitToolkit extends Toolkit<Widget, Table, TableLayout>{
+public class NuitToolkit extends Toolkit<Widget, Table>{
 
     @Override
-    public Cell obtainCell(TableLayout layout) {
-        Cell<Widget> cell = new Cell<Widget>();
+    public Cell<Widget, Table> obtainCell(BaseTableLayout<Widget, Table> layout) {
+        Cell<Widget, Table> cell = new Cell<Widget, Table>();
         cell.setLayout(layout);
         return cell;
     }
 
     @Override
-    public void freeCell(Cell cell) {
+    public void freeCell(Cell<Widget, Table> cell) {
     }
 
     @Override
@@ -68,13 +69,13 @@ public class NuitToolkit extends Toolkit<Widget, Table, TableLayout>{
     }
 
     @Override
-    public void clearDebugRectangles(TableLayout layout) {
+    public void clearDebugRectangles(BaseTableLayout<Widget, Table> layout) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void addDebugRectangle(TableLayout layout, Debug type, float x, float y, float w, float h) {
+    public void addDebugRectangle(BaseTableLayout<Widget, Table> layout, Debug type, float x, float y, float w, float h) {
         // TODO Auto-generated method stub
         
     }
