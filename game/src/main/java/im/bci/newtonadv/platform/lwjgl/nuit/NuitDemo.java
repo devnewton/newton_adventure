@@ -1,12 +1,13 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
 import im.bci.newtonadv.platform.lwjgl.RuntimeUtils;
-import im.bci.newtonadv.platform.lwjgl.nuit.controls.Select;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Button;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.ColoredRectangle;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Container;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Root;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Select;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Table;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Toggle;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +52,12 @@ public class NuitDemo {
         Logger.getLogger(NuitDemo.class.getName()).log(Level.WARNING,
                 "Cannot find 'natives' library folder, try system libraries");
     }
+    
+    enum Difficulty {
+        EASY,
+        NORMAL,
+        HARD
+    }
 
     public static void main(String[] args) throws IOException,
             ClassNotFoundException, Exception {
@@ -85,8 +92,9 @@ public class NuitDemo {
                 table.cell(new ColoredRectangle(0.5f, 0.5f, 0.5f)).expand().fill();
                 table.cell(new ColoredRectangle(0.5f, 0.4f, 0)).expand().fill();
                 table.row().expand().fill();
+                table.cell(new Toggle(tk)).expand().fill();
                 table.cell(new ColoredRectangle(0, 0, 1)).expand().fill();
-                table.cell(new Select(tk, Arrays.asList("Yes", "No", "Maybe"))).expand().fill();
+                table.cell(new Select(tk, Arrays.asList(Difficulty.values()))).expand().fill();
                 table.row().expand().fill();
                 root.add(table);
                 

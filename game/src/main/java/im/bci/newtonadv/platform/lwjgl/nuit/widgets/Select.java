@@ -1,4 +1,4 @@
-package im.bci.newtonadv.platform.lwjgl.nuit.controls;
+package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 
 import java.util.List;
 
@@ -6,14 +6,13 @@ import org.lwjgl.opengl.GL11;
 
 import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Widget;
 
 public class Select extends Widget {
     private NuitToolkit toolkit;
     private List<?> possibleValues;
     private int selected;
     private int oldSelected;
-    private boolean suckFocus = true;
+    private boolean suckFocus;
 
     public Select(NuitToolkit toolkit, List<?> possibleValues) {
         this.toolkit = toolkit;

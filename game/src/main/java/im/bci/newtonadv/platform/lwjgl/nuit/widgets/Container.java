@@ -97,6 +97,9 @@ public class Container extends Widget {
         if (null != focused) {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glLineWidth(5.0f);
+            if(isFocusSucked()) {
+                GL11.glColor3f(0.5f, 0.5f, 0.5f);
+            }
             GL11.glBegin(GL11.GL_LINE_LOOP);
             GL11.glVertex2f(focused.getX(), focused.getY());
             GL11.glVertex2f(focused.getX() + focused.getWidth(), focused.getY());
@@ -104,6 +107,7 @@ public class Container extends Widget {
             GL11.glVertex2f(focused.getX(), focused.getY() + focused.getHeight());
             GL11.glVertex2f(focused.getX(), focused.getY());
             GL11.glEnd();
+            GL11.glColor3f(1, 1, 1);
             GL11.glLineWidth(1.0f);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
