@@ -1,23 +1,26 @@
 package im.bci.newtonadv.platform.lwjgl.nuit.controls;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Action {
     private final String name;
-    private Control control = NullControl.INSTANCE;
+    private List<Control> controls;
     
-    public Action(String name) {
+    public Action(String name, Control... controls) {
         this.name = name;
+        this.controls = Arrays.asList(controls);
     }
 
     public String getName() {
         return name;
     }
 
-    public Control getControl() {
-        return control;
+    public List<Control> getControls() {
+        return controls;
     }
 
-    public void setControl(Control control) {
-        this.control = control;
+    public void setControls(List<Control> controls) {
+        this.controls = controls;
     }
-
 }

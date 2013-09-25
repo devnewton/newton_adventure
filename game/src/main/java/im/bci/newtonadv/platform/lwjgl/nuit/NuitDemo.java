@@ -66,6 +66,10 @@ public class NuitDemo {
                 table.cell(new ColoredRectangle(1, 0, 0)).expand().fill();
                 table.cell(new ColoredRectangle(0, 1, 0)).expand().fill();
                 table.row().expand().fill();
+                table.cell(new ColoredRectangle(1, 1, 0)).expand().fill();
+                table.cell(new ColoredRectangle(0.5f, 0.5f, 0.5f)).expand().fill();
+                table.cell(new ColoredRectangle(0.5f, 0.4f, 0)).expand().fill();
+                table.row().expand().fill();
                 table.cell(new ColoredRectangle(0, 0, 1)).expand().fill();
                 table.cell(new ColoredRectangle(1, 1, 0)).expand().fill();
                 table.row().expand().fill();
@@ -75,6 +79,7 @@ public class NuitDemo {
                 root.add(table);
                 
                 while(!Display.isCloseRequested()) {
+                    tk.update(root);
                     root.draw();
                     Display.update(false);
                     Display.sync(60);

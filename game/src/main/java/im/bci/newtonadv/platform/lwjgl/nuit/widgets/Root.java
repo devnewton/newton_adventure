@@ -3,7 +3,7 @@ package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 import org.lwjgl.opengl.GL11;
 
 public class Root extends Stack {
-    
+
     @Override
     public void draw() {
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_TRANSFORM_BIT | GL11.GL_HINT_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_SCISSOR_BIT | GL11.GL_LINE_BIT | GL11.GL_TEXTURE_BIT);
