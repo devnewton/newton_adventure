@@ -7,20 +7,20 @@ import org.lwjgl.opengl.GL11;
 import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
 
-public class Select extends Widget {
+public class Select<T> extends Widget {
     private NuitToolkit toolkit;
-    private List<?> possibleValues;
+    private List<T> possibleValues;
     private int selected;
     private int oldSelected;
     private boolean suckFocus;
 
-    public Select(NuitToolkit toolkit, List<?> possibleValues) {
+    public Select(NuitToolkit toolkit, List<T> possibleValues) {
         this.toolkit = toolkit;
         this.possibleValues = possibleValues;
     }
 
     @Override
-    public boolean isInputWhore() {
+    public boolean isFocusWhore() {
         return true;
     }
 
@@ -35,12 +35,15 @@ public class Select extends Widget {
         return suckFocus;
     }
 
-    public Object getSelected() {
-        return selected;
+    public T getSelected() {
+        return possibleValues.get(selected);
     }
 
-    public void setSelected(Object value) {
+    public void setSelected(T value) {
         this.selected = possibleValues.indexOf(value);
+        if(this.selected<0) {
+        	this.selected = 0;
+        }
     }
 
     @Override
@@ -62,6 +65,11 @@ public class Select extends Widget {
     @Override
     public void onOK() {
         suckFocus = false;
+    }
+    
+    @Override
+    public void onMouseClick(float mouseX, float mouseY) {
+    	onRight();
     }
     
     @Override

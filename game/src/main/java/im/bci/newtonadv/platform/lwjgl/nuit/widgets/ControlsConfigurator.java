@@ -35,14 +35,18 @@ public class ControlsConfigurator extends Table {
         super(toolkit);
         this.toolkit = toolkit;
         this.actions = actions;
-        this.resets = new ArrayList<>();
-        for (Action action : actions) {
-            resets.add(new Action(action));
-        }
         this.defaults = defaults;
+        initResets();
         initPossibleControls();
         initUI(toolkit);
     }
+
+	private void initResets() {
+		this.resets = new ArrayList<>();
+        for (Action action : actions) {
+            resets.add(new Action(action));
+        }
+	}
 
     private void initUI(NuitToolkit toolkit) {
         this.defaults().expand().fill();
@@ -108,7 +112,7 @@ public class ControlsConfigurator extends Table {
         public abstract void setControl(Control control);
 
         @Override
-        public boolean isInputWhore() {
+        public boolean isFocusWhore() {
             return true;
         }
 
@@ -118,6 +122,11 @@ public class ControlsConfigurator extends Table {
                 control.reset();
             }
             suckFocus = true;
+        }
+        
+        @Override
+        public void onMouseClick(float mouseX, float mouseY) {
+        	suckFocus();
         }
 
         @Override
@@ -178,6 +187,11 @@ public class ControlsConfigurator extends Table {
     }
 
     public void onBack() {
+    }
+    
+    @Override
+    public void onShow() {
+    	initResets();
     }
 
     private void initPossibleControls() {

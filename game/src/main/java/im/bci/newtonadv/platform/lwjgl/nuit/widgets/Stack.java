@@ -6,6 +6,7 @@ public class Stack extends Widget {
     
     public void show(Widget w) {
         add(w);
+        w.onShow();
     }
 
     @Override
@@ -68,5 +69,21 @@ public class Stack extends Widget {
             child.draw();
         }
     }
+    
+    @Override
+	public void onMouseMove(float mouseX, float mouseY) {
+		Widget child = getFocusedChild();
+        if (null != child) {
+            child.onMouseMove(mouseX, mouseY);
+        }
+	}
+    
+    @Override
+	public void onMouseClick(float mouseX, float mouseY) {
+		Widget child = getFocusedChild();
+        if (null != child) {
+            child.onMouseClick(mouseX, mouseY);
+        }
+	}
 
 }

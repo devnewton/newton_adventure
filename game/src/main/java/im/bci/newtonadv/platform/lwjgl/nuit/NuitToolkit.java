@@ -4,7 +4,10 @@ import java.awt.Font;
 import java.util.HashMap;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector2f;
 
+import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
 import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.Action;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.ActionActivatedDetector;
@@ -23,6 +26,8 @@ public class NuitToolkit extends Toolkit<Widget, Table> {
     private ActionActivatedDetector menuUp, menuDown, menuLeft, menuRight, menuOK, menuCancel;
     
     private TrueTypeFont font;
+    private Vector2f oldMousePos;
+    private Boolean oldIsMouseButtonDown;
 
     public NuitToolkit() {
         menuUp = new ActionActivatedDetector(new Action("menu up", new KeyControl(Keyboard.KEY_UP)));
@@ -161,6 +166,23 @@ public class NuitToolkit extends Toolkit<Widget, Table> {
         if(menuCancel.isActivated()) {
             root.onCancel();
         }
+        
+        float mouseX = Mouse.getX() * root.getWidth() / LwjglHelper.getWidth();
+		float mouseY = root.getHeight() - (Mouse.getY() * root.getHeight() / LwjglHelper.getHeight());
+		if(null == oldMousePos) {
+			oldMousePos = new Vector2f();			
+		} else {
+	        if(mouseX != oldMousePos.getX() || mouseY != oldMousePos.getY()) {
+	        	root.onMouseMove(mouseX, mouseY);     	
+	        }
+		}
+		oldMousePos.set(mouseX, mouseY);
+		
+		boolean isMouseButtonDown = Mouse.isButtonDown(0);
+		if(isMouseButtonDown && Boolean.FALSE == oldIsMouseButtonDown) {
+			root.onMouseClick(mouseX, mouseY);			
+		}
+		oldIsMouseButtonDown = isMouseButtonDown;
     }
     
     public void resetInputPoll() {

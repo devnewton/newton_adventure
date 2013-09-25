@@ -27,5 +27,10 @@ public class Button extends Widget {
         GL11.glPopAttrib();
         GL11.glPopMatrix();
     }
+    
+    @Override
+    public void onMouseClick(float mouseX, float mouseY) {
+    	this.onOK();
+    }
 
 }

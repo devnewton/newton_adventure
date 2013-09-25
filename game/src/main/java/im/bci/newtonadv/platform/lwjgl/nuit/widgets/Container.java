@@ -9,7 +9,7 @@ public class Container extends Widget {
     @Override
     public Widget getFocusedChild() {
         if (null == focusedChild) {
-            focusedChild = getTopLeftChild();
+            focusedChild = getTopLeftFocusableChild();
         }
         return focusedChild;
     }
@@ -20,7 +20,7 @@ public class Container extends Widget {
             super.onLeft();
         } else {
             final Widget currentFocusedChild = getFocusedChild();
-            Widget closest = findClosestLeftWidget(currentFocusedChild);
+            Widget closest = findClosestLeftFocusableWidget(currentFocusedChild);
             if (null != closest) {
                 focusedChild = closest;
             }
@@ -38,7 +38,7 @@ public class Container extends Widget {
             super.onRight();
         } else {
             final Widget currentFocusedChild = getFocusedChild();
-            Widget closest = findClosestRightWidget(currentFocusedChild);
+            Widget closest = findClosestRightFocusableWidget(currentFocusedChild);
             if (null != closest) {
                 focusedChild = closest;
             }
@@ -51,7 +51,7 @@ public class Container extends Widget {
             super.onUp();
         } else {
             final Widget currentFocusedChild = getFocusedChild();
-            Widget closest = findClosestUpWidget(currentFocusedChild);
+            Widget closest = findClosestUpFocusableWidget(currentFocusedChild);
             if (null != closest) {
                 focusedChild = closest;
             }
@@ -64,7 +64,7 @@ public class Container extends Widget {
             super.onDown();
         } else {
             final Widget currentFocusedChild = getFocusedChild();
-            Widget closest = findClosestDownWidget(currentFocusedChild);
+            Widget closest = findClosestDownFocusableWidget(currentFocusedChild);
             if (null != closest) {
                 focusedChild = closest;
             }
@@ -75,7 +75,7 @@ public class Container extends Widget {
     public void onOK() {
         final Widget currentFocusedChild = getFocusedChild();
         if (null != currentFocusedChild) {
-            if (currentFocusedChild.isInputWhore() && !currentFocusedChild.isSuckingFocus()) {
+            if (currentFocusedChild.isFocusWhore() && !currentFocusedChild.isSuckingFocus()) {
                 currentFocusedChild.suckFocus();
                 return;
             }
@@ -112,5 +112,16 @@ public class Container extends Widget {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
     }
-
+    
+    @Override
+	public void onMouseMove(float mouseX, float mouseY) {
+        for(Widget child : getChildren()) {
+            if(mouseX >= child.getX() && mouseX <= (child.getX() + child.getWidth()) && mouseY >= child.getY() && mouseY <= (child.getY() + child.getHeight())) {
+            	if(child.isFocusable() && !isFocusSucked()) {
+            		focusedChild = child;
+            	}
+            	child.onMouseMove(mouseX, mouseY);
+            }
+        }
+	}
 }

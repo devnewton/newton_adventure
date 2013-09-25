@@ -16,6 +16,11 @@ public class Label extends Widget {
     }
 
     @Override
+    public boolean isFocusable() {
+    	return false;
+    }
+    
+    @Override
     public void draw() {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_BLEND);

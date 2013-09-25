@@ -42,6 +42,11 @@ public class Toggle extends Widget {
     public void onOK() {
         this.enabled = !this.enabled;
     }
+    
+    @Override
+    public void onMouseClick(float mouseX, float mouseY) {
+    	onOK();
+    }
 
     @Override
     public void draw() {

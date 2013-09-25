@@ -15,8 +15,12 @@ public class Widget {
 
     private float x, y, width, height;
     private List<Widget> children = new ArrayList<Widget>();
+
+    public boolean isFocusable() {
+    	return true;
+    }
     
-    public boolean isInputWhore() {
+    public boolean isFocusWhore() {
         return false;
     }
     
@@ -141,13 +145,13 @@ public class Widget {
         this.height = height;
     }
     
-    public Widget findClosestLeftWidget(Widget widget) {
+    public Widget findClosestLeftFocusableWidget(Widget widget) {
         Widget closestLeftChild = null;
         if (null != widget) {
             
             float closestLeftChildLengthSquared = Float.MAX_VALUE;
             for (Widget w : getChildren()) {
-                if (w.getX() < widget.getX()) {
+                if (w.isFocusable() && w.getX() < widget.getX()) {
                     float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
                     if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
                         closestLeftChildLengthSquared = lenghtSquared;
@@ -158,31 +162,13 @@ public class Widget {
         }
         return closestLeftChild;
     }
-    public Widget findClosestRightWidget(Widget widget) {
+    public Widget findClosestRightFocusableWidget(Widget widget) {
         Widget closestLeftChild = null;
         if (null != widget) {
             
             float closestLeftChildLengthSquared = Float.MAX_VALUE;
             for (Widget w : getChildren()) {
-                if (w.getX() > widget.getX()) {
-                    float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
-                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
-                        closestLeftChildLengthSquared = lenghtSquared;
-                        closestLeftChild = w;
-                    }
-                }
-            }
-        }
-        return closestLeftChild;
-    }
-    
-    public Widget findClosestUpWidget(Widget widget) {
-        Widget closestLeftChild = null;
-        if (null != widget) {
-            
-            float closestLeftChildLengthSquared = Float.MAX_VALUE;
-            for (Widget w : getChildren()) {
-                if (w.getY() < widget.getY()) {
+                if (w.isFocusable() && w.getX() > widget.getX()) {
                     float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
                     if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
                         closestLeftChildLengthSquared = lenghtSquared;
@@ -194,13 +180,31 @@ public class Widget {
         return closestLeftChild;
     }
     
-    public Widget findClosestDownWidget(Widget widget) {
+    public Widget findClosestUpFocusableWidget(Widget widget) {
         Widget closestLeftChild = null;
         if (null != widget) {
             
             float closestLeftChildLengthSquared = Float.MAX_VALUE;
             for (Widget w : getChildren()) {
-                if (w.getY() > widget.getY()) {
+                if (w.isFocusable() &&  w.getY() < widget.getY()) {
+                    float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
+                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
+                        closestLeftChildLengthSquared = lenghtSquared;
+                        closestLeftChild = w;
+                    }
+                }
+            }
+        }
+        return closestLeftChild;
+    }
+    
+    public Widget findClosestDownFocusableWidget(Widget widget) {
+        Widget closestLeftChild = null;
+        if (null != widget) {
+            
+            float closestLeftChildLengthSquared = Float.MAX_VALUE;
+            for (Widget w : getChildren()) {
+                if (w.isFocusable() && w.getY() > widget.getY()) {
                     float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
                     if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
                         closestLeftChildLengthSquared = lenghtSquared;
@@ -212,8 +216,8 @@ public class Widget {
         return closestLeftChild;
     }
 
-    protected Widget getTopLeftChild() {
-        return Collections.min(getChildren(), new Comparator<Widget>() {
+    protected Widget getTopLeftFocusableChild() {
+        return Collections.min(getFocusableChildren(), new Comparator<Widget>() {
     
             @Override
             public int compare(Widget w1, Widget w2) {
@@ -226,7 +230,17 @@ public class Widget {
         });
     }
 
-    public void suckFocus() {
+    private List<Widget> getFocusableChildren() {
+    	List<Widget> result = new ArrayList<>();
+		for(Widget w : getChildren()) {
+			if(w.isFocusable()) {
+				result.add(w);
+			}
+		}
+		return result;
+	}
+
+	public void suckFocus() {
     }
 
     public boolean isSuckingFocus() {
@@ -238,4 +252,23 @@ public class Widget {
             child.update();
         }
     }
+
+	public void onMouseMove(float mouseX, float mouseY) {
+        for(Widget child : children) {
+            if(mouseX >= child.getX() && mouseX <= (child.getX() + child.getWidth()) && mouseY >= child.getY() && mouseY <= (child.getY() + child.getHeight())) {
+            	child.onMouseMove(mouseX, mouseY);
+            }
+        }
+	}
+
+	public void onMouseClick(float mouseX, float mouseY) {
+        for(Widget child : children) {
+            if(mouseX >= child.getX() && mouseX <= (child.getX() + child.getWidth()) && mouseY >= child.getY() && mouseY <= (child.getY() + child.getHeight())) {
+            	child.onMouseClick(mouseX, mouseY);
+            }
+        }
+	}
+
+	public void onShow() {
+	}
 }

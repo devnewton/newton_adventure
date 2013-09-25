@@ -1,14 +1,10 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
+import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
 import im.bci.newtonadv.platform.lwjgl.RuntimeUtils;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Button;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.ControlsConfigurator;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Root;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Table;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,63 +66,13 @@ public class NuitDemo {
                 Display.setDisplayMode(new DisplayMode(800, 600));
                 Display.setFullscreen(false);
                 Display.create();
-                NuitToolkit toolkit = new NuitToolkit();
-                final Root root = new Root(toolkit);
-                final Table mainMenu = new Table(toolkit);                
-                final Table optionsMenu = new Table(toolkit);
-                
-                final ControlsConfigurator controls = new ControlsConfigurator(toolkit, Arrays.asList(toolkit.getMenuUp(), toolkit.getMenuDown(),toolkit.getMenuLeft(), toolkit.getMenuRight(), toolkit.getMenuOK(), toolkit.getMenuCancel()), null) {
-                    @Override
-                    public void onBack() {
-                        root.show(optionsMenu);
-                    }
-                };
-                root.add(controls);
-                
-                optionsMenu.defaults().expand().fill();
-                optionsMenu.cell(new Button(toolkit, "VIDEO"));
-                optionsMenu.row();
-                optionsMenu.cell(new Button(toolkit, "AUDIO"));
-                optionsMenu.row();
-                optionsMenu.cell(new Button(toolkit, "CONTROLS") {
-                    @Override
-                    public void onOK() {
-                        root.show(controls);
-                    }
-                });
-                optionsMenu.row();
-                optionsMenu.cell(new Button(toolkit, "BACK") {
-                    @Override
-                    public void onOK() {
-                        root.show(mainMenu);
-                    }
-                });
-                optionsMenu.row();
-                root.add(optionsMenu);
-                
-                mainMenu.defaults().expand().fill();
-                mainMenu.cell(new Button(toolkit, "START"));
-                mainMenu.row();
-                mainMenu.cell(new Button(toolkit, "OPTIONS") {
-                    @Override
-                    public void onOK() {
-                        root.show(optionsMenu);
-                    }
-                });
-                mainMenu.row();
-                mainMenu.cell(new Button(toolkit, "QUIT") { 
-                    @Override
-                    public void onOK() {
-                        System.exit(0);
-                    }
-                });
-                mainMenu.row();
-                root.add(mainMenu);
+                LwjglHelper.setResizable(true);
+                NuitBasic nuit = new NuitBasic();
 
                 while(!Display.isCloseRequested()) {
-                    root.update();
+                	nuit.update();
                     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-                    root.draw();
+                    nuit.draw();
                     Display.update(false);
                     Display.sync(60);
                     Display.processMessages();

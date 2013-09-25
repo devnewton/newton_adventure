@@ -129,4 +129,5 @@ public class Table extends Container {
             cellWidget.setHeight(c.getWidgetHeight());
         }
     }
+
 }
