@@ -232,4 +232,10 @@ public class Widget {
     public boolean isSuckingFocus() {
         return false;
     }
+    
+    public void update() {
+        for(Widget child : children) {
+            child.update();
+        }
+    }
 }

@@ -162,4 +162,13 @@ public class NuitToolkit extends Toolkit<Widget, Table> {
             root.onCancel();
         }
     }
+    
+    public void resetInputPoll() {
+        menuUp.reset();
+        menuDown.reset();
+        menuLeft.reset();
+        menuRight.reset();
+        menuOK.reset();
+        menuCancel.reset();
+    }
 }

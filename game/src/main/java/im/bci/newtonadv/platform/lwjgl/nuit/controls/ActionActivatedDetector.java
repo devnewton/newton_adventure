@@ -1,10 +1,8 @@
 package im.bci.newtonadv.platform.lwjgl.nuit.controls;
 
-import java.util.List;
-
 public class ActionActivatedDetector {
     private final Action action;
-    private float[] previousStates;
+    private Float[] previousStates;
     private boolean activated;
     
     public ActionActivatedDetector(Action action) {
@@ -20,19 +18,25 @@ public class ActionActivatedDetector {
     }
         
     public void poll() {
-        List<Control> controls = action.getControls();
-        int nbActions = controls.size();
+        Control[] controls = action.getControls();
+        int nbActions = controls.length;
         if(null == previousStates || nbActions != previousStates.length) {
-            previousStates = new float[nbActions];
+            previousStates = new Float[nbActions];
         }
         activated = false;
         for(int i=0; i<nbActions; ++i) {
-            Control control = controls.get(i);
+            Control control = controls[i];
             float newState =  control.getValue();
-            if(newState > control.getDeadZone() && previousStates[i] <= control.getDeadZone()) {
-                activated = true;
+            if(null != previousStates[i]) {
+                if(newState > control.getDeadZone() && previousStates[i] <= control.getDeadZone()) {
+                    activated = true;
+                }
             }
             previousStates[i] = newState;
         }        
+    }
+    
+    public void reset() {
+        previousStates = null;
     }
 }

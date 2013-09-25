@@ -1,26 +1,42 @@
 package im.bci.newtonadv.platform.lwjgl.nuit.controls;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class Action {
     private final String name;
-    private List<Control> controls;
+    private Control[] controls;
     
-    public Action(String name, Control... controls) {
+    public Action(String name, Control main) {
         this.name = name;
-        this.controls = Arrays.asList(controls);
+        controls = new Control[2];
+        controls[0] = main;
+        controls[1] = NullControl.INSTANCE;
+    }
+
+    public Action(Action action) {
+        this.name = action.name;
+        this.controls = action.controls.clone();
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Control> getControls() {
+    public Control[] getControls() {
         return controls;
     }
 
-    public void setControls(List<Control> controls) {
-        this.controls = controls;
+    public Control getMainControl() {
+        return controls[0];
+    }
+    
+    public void setMainControl(Control control) {
+        controls[0] = control;
+    }
+    
+    public Control getAlternativeControl() {
+        return controls[1];
+    }
+    
+    public void setAlternativeControl(Control control) {
+        controls[1] = control;
     }
 }

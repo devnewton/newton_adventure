@@ -2,12 +2,9 @@ package im.bci.newtonadv.platform.lwjgl.nuit;
 
 import im.bci.newtonadv.platform.lwjgl.RuntimeUtils;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Button;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.ColoredRectangle;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Container;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.ControlsConfigurator;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Root;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Select;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Table;
-import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Toggle;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,67 +70,58 @@ public class NuitDemo {
                 Display.setDisplayMode(new DisplayMode(800, 600));
                 Display.setFullscreen(false);
                 Display.create();
-                NuitToolkit tk = new NuitToolkit();
-                final Root root = new Root(tk);
-                final Table table = new Table(tk);
-                final Container container = new Container();
+                NuitToolkit toolkit = new NuitToolkit();
+                final Root root = new Root(toolkit);
+                final Table mainMenu = new Table(toolkit);                
+                final Table optionsMenu = new Table(toolkit);
                 
-                table.cell(new ColoredRectangle(1, 0, 0)).expand().fill();
-                table.cell(new ColoredRectangle(0, 1, 0)).expand().fill();                
-                Button toFreeLayoutButton = new Button(tk, "free layout") { 
+                final ControlsConfigurator controls = new ControlsConfigurator(toolkit, Arrays.asList(toolkit.getMenuUp(), toolkit.getMenuDown(),toolkit.getMenuLeft(), toolkit.getMenuRight(), toolkit.getMenuOK(), toolkit.getMenuCancel()), null) {
                     @Override
-                    public void onOK() {
-                        root.show(container);
+                    public void onBack() {
+                        root.show(optionsMenu);
                     }
                 };
-                table.cell(toFreeLayoutButton).expand().fill();                
-                table.row().expand().fill();
-                table.cell(new ColoredRectangle(1, 1, 0)).expand().fill();
-                table.cell(new ColoredRectangle(0.5f, 0.5f, 0.5f)).expand().fill();
-                table.cell(new ColoredRectangle(0.5f, 0.4f, 0)).expand().fill();
-                table.row().expand().fill();
-                table.cell(new Toggle(tk)).expand().fill();
-                table.cell(new ColoredRectangle(0, 0, 1)).expand().fill();
-                table.cell(new Select(tk, Arrays.asList(Difficulty.values()))).expand().fill();
-                table.row().expand().fill();
-                root.add(table);
+                root.add(controls);
                 
-                ColoredRectangle r = new ColoredRectangle(1, 0, 0);
-                r.setX(40);
-                r.setY(40);
-                r.setWidth(40);
-                r.setHeight(50);
-                container.add(r);
-                ColoredRectangle g = new ColoredRectangle(0, 1, 0);
-                g.setX(100);
-                g.setY(40);
-                g.setWidth(40);
-                g.setHeight(50);
-                container.add(g);
-                ColoredRectangle b = new ColoredRectangle(0, 0, 1);
-                b.setX(40);
-                b.setY(100);
-                b.setWidth(40);
-                b.setHeight(50);
-                container.add(b);
-                ColoredRectangle j = new ColoredRectangle(0, 1, 1);
-                j.setX(100);
-                j.setY(100);
-                j.setWidth(40);
-                j.setHeight(50);
-                container.add(j);
-                Button toTableLayoutButton = new Button(tk, "table layout"){ 
+                optionsMenu.defaults().expand().fill();
+                optionsMenu.cell(new Button(toolkit, "VIDEO"));
+                optionsMenu.row();
+                optionsMenu.cell(new Button(toolkit, "AUDIO"));
+                optionsMenu.row();
+                optionsMenu.cell(new Button(toolkit, "CONTROLS") {
                     @Override
                     public void onOK() {
-                        root.show(table);
+                        root.show(controls);
                     }
-                };
-                toTableLayoutButton.setX(300);
-                toTableLayoutButton.setY(300);
-                toTableLayoutButton.setWidth(200);
-                toTableLayoutButton.setHeight(50);
-                container.add(toTableLayoutButton);     
-                root.add(container);
+                });
+                optionsMenu.row();
+                optionsMenu.cell(new Button(toolkit, "BACK") {
+                    @Override
+                    public void onOK() {
+                        root.show(mainMenu);
+                    }
+                });
+                optionsMenu.row();
+                root.add(optionsMenu);
+                
+                mainMenu.defaults().expand().fill();
+                mainMenu.cell(new Button(toolkit, "START"));
+                mainMenu.row();
+                mainMenu.cell(new Button(toolkit, "OPTIONS") {
+                    @Override
+                    public void onOK() {
+                        root.show(optionsMenu);
+                    }
+                });
+                mainMenu.row();
+                mainMenu.cell(new Button(toolkit, "QUIT") { 
+                    @Override
+                    public void onOK() {
+                        System.exit(0);
+                    }
+                });
+                mainMenu.row();
+                root.add(mainMenu);
 
                 while(!Display.isCloseRequested()) {
                     root.update();

@@ -43,6 +43,9 @@ public class Root extends Stack {
     }
 
     public void update() {
-        toolkit.update(this);        
+        toolkit.update(this);
+        for(Widget child : getChildren()) {
+            child.update();
+        }
     }
 }
