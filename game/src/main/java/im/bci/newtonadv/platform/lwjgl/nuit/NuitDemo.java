@@ -1,13 +1,17 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
 import im.bci.newtonadv.platform.lwjgl.RuntimeUtils;
+import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Button;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.ColoredRectangle;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Container;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Root;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Table;
 
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,9 +68,22 @@ public class NuitDemo {
                 Display.setFullscreen(false);
                 Display.create();
                 NuitToolkit tk = new NuitToolkit();
-                Table table = new Table(tk);
+                final Root root = new Root(tk);
+                HashMap<Character, String> fontSpecialCharacters = new HashMap<Character, String>();
+                TrueTypeFont font =  new TrueTypeFont(null, new Font("monospaced", Font.BOLD, 24), true, new char[0], fontSpecialCharacters);
+                
+                final Table table = new Table(tk);
+                final Container container = new Container();
+                
                 table.cell(new ColoredRectangle(1, 0, 0)).expand().fill();
-                table.cell(new ColoredRectangle(0, 1, 0)).expand().fill();
+                table.cell(new ColoredRectangle(0, 1, 0)).expand().fill();                
+                Button toFreeLayoutButton = new Button(font, "free layout") { 
+                    @Override
+                    public void onOK() {
+                        root.show(container);
+                    }
+                };
+                table.cell(toFreeLayoutButton).expand().fill();                
                 table.row().expand().fill();
                 table.cell(new ColoredRectangle(1, 1, 0)).expand().fill();
                 table.cell(new ColoredRectangle(0.5f, 0.5f, 0.5f)).expand().fill();
@@ -75,10 +92,9 @@ public class NuitDemo {
                 table.cell(new ColoredRectangle(0, 0, 1)).expand().fill();
                 table.cell(new ColoredRectangle(1, 1, 0)).expand().fill();
                 table.row().expand().fill();
-                Root root = new Root(tk);
                 root.add(table);
                 
-                Container container = new Container();
+
                 ColoredRectangle r = new ColoredRectangle(1, 0, 0);
                 r.setX(40);
                 r.setY(40);
@@ -103,7 +119,21 @@ public class NuitDemo {
                 j.setWidth(40);
                 j.setHeight(50);
                 container.add(j);
+                Button toTableLayoutButton = new Button(font, "table layout"){ 
+                    @Override
+                    public void onOK() {
+                        root.show(table);
+                    }
+                };
+                toTableLayoutButton.setX(300);
+                toTableLayoutButton.setY(300);
+                toTableLayoutButton.setWidth(200);
+                toTableLayoutButton.setHeight(50);
+                container.add(toTableLayoutButton);     
                 root.add(container);
+                
+
+
                 
                 
                 while(!Display.isCloseRequested()) {

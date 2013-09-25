@@ -3,6 +3,10 @@ package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 import java.util.List;
 
 public class Stack extends Widget {
+    
+    public void show(Widget w) {
+        add(w);
+    }
 
     @Override
     public void setX(float x) {
