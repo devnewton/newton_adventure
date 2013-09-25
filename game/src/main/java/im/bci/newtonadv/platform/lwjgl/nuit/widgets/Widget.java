@@ -16,6 +16,10 @@ public class Widget {
     private float x, y, width, height;
     private List<Widget> children = new ArrayList<Widget>();
     
+    public boolean isInputWhore() {
+        return false;
+    }
+    
     public void onLeft() {
         Widget child = getFocusedChild();
         if(null != child) {
@@ -220,5 +224,12 @@ public class Widget {
                 return result;
             }
         });
+    }
+
+    public void suckFocus() {
+    }
+
+    public boolean isSuckingFocus() {
+        return false;
     }
 }

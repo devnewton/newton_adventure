@@ -1,7 +1,11 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
+import java.awt.Font;
+import java.util.HashMap;
+
 import org.lwjgl.input.Keyboard;
 
+import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.Action;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.ActionActivatedDetector;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.KeyControl;
@@ -17,6 +21,8 @@ import com.esotericsoftware.tablelayout.Toolkit;
 public class NuitToolkit extends Toolkit<Widget, Table> {
 
     private ActionActivatedDetector menuUp, menuDown, menuLeft, menuRight, menuOK, menuCancel;
+    
+    private TrueTypeFont font;
 
     public NuitToolkit() {
         menuUp = new ActionActivatedDetector(new Action("menu up", new KeyControl(Keyboard.KEY_UP)));
@@ -25,8 +31,13 @@ public class NuitToolkit extends Toolkit<Widget, Table> {
         menuRight = new ActionActivatedDetector(new Action("menu right", new KeyControl(Keyboard.KEY_RIGHT)));
         menuOK = new ActionActivatedDetector(new Action("menu ok", new KeyControl(Keyboard.KEY_RETURN)));
         menuCancel = new ActionActivatedDetector(new Action("menu cancel", new KeyControl(Keyboard.KEY_ESCAPE)));
+       font = new TrueTypeFont(null, new Font("monospaced", Font.BOLD, 24), true, new char[0], new HashMap<Character, String>());
     }
 
+    public TrueTypeFont getFont() {
+        return font;
+    }
+    
     public Action getMenuUp() {
         return menuUp.getAction();
     }

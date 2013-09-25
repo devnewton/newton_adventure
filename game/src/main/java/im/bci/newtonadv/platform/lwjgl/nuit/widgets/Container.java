@@ -16,37 +16,77 @@ public class Container extends Widget {
 
     @Override
     public void onLeft() {
-        final Widget currentFocusedChild = getFocusedChild();
-        Widget closest = findClosestLeftWidget(currentFocusedChild);
-        if (null != closest) {
-            focusedChild = closest;
+        if (isFocusSucked()) {
+            super.onLeft();
+        } else {
+            final Widget currentFocusedChild = getFocusedChild();
+            Widget closest = findClosestLeftWidget(currentFocusedChild);
+            if (null != closest) {
+                focusedChild = closest;
+            }
         }
+    }
+
+    private boolean isFocusSucked() {
+        final Widget currentFocusedChild = getFocusedChild();
+        return null == currentFocusedChild || currentFocusedChild.isSuckingFocus();
     }
 
     @Override
     public void onRight() {
-        final Widget currentFocusedChild = getFocusedChild();
-        Widget closest = findClosestRightWidget(currentFocusedChild);
-        if (null != closest) {
-            focusedChild = closest;
+        if (isFocusSucked()) {
+            super.onRight();
+        } else {
+            final Widget currentFocusedChild = getFocusedChild();
+            Widget closest = findClosestRightWidget(currentFocusedChild);
+            if (null != closest) {
+                focusedChild = closest;
+            }
         }
     }
 
     @Override
     public void onUp() {
-        final Widget currentFocusedChild = getFocusedChild();
-        Widget closest = findClosestUpWidget(currentFocusedChild);
-        if (null != closest) {
-            focusedChild = closest;
+        if (isFocusSucked()) {
+            super.onUp();
+        } else {
+            final Widget currentFocusedChild = getFocusedChild();
+            Widget closest = findClosestUpWidget(currentFocusedChild);
+            if (null != closest) {
+                focusedChild = closest;
+            }
         }
     }
 
     @Override
     public void onDown() {
+        if (isFocusSucked()) {
+            super.onDown();
+        } else {
+            final Widget currentFocusedChild = getFocusedChild();
+            Widget closest = findClosestDownWidget(currentFocusedChild);
+            if (null != closest) {
+                focusedChild = closest;
+            }
+        }
+    }
+
+    @Override
+    public void onOK() {
         final Widget currentFocusedChild = getFocusedChild();
-        Widget closest = findClosestDownWidget(currentFocusedChild);
-        if (null != closest) {
-            focusedChild = closest;
+        if (null != currentFocusedChild) {
+            if (currentFocusedChild.isInputWhore() && !currentFocusedChild.isSuckingFocus()) {
+                currentFocusedChild.suckFocus();
+                return;
+            }
+        }
+        super.onOK();
+    }
+
+    @Override
+    public void onCancel() {
+        if (isFocusSucked()) {
+            super.onCancel();
         }
     }
 
