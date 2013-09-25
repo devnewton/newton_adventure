@@ -1,7 +1,11 @@
 package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import org.lwjgl.util.vector.Vector2f;
 
 public class Widget {
     
@@ -131,5 +135,90 @@ public class Widget {
 
     public void setHeight(float height) {
         this.height = height;
+    }
+    
+    public Widget findClosestLeftWidget(Widget widget) {
+        Widget closestLeftChild = null;
+        if (null != widget) {
+            
+            float closestLeftChildLengthSquared = Float.MAX_VALUE;
+            for (Widget w : getChildren()) {
+                if (w.getX() < widget.getX()) {
+                    float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
+                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
+                        closestLeftChildLengthSquared = lenghtSquared;
+                        closestLeftChild = w;
+                    }
+                }
+            }
+        }
+        return closestLeftChild;
+    }
+    public Widget findClosestRightWidget(Widget widget) {
+        Widget closestLeftChild = null;
+        if (null != widget) {
+            
+            float closestLeftChildLengthSquared = Float.MAX_VALUE;
+            for (Widget w : getChildren()) {
+                if (w.getX() > widget.getX()) {
+                    float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
+                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
+                        closestLeftChildLengthSquared = lenghtSquared;
+                        closestLeftChild = w;
+                    }
+                }
+            }
+        }
+        return closestLeftChild;
+    }
+    
+    public Widget findClosestUpWidget(Widget widget) {
+        Widget closestLeftChild = null;
+        if (null != widget) {
+            
+            float closestLeftChildLengthSquared = Float.MAX_VALUE;
+            for (Widget w : getChildren()) {
+                if (w.getY() < widget.getY()) {
+                    float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
+                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
+                        closestLeftChildLengthSquared = lenghtSquared;
+                        closestLeftChild = w;
+                    }
+                }
+            }
+        }
+        return closestLeftChild;
+    }
+    
+    public Widget findClosestDownWidget(Widget widget) {
+        Widget closestLeftChild = null;
+        if (null != widget) {
+            
+            float closestLeftChildLengthSquared = Float.MAX_VALUE;
+            for (Widget w : getChildren()) {
+                if (w.getY() > widget.getY()) {
+                    float lenghtSquared = new Vector2f(w.getX() - widget.getX(), w.getY() - widget.getY()).lengthSquared();
+                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
+                        closestLeftChildLengthSquared = lenghtSquared;
+                        closestLeftChild = w;
+                    }
+                }
+            }
+        }
+        return closestLeftChild;
+    }
+
+    protected Widget getTopLeftChild() {
+        return Collections.min(getChildren(), new Comparator<Widget>() {
+    
+            @Override
+            public int compare(Widget w1, Widget w2) {
+                int result = Float.compare(w1.getY(), w2.getY());
+                if (result == 0) {
+                    result = Float.compare(w1.getX(), w2.getX());
+                }
+                return result;
+            }
+        });
     }
 }

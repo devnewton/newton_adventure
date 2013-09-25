@@ -1,8 +1,19 @@
 package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 
+import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
+
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 public class Root extends Stack {
+    
+    private NuitToolkit toolkit;
+
+    public Root(NuitToolkit tk) {
+        this.toolkit = tk;
+        setWidth(Display.getDisplayMode().getWidth());
+        setHeight(Display.getDisplayMode().getHeight());
+    }
 
     @Override
     public void draw() {
@@ -23,11 +34,15 @@ public class Root extends Stack {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
 
-        drawChildren();
+        super.draw();
 
         GL11.glPopMatrix();
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glPopMatrix();
         GL11.glPopAttrib();
+    }
+
+    public void update() {
+        toolkit.update(this);        
     }
 }

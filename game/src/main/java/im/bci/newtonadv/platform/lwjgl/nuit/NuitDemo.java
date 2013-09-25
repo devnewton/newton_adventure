@@ -2,6 +2,7 @@ package im.bci.newtonadv.platform.lwjgl.nuit;
 
 import im.bci.newtonadv.platform.lwjgl.RuntimeUtils;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.ColoredRectangle;
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Container;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Root;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Table;
 
@@ -17,6 +18,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 
 public class NuitDemo {
     static void setupLibraryPath() {
@@ -73,13 +75,40 @@ public class NuitDemo {
                 table.cell(new ColoredRectangle(0, 0, 1)).expand().fill();
                 table.cell(new ColoredRectangle(1, 1, 0)).expand().fill();
                 table.row().expand().fill();
-                Root root = new Root();
-                root.setWidth(Display.getDisplayMode().getWidth());
-                root.setHeight(Display.getDisplayMode().getHeight());
+                Root root = new Root(tk);
                 root.add(table);
                 
+                Container container = new Container();
+                ColoredRectangle r = new ColoredRectangle(1, 0, 0);
+                r.setX(40);
+                r.setY(40);
+                r.setWidth(40);
+                r.setHeight(50);
+                container.add(r);
+                ColoredRectangle g = new ColoredRectangle(0, 1, 0);
+                g.setX(100);
+                g.setY(40);
+                g.setWidth(40);
+                g.setHeight(50);
+                container.add(g);
+                ColoredRectangle b = new ColoredRectangle(0, 0, 1);
+                b.setX(40);
+                b.setY(100);
+                b.setWidth(40);
+                b.setHeight(50);
+                container.add(b);
+                ColoredRectangle j = new ColoredRectangle(0, 1, 1);
+                j.setX(100);
+                j.setY(100);
+                j.setWidth(40);
+                j.setHeight(50);
+                container.add(j);
+                root.add(container);
+                
+                
                 while(!Display.isCloseRequested()) {
-                    tk.update(root);
+                    root.update();
+                    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
                     root.draw();
                     Display.update(false);
                     Display.sync(60);

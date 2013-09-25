@@ -2,28 +2,21 @@ package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 
 import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
 
 import com.esotericsoftware.tablelayout.BaseTableLayout;
 import com.esotericsoftware.tablelayout.Cell;
 import com.esotericsoftware.tablelayout.Value;
 
-public class Table extends Widget {
+public class Table extends Container {
 
     private final TableLayout layout;
 
-    private Widget focusedChild;
-    
     public Cell<Widget, Table> cell(Widget widget) {
         add(widget);
         return layout.add(widget);
     }
-    
+
     public Cell<Widget, Table> row() {
         return layout.row();
     }
@@ -98,113 +91,6 @@ public class Table extends Widget {
     }
 
     @Override
-    public Widget getFocusedChild() {
-        if (null == focusedChild) {
-            focusedChild = getTopLeftChild();
-
-        }
-        return focusedChild;
-    }
-
-    @Override
-    public void onLeft() {
-        final Widget currentFocusedChild = getFocusedChild();
-        if (null != currentFocusedChild) {
-            Widget closestLeftChild = null;
-            float closestLeftChildLengthSquared = Float.MAX_VALUE;
-            for (Widget w : getChildren()) {
-                if (w.getX() < currentFocusedChild.getX()) {
-                    float lenghtSquared = new Vector2f(w.getX() - currentFocusedChild.getX(), w.getY() - currentFocusedChild.getY()).lengthSquared();
-                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
-                        closestLeftChildLengthSquared = lenghtSquared;
-                        closestLeftChild = w;
-                    }
-                }
-            }
-            if (null != closestLeftChild) {
-                focusedChild = closestLeftChild;
-            }
-        }
-    }
-
-    @Override
-    public void onRight() {
-        final Widget currentFocusedChild = getFocusedChild();
-        if (null != currentFocusedChild) {
-            Widget closestLeftChild = null;
-            float closestLeftChildLengthSquared = Float.MAX_VALUE;
-            for (Widget w : getChildren()) {
-                if (w.getX() > currentFocusedChild.getX()) {
-                    float lenghtSquared = new Vector2f(w.getX() - currentFocusedChild.getX(), w.getY() - currentFocusedChild.getY()).lengthSquared();
-                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
-                        closestLeftChildLengthSquared = lenghtSquared;
-                        closestLeftChild = w;
-                    }
-                }
-            }
-            if (null != closestLeftChild) {
-                focusedChild = closestLeftChild;
-            }
-        }
-    }
-
-    @Override
-    public void onUp() {
-        final Widget currentFocusedChild = getFocusedChild();
-        if (null != currentFocusedChild) {
-            Widget closestLeftChild = null;
-            float closestLeftChildLengthSquared = Float.MAX_VALUE;
-            for (Widget w : getChildren()) {
-                if (w.getY() < currentFocusedChild.getY()) {
-                    float lenghtSquared = new Vector2f(w.getX() - currentFocusedChild.getX(), w.getY() - currentFocusedChild.getY()).lengthSquared();
-                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
-                        closestLeftChildLengthSquared = lenghtSquared;
-                        closestLeftChild = w;
-                    }
-                }
-            }
-            if (null != closestLeftChild) {
-                focusedChild = closestLeftChild;
-            }
-        }
-    }
-
-    @Override
-    public void onDown() {
-        final Widget currentFocusedChild = getFocusedChild();
-        if (null != currentFocusedChild) {
-            Widget closestLeftChild = null;
-            float closestLeftChildLengthSquared = Float.MAX_VALUE;
-            for (Widget w : getChildren()) {
-                if (w.getY() > currentFocusedChild.getY()) {
-                    float lenghtSquared = new Vector2f(w.getX() - currentFocusedChild.getX(), w.getY() - currentFocusedChild.getY()).lengthSquared();
-                    if (null == closestLeftChild || lenghtSquared < closestLeftChildLengthSquared) {
-                        closestLeftChildLengthSquared = lenghtSquared;
-                        closestLeftChild = w;
-                    }
-                }
-            }
-            if (null != closestLeftChild) {
-                focusedChild = closestLeftChild;
-            }
-        }
-    }
-
-    private Widget getTopLeftChild() {
-        return Collections.min(getChildren(), new Comparator<Widget>() {
-
-            @Override
-            public int compare(Widget w1, Widget w2) {
-                int result = Float.compare(w1.getY(), w2.getY());
-                if (result == 0) {
-                    result = Float.compare(w1.getX(), w2.getX());
-                }
-                return result;
-            }
-        });
-    }
-
-    @Override
     public void setX(float x) {
         super.setX(x);
         layout();
@@ -242,20 +128,5 @@ public class Table extends Widget {
             cellWidget.setWidth(c.getWidgetWidth());
             cellWidget.setHeight(c.getWidgetHeight());
         }
-    }
-
-    @Override
-    public void draw() {
-        drawChildren();
-        Widget focused = getFocusedChild();
-        GL11.glLineWidth(5.0f);
-        GL11.glBegin(GL11.GL_LINE_LOOP);
-        GL11.glVertex2f(focused.getX(), focused.getY());
-        GL11.glVertex2f(focused.getX() + focused.getWidth(), focused.getY());
-        GL11.glVertex2f(focused.getX() + focused.getWidth(), focused.getY() + focused.getHeight());
-        GL11.glVertex2f(focused.getX(), focused.getY() + focused.getHeight());
-        GL11.glVertex2f(focused.getX(), focused.getY());
-        GL11.glEnd();
-        GL11.glLineWidth(1.0f);
     }
 }
