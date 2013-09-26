@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.lwjgl.LWJGLException;
 
+import im.bci.newtonadv.platform.lwjgl.nuit.widgets.AudioConfigurator;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Button;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.ControlsConfigurator;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Root;
@@ -14,7 +15,8 @@ public class NuitBasic {
     private NuitToolkit toolkit;
     private Root root;
     private Table mainMenu;
-    private VideoConfigurator videoMenu;
+    private VideoConfigurator videoConfigurator;
+    private AudioConfigurator audioConfigurator;
     private Table optionsMenu;
     private ControlsConfigurator controls;
     
@@ -22,22 +24,30 @@ public class NuitBasic {
         toolkit = new NuitToolkit();
         root = new Root(toolkit);
         initVideo();
+        initAudio();
         initControls();
         initOptions();
         initMain();
 	}
 
-	private void initVideo() throws LWJGLException {
-		videoMenu = new VideoConfigurator(toolkit){
+    private void initVideo() throws LWJGLException {
+		videoConfigurator = new VideoConfigurator(toolkit){
 			@Override
 			protected void closeVideoSettings() {
 				root.show(optionsMenu);
 			}
 		};		
-		root.add(videoMenu);
+		root.add(videoConfigurator);
 	}
 	
- 
+    private void initAudio() {
+        audioConfigurator = new AudioConfigurator(toolkit) {
+            @Override
+            protected void closeAudioSettings() {
+                root.show(optionsMenu);
+            }
+        };
+    }
 
 	private void initMain() {
 		mainMenu = new Table(toolkit);
@@ -67,11 +77,16 @@ public class NuitBasic {
         optionsMenu.cell(new Button(toolkit, "VIDEO") {
 	        @Override
 	        public void onOK() {
-	        	root.show(videoMenu);
+	        	root.show(videoConfigurator);
 	        }
         });
         optionsMenu.row();
-        optionsMenu.cell(new Button(toolkit, "AUDIO"));
+        optionsMenu.cell(new Button(toolkit, "AUDIO") {
+            @Override
+            public void onOK() {
+                root.show(audioConfigurator);
+            }
+        });
         optionsMenu.row();
         optionsMenu.cell(new Button(toolkit, "CONTROLS") {
             @Override

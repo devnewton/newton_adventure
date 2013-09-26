@@ -45,12 +45,6 @@ public class NuitDemo {
         Logger.getLogger(NuitDemo.class.getName()).log(Level.WARNING,
                 "Cannot find 'natives' library folder, try system libraries");
     }
-    
-    enum Difficulty {
-        EASY,
-        NORMAL,
-        HARD
-    }
 
     public static void main(String[] args) throws IOException,
             ClassNotFoundException, Exception {
