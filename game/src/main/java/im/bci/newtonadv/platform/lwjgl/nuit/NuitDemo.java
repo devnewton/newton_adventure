@@ -1,7 +1,7 @@
 package im.bci.newtonadv.platform.lwjgl.nuit;
 
-import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
 import im.bci.newtonadv.platform.lwjgl.RuntimeUtils;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
 
 import java.io.File;
 import java.io.IOException;

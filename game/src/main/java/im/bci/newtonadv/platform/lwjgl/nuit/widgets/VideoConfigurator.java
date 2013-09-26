@@ -8,8 +8,8 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
 import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
 
 public class VideoConfigurator extends Table {
 

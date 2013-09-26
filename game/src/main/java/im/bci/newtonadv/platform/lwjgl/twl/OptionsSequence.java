@@ -46,15 +46,17 @@ import im.bci.newtonadv.platform.lwjgl.GameCloseException;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.JoyButtonItem;
 import im.bci.newtonadv.score.ScoreServer;
+
 import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;

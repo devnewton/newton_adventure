@@ -32,6 +32,7 @@
 package im.bci.newtonadv.platform.lwjgl.twl;
 
 import com.esotericsoftware.tablelayout.twl.Table;
+
 import de.matthiasmann.twl.BoxLayout;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ComboBox;
@@ -47,14 +48,16 @@ import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
 import im.bci.newtonadv.score.ScoreServer;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;

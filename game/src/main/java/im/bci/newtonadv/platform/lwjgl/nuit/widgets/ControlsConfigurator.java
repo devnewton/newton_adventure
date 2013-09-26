@@ -1,6 +1,5 @@
 package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 
-import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.Action;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.Control;
@@ -9,6 +8,7 @@ import im.bci.newtonadv.platform.lwjgl.nuit.controls.GamepadAxisControl;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.GamepadButtonControl;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.KeyControl;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.MouseButtonControl;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI;
 
 import java.lang.reflect.Field;

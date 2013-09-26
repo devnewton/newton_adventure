@@ -7,11 +7,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
-import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
-import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.Action;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.ActionActivatedDetector;
 import im.bci.newtonadv.platform.lwjgl.nuit.controls.KeyControl;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Root;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Table;
 import im.bci.newtonadv.platform.lwjgl.nuit.widgets.Widget;

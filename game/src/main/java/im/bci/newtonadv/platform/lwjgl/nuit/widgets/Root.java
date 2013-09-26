@@ -1,7 +1,7 @@
 package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 
-import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
 import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
 
 import org.lwjgl.opengl.GL11;
 

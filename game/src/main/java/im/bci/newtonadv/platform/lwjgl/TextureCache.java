@@ -37,6 +37,8 @@ import im.bci.nanim.NanimParser.PixelFormat;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -62,7 +64,9 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.imageio.ImageIO;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;

@@ -2,8 +2,8 @@ package im.bci.newtonadv.platform.lwjgl.nuit.widgets;
 
 import org.lwjgl.opengl.GL11;
 
-import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.TrueTypeFont;
 
 public class Label extends Widget {
 

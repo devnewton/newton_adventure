@@ -1,4 +1,4 @@
-package im.bci.newtonadv.platform.lwjgl;
+package im.bci.newtonadv.platform.lwjgl.nuit.utils;
 
 import java.lang.reflect.Method;
 

@@ -1,4 +1,4 @@
-package im.bci.newtonadv.platform.lwjgl;
+package im.bci.newtonadv.platform.lwjgl.nuit.utils;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import java.awt.Color;

@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import im.bci.newtonadv.platform.lwjgl.TrueTypeFont;
 import im.bci.newtonadv.platform.lwjgl.nuit.NuitToolkit;
+import im.bci.newtonadv.platform.lwjgl.nuit.utils.TrueTypeFont;
 
 public class Select<T> extends Widget {
     private NuitToolkit toolkit;
