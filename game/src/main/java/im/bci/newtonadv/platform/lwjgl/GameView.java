@@ -31,6 +31,8 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.lwjgl.nuit.utils.LwjglHelper;
+import im.bci.lwjgl.nuit.utils.TrueTypeFont;
 import im.bci.nanim.NanimParser;
 import im.bci.nanim.NanimParser.Nanim;
 import im.bci.newtonadv.Game;
@@ -50,8 +52,6 @@ import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
-import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
-import im.bci.newtonadv.platform.lwjgl.nuit.utils.TrueTypeFont;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
@@ -1617,8 +1617,12 @@ public strictfp class GameView implements IGameView {
     }
 
     private TrueTypeFont initFont() {
-        HashMap<Character, String> fontSpecialCharacters = new HashMap<Character, String>();
-        fontSpecialCharacters.put('$', data.getFile("default_level_data/apple.png"));
-        return new TrueTypeFont(this.data, new Font("monospaced", Font.BOLD, 24), true, new char[0], fontSpecialCharacters);
+        HashMap<Character, BufferedImage> fontSpecialCharacters = new HashMap<>();
+        try {
+            fontSpecialCharacters.put('$', data.openImage("default_level_data/apple.png"));
+        } catch (IOException e) {
+           Logger.getLogger(GameView.class.getName()).warning("Cannot load default_level_data/apple.png");
+        }
+        return new TrueTypeFont(new Font("monospaced", Font.BOLD, 24), true, new char[0], fontSpecialCharacters);
     }
 }

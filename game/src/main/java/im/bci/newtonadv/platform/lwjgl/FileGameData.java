@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,6 +44,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
 import tiled.core.Map;
 import tiled.io.TMXMapReader;
 
@@ -159,6 +163,13 @@ class FileGameData extends AbstractGameData {
             }
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public BufferedImage openImage(String file) throws IOException{
+        try(InputStream is = openFile(getFile(file))) {
+            return ImageIO.read(is);
         }
     }
 }

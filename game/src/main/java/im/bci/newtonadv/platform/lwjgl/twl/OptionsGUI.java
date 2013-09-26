@@ -42,13 +42,13 @@ import de.matthiasmann.twl.TabbedPane;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.SimpleChangableListModel;
+import im.bci.lwjgl.nuit.utils.LwjglHelper;
 import im.bci.newtonadv.platform.interfaces.IMod;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.platform.lwjgl.nuit.utils.LwjglHelper;
 import im.bci.newtonadv.score.ScoreServer;
 
 import java.lang.reflect.Field;

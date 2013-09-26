@@ -1,5 +1,6 @@
 package im.bci.newtonadv.platform.interfaces;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -29,4 +30,6 @@ public interface IGameData {
     void setDataDir(String dataDir);
 
     String getDataDir();
+
+    BufferedImage openImage(String file) throws IOException;
 }
