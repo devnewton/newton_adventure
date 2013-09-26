@@ -18,6 +18,25 @@ public class Select<T> extends Widget {
         this.toolkit = toolkit;
         this.possibleValues = possibleValues;
     }
+    
+    
+    @Override
+    public float getMinWidth() {
+        float minWidth = 0.0f;
+        for(T value : possibleValues) {
+            minWidth = Math.max(toolkit.getFont().getWidth(value.toString()), minWidth);
+        }
+        return minWidth;
+    }
+    
+    @Override
+    public float getMinHeight() {
+        float minHeight = 0.0f;
+        for(T value : possibleValues) {
+            minHeight = Math.max(toolkit.getFont().getHeight(value.toString()), minHeight);
+        }
+        return minHeight;
+    }
 
     @Override
     public boolean isFocusWhore() {

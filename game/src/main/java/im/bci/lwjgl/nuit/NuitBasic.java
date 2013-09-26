@@ -51,7 +51,7 @@ public class NuitBasic {
 
 	private void initMain() {
 		mainMenu = new Table(toolkit);
-		mainMenu.defaults().expand().fill();
+		mainMenu.defaults().expand();
         mainMenu.cell(new Button(toolkit, "START"));
         mainMenu.row();
         mainMenu.cell(new Button(toolkit, "OPTIONS") {
@@ -73,7 +73,7 @@ public class NuitBasic {
 
 	private void initOptions() {
 		optionsMenu = new Table(toolkit);
-		optionsMenu.defaults().expand().fill();
+		optionsMenu.defaults().expand();
         optionsMenu.cell(new Button(toolkit, "VIDEO") {
 	        @Override
 	        public void onOK() {

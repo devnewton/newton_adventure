@@ -96,7 +96,7 @@ public class Container extends Widget {
         Widget focused = getFocusedChild();
         if (null != focused) {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glLineWidth(5.0f);
+            GL11.glLineWidth(2.0f);
             if(isFocusSucked()) {
                 GL11.glColor3f(0.5f, 0.5f, 0.5f);
             }

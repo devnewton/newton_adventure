@@ -28,7 +28,7 @@ public class AudioConfigurator extends Table {
             possibleVolumes.add(new Volume(l));
         }
 
-        defaults().expand().fill();
+        defaults().expand();
         cell(new Label(toolkit, "Music volume"));
         cell(new Select<Volume>(toolkit, possibleVolumes) {
             @Override

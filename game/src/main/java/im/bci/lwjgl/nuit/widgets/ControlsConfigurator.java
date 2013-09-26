@@ -48,7 +48,7 @@ public class ControlsConfigurator extends Table {
 	}
 
     private void initUI(NuitToolkit toolkit) {
-        this.defaults().expand().fill();
+        this.defaults().expand();
         this.cell(new Label(toolkit, "Action"));
         this.cell(new Label(toolkit, "Control"));
         this.cell(new Label(toolkit, "Alternative"));
@@ -66,7 +66,7 @@ public class ControlsConfigurator extends Table {
                     action.setMainControl(control);
                 }
             };
-            this.cell(mainConfigurator);
+            this.cell(mainConfigurator).fill();
             ControlConfigurator alternativeConfigurator = new ControlConfigurator() {
                 @Override
                 public Control getControl() {
@@ -78,7 +78,7 @@ public class ControlsConfigurator extends Table {
                     action.setAlternativeControl(control);
                 }
             };
-            this.cell(alternativeConfigurator);
+            this.cell(alternativeConfigurator).fill();
             this.row();
         }
 

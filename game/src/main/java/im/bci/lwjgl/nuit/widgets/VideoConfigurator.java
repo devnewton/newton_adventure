@@ -18,7 +18,7 @@ public class VideoConfigurator extends Table {
 
     public VideoConfigurator(NuitToolkit toolkit) throws LWJGLException {
         super(toolkit);
-        defaults().expand().fill();
+        defaults().expand();
         cell(new Label(toolkit, "Mode"));
         mode = new Select<DisplayMode>(toolkit, getDisplayModes());
         cell(mode);

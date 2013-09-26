@@ -47,6 +47,16 @@ public class Toggle extends Widget {
     public void onMouseClick(float mouseX, float mouseY) {
     	onOK();
     }
+    
+    @Override
+    public float getMinWidth() {
+        return Math.max(toolkit.getFont().getWidth(enabledText), toolkit.getFont().getWidth(disabledText));
+    }
+    
+    @Override
+    public float getMinHeight() {
+        return Math.max(toolkit.getFont().getHeight(enabledText), toolkit.getFont().getHeight(disabledText));
+    }
 
     @Override
     public void draw() {
