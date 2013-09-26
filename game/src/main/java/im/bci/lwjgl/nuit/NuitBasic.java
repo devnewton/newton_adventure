@@ -11,7 +11,7 @@ import im.bci.lwjgl.nuit.widgets.Root;
 import im.bci.lwjgl.nuit.widgets.Table;
 import im.bci.lwjgl.nuit.widgets.VideoConfigurator;
 
-public class NuitBasic {
+public class NuitBasic implements AutoCloseable {
     private NuitToolkit toolkit;
     private Root root;
     private Table mainMenu;
@@ -19,7 +19,7 @@ public class NuitBasic {
     private AudioConfigurator audioConfigurator;
     private Table optionsMenu;
     private ControlsConfigurator controls;
-    
+
     public NuitBasic() throws LWJGLException {
         toolkit = new NuitToolkit();
         root = new Root(toolkit);
@@ -28,18 +28,18 @@ public class NuitBasic {
         initControls();
         initOptions();
         initMain();
-	}
+    }
 
     private void initVideo() throws LWJGLException {
-		videoConfigurator = new VideoConfigurator(toolkit){
-			@Override
-			protected void closeVideoSettings() {
-				root.show(optionsMenu);
-			}
-		};		
-		root.add(videoConfigurator);
-	}
-	
+        videoConfigurator = new VideoConfigurator(toolkit) {
+            @Override
+            protected void closeVideoSettings() {
+                root.show(optionsMenu);
+            }
+        };
+        root.add(videoConfigurator);
+    }
+
     private void initAudio() {
         audioConfigurator = new AudioConfigurator(toolkit) {
             @Override
@@ -49,9 +49,9 @@ public class NuitBasic {
         };
     }
 
-	private void initMain() {
-		mainMenu = new Table(toolkit);
-		mainMenu.defaults().expand();
+    private void initMain() {
+        mainMenu = new Table(toolkit);
+        mainMenu.defaults().expand();
         mainMenu.cell(new Button(toolkit, "START"));
         mainMenu.row();
         mainMenu.cell(new Button(toolkit, "OPTIONS") {
@@ -61,7 +61,7 @@ public class NuitBasic {
             }
         });
         mainMenu.row();
-        mainMenu.cell(new Button(toolkit, "QUIT") { 
+        mainMenu.cell(new Button(toolkit, "QUIT") {
             @Override
             public void onOK() {
                 System.exit(0);
@@ -69,16 +69,16 @@ public class NuitBasic {
         });
         mainMenu.row();
         root.add(mainMenu);
-	}
+    }
 
-	private void initOptions() {
-		optionsMenu = new Table(toolkit);
-		optionsMenu.defaults().expand();
+    private void initOptions() {
+        optionsMenu = new Table(toolkit);
+        optionsMenu.defaults().expand();
         optionsMenu.cell(new Button(toolkit, "VIDEO") {
-	        @Override
-	        public void onOK() {
-	        	root.show(videoConfigurator);
-	        }
+            @Override
+            public void onOK() {
+                root.show(videoConfigurator);
+            }
         });
         optionsMenu.row();
         optionsMenu.cell(new Button(toolkit, "AUDIO") {
@@ -103,23 +103,28 @@ public class NuitBasic {
         });
         optionsMenu.row();
         root.add(optionsMenu);
-	}
+    }
 
-	private void initControls() {
-		controls = new ControlsConfigurator(toolkit, Arrays.asList(toolkit.getMenuUp(), toolkit.getMenuDown(),toolkit.getMenuLeft(), toolkit.getMenuRight(), toolkit.getMenuOK(), toolkit.getMenuCancel()), null) {
+    private void initControls() {
+        controls = new ControlsConfigurator(toolkit, Arrays.asList(toolkit.getMenuUp(), toolkit.getMenuDown(), toolkit.getMenuLeft(), toolkit.getMenuRight(), toolkit.getMenuOK(), toolkit.getMenuCancel()), null) {
             @Override
             public void onBack() {
                 root.show(optionsMenu);
             }
         };
         root.add(controls);
-	}
+    }
 
-	public void update() {
-		root.update();
-	}
+    public void update() {
+        root.update();
+    }
 
-	public void draw() {
-		root.draw();
-	}
+    public void draw() {
+        root.draw();
+    }
+
+    @Override
+    public void close() throws Exception {
+        toolkit.close();
+    }
 }

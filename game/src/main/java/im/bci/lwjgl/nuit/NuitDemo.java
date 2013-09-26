@@ -29,8 +29,7 @@ public class NuitDemo {
         }
 
         try {
-            File nativeDir = new File(getApplicationDir() + File.separator
-                    + "natives");
+            File nativeDir = new File(getApplicationDir() + File.separator + "natives");
             if (nativeDir.exists()) {
                 String nativePath = nativeDir.getCanonicalPath();
                 System.setProperty("org.lwjgl.librarypath", nativePath);
@@ -42,39 +41,35 @@ public class NuitDemo {
         } catch (IOException e) {
             Logger.getLogger(NuitDemo.class.getName()).log(Level.WARNING, "error", e);
         }
-        Logger.getLogger(NuitDemo.class.getName()).log(Level.WARNING,
-                "Cannot find 'natives' library folder, try system libraries");
+        Logger.getLogger(NuitDemo.class.getName()).log(Level.WARNING, "Cannot find 'natives' library folder, try system libraries");
     }
 
     public static String getApplicationDir() throws IOException {
         try {
             return new File(NuitDemo.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
         } catch (URISyntaxException uriEx) {
-            Logger.getLogger(NuitDemo.class.getName()).log(Level.WARNING,
-                    "Cannot find application directory, try current", uriEx);
+            Logger.getLogger(NuitDemo.class.getName()).log(Level.WARNING, "Cannot find application directory, try current", uriEx);
             return new File(".").getCanonicalPath();
         }
     }
 
-    public static void main(String[] args) throws IOException,
-            ClassNotFoundException, Exception {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, Exception {
 
-            try {
-                setupLibraryPath();
-            } catch (Throwable e) {
-                handleError(e, "Unexpected error during newton adventure startup. Check your java version and your opengl driver.\n");
-                return;
-            }
+        try {
+            setupLibraryPath();
+        } catch (Throwable e) {
+            handleError(e, "Unexpected error during newton adventure startup. Check your java version and your opengl driver.\n");
+            return;
+        }
 
-            try {
-                Display.setDisplayMode(new DisplayMode(800, 600));
-                Display.setFullscreen(false);
-                Display.create();
-                LwjglHelper.setResizable(true);
-                NuitBasic nuit = new NuitBasic();
-
-                while(!Display.isCloseRequested()) {
-                	nuit.update();
+        try {
+            Display.setDisplayMode(new DisplayMode(800, 600));
+            Display.setFullscreen(false);
+            Display.create();
+            LwjglHelper.setResizable(true);
+            try (NuitBasic nuit = new NuitBasic()) {
+                while (!Display.isCloseRequested()) {
+                    nuit.update();
                     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
                     nuit.draw();
                     Display.update(false);
@@ -84,21 +79,15 @@ public class NuitDemo {
                     Keyboard.poll();
                     Controllers.poll();
                 }
-
-            } catch (Throwable e) {
-                handleError(e, "Unexpected error during newton adventure execution.\n");
             }
+
+        } catch (Throwable e) {
+            handleError(e, "Unexpected error during newton adventure execution.\n");
+        }
     }
 
     public static void handleError(Throwable e, final String defaultMessage) {
-        Logger.getLogger(NuitDemo.class.getName()).log(Level.SEVERE,
-                defaultMessage, e);
-        JOptionPane.showMessageDialog(null,
-                defaultMessage
-                + "\n"
-                + e.getMessage()
-                + (e.getCause() != null ? "\nCause: "
-                + e.getCause().getMessage() : ""), "Error",
-                JOptionPane.ERROR_MESSAGE);
+        Logger.getLogger(NuitDemo.class.getName()).log(Level.SEVERE, defaultMessage, e);
+        JOptionPane.showMessageDialog(null, defaultMessage + "\n" + e.getMessage() + (e.getCause() != null ? "\nCause: " + e.getCause().getMessage() : ""), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

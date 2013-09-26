@@ -31,7 +31,7 @@ import org.lwjgl.util.glu.GLU;
  * 
  * @new version edited by David Aaron Muhar (bobjob)
  */
-public class TrueTypeFont {
+public class TrueTypeFont implements AutoCloseable {
 
     public enum Align {
 
@@ -438,6 +438,14 @@ public class TrueTypeFont {
     }
 
     public void destroy() {
+        IntBuffer scratch = BufferUtils.createIntBuffer(1);
+        scratch.put(0, fontTextureID);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL11.glDeleteTextures(scratch);
+    }
+
+    @Override
+    public void close() throws Exception {
         IntBuffer scratch = BufferUtils.createIntBuffer(1);
         scratch.put(0, fontTextureID);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);

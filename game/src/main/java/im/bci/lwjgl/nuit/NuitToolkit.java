@@ -22,7 +22,7 @@ import com.esotericsoftware.tablelayout.BaseTableLayout;
 import com.esotericsoftware.tablelayout.Cell;
 import com.esotericsoftware.tablelayout.Toolkit;
 
-public class NuitToolkit extends Toolkit<Widget, Table> {
+public class NuitToolkit extends Toolkit<Widget, Table> implements AutoCloseable {
 
     private ActionActivatedDetector menuUp, menuDown, menuLeft, menuRight, menuOK, menuCancel;
 
@@ -37,10 +37,10 @@ public class NuitToolkit extends Toolkit<Widget, Table> {
         menuRight = new ActionActivatedDetector(new Action("menu right", new KeyControl(Keyboard.KEY_RIGHT)));
         menuOK = new ActionActivatedDetector(new Action("menu ok", new KeyControl(Keyboard.KEY_RETURN)));
         menuCancel = new ActionActivatedDetector(new Action("menu cancel", new KeyControl(Keyboard.KEY_ESCAPE)));
-        font = createDefaultFont();
+        font = createFont();
     }
 
-    protected TrueTypeFont createDefaultFont() {
+    protected TrueTypeFont createFont() {
         return new TrueTypeFont(new Font("monospaced", Font.BOLD, 24), true, new char[0], new HashMap<Character, BufferedImage>());
     }
 
@@ -197,5 +197,11 @@ public class NuitToolkit extends Toolkit<Widget, Table> {
         menuRight.reset();
         menuOK.reset();
         menuCancel.reset();
+    }
+
+    @Override
+    public void close() throws Exception {
+        font.destroy();
+        
     }
 }
