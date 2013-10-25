@@ -79,7 +79,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     public PlatformSpecific() throws Exception {
         messages = ResourceBundle.getBundle("messages");
-        
+
         loadConfig();
 
         createGameData();
@@ -119,21 +119,13 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     private void loadConfig() {
-        try {
-            URL configFilePath = getUserOrDefaultConfigFilePath();
-            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.INFO,
-                    "Load config from file {0}", configFilePath);
-
-            InputStream f = configFilePath.openStream();
-            try {
-                config = new Properties();
-                config.load(f);
-            } finally {
-                f.close();
-            }
-        } catch (IOException e) {
-            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE,
-                    null, e);
+        URL configFilePath = getUserOrDefaultConfigFilePath();
+        Logger.getLogger(PlatformSpecific.class.getName()).log(Level.INFO, "Load config from file {0}", configFilePath);
+        try (InputStream f = configFilePath.openStream()) {
+            config = new Properties();
+            config.load(f);
+        } catch (IOException ex) {
+            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, "Cannot load config file " + configFilePath, ex);
         }
     }
 
@@ -174,6 +166,9 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     public static String getUserConfigDirPath() {
         String configDirPath = System.getenv("XDG_CONFIG_HOME");
+        if (null == configDirPath) {
+            configDirPath = System.getenv("APPDATA");
+        }
         if (null == configDirPath) {
             configDirPath = System.getProperty("user.home") + File.separator
                     + ".config";
