@@ -4,25 +4,25 @@ Note that Newton Adventure requires <a href="http://java.com">Java</a> and a goo
 
 <table border="1" cellpadding="8px">
 <tr><th>Debian / Ubuntu</th>
-<td><a href="downloads/newton-adventure_1.12.deb">deb</a></td></td>
+<td><a href="downloads/newton-adventure_1.13.deb">deb</a></td></td>
 </tr>
 
 <tr><th>Windows XP / Vista /7</th>
-<td><a href="downloads/newton_adventure-1.12-installer.exe">installer</a></td>
+<td><a href="downloads/newton_adventure-1.13-installer.exe">installer</a></td>
 </tr>
 
 <tr><th>Red Hat / Fedora / Suse</th>
-<td><a href="downloads/newton_adventure-1.12-1.i686.rpm">32 bits rpm</a><br/>
-	<a href="downloads/newton_adventure-1.12-1.x86_64.rpm">64 bits rpm</a></td>
+<td><a href="downloads/newton_adventure-1.13-1.i686.rpm">32 bits rpm</a><br/>
+	<a href="downloads/newton_adventure-1.13-1.x86_64.rpm">64 bits rpm</a></td>
 </tr>
 
 <tr><th>Others (Linux, Macosx, Windows, Solaris, BSD...)</th>
-<td><a href="downloads/newton_adventure-1.12-installer.jar">universal installer</a></td>
+<td><a href="downloads/newton_adventure-1.13-installer.jar">universal installer</a></td>
 </tr>
 
 </table>
 
 <p><a href="downloads/newton_adventure_editor-1.0.jar">Level editor</a></p>
-<p><a href="downloads/newton_adventure_1.12_sources.zip">Source code</a></p>
+<p><a href="downloads/newton_adventure_1.13_sources.zip">Source code</a></p>
 
 <p>If you have any problem to install or run Newton Adventure, <a href="contact.wiki">contact me!</a></p>
