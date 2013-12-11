@@ -1,5 +1,0 @@
-<title>Contact</title>
-
-<p>Send me mails to devnewton ^at^ bci.im</p>
-
-<p>To chat with me click <a href="http://devnewton.bci.im/home/?q=chat">here</a>.</p>
