@@ -23,11 +23,15 @@ SUCH DAMAGE. */ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>im.bci.newtonadv</groupId>
-    <artifactId>newton_adventure_mod_pack1</artifactId>
+    <parent>
+        <groupId>im.bci.newtonadv</groupId>
+	<artifactId>newton-adventure</artifactId>
+	<version>1.14-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <artifactId>newton-adventure-mod-pack1</artifactId>
     <packaging>jar</packaging>
-    <version>1.13</version>
-    <name>newton_adventure_mod_pack1</name>
+    <name>newton-adventure-mod-pack1</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -59,50 +63,6 @@ SUCH DAMAGE. */ -->
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>win</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                        <artifactId>launch4j-maven-plugin</artifactId>
-                        <version>1.5.2</version>
-                        <executions>
-                            <execution>
-                                <id>l4j-installer</id>
-                                <phase>install</phase><!-- how to create a custom phase? -->
-                                <goals>
-                                    <goal>launch4j</goal>
-                                </goals>
-                                <configuration>
-                                    <headerType>gui</headerType>
-                                    <dontWrapJar>false</dontWrapJar>
-                                    <outfile>${project.build.finalName}-installer.exe</outfile>
-                                    <jar>${project.build.finalName}-installer.jar</jar><!-- Copy manually the file in ${basedir}. Without this, the generated exe will be bugged. -->
-                                    <errTitle>Newton Adventure Mod Pack 1 installer</errTitle>
-                                    <jre>
-                                        <minVersion>1.7.0</minVersion>
-                                    </jre>
-                                    <versionInfo>
-                                        <fileVersion>1.0.0.0</fileVersion>
-                                        <txtFileVersion>${project.version}</txtFileVersion>
-                                        <fileDescription>Newton Adventure Mod Pack 1.</fileDescription>
-                                        <copyright>BSD, CC-BY-SA 3.0</copyright>
-                                        <productVersion>1.0.0.0</productVersion>
-                                        <txtProductVersion>${project.version}</txtProductVersion>
-                                        <productName>Newton Adventure Mod Pack 1 installer</productName>
-                                        <internalName>newton_adventure_mod_pack1_installer</internalName>
-                                        <originalFilename>${project.build.finalName}-installer.exe</originalFilename>
-                                    </versionInfo>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
 
 
