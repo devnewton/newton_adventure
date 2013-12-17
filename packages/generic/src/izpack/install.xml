@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<installation version="1.0">
+    <info>
+        <appname>newton-adventure</appname>
+        <appversion>@{project.version}</appversion>
+        <authors>
+            <author name="devnewton" email="devnewton@bci.Im" />
+        </authors>
+        <url>http://devnewton.bci.im</url>
+        <javaversion>1.7</javaversion>
+        <requiresjdk>no</requiresjdk>
+    </info>
+ 
+    <guiprefs width="800" height="480" resizable="yes" />
+ 
+    <locale>
+        <langpack iso3="eng" />
+    </locale>
+
+    <variables>
+        <variable name="newton_adventure_build_final_name" value="newton-adventure-lwjgl-@{project.version}.jar"/>
+        <variable name="ShowCreateDirectoryMessage" value="false"/>
+        <variable name="TargetPanel.dir" value="${SYSTEM_user_dir}/opt/games/newtonadventure"/>
+    </variables>
+
+    <resources>
+        <res id="Installer.image" src="../../src/izpack/cover.png" />
+        <res src="../../src/izpack/Win_shortcutSpec.xml" id="Win_shortcutSpec.xml" parse="yes"/>
+        <res src="../../src/izpack/Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml" parse="yes"/>
+    </resources>
+ 
+    <panels>
+        <panel classname="HelloPanel" />
+        <panel classname="TargetPanel"/>       
+        <panel classname="InstallPanel"/>
+        <panel classname="ShortcutPanel"/>     
+        <panel classname="SimpleFinishPanel" />
+    </panels>
+ 
+    <packs>
+        <pack name="Core" required="yes">
+            <description>Core installation files</description>
+            <file src="../../src/izpack/icon.ico" targetdir="$INSTALL_PATH" />
+            <file src="../../target/README.txt" targetdir="$INSTALL_PATH" />
+            <file src="../../target/run_linux.sh" targetdir="$INSTALL_PATH" >
+                <os family="unix"/>
+            </file>
+            <file src="../../target/run_macosx.sh" targetdir="$INSTALL_PATH" >
+                <os family="mac"/>
+            </file>
+            <file src="../../target/run_windows.bat" targetdir="$INSTALL_PATH" >
+                <os family="windows"/>
+            </file>
+            <file src="../../../../game/lwjgl/src/main/resources/icon.png" targetdir="$INSTALL_PATH" />
+            <fileset dir="../../../../licenses" targetdir="$INSTALL_PATH/licenses" override="true"/>
+            <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/data" override="true" />
+            <fileset dir="../../target/lib" targetdir="$INSTALL_PATH" override="true" />
+            <fileset dir="../../target/natives" targetdir="$INSTALL_PATH/natives" override="true">
+                <include name="*.so"/>
+                <os family="unix"/>
+            </fileset>
+            <fileset dir="../../target/natives" targetdir="$INSTALL_PATH/natives" override="true">
+                <include name="*.jnilib"/>
+                <include name="*.dylib"/>
+                <os family="mac"/>
+            </fileset>
+            <fileset dir="../../target/natives" targetdir="$INSTALL_PATH/natives" override="true">
+                <include name="*.dll"/>
+                <os family="windows"/>
+            </fileset>
+            <executable type="bin" stage="never" targetfile="$INSTALL_PATH/${newton_adventure_build_final_name}"/>
+            <executable type="bin" stage="never" targetfile="$INSTALL_PATH/run_linux.sh">
+                <os family="unix"/>
+            </executable>
+            <executable type="bin" stage="never" targetfile="$INSTALL_PATH/run_macosx.sh" >
+                <os family="mac"/>
+            </executable>
+        </pack>
+    </packs>
+
+    <native type="izpack" name="ShellLink.dll"/>
+    <native type="izpack" name="ShellLink_x64.dll"/>
+ 
+</installation>
+

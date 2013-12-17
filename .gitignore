@@ -1,0 +1,9 @@
+/game/target/
+/game/core/target/
+/game/lwjgl/target/
+/editor/target/
+/packages/generic/target/
+/packages/win/target/
+/packages/deb/target/
+/packages/rpm32/target/
+/packages/rpm64/target/

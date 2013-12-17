@@ -40,8 +40,6 @@
             </plugin>
         </plugins>
     </build>
-    <dependencies>
-    </dependencies>
     <url>http://devnewton.bci.im</url>
 </project>
 
