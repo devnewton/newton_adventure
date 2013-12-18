@@ -72,10 +72,10 @@ public class PlatformSpecific implements IPlatformSpecific {
     private GameInput input;
     private Properties config;
     private ScoreServer scoreServer;
-    private IGameData data;
+    private FileGameData data;
     private ISoundCache soundCache;
     private IOptionsSequence options;
-    private ResourceBundle messages;
+    private final ResourceBundle messages;
 
     public PlatformSpecific() throws Exception {
         messages = ResourceBundle.getBundle("messages");
@@ -131,9 +131,14 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     private IGameData createGameData() {
         if (data == null) {
-            String dataDir = System.getProperty("newton_adventure.data.dir", getModOrDefaultDataDir());
+            List<File> dataDirs = new ArrayList<>();
+            IMod mod = findModByName(config.getProperty("newton_adventure.mod"));
+            if (null != mod) {
+                dataDirs.add(new File(mod.getPath()));
+            }
+            dataDirs.add(getDefaultDataDir());
             data = new FileGameData();
-            data.setDataDir(dataDir);
+            data.setDataDirs(dataDirs);
         }
         return data;
     }
@@ -377,28 +382,16 @@ public class PlatformSpecific implements IPlatformSpecific {
         }
     }
 
-    private String getDefaultDataDir() {
-        try {
-            File dir = new File(RuntimeUtils.getApplicationDir());
-            do {
-                File dataDir = new File(dir, "data");
-                if(dataDir.exists() && dataDir.isDirectory()) {
-                    return dataDir.getCanonicalPath();
-                }
-                dir = dir.getParentFile();
-            } while(null != dir);
-        } catch (IOException ex) {
-            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, "Cannot get default data dir", ex);
-        }
+    private File getDefaultDataDir() {
+        File dir = RuntimeUtils.getApplicationDir();
+        do {
+            File dataDir = new File(dir, "data");
+            if (dataDir.exists() && dataDir.isDirectory()) {
+                return dataDir;
+            }
+            dir = dir.getParentFile();
+        } while (null != dir);
         return null;
-    }
-
-    private String getModOrDefaultDataDir() {
-        IMod mod = findModByName(config.getProperty("newton_adventure.mod"));
-        if (null != mod) {
-            return mod.getPath();
-        }
-        return getDefaultDataDir();
     }
 
     @Override
@@ -423,21 +416,23 @@ public class PlatformSpecific implements IPlatformSpecific {
     public void loadModIfNeeded(String modName) throws RestartGameException {
         IMod mod = findModByName(modName);
         IMod currentMod = getCurrentMod();
-        String modPath = null != mod ? mod.getPath() : getDefaultDataDir();
-        String currentModPath = null != currentMod ? currentMod.getPath() : getDefaultDataDir();
-        if (!(new File(modPath)).equals(new File(currentModPath))) {
-            data.setDataDir(modPath);
+        File modDir = null != mod ? new File(mod.getPath()) : getDefaultDataDir();
+        File currentModDir = null != currentMod ? new File(currentMod.getPath()) : getDefaultDataDir();
+        if (!modDir.equals(currentModDir)) {
+            List<File> dataDirs = new ArrayList<>();
+            dataDirs.add(modDir);
+            dataDirs.add(getDefaultDataDir());
+            data.setDataDirs(dataDirs);
             throw new RestartGameException();
         }
     }
 
     @Override
     public IMod getCurrentMod() {
-        return findModByPath(data.getDataDir());
+        return findModByPath(data.getDataDirs().get(0));
     }
 
-    private IMod findModByPath(String pathStr) {
-        File path = new File(pathStr);
+    private IMod findModByPath(File path) {
         List<IMod> mods = listMods();
         for (IMod mod : mods) {
             if (path.equals(new File(mod.getPath()))) {
@@ -448,7 +443,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     private List<IMod> listModsInDirs(File... dirs) {
-        List<IMod> mods = new ArrayList<IMod>();
+        List<IMod> mods = new ArrayList<>();
         for (File dir : dirs) {
             if (dir.exists()) {
                 for (File f : dir.listFiles()) {

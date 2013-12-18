@@ -48,20 +48,16 @@ import java.util.logging.Logger;
  */
 public class RuntimeUtils {
 
-    public static String getApplicationDir() throws IOException {
+    public static File getApplicationDir() {
         try {
-            return new File(RuntimeUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            return new File(RuntimeUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
         } catch (URISyntaxException uriEx) {
             Logger.getLogger(RuntimeUtils.class.getName()).log(Level.WARNING,
                     "Cannot find application directory, try current", uriEx);
-            return new File(".").getCanonicalPath();
+            return new File(".");
         }
     }
-
-    public static String getApplicationParentDir() throws IOException {
-        return (new File(getApplicationDir())).getParent();
-    }
-
+    
     public static Properties loadPropertiesFromFile(File f) {
         try {
             FileInputStream fs = new FileInputStream(f);

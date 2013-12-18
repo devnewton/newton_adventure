@@ -31,19 +31,20 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 
@@ -54,31 +55,34 @@ import tiled.io.TMXMapReader;
  *
  * @author devnewton
  */
-class FileGameData extends AbstractGameData {
+class FileGameData implements IGameData {
+    private List<File> dataDirs;
 
-    @Override
-    public void setDataDir(String dataDir) {
-        super.setDataDir(addSeparator(dataDir));
+    public void setDataDirs(List<File> dataDirs) {
+        ListIterator<File> it = dataDirs.listIterator();
+        File previousDir = null;
+        while(it.hasNext()) {
+            File currentDir = it.next();
+            if(currentDir.equals(previousDir)) {
+                it.remove();
+            }
+        }
+        this.dataDirs = dataDirs;
     }
 
-    private static String addSeparator(String dataDir) {
-        try {
-            File f = new File(dataDir);
-            return f.getCanonicalPath() + File.separator;
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+    public List<File> getDataDirs() {
+        return dataDirs;
     }
 
     @Override
     public List<String> listQuests() {
-        List<String> quests = listSubDirectories(dataDir + "quests", getConfiguredQuests());
+        List<String> quests = listSubDirectories("quests", getConfiguredQuests());
         return quests;
     }
 
     @Override
     public List<String> listQuestLevels(String questName) {
-        return listSubDirectories(dataDir + "quests/" + questName + "/levels", getConfiguredLevels(questName));
+        return listSubDirectories("quests/" + questName + "/levels", getConfiguredLevels(questName));
     }
 
     @Override
@@ -91,31 +95,34 @@ class FileGameData extends AbstractGameData {
         }
     }
 
-    private static List<String> listSubDirectories(String path, List<String> order) {
-        File dir = new File(path);
-        ArrayList<String> subdirs = new ArrayList<String>();
-        if (dir.exists()) {
-            for (File f : dir.listFiles()) {
-                if (f.isDirectory()) {
-                    subdirs.add(f.getName());
+    private List<String> listSubDirectories(String path, List<String> order) {
+        TreeSet<String> subdirs = new TreeSet<>();
+        for(File dataDir: dataDirs) {
+            File dir = new File(dataDir, path);
+            if (dir.exists()) {
+                for (File f : dir.listFiles()) {
+                    if (f.isDirectory()) {
+                        subdirs.add(f.getName());
+                    }
                 }
             }
         }
         subdirs.retainAll(order);
-        reorderList(subdirs, order);
-        return subdirs;
+        ArrayList<String> result = new ArrayList<>(subdirs);
+        reorderList(result, order);
+        return result;
     }
 
     @Override
     public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
-        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(dataDir + "quests/" + questName + "/quest.properties");
+        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/" + questName + "/quest.properties"));
         return RuntimeUtils.getPropertyAsList(questsProperties,("locked.by"));
     }
 
     @Override
     public Map openLevelTmx(String questName, String levelName) throws Exception {
         TMXMapReader mapReader = new TMXMapReader();
-        File file = new File(dataDir + "quests/" + questName + "/levels/" + levelName + "/" + levelName + ".tmx"); 
+        File file = getVirtualFile("quests/" + questName + "/levels/" + levelName + "/" + levelName + ".tmx"); 
         return mapReader.readMap(file.getCanonicalPath());
     }
 
@@ -137,12 +144,12 @@ class FileGameData extends AbstractGameData {
     }
 
     private List<String> getConfiguredQuests() {
-        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(dataDir + "quests/quests.properties");
+        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/quests.properties"));
         return RuntimeUtils.getPropertyAsList(questsProperties,("quests"));
     }
 
     private List<String> getConfiguredLevels(String questName) {
-        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(dataDir + "quests/" + questName + "/quest.properties");
+        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/" + questName + "/quest.properties"));
         return RuntimeUtils.getPropertyAsList(questsProperties,("levels"));
     }
 
@@ -151,5 +158,52 @@ class FileGameData extends AbstractGameData {
         try(InputStream is = openFile(getFile(file))) {
             return ImageIO.read(is);
         }
+    }
+
+    @Override
+    public String getFile(String name) {
+        return getVirtualFile(name).getAbsolutePath();
+    }
+
+    @Override
+    public String getQuestFile(String questName, String file) {
+        return getVirtualFile("quests/" + questName + "/" + file).getAbsolutePath();
+    }
+
+    @Override
+    public String getLevelFilePath(String questName, String levelName, String filename) {
+        File file = getVirtualFile("quests/" + questName + "/levels/" + levelName + "/" + filename);
+        if (file.exists()) {
+            return file.getAbsolutePath();
+        }
+        file = getVirtualFile("quests/" + questName + "/" + filename);
+        if (file.exists()) {
+            return file.getAbsolutePath();
+        }
+        return getVirtualFile("default_level_data/" + filename).getAbsolutePath();
+    }
+
+    @Override
+    public boolean fileExists(String path) {
+        try {
+            InputStream s = openFile(path);
+            if (s != null) {
+                s.close();
+                return true;
+            }
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+        return false;
+    }
+    
+    private File getVirtualFile(String path) {
+        for(File dir : dataDirs) {
+            File f = new File(dir, path);
+            if(f.exists()) {
+                return f;
+            }            
+        }
+        return new File(path);
     }
 }

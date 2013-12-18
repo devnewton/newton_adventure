@@ -42,10 +42,8 @@
         <pack name="pack1" required="yes">
             <description>pack1</description>
             <singlefile src="../../../../licenses/data.txt" target="$INSTALL_PATH/deluxe/licenses.txt" override="true"/>
-            <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/deluxe" override="true"/>
             <fileset dir="../../deluxe" targetdir="$INSTALL_PATH/deluxe" override="true"/>
             <singlefile src="../../../../licenses/data.txt" target="$INSTALL_PATH/retro/licenses.txt" override="true"/>
-            <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/retro" override="true" excludes="quests/**" />
             <fileset dir="../../retro" targetdir="$INSTALL_PATH/retro" override="true"/>
         </pack>
     </packs> 

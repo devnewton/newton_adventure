@@ -41,7 +41,6 @@
         <pack name="Core" required="yes">
             <description>Core installation files</description>
 	    <singlefile src="../../../../licenses/data.txt" target="$INSTALL_PATH/licenses.txt" override="true"/>
-	    <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH" override="true"/>
 	    <fileset dir="../../data" targetdir="$INSTALL_PATH" override="true"/>
         </pack>
     </packs> 

@@ -56,8 +56,7 @@ public class Main {
         }
 
         try {
-            File nativeDir = new File(RuntimeUtils.getApplicationDir() + File.separator
-                    + "natives");
+            File nativeDir = new File(RuntimeUtils.getApplicationDir(),"natives");
             if (nativeDir.exists()) {
                 String nativePath = nativeDir.getCanonicalPath();
                 System.setProperty("org.lwjgl.librarypath", nativePath);

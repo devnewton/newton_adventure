@@ -23,13 +23,7 @@ public interface IGameData {
 
     boolean fileExists(String minimapPath);
 
-    InputStream openLevelNal(String questName, String levelName) throws Exception;
-
     List<String> listQuestsToCompleteToUnlockQuest(String questName);
-
-    void setDataDir(String dataDir);
-
-    String getDataDir();
 
     BufferedImage openImage(String file) throws IOException;
 }
