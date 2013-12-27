@@ -96,19 +96,16 @@ public class ScoreServer {
     public void sendScore(String level, int score) {
         if (scoreShareEnabled) {
             try {
-                logger.log(Level.INFO, "Send score to " + serverUrl);
+                logger.log(Level.INFO, "Send score to {0}", serverUrl);
                 String hurle = serverUrl + "/score/";
                 URL url = new URL(hurle);
                 URLConnection conn = url.openConnection();
                 conn.setDoOutput(true);
-                OutputStreamWriter writer = new OutputStreamWriter(
-                        conn.getOutputStream());
-                try {
+                try (OutputStreamWriter writer = new OutputStreamWriter(
+                        conn.getOutputStream())) {
                     String parameters = encodeScore(level, score);
                     writer.write(parameters);
                     writer.flush();
-                } finally {
-                    writer.close();
                 }
                 String line;
                 BufferedReader reader = new BufferedReader(new InputStreamReader(
