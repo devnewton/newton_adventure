@@ -47,7 +47,6 @@ import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.ScoreSequence;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
-import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
@@ -122,13 +121,13 @@ public strictfp class GameView implements IGameView {
 
     private TextureCache textureCache;
     private GameViewQuality quality = GameViewQuality.DEFAULT;
-    private final IGameData data;
+    private final FileGameData data;
     private boolean rotateViewWithGravity = true;
     private TrueTypeFont font;
     private boolean mustDrawFPS = false;
     private final PlatformSpecific platformSpecific;
 
-    public GameView(IGameData data, Properties config, PlatformSpecific platformSpecific) {
+    GameView(FileGameData data, Properties config, PlatformSpecific platformSpecific) {
         this.data = data;
         this.platformSpecific = platformSpecific;
         initDisplay(config);

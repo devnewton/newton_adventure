@@ -69,6 +69,7 @@ class FileGameData implements IGameData {
             if (currentDir.equals(previousDir)) {
                 it.remove();
             }
+            previousDir = currentDir;
         }
         this.dataDirs = dataDirs;
     }
@@ -187,7 +188,6 @@ class FileGameData implements IGameData {
         return RuntimeUtils.getPropertyAsList(questsProperties, ("levels"));
     }
 
-    @Override
     public BufferedImage openImage(String file) throws IOException {
         try (InputStream is = openFile(getFile(file))) {
             return ImageIO.read(is);

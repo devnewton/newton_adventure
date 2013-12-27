@@ -1,7 +1,6 @@
 package im.bci.newtonadv.platform.interfaces;
 
 import im.bci.tmxloader.TmxMap;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -22,9 +21,7 @@ public interface IGameData {
 
     InputStream openFile(String path) throws IOException;
 
-    boolean fileExists(String minimapPath);
+    boolean fileExists(String path);
 
     List<String> listQuestsToCompleteToUnlockQuest(String questName);
-
-    BufferedImage openImage(String file) throws IOException;
 }

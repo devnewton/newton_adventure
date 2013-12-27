@@ -32,8 +32,6 @@
 
 package im.bci.newtonadv.platform.interfaces;
 
-import im.bci.tmxloader.TmxTileInstance;
-
 /**
  *
  * @author devnewton

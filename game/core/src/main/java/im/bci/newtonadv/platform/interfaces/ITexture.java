@@ -42,8 +42,8 @@ public interface ITexture {
 
     int getWidth();
 
-	int getId();
+    int getId();
 	
-	boolean hasAlpha();
+    boolean hasAlpha();
 
 }
