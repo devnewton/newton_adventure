@@ -32,6 +32,10 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.tmxloader.TmxLoader;
+import im.bci.tmxloader.TmxMap;
+import im.bci.tmxloader.TmxTileset;
+import im.bci.tmxloader.TmxTile;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,26 +48,25 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
-
-import tiled.core.Map;
-import tiled.io.TMXMapReader;
 
 /**
  *
  * @author devnewton
  */
 class FileGameData implements IGameData {
+
     private List<File> dataDirs;
 
     public void setDataDirs(List<File> dataDirs) {
         ListIterator<File> it = dataDirs.listIterator();
         File previousDir = null;
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             File currentDir = it.next();
-            if(currentDir.equals(previousDir)) {
+            if (currentDir.equals(previousDir)) {
                 it.remove();
             }
         }
@@ -97,7 +100,7 @@ class FileGameData implements IGameData {
 
     private List<String> listSubDirectories(String path, List<String> order) {
         TreeSet<String> subdirs = new TreeSet<>();
-        for(File dataDir: dataDirs) {
+        for (File dataDir : dataDirs) {
             File dir = new File(dataDir, path);
             if (dir.exists()) {
                 for (File f : dir.listFiles()) {
@@ -116,14 +119,45 @@ class FileGameData implements IGameData {
     @Override
     public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
         Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/" + questName + "/quest.properties"));
-        return RuntimeUtils.getPropertyAsList(questsProperties,("locked.by"));
+        return RuntimeUtils.getPropertyAsList(questsProperties, ("locked.by"));
     }
 
     @Override
-    public Map openLevelTmx(String questName, String levelName) throws Exception {
-        TMXMapReader mapReader = new TMXMapReader();
-        File file = getVirtualFile("quests/" + questName + "/levels/" + levelName + "/" + levelName + ".tmx"); 
-        return mapReader.readMap(file.getCanonicalPath());
+    public TmxMap openLevelTmx(String questName, String levelName) throws Exception {
+        File file = getVirtualFile("quests/" + questName + "/levels/" + levelName + "/" + levelName + ".tmx");
+        final File mapParentDir = file.getParentFile().getCanonicalFile();
+        TmxLoader loader = new TmxLoader() {
+            @Override
+            protected String openExternalTileset(String source) {
+                return loadText(new File(mapParentDir, source));
+            }
+        };
+        TmxMap map = loader.load(loadText(file));
+        for (TmxTileset tileset : map.getTilesets()) {
+            File tilesetParentDir;
+            if (null != tileset.getSource()) {
+                tilesetParentDir = new File(mapParentDir, tileset.getSource()).getParentFile().getCanonicalFile();
+            } else {
+                tilesetParentDir = mapParentDir;
+            }
+            if (null != tileset.getImage()) {
+                tileset.getImage().setSource(new File(tilesetParentDir, tileset.getImage().getSource()).getCanonicalPath());
+            }
+            for (TmxTile tile : tileset.getTiles()) {
+                tile.getFrame().getImage().setSource(new File(tilesetParentDir, tile.getFrame().getImage().getSource()).getCanonicalPath());
+            }
+        }
+        return map;
+    }
+
+    public String loadText(File f) {
+        try (InputStream is = new FileInputStream(f); Scanner s = new Scanner(is, "UTF-8").useDelimiter("\\Z")) {
+            return s.next();
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException("Cannot find text file: " + f, ex);
+        } catch (IOException ex) {
+            throw new RuntimeException("Cannot load text file: " + f, ex);
+        }
     }
 
     private static void reorderList(List<String> list, final List<String> order) {
@@ -132,9 +166,9 @@ class FileGameData implements IGameData {
             public int compare(String o1, String o2) {
                 int i1 = order.indexOf(o1);
                 int i2 = order.indexOf(o2);
-                if(i1 > i2) {
+                if (i1 > i2) {
                     return 1;
-                } else if(i1 < i2) {
+                } else if (i1 < i2) {
                     return -1;
                 } else {
                     return 0;
@@ -145,17 +179,17 @@ class FileGameData implements IGameData {
 
     private List<String> getConfiguredQuests() {
         Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/quests.properties"));
-        return RuntimeUtils.getPropertyAsList(questsProperties,("quests"));
+        return RuntimeUtils.getPropertyAsList(questsProperties, ("quests"));
     }
 
     private List<String> getConfiguredLevels(String questName) {
         Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/" + questName + "/quest.properties"));
-        return RuntimeUtils.getPropertyAsList(questsProperties,("levels"));
+        return RuntimeUtils.getPropertyAsList(questsProperties, ("levels"));
     }
 
     @Override
-    public BufferedImage openImage(String file) throws IOException{
-        try(InputStream is = openFile(getFile(file))) {
+    public BufferedImage openImage(String file) throws IOException {
+        try (InputStream is = openFile(getFile(file))) {
             return ImageIO.read(is);
         }
     }
@@ -196,13 +230,13 @@ class FileGameData implements IGameData {
         }
         return false;
     }
-    
+
     private File getVirtualFile(String path) {
-        for(File dir : dataDirs) {
+        for (File dir : dataDirs) {
             File f = new File(dir, path);
-            if(f.exists()) {
+            if (f.exists()) {
                 return f;
-            }            
+            }
         }
         return new File(path);
     }

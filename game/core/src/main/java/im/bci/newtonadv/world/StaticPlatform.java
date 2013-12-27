@@ -45,6 +45,7 @@ public strictfp class StaticPlatform extends StaticBody {
     private int zOrder;
     int vertexBufferIndex;
     StaticPlatformDrawable drawable;
+    private float u1 = 0, v1 = 0, u2 = 1, v2 = 1;
 
     StaticPlatform(float w, float h) {
         super(new Box(w, h));
@@ -67,4 +68,37 @@ public strictfp class StaticPlatform extends StaticBody {
     public void setTexture(ITexture texture) {
         this.texture = texture;
     }
+
+    public float getU1() {
+        return u1;
+    }
+
+    public void setU1(float u1) {
+        this.u1 = u1;
+    }
+
+    public float getV1() {
+        return v1;
+    }
+
+    public void setV1(float v1) {
+        this.v1 = v1;
+    }
+
+    public float getU2() {
+        return u2;
+    }
+
+    public void setU2(float u2) {
+        this.u2 = u2;
+    }
+
+    public float getV2() {
+        return v2;
+    }
+
+    public void setV2(float v2) {
+        this.v2 = v2;
+    }
+    
 }

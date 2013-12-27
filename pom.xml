@@ -14,6 +14,7 @@
         <lwjgl.version>2.9.0</lwjgl.version>
     </properties>
     <modules>
+        <module>libtiled-jpurexml</module>
         <module>game/core</module>
         <module>game/lwjgl</module>
         <module>editor</module>
@@ -51,6 +52,11 @@
                 <groupId>org.lwjgl.lwjgl</groupId>
                 <artifactId>lwjgl_util</artifactId>
                 <version>${lwjgl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>libtiled-jpurexml</artifactId>
+                <version>0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.jcraft</groupId>

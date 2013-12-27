@@ -32,8 +32,7 @@
 
 package im.bci.newtonadv.platform.interfaces;
 
-import tiled.core.Map;
-import tiled.core.Tile;
+import im.bci.tmxloader.TmxTileInstance;
 
 /**
  *
@@ -44,8 +43,6 @@ public interface ITextureCache {
     void clearAll();
 
     void clearUseless();
-
-    ITexture getTexture(String questName, String levelName, Map map, Tile tile);
 
     ITexture getTexture(String name);
     

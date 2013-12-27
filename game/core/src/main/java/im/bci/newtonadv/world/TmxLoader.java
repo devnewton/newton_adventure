@@ -36,6 +36,11 @@ import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.util.MultidimensionnalIterator;
 import im.bci.newtonadv.util.NewtonColor;
+import im.bci.tmxloader.TmxFrame;
+import im.bci.tmxloader.TmxImage;
+import im.bci.tmxloader.TmxLayer;
+import im.bci.tmxloader.TmxMap;
+import im.bci.tmxloader.TmxTileInstance;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -54,8 +59,6 @@ import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Circle;
 import net.phys2d.raw.shapes.ConvexPolygon;
 import net.phys2d.raw.shapes.Line;
-import tiled.core.Map;
-import tiled.core.Tile;
 
 /**
  *
@@ -94,14 +97,14 @@ public class TmxLoader {
     private final Game game;
     private final String questName;
     private final String levelName;
-    private Map map;
-    private Future<Map> futureMap;
+    private TmxMap map;
+    private Future<TmxMap> futureMap;
     private Hero hero;
     private MultidimensionnalIterator iterator;
     static final float defaultPickableObjectSize = 2.0f * World.distanceUnit;
     private static final Circle defaultPickableObjectShape = new Circle(
             defaultPickableObjectSize / 2.0f);
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public TmxLoader(Game game, String questName, String levelName) throws Exception {
         this.game = game;
@@ -110,9 +113,9 @@ public class TmxLoader {
     }
 
     public void preloading() {
-        futureMap = executor.submit(new Callable<Map>() {
+        futureMap = executor.submit(new Callable<TmxMap>() {
             @Override
-            public Map call() throws Exception {
+            public TmxMap call() throws Exception {
                 return game.getData().openLevelTmx(questName,
                         levelName);
             }
@@ -123,7 +126,7 @@ public class TmxLoader {
         this.world = world;
         this.map = futureMap.get();
         world.setAppleIcon(getAppleIconTexture());
-        iterator = new MultidimensionnalIterator(new int[]{map.getLayerCount(), map.getWidth(), map.getHeight()});
+        iterator = new MultidimensionnalIterator(new int[]{map.getLayers().size(), map.getWidth(), map.getHeight()});
     }
 
     public boolean hasMoreToLoad() {
@@ -133,17 +136,14 @@ public class TmxLoader {
     public void loadSome() throws IOException {
         int[] indexes = iterator.next();
         final int layerIndex = indexes[0];
-        tiled.core.MapLayer layer = map.getLayer(layerIndex);
-        if (layer instanceof tiled.core.TileLayer) {
-            tiled.core.TileLayer tileLayer = (tiled.core.TileLayer) layer;
-            int zorderBase = layerIndex * 1000000;
-            int x = indexes[1], y = indexes[2];
-            Tile tile = tileLayer.getTileAt(x, y);
-            if (null != tile) {
-                initFromTile(x - map.getWidth() / 2.0f, -y
-                        + map.getHeight() / 2.0f, map, tile,
-                        zorderBase);
-            }
+        TmxLayer tileLayer = map.getLayers().get(layerIndex);
+        int zorderBase = layerIndex * 1000000;
+        int x = indexes[1], y = indexes[2];
+        TmxTileInstance tile = tileLayer.getTileAt(x, y);
+        if (null != tile) {
+            initFromTile(x - map.getWidth() / 2.0f, -y
+                    + map.getHeight() / 2.0f, map, tile,
+                    zorderBase);
         }
     }
 
@@ -163,24 +163,24 @@ public class TmxLoader {
         world.staticPlatformDrawer.postConstruct(world.getView());
     }
 
-    private void initFromTile(float x, float y, tiled.core.Map map,
-            tiled.core.Tile tile, int zOrderBase) throws IOException {
+    private void initFromTile(float x, float y, TmxMap map,
+            TmxTileInstance tile, int zOrderBase) throws IOException {
         ITextureCache textureCache = game.getView().getTextureCache();
-        String c = tile.getProperties().getProperty("newton_adventure.type",
+        String c = tile.getProperty("newton_adventure.type",
                 "unknown");
 
         final float baseSize = 2.0f * World.distanceUnit;
         final float tileWidthScale = (float) tile.getWidth()
-                / (float) map.getTileWidth();
+                / (float) map.getTilewidth();
         final float tileHeightScale = (float) tile.getHeight()
-                / (float) map.getTileHeight();
+                / (float) map.getTileheight();
         final float tileWidth = baseSize * tileWidthScale;
         final float tileHeight = baseSize * tileHeightScale;
         final float tileX = x * baseSize + tileWidth / 2.0f;
         final float tileY = y * baseSize + tileHeight / 2.0f;
 
         if (c.equals("platform")) {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             if (null != gfx) {
                 AnimationCollection animation = game.getView().loadFromAnimation(
                         game.getData().getLevelFilePath(questName, levelName, gfx));
@@ -192,14 +192,14 @@ public class TmxLoader {
                 world.add(platform);
             } else {
                 StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
-                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, platform, textureCache);
                 platform.setPosition(tileX, tileY);
                 platform.setZOrder(getTileZOrder(tile, zOrderBase));
                 platform.setFriction(getTileFriction(tile));
                 world.addStaticPlatform(platform);
             }
         } else if (c.equals("slash_platform")) {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             if (null != gfx) {
                 AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
                 platform.setTexture(getAnimationForTile(map, tile, textureCache));
@@ -210,7 +210,7 @@ public class TmxLoader {
                 world.add(platform);
             } else {
                 StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
-                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, platform, textureCache);
                 platform.setShape(new Line(-tileWidth / 2.0f, -tileHeight / 2.0f, tileWidth / 2.0f, tileHeight / 2.0f));
                 platform.setPosition(tileX, tileY);
                 platform.setZOrder(getTileZOrder(tile, zOrderBase));
@@ -218,7 +218,7 @@ public class TmxLoader {
                 world.addStaticPlatform(platform);
             }
         } else if (c.equals("antislash_platform")) {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             if (null != gfx) {
                 AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
                 platform.setTexture(getAnimationForTile(map, tile, textureCache));
@@ -229,7 +229,7 @@ public class TmxLoader {
                 world.add(platform);
             } else {
                 StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
-                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, platform, textureCache);
                 platform.setShape(new Line(-tileWidth / 2.0f, tileHeight / 2.0f, tileWidth / 2.0f, -tileHeight / 2.0f));
                 platform.setPosition(tileX, tileY);
                 platform.setZOrder(getTileZOrder(tile, zOrderBase));
@@ -237,7 +237,7 @@ public class TmxLoader {
                 world.addStaticPlatform(platform);
             }
         } else if (c.equals("up_right_half_platform")) {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             if (null != gfx) {
                 AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
                 platform.setTexture(getAnimationForTile(map, tile, textureCache));
@@ -250,7 +250,7 @@ public class TmxLoader {
                 world.add(platform);
             } else {
                 StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
-                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, platform, textureCache);
                 platform.setShape(new ConvexPolygon(new ROVector2f[]{new Vector2f(-tileWidth / 2.0f, tileHeight / 2.0f),
                     new Vector2f(tileWidth / 2.0f, -tileHeight / 2.0f),
                     new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f)}));
@@ -260,7 +260,7 @@ public class TmxLoader {
                 world.addStaticPlatform(platform);
             }
         } else if (c.equals("up_left_half_platform")) {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             if (null != gfx) {
                 AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
                 platform.setTexture(getAnimationForTile(map, tile, textureCache));
@@ -273,7 +273,7 @@ public class TmxLoader {
                 world.add(platform);
             } else {
                 StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
-                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, platform, textureCache);
                 platform.setShape(new ConvexPolygon(new ROVector2f[]{new Vector2f(-tileWidth / 2.0f, tileHeight / 2.0f),
                     new Vector2f(-tileWidth / 2.0f, -tileHeight / 2.0f),
                     new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f)}));
@@ -283,7 +283,7 @@ public class TmxLoader {
                 world.addStaticPlatform(platform);
             }
         } else if (c.equals("down_left_half_platform")) {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             if (null != gfx) {
                 AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
                 platform.setTexture(getAnimationForTile(map, tile, textureCache));
@@ -294,7 +294,7 @@ public class TmxLoader {
                 world.add(platform);
             } else {
                 StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
-                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, platform, textureCache);
                 platform.setShape(new ConvexPolygon(new ROVector2f[]{new Vector2f(-tileWidth / 2.0f, tileHeight / 2.0f), new Vector2f(-tileWidth / 2.0f, -tileHeight / 2.0f), new Vector2f(tileWidth / 2.0f, -tileHeight / 2.0f)}));
                 platform.setPosition(tileX, tileY);
                 platform.setZOrder(getTileZOrder(tile, zOrderBase));
@@ -302,7 +302,7 @@ public class TmxLoader {
                 world.addStaticPlatform(platform);
             }
         } else if (c.equals("down_right_half_platform")) {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             if (null != gfx) {
                 AnimatedPlatform platform = new AnimatedPlatform(world, tileWidth, tileHeight);
                 platform.setTexture(getAnimationForTile(map, tile, textureCache));
@@ -315,7 +315,7 @@ public class TmxLoader {
                 world.add(platform);
             } else {
                 StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
-                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, platform, textureCache);
                 platform.setShape(new ConvexPolygon(new ROVector2f[]{new Vector2f(-tileWidth / 2.0f, -tileHeight / 2.0f),
                     new Vector2f(tileWidth / 2.0f, -tileHeight / 2.0f),
                     new Vector2f(tileWidth / 2.0f, tileHeight / 2.0f)}));
@@ -331,10 +331,10 @@ public class TmxLoader {
                 hero.setZOrder(getTileZOrder(tile, zOrderBase));
                 hero.setAnimation(
                         game.getView().loadFromAnimation(
-                        getFileFromMap(map, "newton_adventure.hero")));
+                                getFileFromMap(map, "newton_adventure.hero")));
                 hero.setJumpSound(
                         game.getSoundCache().getSound(
-                        game.getData().getFile("jump.wav")));
+                                game.getData().getFile("jump.wav")));
                 hero.setPickupSound(game.getSoundCache().getSound(
                         game.getData().getFile("pickup.wav")));
                 hero.setHurtSound(game.getSoundCache().getSound(
@@ -393,7 +393,7 @@ public class TmxLoader {
             key.setPosition(tileX, tileY);
             key.setTexture(getKeyTexture());
             key.setZOrder(getTileZOrder(tile, zOrderBase));
-            key.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+            key.setColor(NewtonColor.valueOf(tile.getProperty(
                     "newton_adventure.color", "white")));
             world.addKey(key);
 
@@ -402,10 +402,7 @@ public class TmxLoader {
             door.setPosition(tileX, tileY);
             door.setTexture(getDoorTexture());
             door.setZOrder(getTileZOrder(tile, zOrderBase));
-            if (tile.getProperties().containsKey("newton_adventure.color")) {
-                door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                        "newton_adventure.color", "white")));
-            }
+            door.setColor(NewtonColor.valueOf(tile.getProperty("newton_adventure.color", "white")));
             world.add(door);
         } else if (c.equals("door_to_bonus_world")) {
             DoorToBonusWorld door = new DoorToBonusWorld(world, tileWidth,
@@ -413,7 +410,7 @@ public class TmxLoader {
             door.setPosition(tileX, tileY);
             door.setTexture(getDoorToBonusWorldTexture());
             door.setZOrder(getTileZOrder(tile, zOrderBase));
-            door.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+            door.setColor(NewtonColor.valueOf(tile.getProperty(
                     "newton_adventure.color", "white")));
             world.add(door);
         } else if (c.equals("cloud")) {
@@ -421,11 +418,11 @@ public class TmxLoader {
             cloud.setTexture(getAnimationForTile(map, tile, textureCache));
             cloud.setPosition(tileX, tileY);
             cloud.setZOrder(getTileZOrder(tile, zOrderBase));
-            cloud.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+            cloud.setColor(NewtonColor.valueOf(tile.getProperty(
                     "newton_adventure.color", "white")));
             world.add(cloud);
         } else if (c.startsWith("pikes_")) {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             PikesComponent.DangerousSide side = PikesComponent.DangerousSide.valueOf(c.replaceFirst("pikes_", "").toUpperCase());
             if (null != gfx) {
                 Pikes pikes = new Pikes(world, side, tileWidth, tileHeight);
@@ -435,7 +432,7 @@ public class TmxLoader {
                 world.add(pikes);
             } else {
                 StaticPikes pikes = new StaticPikes(world, side, tileWidth, tileHeight);
-                pikes.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, pikes, textureCache);
                 pikes.setPosition(tileX, tileY);
                 pikes.setZOrder(getTileZOrder(tile, zOrderBase));
                 world.addStaticPlatform(pikes);
@@ -555,25 +552,25 @@ public class TmxLoader {
             world.add(activator);
         } else if (c.equals("blocker1")) {
             Blocker activable = new Blocker(world, 1, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, getBlocker1Texture()));
+            activable.setTexture(getAnimationForTile(map, tile, getBlocker1Texture()));
             activable.setPosition(tileX, tileY);
             activable.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activable);
         } else if (c.equals("blocker2")) {
             Blocker activable = new Blocker(world, 2, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, getBlocker2Texture()));
+            activable.setTexture(getAnimationForTile(map, tile, getBlocker2Texture()));
             activable.setPosition(tileX, tileY);
             activable.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activable);
         } else if (c.equals("blocker3")) {
             Blocker activable = new Blocker(world, 3, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, getBlocker3Texture()));
+            activable.setTexture(getAnimationForTile(map, tile, getBlocker3Texture()));
             activable.setPosition(tileX, tileY);
             activable.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activable);
         } else if (c.equals("laser_blocker")) {
             LaserBlocker activable = new LaserBlocker(world, 1, tileWidth, tileHeight);
-            activable.setTexture(getAnimationForTile(map, tile, textureCache, getBlocker1Texture()));
+            activable.setTexture(getAnimationForTile(map, tile, getBlocker1Texture()));
             activable.setPosition(tileX, tileY);
             activable.setZOrder(getTileZOrder(tile, zOrderBase));
             world.add(activable);
@@ -598,10 +595,8 @@ public class TmxLoader {
                     getAnimationForTile(map, tile, textureCache),
                     getMovingPlatformPath(tile, x, y, baseSize),
                     tileWidth, tileHeight);
-            if (tile.getProperties().containsKey("newton_adventure.color")) {
-                platform.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
-                        "newton_adventure.color", "white")));
-            }
+            platform.setColor(NewtonColor.valueOf(tile.getProperty(
+                    "newton_adventure.color", "white")));
             platform.setPosition(tileX, tileY);
             platform.setFriction(getTileFriction(tile));
             platform.setZOrder(getTileZOrder(tile, zOrderBase));
@@ -611,15 +606,15 @@ public class TmxLoader {
             teleporter.setTexture(getAnimationForTile(map, tile, textureCache));
             teleporter.setPosition(tileX, tileY);
             teleporter.setZOrder(getTileZOrder(tile, zOrderBase, 1));
-            teleporter.setColor(tile.getProperties().getProperty(
-                    "newton_adventure.teleporter.color"));
+            teleporter.setColor(tile.getProperty(
+                    "newton_adventure.teleporter.color", "white"));
             world.add(teleporter);
         } else if (c.equals("colorizer")) {
             Colorizer colorizer = new Colorizer(world, tileWidth, tileHeight);
             colorizer.setTexture(getAnimationForTile(map, tile, textureCache));
             colorizer.setPosition(tileX, tileY);
             colorizer.setZOrder(getTileZOrder(tile, zOrderBase, 1));
-            colorizer.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+            colorizer.setColor(NewtonColor.valueOf(tile.getProperty(
                     "newton_adventure.color", "white")));
             world.add(colorizer);
         } else if (c.equals("colored_platform")) {
@@ -627,8 +622,8 @@ public class TmxLoader {
             colored.setTexture(getAnimationForTile(map, tile, textureCache));
             colored.setPosition(tileX, tileY);
             colored.setZOrder(getTileZOrder(tile, zOrderBase, 1));
-            NewtonColor color = NewtonColor.valueOf(tile.getProperties().getProperty(
-                    "newton_adventure.color"));
+            NewtonColor color = NewtonColor.valueOf(tile.getProperty(
+                    "newton_adventure.color", "white"));
             world.addColoredPlatform(color, colored);
 
         } else if (c.equals("keylock")) {
@@ -636,7 +631,7 @@ public class TmxLoader {
             keylock.setTexture(getAnimationForTile(map, tile, textureCache));
             keylock.setPosition(tileX, tileY);
             keylock.setZOrder(getTileZOrder(tile, zOrderBase));
-            keylock.setColor(NewtonColor.valueOf(tile.getProperties().getProperty(
+            keylock.setColor(NewtonColor.valueOf(tile.getProperty(
                     "newton_adventure.color", "white")));
             world.add(keylock);
         } else if (c.equals("help_sign")) {
@@ -686,7 +681,7 @@ public class TmxLoader {
             world.add(boss.getLeftHand());
             world.add(boss.getRightHand());
         } else {
-            String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+            String gfx = tile.getProperty("newton_adventure.gfx", null);
             if (null != gfx) {
                 AnimationCollection animation = game.getView().loadFromAnimation(
                         game.getData().getLevelFilePath(questName, levelName, gfx));
@@ -698,7 +693,7 @@ public class TmxLoader {
                 world.add(platform);
             } else {
                 StaticPlatform platform = new StaticPlatform(tileWidth, tileHeight);
-                platform.setTexture(textureCache.getTexture(questName, levelName, map, tile));
+                setTextureFromTile(tile, platform, textureCache);
                 platform.setPosition(tileX, tileY);
                 platform.setZOrder(getTileZOrder(tile, zOrderBase));
                 platform.setEnabled(false);
@@ -708,26 +703,42 @@ public class TmxLoader {
         }
     }
 
-    private AnimationCollection getAnimationForTile(tiled.core.Map map,
-            tiled.core.Tile tile, ITextureCache textureCache)
+    private void setTextureFromTile(TmxTileInstance tile, StaticPlatform platform, ITextureCache textureCache) {
+        final TmxFrame frame = tile.getFrame();
+        final TmxImage image = frame.getImage();
+        final float imageWidth = (float) image.getWidth();
+        final float imageHeight = (float) image.getHeight();
+        platform.setTexture(textureCache.getTexture(image.getSource()));
+        platform.setU1((float) frame.getX1() / imageWidth);
+        platform.setV1((float) frame.getY1() / imageHeight);
+        platform.setU2((float) frame.getX2() / imageWidth);
+        platform.setV2((float) frame.getY2() / imageHeight);
+    }
+
+    private AnimationCollection getAnimationForTile(TmxMap map,
+            TmxTileInstance tile, ITextureCache textureCache)
             throws FileNotFoundException, IOException {
         AnimationCollection animation;
-        String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+        String gfx = tile.getProperty("newton_adventure.gfx", null);
         if (null != gfx) {
             animation = game.getView().loadFromAnimation(
                     game.getData().getLevelFilePath(questName, levelName, gfx));
         } else {
-            animation = new AnimationCollection(textureCache.getTexture(
-                    questName, levelName, map, tile));
+
+            final TmxFrame frame = tile.getFrame();
+            final TmxImage image = frame.getImage();
+            final float imageWidth = (float) image.getWidth();
+            final float imageHeight = (float) image.getHeight();
+            animation = new AnimationCollection(textureCache.getTexture(image.getSource()), (float) frame.getX1() / imageWidth, (float) frame.getY1() / imageHeight, (float) frame.getX2() / imageWidth, (float) frame.getY2() / imageHeight);
         }
         return animation;
     }
 
-    private AnimationCollection getAnimationForTile(tiled.core.Map map,
-            tiled.core.Tile tile, ITextureCache textureCache, AnimationCollection defaultAnimation)
+    private AnimationCollection getAnimationForTile(TmxMap map,
+            TmxTileInstance tile, AnimationCollection defaultAnimation)
             throws FileNotFoundException, IOException {
         AnimationCollection animation;
-        String gfx = tile.getProperties().getProperty("newton_adventure.gfx");
+        String gfx = tile.getProperty("newton_adventure.gfx", null);
         if (null != gfx) {
             animation = game.getView().loadFromAnimation(
                     game.getData().getLevelFilePath(questName, levelName, gfx));
@@ -737,15 +748,14 @@ public class TmxLoader {
         return animation;
     }
 
-    private float getTileFriction(Tile tile) {
-        return Float.parseFloat(tile.getProperties().getProperty(
+    private float getTileFriction(TmxTileInstance tile) {
+        return Float.parseFloat(tile.getProperty(
                 "newton_adventure.friction", "10"));
     }
 
-    private int getTileZOrder(Tile tile, int zOrderBase, int defaultZ) {
+    private int getTileZOrder(TmxTileInstance tile, int zOrderBase, int defaultZ) {
         int z = zOrderBase;
-        String zprop = tile.getProperties().getProperty(
-                "newton_adventure.zorder");
+        String zprop = tile.getProperty("newton_adventure.zorder", null);
         if (null == zprop) {
             z += defaultZ;
         } else {
@@ -754,20 +764,20 @@ public class TmxLoader {
         return z;
     }
 
-    private int getTileZOrder(Tile tile, int zOrderBase) {
+    private int getTileZOrder(TmxTileInstance tile, int zOrderBase) {
         return getTileZOrder(tile, zOrderBase, 0);
     }
 
-    private Vector2f[] getMovingPlatformPath(Tile tile,
+    private Vector2f[] getMovingPlatformPath(TmxTileInstance tile,
             float x, float y, float baseSize) {
         Vector2f[] dest = new Vector2f[2];
-        float ax = Float.parseFloat(tile.getProperties().getProperty(
+        float ax = Float.parseFloat(tile.getProperty(
                 "newton_adventure.moving_platform.a.x", "-1"));
-        float ay = Float.parseFloat(tile.getProperties().getProperty(
+        float ay = Float.parseFloat(tile.getProperty(
                 "newton_adventure.moving_platform.a.y", "-1"));
-        float bx = Float.parseFloat(tile.getProperties().getProperty(
+        float bx = Float.parseFloat(tile.getProperty(
                 "newton_adventure.moving_platform.b.x", "1"));
-        float by = Float.parseFloat(tile.getProperties().getProperty(
+        float by = Float.parseFloat(tile.getProperty(
                 "newton_adventure.moving_platform.b.y", "1"));
 
         ax += x;
@@ -785,13 +795,13 @@ public class TmxLoader {
         return dest;
     }
 
-    private Vector2f getAcceleratorForce(Tile tile) {
-        float ax = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.accelerator.ax"));
-        float ay = Float.parseFloat(tile.getProperties().getProperty("newton_adventure.accelerator.ay"));
+    private Vector2f getAcceleratorForce(TmxTileInstance tile) {
+        float ax = Float.parseFloat(tile.getProperty("newton_adventure.accelerator.ax", "0.0"));
+        float ay = Float.parseFloat(tile.getProperty("newton_adventure.accelerator.ay", "0.0"));
         return new Vector2f(ax, ay);
     }
 
-    public final String getFileFromMap(tiled.core.Map map, String filePropertyName) {
+    public final String getFileFromMap(TmxMap map, String filePropertyName) {
         String filename = getFileFromMapIfAvailable(map, filePropertyName);
         if (filename != null) {
             return filename;
@@ -802,9 +812,9 @@ public class TmxLoader {
         }
     }
 
-    public final String getFileFromMapIfAvailable(tiled.core.Map map,
+    public final String getFileFromMapIfAvailable(TmxMap map,
             String filePropertyName) {
-        String filename = map.getProperties().getProperty(filePropertyName);
+        String filename = map.getProperty(filePropertyName, null);
         if (filename == null) {
             filename = defaultMapProperties.getProperty(filePropertyName);
             if (filename == null) {
@@ -857,8 +867,8 @@ public class TmxLoader {
                 "true");
     }
 
-    private String getMapProperty(tiled.core.Map map, String prop) {
-        String value = map.getProperties().getProperty(prop);
+    private String getMapProperty(TmxMap map, String prop) {
+        String value = map.getProperty(prop, null);
         if (null == value) {
             return defaultMapProperties.getProperty(prop);
         }
@@ -917,7 +927,7 @@ public class TmxLoader {
         if (null == doorToBonusWorldTexture) {
             doorToBonusWorldTexture = game.getView().loadFromAnimation(
                     getFileFromMap(map,
-                    "newton_adventure.door_to_bonus_world"));
+                            "newton_adventure.door_to_bonus_world"));
         }
         return doorToBonusWorldTexture;
     }
@@ -991,7 +1001,7 @@ public class TmxLoader {
         if (null == memoryActivatorHiddenTexture) {
             memoryActivatorHiddenTexture = game.getView().loadFromAnimation(
                     getFileFromMap(map,
-                    "newton_adventure.memory_activator.hidden"));
+                            "newton_adventure.memory_activator.hidden"));
         }
         return memoryActivatorHiddenTexture;
     }
@@ -1082,8 +1092,8 @@ public class TmxLoader {
         return futureMap.isDone();
     }
 
-    private Long getMapDeadClock(Map map) {
-        String deadclock = map.getProperties().getProperty("newton_adventure.deadclock");
+    private Long getMapDeadClock(TmxMap map) {
+        String deadclock = map.getProperty("newton_adventure.deadclock", null);
         if (null != deadclock) {
             return Long.valueOf(deadclock) * 1000000000L;
         } else {

@@ -38,6 +38,7 @@ import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -66,7 +67,6 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GLContext;
@@ -126,29 +126,9 @@ public class TextureCache implements ITextureCache {
         return texture;
     }
     
-    @Override
-    public ITexture getTexture(String questName, String levelName,
-            tiled.core.Map map, tiled.core.Tile tile) {
-        String name = questName + "#" + levelName + "#tiled_" + tile.getGid();
-        TextureWeakReference textureRef = textures.get(name);
-        if (textureRef != null) {
-            ITexture texture = textureRef.get();
-            if (texture != null) {
-                return texture;
-            } else {
-                textures.remove(name);
-            }
-        }
-        BufferedImage loaded = convertToBufferedImage(tile.getImage());
-        Texture texture = convertImageToTexture(loaded, false);
-        putTexture(name, texture);
-        
-        return texture;
-    }
-    
     public Map<String, ITexture> getTextures(String nanimName, Nanim nanim) {
         String baseName = nanimName + "#nanim_";
-        Map<String, ITexture> nanimTextures = new HashMap<String, ITexture>();
+        Map<String, ITexture> nanimTextures = new HashMap<>();
         for (im.bci.nanim.NanimParser.Image nimage : nanim.getImagesList()) {
             String name = baseName + nimage.getName();
             TextureWeakReference textureRef = textures.get(name);

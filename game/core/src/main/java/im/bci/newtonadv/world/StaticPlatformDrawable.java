@@ -96,14 +96,14 @@ public class StaticPlatformDrawable implements Drawable {
             vertices.put(point.x);
             vertices.put(point.y);
         }
-        texCoords.put(0);
-        texCoords.put(1);
-        texCoords.put(1);
-        texCoords.put(1);
-        texCoords.put(1);
-        texCoords.put(0);
-        texCoords.put(0);
-        texCoords.put(0);
+        texCoords.put(platform.getU1());
+        texCoords.put(platform.getV2());
+        texCoords.put(platform.getU2());
+        texCoords.put(platform.getV2());
+        texCoords.put(platform.getU2());
+        texCoords.put(platform.getV1());
+        texCoords.put(platform.getU1());
+        texCoords.put(platform.getV1());
     }
 
 	@Override

@@ -18,6 +18,7 @@
     </locale>
     
     <variables>
+        <variable name="TargetPanel.dir.windows" value="${ENV[APPDATA]}\newton_adventure\mods\duchatelet"/>
 	<variable name="TargetPanel.dir" value="$USER_HOME/.config/newton_adventure/mods/duchatelet"/>
 	<variable name="ShowCreateDirectoryMessage" value="false"/>
     </variables>

@@ -1,5 +1,6 @@
 package im.bci.newtonadv.platform.interfaces;
 
+import im.bci.tmxloader.TmxMap;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +16,7 @@ public interface IGameData {
 
     List<String> listQuestLevels(String questName);
 
-    tiled.core.Map openLevelTmx(String questName, String levelName) throws Exception;
+    TmxMap openLevelTmx(String questName, String levelName) throws Exception;
 
     String getLevelFilePath(String questName, String levelName, String filename);
 

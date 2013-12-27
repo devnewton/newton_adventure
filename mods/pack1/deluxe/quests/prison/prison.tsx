@@ -25,7 +25,7 @@
   </properties>
  </tile>
  <tile id="4">
-  <image source="prison_4.png"/>
+  <image source="prison_4.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door"/>
   </properties>
@@ -139,7 +139,7 @@
   </properties>
  </tile>
  <tile id="23">
-  <image source="prison_23.png"/>
+  <image source="prison_23.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door_to_bonus_world"/>
   </properties>
