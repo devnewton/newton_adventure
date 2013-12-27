@@ -57,10 +57,6 @@ SUCH DAMAGE. */ -->
     </build>
     <dependencies>
         <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-        </dependency>
-        <dependency>
             <groupId>im.bci</groupId>
             <artifactId>libtiled-jpurexml</artifactId>
         </dependency>

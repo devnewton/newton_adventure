@@ -1,0 +1,64 @@
+{
+  "animations": [
+    {
+      "name": "boss_body",
+      "frames": [
+        {
+          "duration": 30,
+          "image": "boss.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 0.484375,
+          "v2": 0.49804688
+        }
+      ]
+    },
+    {
+      "name": "angry_boss_body",
+      "frames": [
+        {
+          "duration": 30,
+          "image": "boss.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 0.484375,
+          "v2": 0.49804688
+        },
+        {
+          "duration": 30,
+          "image": "boss.png",
+          "u1": 0.0,
+          "v1": 0.49804688,
+          "u2": 0.484375,
+          "v2": 0.99609375
+        }
+      ]
+    },
+    {
+      "name": "boss_hand_right",
+      "frames": [
+        {
+          "duration": 30,
+          "image": "boss.png",
+          "u1": 0.484375,
+          "v1": 0.0,
+          "u2": 0.609375,
+          "v2": 0.125
+        }
+      ]
+    },
+    {
+      "name": "boss_hand_left",
+      "frames": [
+        {
+          "duration": 0,
+          "image": "boss.png",
+          "u1": 0.484375,
+          "v1": 0.125,
+          "u2": 0.609375,
+          "v2": 0.25
+        }
+      ]
+    }
+  ]
+}

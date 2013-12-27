@@ -136,6 +136,7 @@ public class PlatformSpecific implements IPlatformSpecific {
             if (null != mod) {
                 dataDirs.add(new File(mod.getPath()));
             }
+            dataDirs.add(new File("C:\\Users\\bob\\Documents\\NetBeansProjects\\newton_adventure\\mods\\pack1\\deluxe"));
             dataDirs.add(getDefaultDataDir());
             data = new FileGameData();
             data.setDataDirs(dataDirs);

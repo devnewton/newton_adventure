@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
-import im.bci.nanim.NanimParser;
-import im.bci.nanim.NanimParser.Nanim;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.Animation.Play;
@@ -85,12 +86,13 @@ import im.bci.newtonadv.world.World;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -554,10 +556,10 @@ public strictfp class GameView implements IGameView {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
-    
-	@Override
-	public void drawStaticPlatforms(
-			StaticPlatformDrawable platforms) {
+
+    @Override
+    public void drawStaticPlatforms(
+            StaticPlatformDrawable platforms) {
         final boolean hasAlpha = platforms.texture.hasAlpha();
         if (hasAlpha) {
             GL11.glEnable(GL11.GL_BLEND);
@@ -570,7 +572,7 @@ public strictfp class GameView implements IGameView {
         if (hasAlpha) {
             GL11.glDisable(GL11.GL_BLEND);
         }
-	}
+    }
 
     @Override
     public void drawMovingPlatform(MovingPlatform platform, AnimationFrame texture) {
@@ -699,22 +701,22 @@ public strictfp class GameView implements IGameView {
         AABox bounds = hero.getShape().getBounds();
         float r = (float) Math.toDegrees(world.getGravityAngle());
         float scale = 1.0f;
-        if(null != world.getHero().getDyingTimedAction()) {
-        	float p = world.getHero().getDyingTimedAction().getProgress();
-        	if(p >= 0.5f) {
-        		p -= 0.5f;
-        		p *= 2.0f;
-	        	r += 500 * p;
-	    		scale += Math.sin(p * 1.5f * Math.PI) * 4.0f;
-	    		if(scale<0.0f) {
-	    			return;
-	    		}
-        	}
+        if (null != world.getHero().getDyingTimedAction()) {
+            float p = world.getHero().getDyingTimedAction().getProgress();
+            if (p >= 0.5f) {
+                p -= 0.5f;
+                p *= 2.0f;
+                r += 500 * p;
+                scale += Math.sin(p * 1.5f * Math.PI) * 4.0f;
+                if (scale < 0.0f) {
+                    return;
+                }
+            }
         }
         GL11.glPushMatrix();
         GL11.glTranslatef(hero.getPosition().getX(), hero.getPosition().getY(),
                 0.0f);
-        GL11.glRotatef(r, 0, 0,1.0f);
+        GL11.glRotatef(r, 0, 0, 1.0f);
         GL11.glScalef(scale, scale, 1);
         float x1 = -bounds.getWidth() / 2.0f;
         float x2 = bounds.getWidth() / 2.0f;
@@ -777,7 +779,7 @@ public strictfp class GameView implements IGameView {
         }
 
         final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getU1(), v2 = texture.getU2();
+        final float v1 = texture.getV1(), v2 = texture.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -1003,15 +1005,16 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
-        final float u1 = 1, u2 = 0;
+        final float u1 = texture.getU1(), u2 = texture.getU2();
+        final float v1 = texture.getV1(), v2 = texture.getV2();
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
+        GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
+        GL11.glTexCoord2f(u2, v1);
         GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
+        GL11.glTexCoord2f(u2, v2);
         GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
+        GL11.glTexCoord2f(u1, v2);
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glPopMatrix();
@@ -1035,15 +1038,16 @@ public strictfp class GameView implements IGameView {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
-        final float u1 = 1, u2 = 0;
+        final float u1 = texture.getU1(), u2 = texture.getU2();
+        final float v1 = texture.getV1(), v2 = texture.getV2();
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 0.0f);
+        GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
+        GL11.glTexCoord2f(u2, v1);
         GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
+        GL11.glTexCoord2f(u2, v2);
         GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 1.0f);
+        GL11.glTexCoord2f(u1, v2);
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glDisable(GL11.GL_BLEND);
@@ -1086,7 +1090,7 @@ public strictfp class GameView implements IGameView {
                     + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
                     TrueTypeFont.Align.LEFT);
-            font.drawString(0, i++ * font.getHeight(), platformSpecific.getMessage("score.sequence.see.hightscore.on") + " "+ sequence.getScoreServer().getServerUrl() + " !", 1, -1,
+            font.drawString(0, i++ * font.getHeight(), platformSpecific.getMessage("score.sequence.see.hightscore.on") + " " + sequence.getScoreServer().getServerUrl() + " !", 1, -1,
                     TrueTypeFont.Align.LEFT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
@@ -1145,7 +1149,7 @@ public strictfp class GameView implements IGameView {
     public void drawButton(Button button) {
         ITexture texture = button.getTexture();
         if (texture != null) {
-        	GL11.glEnable(GL11.GL_BLEND);
+            GL11.glEnable(GL11.GL_BLEND);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
             final float x1 = button.x;
             final float x2 = button.x
@@ -1213,20 +1217,20 @@ public strictfp class GameView implements IGameView {
 
         float cameraW = (World.ortho2DRight - World.ortho2DLeft) * aspectRatio;
         float cameraH = World.ortho2DTop - World.ortho2DBottom;
-        final float cameraSize = (float)Math.sqrt(cameraW * cameraW + cameraH * cameraH);
+        final float cameraSize = (float) Math.sqrt(cameraW * cameraW + cameraH * cameraH);
         final BodyList visibleBodies = world.getVisibleBodies(heroPos.getX()
                 - cameraSize, heroPos.getY() - cameraSize, heroPos.getX()
                 + cameraSize, heroPos.getY() + cameraSize);
 
-        ArrayList<Drawable> drawableBodies = new ArrayList<Drawable>();
+        ArrayList<Drawable> drawableBodies = new ArrayList<>();
         world.staticPlatformDrawer.resetVisibles();
         for (int i = 0; i < visibleBodies.size(); i++) {
             Body body = visibleBodies.get(i);
             if (body instanceof Drawable) {
                 drawableBodies.add(((Drawable) body));
             }
-            if(body instanceof StaticPlatform) {
-            	world.staticPlatformDrawer.addVisible((StaticPlatform) body);
+            if (body instanceof StaticPlatform) {
+                world.staticPlatformDrawer.addVisible((StaticPlatform) body);
             }
         }
         world.staticPlatformDrawer.getVisibleDrawables(drawableBodies);
@@ -1246,15 +1250,15 @@ public strictfp class GameView implements IGameView {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, backgroundTexture.getId());
 
             ROVector2f heroPos = world.getHero().getPosition();
-            
+
             float color = 1.0f;
-            if(null != world.getHero().getDyingTimedAction()) {
-            	color -= world.getHero().getDyingTimedAction().getProgress() * 2.0f;
-            	if(color <= 0.0f) {
-            		color = 0.0f;
-            	}
+            if (null != world.getHero().getDyingTimedAction()) {
+                color -= world.getHero().getDyingTimedAction().getProgress() * 2.0f;
+                if (color <= 0.0f) {
+                    color = 0.0f;
+                }
             }
-            GL11.glColor4f(color, color, color, 1.0f);            
+            GL11.glColor4f(color, color, color, 1.0f);
 
             AbsoluteAABox worldStaticBounds = world.getStaticBounds();
             AbsoluteAABox staticBounds = new AbsoluteAABox();
@@ -1303,7 +1307,7 @@ public strictfp class GameView implements IGameView {
             throws IOException {
         if (filename.endsWith("gif")) {
             return loadGif(filename);
-        } else if (filename.endsWith("nanim")) {
+        } else if (filename.endsWith("json")) {
             return loadNanim(filename);
         } else {
             return new AnimationCollection(textureCache.getTexture(filename));
@@ -1311,40 +1315,22 @@ public strictfp class GameView implements IGameView {
     }
 
     private AnimationCollection loadNanim(String filename) throws IOException {
-        InputStream is = data.openFile(filename);
-        try {
-            Nanim nanim = NanimParser.Nanim.parseFrom(is);
-            Map<String, ITexture> textures = textureCache.getTextures(filename,
-                    nanim);
-            return new AnimationCollection(nanim, textures);
-        } finally {
-            is.close();
+        AnimationCollection nanim = new AnimationCollection();
+        try (InputStream is = data.openFile(filename); InputStreamReader reader = new InputStreamReader(is)) {
+            JsonObject json = new Gson().fromJson(reader, JsonObject.class);
+            for (JsonElement jsonAnimationElement : json.getAsJsonArray("animations")) {
+                JsonObject jsonAnimation = jsonAnimationElement.getAsJsonObject();
+                Animation animation = new Animation(jsonAnimation.get("name").getAsString());
+                for (JsonElement jsonFrameElement : jsonAnimation.getAsJsonArray("frames")) {
+                    JsonObject jsonFrame = jsonFrameElement.getAsJsonObject();
+                    final String imageFilename = jsonFrame.get("image").getAsString();
+                    ITexture texture = textureCache.getTexture(new File(new File(filename).getParent(), imageFilename).getCanonicalPath());
+                    animation.addFrame(texture, jsonFrame.get("duration").getAsInt(), jsonFrame.get("u1").getAsFloat(), jsonFrame.get("v1").getAsFloat(), jsonFrame.get("u2").getAsFloat(), jsonFrame.get("v2").getAsFloat());
+                }
+                nanim.addAnimation(animation);
+            }
         }
-    }
-
-    @Override
-    public AnimationCollection loadSomeAnimations(String filename,
-            String... animationNames) throws IOException {
-        if (filename.endsWith("gif")) {
-            return loadGif(filename);
-        } else if (filename.endsWith("nanim")) {
-            return loadNanim(filename, animationNames);
-        } else {
-            return new AnimationCollection(textureCache.getTexture(filename));
-        }
-    }
-
-    private AnimationCollection loadNanim(String filename,
-            String[] animationNames) throws IOException {
-        InputStream is = data.openFile(filename);
-        try {
-            Nanim nanim = NanimParser.Nanim.parseFrom(is);
-            Map<String, ITexture> textures = textureCache.getTextures(filename,
-                    nanim);
-            return new AnimationCollection(nanim, textures, animationNames);
-        } finally {
-            is.close();
-        }
+        return nanim;
     }
 
     private AnimationCollection loadGif(String filename) throws IOException {
@@ -1383,7 +1369,7 @@ public strictfp class GameView implements IGameView {
         GL11.glRectf(0, 0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT);
         GL11.glColor4f(1f, 1f, 1f, 1f);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        drawLoadingIcon(loadingPlay, screenWidth, aspectRatio);
+        drawLoadingIcon(loadingPlay, screenWidth);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
@@ -1407,21 +1393,23 @@ public strictfp class GameView implements IGameView {
         GL11.glEnd();
     }
 
-    private void drawLoadingIcon(Play loadingPlay, final float screenWidth, final float aspectRatio) {
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, loadingPlay.getCurrentFrame().getImage().getId());
+    private void drawLoadingIcon(Play loadingPlay, final float screenWidth) {
+        final AnimationFrame texture = loadingPlay.getCurrentFrame();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
         final float x1 = screenWidth - 256;
         final float x2 = screenWidth;
         final float y1 = Game.DEFAULT_SCREEN_HEIGHT - 256;
         final float y2 = Game.DEFAULT_SCREEN_HEIGHT;
-        final float u1 = 0.0f, u2 = 1.0f;
+        final float u1 = texture.getU1(), u2 = texture.getU2();
+        final float v1 = texture.getV1(), v2 = texture.getV2();
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(u1, 1.0f);
+        GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
-        GL11.glTexCoord2f(u2, 1.0f);
+        GL11.glTexCoord2f(u2, v1);
         GL11.glVertex2f(x2, y2);
-        GL11.glTexCoord2f(u2, 0.0f);
+        GL11.glTexCoord2f(u2, v2);
         GL11.glVertex2f(x2, y1);
-        GL11.glTexCoord2f(u1, 0.0f);
+        GL11.glTexCoord2f(u1, v2);
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
     }
@@ -1585,7 +1573,7 @@ public strictfp class GameView implements IGameView {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
 
         final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getU1(), v2 = texture.getU2();
+        final float v1 = texture.getV1(), v2 = texture.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -1610,7 +1598,7 @@ public strictfp class GameView implements IGameView {
         final float screenWidth = Game.DEFAULT_SCREEN_WIDTH
                 * aspectRatio;
         GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);
-        drawLoadingIcon(loadingPlay, screenWidth, aspectRatio);
+        drawLoadingIcon(loadingPlay, screenWidth);
         GL11.glPopMatrix();
     }
 
@@ -1619,7 +1607,7 @@ public strictfp class GameView implements IGameView {
         try {
             fontSpecialCharacters.put('$', data.openImage("default_level_data/apple.png"));
         } catch (IOException e) {
-           Logger.getLogger(GameView.class.getName()).warning("Cannot load default_level_data/apple.png");
+            Logger.getLogger(GameView.class.getName()).warning("Cannot load default_level_data/apple.png");
         }
         return new TrueTypeFont(new Font("monospaced", Font.BOLD, 24), true, new char[0], fontSpecialCharacters);
     }

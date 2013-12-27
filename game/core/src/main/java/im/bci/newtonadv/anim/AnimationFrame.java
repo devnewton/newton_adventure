@@ -33,47 +33,49 @@ package im.bci.newtonadv.anim;
 
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
-
 /**
  *
  * @author devnewton
  */
 public class AnimationFrame {
 
-    private ITexture image;
-    private long duration;//milliseconds
-    long endTime;//milliseconds
-    float u1 = 0;
-    float v1 = 0;
-    float u2 = 1;
-    float v2 = 1;
+    private final ITexture image;
+    private final long endTime;//milliseconds
+    private final float u1;
+    private final float v1;
+    private final float u2;
+    private final float v2;
 
-	public AnimationFrame(ITexture image, long duration) {
+    public AnimationFrame(ITexture image, long endTime, float u1, float v1, float u2, float v2) {
         this.image = image;
-        this.duration = duration;
-    }
-
-	public long getDuration() {
-        return duration;
+        this.endTime = endTime;
+        this.u1 = u1;
+        this.v1 = v1;
+        this.u2 = u2;
+        this.v2 = v2;
     }
 
     public ITexture getImage() {
         return image;
     }
-    
-	public float getU1() {
-		return u1;
-	}
 
-	public float getV1() {
-		return v1;
-	}
+    public float getU1() {
+        return u1;
+    }
 
-	public float getU2() {
-		return u2;
-	}
+    public float getV1() {
+        return v1;
+    }
 
-	public float getV2() {
-		return v2;
-	}
+    public float getU2() {
+        return u2;
+    }
+
+    public float getV2() {
+        return v2;
+    }
+
+    long getEndTime() {
+        return endTime;
+    }
 }

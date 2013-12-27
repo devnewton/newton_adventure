@@ -31,145 +31,138 @@
  */
 package im.bci.newtonadv.anim;
 
-import im.bci.nanim.NanimParser.Frame;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
- * 
+ *
  * @author devnewton
  */
 public class Animation {
 
-	public class Play {
-		public int currentFrameIndex;
-		public long currentTime;
-		public PlayMode mode = PlayMode.LOOP;
-		public State state = State.STOPPED;
-		
-		public String getName() {
-			return Animation.this.name;
-		}
+    public class Play {
 
-		public AnimationFrame getCurrentFrame() {
-			return frames.get(currentFrameIndex);
-		}
-		
-		public void start() {
-			start(PlayMode.LOOP);
-		}
+        private int currentFrameIndex;
+        private long currentTime;
+        private PlayMode mode = PlayMode.LOOP;
+        private State state = State.STOPPED;
 
-		public void start(PlayMode mode) {
-			this.state = State.STARTED;
-			this.mode = mode;
-			this.currentTime = 0;
-			this.currentFrameIndex = 0;
-		}
+        public String getName() {
+            return Animation.this.name;
+        }
 
-		public void stop() {
-			state = State.STOPPED;
-			currentTime = 0;
-			currentFrameIndex = 0;
-		}
+        public AnimationFrame getCurrentFrame() {
+            return frames.get(currentFrameIndex);
+        }
 
-		public boolean isStopped() {
-			return state == State.STOPPED;
-		}
+        public void start() {
+            start(PlayMode.LOOP);
+        }
 
-		public void update(long elapsedTime) {
+        public void start(PlayMode mode) {
+            this.state = State.STARTED;
+            this.mode = mode;
+            this.currentTime = 0;
+            this.currentFrameIndex = 0;
+        }
 
-			if (state == State.STOPPED) {
-				return;
-			}
+        public void stop() {
+            state = State.STOPPED;
+            currentTime = 0;
+            currentFrameIndex = 0;
+        }
 
-			this.currentTime += elapsedTime;
-			if (currentTime >= totalDuration) {
+        public boolean isStopped() {
+            return state == State.STOPPED;
+        }
 
-				switch (mode) {
-				case ONCE:
-					currentFrameIndex = frames.size() - 1;
-					state = State.STOPPED;
-					return;
-				case LOOP:
-					currentTime %= totalDuration;
-					currentFrameIndex = 0;
-					break;
-				}
-			}
+        public void update(long elapsedTime) {
 
-			while (currentTime > frames.get(currentFrameIndex).endTime) {
-				++this.currentFrameIndex;
-			}
-		}
-	}
+            if (state == State.STOPPED) {
+                return;
+            }
 
-	public enum PlayMode {
+            this.currentTime += elapsedTime;
+            if (currentTime >= totalDuration) {
 
-		ONCE, LOOP
-	}
+                switch (mode) {
+                    case ONCE:
+                        currentFrameIndex = frames.size() - 1;
+                        state = State.STOPPED;
+                        return;
+                    case LOOP:
+                        if (totalDuration > 0) {
+                            currentTime %= totalDuration;
+                        } else {
+                            currentTime = 0;
+                        }
+                        currentFrameIndex = 0;
+                        break;
+                }
+            }
 
-	enum State {
+            while (currentTime > frames.get(currentFrameIndex).getEndTime()) {
+                ++this.currentFrameIndex;
+            }
+        }
+    }
 
-		STARTED, STOPPED
-	}
+    public enum PlayMode {
 
-	private ArrayList<AnimationFrame> frames = new ArrayList<AnimationFrame>();
-	private long totalDuration;// milliseconds
-	private final String name;
+        ONCE, LOOP
+    }
 
-	public Animation(String name) {
-		this.name = name;
-	}
+    enum State {
 
-	public Animation(im.bci.nanim.NanimParser.Animation nanimation,
-			Map<String, ITexture> textures) {
-		name = nanimation.getName();
-		frames.ensureCapacity(nanimation.getFramesCount());
-		for (Frame nframe : nanimation.getFramesList()) {
-			AnimationFrame frame = addFrame(
-					textures.get(nframe.getImageName()), nframe.getDuration());
-			frame.u1 = nframe.getU1();
-			frame.v1 = nframe.getV1();
-			frame.u2 = nframe.getU2();
-			frame.v2 = nframe.getV2();
-		}
-	}
+        STARTED, STOPPED
+    }
 
-	public AnimationFrame addFrame(ITexture image, long duration) {
-		final AnimationFrame frame = new AnimationFrame(image, duration);
-		frames.add(frame);
-		totalDuration += duration;
-		frame.endTime = totalDuration;
-		return frame;
-	}
+    private final ArrayList<AnimationFrame> frames = new ArrayList<>();
+    private long totalDuration;// milliseconds
+    private final String name;
 
-	public Play start() {
-		return start(PlayMode.LOOP);
-	}
+    public Animation(String name) {
+        this.name = name;
+    }
 
-	public Play start(PlayMode mode) {
-		if (!frames.isEmpty()) {
-			Play play = new Play();
-			play.start(mode);
-			return play;
-		} else {
-			return null;
-		}
-	}
-	
-	/**
-	 * Call play.stop
-	 * @param play
-	 */
-	public void stop(Play play) {
-		if(null != play) {
-			play.stop();
-		}
-	}
+    public AnimationFrame addFrame(ITexture image, long duration) {
+        return addFrame(image, duration, 0f, 0f, 1f, 1f);
+    }
 
-	public String getName() {
-		return name;
-	}
+    public AnimationFrame addFrame(ITexture image, long duration, float u1, float v1, float u2, float v2) {
+        totalDuration += duration;
+        final AnimationFrame frame = new AnimationFrame(image, totalDuration, u1, v1, u2, v2);
+        frames.add(frame);
+        return frame;
+    }
+
+    public Play start() {
+        return start(PlayMode.LOOP);
+    }
+
+    public Play start(PlayMode mode) {
+        if (!frames.isEmpty()) {
+            Play play = new Play();
+            play.start(mode);
+            return play;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Call play.stop
+     *
+     * @param play
+     */
+    public void stop(Play play) {
+        if (null != play) {
+            play.stop();
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
 }

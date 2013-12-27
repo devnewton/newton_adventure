@@ -62,9 +62,9 @@ public strictfp class BossHand extends AbstractDrawableBody implements Updatable
         MOVING_TO_BOSS,
     }
     private static final float weight = 5.0f;
-    private Boss boss;
+    private final Boss boss;
     private Animation.Play play;
-    private Side side;
+    private final Side side;
     private State state = State.MOVING_TO_BOSS;
 
     BossHand(Boss boss, Side side, World world) {
@@ -78,7 +78,7 @@ public strictfp class BossHand extends AbstractDrawableBody implements Updatable
     }
 
     public void setTexture(AnimationCollection t) {
-        this.play = t.getAnimationByName("boss_hand").start();
+        this.play = t.getAnimationByName("boss_hand_" + side.name().toLowerCase()).start();
     }
 
     @Override

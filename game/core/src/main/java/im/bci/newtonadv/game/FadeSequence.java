@@ -34,6 +34,7 @@ package im.bci.newtonadv.game;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation.Play;
 import im.bci.newtonadv.platform.interfaces.ITexture;
+import java.io.IOException;
 
 /**
  *
@@ -63,8 +64,8 @@ public class FadeSequence implements Sequence {
     public void start() {
         try {
             backgroundTexture = game.getView().getTextureCache().grabScreenToTexture();
-            loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.nanim")).getFirst().start();
-        } catch (Exception ex) {
+            loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.json")).getFirst().start();
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }

@@ -1,0 +1,91 @@
+{
+  "animations": [
+    {
+      "name": "stay",
+      "frames": [
+        {
+          "duration": 100,
+          "image": "hero.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 0.25,
+          "v2": 0.25
+        }
+      ]
+    },
+    {
+      "name": "walk",
+      "frames": [
+        {
+          "duration": 100,
+          "image": "hero.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 0.25,
+          "v2": 0.25
+        },
+        {
+          "duration": 100,
+          "image": "hero.png",
+          "u1": 0.0,
+          "v1": 0.25,
+          "u2": 0.25,
+          "v2": 0.5
+        },
+        {
+          "duration": 100,
+          "image": "hero.png",
+          "u1": 0.0,
+          "v1": 0.5,
+          "u2": 0.25,
+          "v2": 0.75
+        },
+        {
+          "duration": 100,
+          "image": "hero.png",
+          "u1": 0.0,
+          "v1": 0.25,
+          "u2": 0.25,
+          "v2": 0.5
+        },
+        {
+          "duration": 100,
+          "image": "hero.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 0.25,
+          "v2": 0.25
+        },
+        {
+          "duration": 100,
+          "image": "hero.png",
+          "u1": 0.0,
+          "v1": 0.75,
+          "u2": 0.25,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "hero.png",
+          "u1": 0.25,
+          "v1": 0.0,
+          "u2": 0.5,
+          "v2": 0.25
+        }
+      ]
+    },
+    {
+      "name": "falling",
+      "frames": [
+        {
+          "duration": 100000,
+          "image": "hero.png",
+          "u1": 0.25,
+          "v1": 0.25,
+          "u2": 0.5,
+          "v2": 0.5
+        }
+      ]
+    }
+  ]
+}

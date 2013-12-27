@@ -229,7 +229,7 @@
  <tile id="36">
   <image source="prison_36.png"/>
   <properties>
-   <property name="newton_adventure.gfx" value="boss.nanim"/>
+   <property name="newton_adventure.gfx" value="boss.json"/>
    <property name="newton_adventure.type" value="boss"/>
   </properties>
  </tile>

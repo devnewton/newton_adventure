@@ -827,20 +827,20 @@ public class TmxLoader {
 
     static {
         defaultMapProperties.put("newton_adventure.mummy", "mummy.gif");
-        defaultMapProperties.put("newton_adventure.bat", "bat.nanim");
+        defaultMapProperties.put("newton_adventure.bat", "bat.json");
         defaultMapProperties.put("newton_adventure.explosion", "explosion.gif");
         defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
-        defaultMapProperties.put("newton_adventure.bomb", "bomb.nanim");
-        defaultMapProperties.put("newton_adventure.crate", "crate.nanim");
+        defaultMapProperties.put("newton_adventure.bomb", "bomb.json");
+        defaultMapProperties.put("newton_adventure.crate", "crate.json");
         defaultMapProperties.put("newton_adventure.axe", "axe.png");
         defaultMapProperties.put("newton_adventure.mobilePikes",
                 "mobile_pikes.png");
         defaultMapProperties.put("newton_adventure.door_to_bonus_world",
-                "door_to_bonus_world.nanim");
-        defaultMapProperties.put("newton_adventure.door", "door.nanim");
-        defaultMapProperties.put("newton_adventure.key", "key.nanim");
-        defaultMapProperties.put("newton_adventure.clue", "clue.nanim");
-        defaultMapProperties.put("newton_adventure.hero", "hero.nanim");
+                "door_to_bonus_world.json");
+        defaultMapProperties.put("newton_adventure.door", "door.json");
+        defaultMapProperties.put("newton_adventure.key", "key.json");
+        defaultMapProperties.put("newton_adventure.clue", "clue.json");
+        defaultMapProperties.put("newton_adventure.hero", "hero.json");
         defaultMapProperties.put("newton_adventure.apple", "apple.png");
         defaultMapProperties.put("newton_adventure.coin", "coin.png");
         defaultMapProperties.put("newton_adventure.world_map", "map.png");
