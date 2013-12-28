@@ -4,7 +4,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl.openal;
 
-import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.newtonadv.platform.lwjgl.FileGameData;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
@@ -33,11 +33,11 @@ public class SimpleSoundEngine {
     private final FloatBuffer sourcePos;
     private final FloatBuffer sourceVel;
     private static final Logger logger = Logger.getLogger(SimpleSoundEngine.class.getName());
-    private final IGameData gameData;
+    private final FileGameData gameData;
 
-    public SimpleSoundEngine(IGameData gameData) {
-        buffers = new HashMap<String, SoundBufferEntry>();
-        sources = new LinkedList<SoundSourceEntry>();
+    public SimpleSoundEngine(FileGameData gameData) {
+        buffers = new HashMap<>();
+        sources = new LinkedList<>();
         musicStreamer = new Streamer(gameData);
         sourcePos = BufferUtils.createFloatBuffer(3);
         sourceVel = BufferUtils.createFloatBuffer(3);

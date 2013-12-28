@@ -48,7 +48,6 @@ import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.GameScore;
-import im.bci.newtonadv.score.ScoreServer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,17 +66,17 @@ public strictfp class Game {
     static public final float FPSf = FPS;
     static public final int DEFAULT_SCREEN_WIDTH = 1280;
     static public final int DEFAULT_SCREEN_HEIGHT = 800;
-    private FrameTimeInfos frameTimeInfos = new FrameTimeInfos();
+    private final FrameTimeInfos frameTimeInfos = new FrameTimeInfos();
     private ISoundCache soundCache = null;
     private MainMenuSequence mainMenuSequence;
-    private GameScore score;
+    private final GameScore score;
     private Sequence currentSequence;
     private List<BonusSequence> bonusSequences;
     private BonusSequence lastBonusSequence;
-    private IOptionsSequence optionsSequence;
+    private final IOptionsSequence optionsSequence;
     private QuestMenuSequence questMenuSequence;
-    private IPlatformSpecific platform;
-    private GameProgression progression;
+    private final IPlatformSpecific platform;
+    private final GameProgression progression;
 
     public final FrameTimeInfos getFrameTimeInfos() {
         return frameTimeInfos;
@@ -98,7 +97,6 @@ public strictfp class Game {
         this.soundCache = platform.getSoundCache();
         this.view = platform.getGameView();
         this.input = platform.getGameInput();
-        this.scoreServer = platform.getScoreServer();
         this.optionsSequence = platform.getOptionsSequence();
 
         this.platform = platform;
@@ -191,7 +189,6 @@ public strictfp class Game {
     }
     private boolean bToggleFullscreen = false;
     private boolean bShowMainMenu = false;
-    private ScoreServer scoreServer;
 
     private void processInputs() {
         if (input.isKeyReturnToMenuDown()) {
@@ -248,7 +245,7 @@ public strictfp class Game {
     }
 
     private void loadBonusSequences() {
-        bonusSequences = new ArrayList<BonusSequence>();
+        bonusSequences = new ArrayList<>();
         List<String> levelNames = getData().listQuestLevels("bonus");
 
         for (String levelName : levelNames) {
@@ -259,10 +256,6 @@ public strictfp class Game {
 
     public Sequence getMainMenuSequence() {
         return mainMenuSequence;
-    }
-
-    public ScoreServer getScoreServer() {
-        return scoreServer;
     }
 
     public void gotoLevel(String newQuestName, String newLevelName)

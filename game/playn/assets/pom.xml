@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>im.bci.newtonadv</groupId>
+        <artifactId>playn</artifactId>
+        <version>1.14-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>playn-assets</artifactId>
+    <packaging>jar</packaging>
+    <name>PlaynNewtonAdventureGame Assets</name>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>../../data</directory>
+                <targetPath>assets</targetPath>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
+</project>

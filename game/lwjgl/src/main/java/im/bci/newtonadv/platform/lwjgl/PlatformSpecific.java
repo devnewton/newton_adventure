@@ -43,7 +43,6 @@ import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.openal.OpenALSoundCache;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 import im.bci.newtonadv.score.GameScore;
-import im.bci.newtonadv.score.ScoreServer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -71,7 +70,6 @@ public class PlatformSpecific implements IPlatformSpecific {
     private GameView view;
     private GameInput input;
     private Properties config;
-    private ScoreServer scoreServer;
     private FileGameData data;
     private ISoundCache soundCache;
     private IOptionsSequence options;
@@ -86,7 +84,6 @@ public class PlatformSpecific implements IPlatformSpecific {
         createSoundCache();
         createGameView();
         createGameInput();
-        createScoreServer();
         createOptionsSequence();
 
     }
@@ -153,15 +150,11 @@ public class PlatformSpecific implements IPlatformSpecific {
             throw new RuntimeException(
                     "create IGameInput before IOptionsSequence");
         }
-        if (null == scoreServer) {
-            throw new RuntimeException(
-                    "create ScoreServer before creating IOptionsSequence");
-        }
         if (null == config) {
             throw new RuntimeException(
                     "load config before creating IOptionsSequence");
         }
-        options = new OptionsSequence(this, view, input, scoreServer, soundCache, config);
+        options = new OptionsSequence(this, view, input, soundCache, config);
         return options;
     }
 
@@ -214,11 +207,6 @@ public class PlatformSpecific implements IPlatformSpecific {
         return getDefaultConfigFilePath();
     }
 
-    private ScoreServer createScoreServer() {
-        scoreServer = new ScoreServer(config);
-        return scoreServer;
-    }
-
     private void writeConfig(String path) throws FileNotFoundException,
             IOException {
         FileOutputStream os = new FileOutputStream(path);
@@ -247,11 +235,6 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     @Override
-    public Properties getConfig() {
-        return config;
-    }
-
-    @Override
     public IGameInput getGameInput() {
         return input;
     }
@@ -274,11 +257,6 @@ public class PlatformSpecific implements IPlatformSpecific {
     @Override
     public IOptionsSequence getOptionsSequence() {
         return options;
-    }
-
-    @Override
-    public ScoreServer getScoreServer() {
-        return scoreServer;
     }
 
     @Override

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>im.bci.newtonadv</groupId>
+    <artifactId>playn</artifactId>
+    <version>1.14-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>playn-core</artifactId>
+  <packaging>jar</packaging>
+  <name>PlaynNewtonAdventureGame Core</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.googlecode.playn</groupId>
+      <artifactId>playn-core</artifactId>
+      <version>${playn.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>im.bci.newtonadv</groupId>
+        <artifactId>newton-adventure-core</artifactId>
+        <version>1.14-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <!-- build a -sources.jar always, rather than only on deploy -->
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

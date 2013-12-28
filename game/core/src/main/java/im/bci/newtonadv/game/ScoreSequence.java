@@ -33,7 +33,6 @@ package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.score.QuestScore;
-import im.bci.newtonadv.score.ScoreServer;
 
 /**
  *
@@ -45,24 +44,17 @@ public class ScoreSequence extends MenuSequence {
     private Sequence nextSequence;
     private FrameTimeInfos timeInfos;
     private long scorePerCentToShow;
-    private final ScoreServer scoreServer;
-
-    public ScoreServer getScoreServer() {
-        return scoreServer;
-    }
 
     public ScoreSequence(Game game, String questName, Sequence nextSequence) {
         super(game);
         this.questScore = game.getScore().getQuestScore(questName);
         this.nextSequence = nextSequence;
-        this.scoreServer = game.getScoreServer();
                
        Button continueButton = new Button() {
 
             @Override
             void activate() throws NormalTransitionException,
                     ResumeTransitionException, ResumableTransitionException {
-                scoreServer.sendScore(questScore.getQuestName(), questScore.computeScore());
                 throw new NormalTransitionException(ScoreSequence.this.nextSequence);
             }
         };

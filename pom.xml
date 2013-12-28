@@ -17,6 +17,7 @@
         <module>libtiled-jpurexml</module>
         <module>game/core</module>
         <module>game/lwjgl</module>
+        <module>game/playn</module>
         <module>editor</module>
         <module>packages/deb</module>
         <module>packages/generic</module>

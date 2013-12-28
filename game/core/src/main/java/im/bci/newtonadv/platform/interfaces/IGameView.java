@@ -139,7 +139,7 @@ public interface IGameView {
 
     void toggleFullscreen();
 
-    AnimationCollection loadFromAnimation(String name) throws FileNotFoundException, IOException;
+    AnimationCollection loadFromAnimation(String name) throws IOException;
     
     void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a);
 

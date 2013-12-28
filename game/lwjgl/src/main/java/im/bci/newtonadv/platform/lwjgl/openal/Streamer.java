@@ -1,6 +1,6 @@
 package im.bci.newtonadv.platform.lwjgl.openal;
 
-import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.newtonadv.platform.lwjgl.FileGameData;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -26,7 +26,7 @@ class Streamer {
     public static final int BUFFER_COUNT = 3;
     private static final int sectionSize = 4096 * 20;
   
-    private final IGameData gameData;
+    private final FileGameData gameData;
     private int source;
     private byte[] buffer;
     private IntBuffer buffersId;
@@ -40,7 +40,7 @@ class Streamer {
     private boolean initiated;
     private boolean paused;
 
-    public Streamer(IGameData gameData) {
+    public Streamer(FileGameData gameData) {
         buffer = new byte[sectionSize];
         bufferData = BufferUtils.createByteBuffer(sectionSize);
         auxBuffer = BufferUtils.createIntBuffer(1);

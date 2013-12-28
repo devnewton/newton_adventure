@@ -76,7 +76,7 @@ public class TextureCache implements ITextureCache {
     private static final Logger logger = Logger.getLogger(TextureCache.class.getName());
     private final HashMap<String/* name */, TextureWeakReference> textures = new HashMap<>();
     private final ReferenceQueue<Texture> referenceQueue = new ReferenceQueue<>();
-    private final IGameData data;
+    private final FileGameData data;
     /**
      * The colour model including alpha for the GL image
      */
@@ -93,7 +93,7 @@ public class TextureCache implements ITextureCache {
             DataBuffer.TYPE_BYTE);
     private GameViewQuality quality = GameViewQuality.DEFAULT;
 
-    TextureCache(IGameData data) {
+    TextureCache(FileGameData data) {
         this.data = data;
     }
 

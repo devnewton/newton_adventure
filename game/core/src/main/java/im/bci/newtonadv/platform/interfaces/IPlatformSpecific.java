@@ -34,17 +34,13 @@ package im.bci.newtonadv.platform.interfaces;
 import im.bci.newtonadv.GameProgression;
 import im.bci.newtonadv.game.RestartGameException;
 import im.bci.newtonadv.score.GameScore;
-import im.bci.newtonadv.score.ScoreServer;
 import java.util.List;
-import java.util.Properties;
 
 /**
  *
  * @author devnewton
  */
 public interface IPlatformSpecific {
-
-    Properties getConfig();
 
     void saveConfig();
 
@@ -57,8 +53,6 @@ public interface IPlatformSpecific {
     IGameData getGameData();
 
     IOptionsSequence getOptionsSequence();
-
-    ScoreServer getScoreServer();
 
     void openUrl(String string);
 

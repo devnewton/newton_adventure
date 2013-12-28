@@ -19,8 +19,6 @@ public interface IGameData {
 
     String getLevelFilePath(String questName, String levelName, String filename);
 
-    InputStream openFile(String path) throws IOException;
-
     boolean fileExists(String path);
 
     List<String> listQuestsToCompleteToUnlockQuest(String questName);

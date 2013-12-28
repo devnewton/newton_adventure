@@ -57,7 +57,7 @@ import javax.imageio.ImageIO;
  *
  * @author devnewton
  */
-class FileGameData implements IGameData {
+public class FileGameData implements IGameData {
 
     private List<File> dataDirs;
 
@@ -89,7 +89,6 @@ class FileGameData implements IGameData {
         return listSubDirectories("quests/" + questName + "/levels", getConfiguredLevels(questName));
     }
 
-    @Override
     public InputStream openFile(String path) throws IOException {
         File f = new File(path);
         if (f.exists()) {

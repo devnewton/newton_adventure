@@ -1089,8 +1089,6 @@ public strictfp class GameView implements IGameView {
                     + (scorePerCentToShow * questScore.computeScore() / 100);
             font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
                     TrueTypeFont.Align.LEFT);
-            font.drawString(0, i++ * font.getHeight(), platformSpecific.getMessage("score.sequence.see.hightscore.on") + " " + sequence.getScoreServer().getServerUrl() + " !", 1, -1,
-                    TrueTypeFont.Align.LEFT);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
         }
