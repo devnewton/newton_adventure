@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import com.google.gson.Gson;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.tmxloader.TmxLoader;
 import im.bci.tmxloader.TmxMap;
@@ -42,12 +43,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Properties;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -118,36 +119,44 @@ public class FileGameData implements IGameData {
 
     @Override
     public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
-        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/" + questName + "/quest.properties"));
-        return RuntimeUtils.getPropertyAsList(questsProperties, ("locked.by"));
+        try (InputStream is = new FileInputStream(getVirtualFile("quests/" + questName + "/quest.json")); InputStreamReader reader = new InputStreamReader(is)) {
+            QuestConfig conf = new Gson().fromJson(reader, QuestConfig.class);
+            return conf.getLockedBy();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
-    public TmxMap openLevelTmx(String questName, String levelName) throws Exception {
+    public TmxMap openLevelTmx(String questName, String levelName) {
+
         File file = getVirtualFile("quests/" + questName + "/levels/" + levelName + "/" + levelName + ".tmx");
-        final File mapParentDir = file.getParentFile().getCanonicalFile();
-        TmxLoader loader = new TmxLoader() {
-            @Override
-            protected String openExternalTileset(String source) {
-                return loadText(new File(mapParentDir, source));
+        try {
+            final File mapParentDir = file.getParentFile().getCanonicalFile();
+            TmxLoader loader = new TmxLoader();
+            TmxMap map = new TmxMap();
+            loader.parseTmx(map, loadText(file));
+            for (TmxTileset tileset : map.getTilesets()) {
+                File tilesetParentDir;
+                if (null != tileset.getSource()) {
+                    final File tilesetFile = new File(mapParentDir, tileset.getSource());
+                    tilesetParentDir = tilesetFile.getParentFile().getCanonicalFile();
+                    loader.parseTsx(map, tileset, loadText(tilesetFile));
+                } else {
+                    tilesetParentDir = mapParentDir;
+                }
+                if (null != tileset.getImage()) {
+                    tileset.getImage().setSource(new File(tilesetParentDir, tileset.getImage().getSource()).getCanonicalPath());
+                }
+                for (TmxTile tile : tileset.getTiles()) {
+                    tile.getFrame().getImage().setSource(new File(tilesetParentDir, tile.getFrame().getImage().getSource()).getCanonicalPath());
+                }
             }
-        };
-        TmxMap map = loader.load(loadText(file));
-        for (TmxTileset tileset : map.getTilesets()) {
-            File tilesetParentDir;
-            if (null != tileset.getSource()) {
-                tilesetParentDir = new File(mapParentDir, tileset.getSource()).getParentFile().getCanonicalFile();
-            } else {
-                tilesetParentDir = mapParentDir;
-            }
-            if (null != tileset.getImage()) {
-                tileset.getImage().setSource(new File(tilesetParentDir, tileset.getImage().getSource()).getCanonicalPath());
-            }
-            for (TmxTile tile : tileset.getTiles()) {
-                tile.getFrame().getImage().setSource(new File(tilesetParentDir, tile.getFrame().getImage().getSource()).getCanonicalPath());
-            }
+            loader.decode(map);
+            return map;
+        } catch (Exception ex) {
+            throw new RuntimeException("Cannot load " + file, ex);
         }
-        return map;
     }
 
     public String loadText(File f) {
@@ -177,14 +186,61 @@ public class FileGameData implements IGameData {
         });
     }
 
+    public static class QuestsConfig {
+
+        public List<String> quests = Collections.emptyList();
+
+        public List<String> getQuests() {
+            return quests;
+        }
+
+        public void setQuests(List<String> quests) {
+            this.quests = quests;
+        }
+
+    }
+
     private List<String> getConfiguredQuests() {
-        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/quests.properties"));
-        return RuntimeUtils.getPropertyAsList(questsProperties, ("quests"));
+        final File file = getVirtualFile("quests/quests.json");
+        try (InputStream is = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(is)) {
+            QuestsConfig quests = new Gson().fromJson(reader, QuestsConfig.class);
+            return quests.getQuests();
+        } catch (Exception ex) {
+            throw new RuntimeException("Cannot load " + file, ex);
+        }
+    }
+
+    public static class QuestConfig {
+
+        public List<String> levels = Collections.emptyList();
+        public List<String> lockedBy = Collections.emptyList();
+
+        public List<String> getLockedBy() {
+            return lockedBy;
+        }
+
+        public void setLockedBy(List<String> lockedBy) {
+            this.lockedBy = lockedBy;
+        }
+
+        public List<String> getLevels() {
+            return levels;
+        }
+
+        public void setLevels(List<String> levels) {
+            this.levels = levels;
+        }
+
     }
 
     private List<String> getConfiguredLevels(String questName) {
-        Properties questsProperties = RuntimeUtils.loadPropertiesFromFile(getVirtualFile("quests/" + questName + "/quest.properties"));
-        return RuntimeUtils.getPropertyAsList(questsProperties, ("levels"));
+        final File file = getVirtualFile("quests/" + questName + "/quest.json");
+        try (InputStream is = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(is)) {
+            QuestConfig levels = new Gson().fromJson(reader, QuestConfig.class);
+            return levels.getLevels();
+        } catch (Exception ex) {
+            throw new RuntimeException("Cannot load " + file, ex);
+        }
     }
 
     public BufferedImage openImage(String file) throws IOException {

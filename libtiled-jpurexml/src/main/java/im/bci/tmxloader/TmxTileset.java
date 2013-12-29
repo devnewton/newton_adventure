@@ -43,7 +43,15 @@ public class TmxTileset {
     private int firstgid;
     private final TreeMap<Integer/*id*/, TmxTile> tilesById = new TreeMap<>();
     private List<TmxTile> tiles = new ArrayList<>();
+    private boolean ready;
+    
+    public boolean isReady() {
+        return ready;
+    }
 
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
     public String getSource() {
         return source;
     }

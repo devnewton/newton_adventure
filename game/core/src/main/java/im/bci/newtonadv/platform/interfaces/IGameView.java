@@ -68,7 +68,6 @@ import im.bci.newtonadv.world.StaticPlatformDrawable;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -161,5 +160,5 @@ public interface IGameView {
 
     void drawLoading(Play loadingPlay);
 
-	void drawStaticPlatforms(StaticPlatformDrawable staticPlatformDrawable);
+    void drawStaticPlatforms(StaticPlatformDrawable staticPlatformDrawable);
 }

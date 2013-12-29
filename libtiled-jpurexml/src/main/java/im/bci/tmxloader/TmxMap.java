@@ -32,6 +32,7 @@ import java.util.List;
  */
 public class TmxMap {
 
+    private boolean ready;
     private int width;
     private int height;
     private int tilewidth;
@@ -107,5 +108,22 @@ public class TmxMap {
 
     public String getProperty(String name, String defaultValue) {
         return TmxUtils.getProperty(properties, name, defaultValue);
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+    
+    public boolean canDecode() {
+        for(TmxTileset ts : tilesets) {
+            if(!ts.isReady()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

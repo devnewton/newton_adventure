@@ -1327,6 +1327,7 @@ public strictfp class GameView implements IGameView {
                 nanim.addAnimation(animation);
             }
         }
+        nanim.setReady(true);
         return nanim;
     }
 
@@ -1345,6 +1346,7 @@ public strictfp class GameView implements IGameView {
         }
         AnimationCollection collection = new AnimationCollection();
         collection.addAnimation(animation);
+        collection.setReady(true);
         return collection;
     }
 

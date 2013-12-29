@@ -45,10 +45,6 @@ import im.bci.tmxloader.TmxTileInstance;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -98,14 +94,11 @@ public class TmxLoader {
     private final String questName;
     private final String levelName;
     private TmxMap map;
-    private Future<TmxMap> futureMap;
     private Hero hero;
     private MultidimensionnalIterator iterator;
     static final float defaultPickableObjectSize = 2.0f * World.distanceUnit;
     private static final Circle defaultPickableObjectShape = new Circle(
             defaultPickableObjectSize / 2.0f);
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
     public TmxLoader(Game game, String questName, String levelName) throws Exception {
         this.game = game;
         this.questName = questName;
@@ -113,18 +106,11 @@ public class TmxLoader {
     }
 
     public void preloading() {
-        futureMap = executor.submit(new Callable<TmxMap>() {
-            @Override
-            public TmxMap call() throws Exception {
-                return game.getData().openLevelTmx(questName,
-                        levelName);
-            }
-        });
+        map = game.getData().openLevelTmx(questName,levelName);
     }
 
     public void startLoading(World world) throws FileNotFoundException, IOException, Exception {
         this.world = world;
-        this.map = futureMap.get();
         world.setAppleIcon(getAppleIconTexture());
         iterator = new MultidimensionnalIterator(new int[]{map.getLayers().size(), map.getWidth(), map.getHeight()});
     }
@@ -724,7 +710,6 @@ public class TmxLoader {
             animation = game.getView().loadFromAnimation(
                     game.getData().getLevelFilePath(questName, levelName, gfx));
         } else {
-
             final TmxFrame frame = tile.getFrame();
             final TmxImage image = frame.getImage();
             final float imageWidth = (float) image.getWidth();
@@ -1089,7 +1074,7 @@ public class TmxLoader {
     }
 
     public boolean isReadyToLoad() {
-        return futureMap.isDone();
+        return map.isReady();
     }
 
     private Long getMapDeadClock(TmxMap map) {

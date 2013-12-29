@@ -31,7 +31,6 @@
  */
 package im.bci.newtonadv.platform.lwjgl.openal;
 
-import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.FileGameData;
 import java.io.IOException;

@@ -29,59 +29,220 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package im.bci.newtonadv.platform.playn.core;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.tmxloader.TmxLoader;
 import im.bci.tmxloader.TmxMap;
-import java.io.IOException;
-import java.io.InputStream;
+import im.bci.tmxloader.TmxTileset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import playn.core.Json;
+import playn.core.PlayN;
+import playn.core.WatchedAssets;
+import playn.core.util.Callback;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
-public class PlaynGameData implements IGameData{
+public class PlaynGameData implements IGameData {
 
-    @Override
-    public List<String> listQuests() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Set<String> assetsList = Collections.emptySet();
+    private QuestsConfig questsConfig = new QuestsConfig();
+    private final WatchedAssets assets;
+    private static final Logger LOGGER = Logger.getLogger(PlaynGameData.class.getName());
+
+    public static class QuestsConfig {
+
+        Map<String, QuestConfig> quests = new HashMap<String, QuestConfig>();
+        private boolean ready;
+
+        public boolean isReady() {
+            return ready && areQuestReady();
+        }
+
+        private boolean areQuestReady() {
+            for (QuestConfig conf : quests.values()) {
+                if (!conf.isReady()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    public static class QuestConfig {
+
+        List<String> levels = new ArrayList<String>();
+        List<String> lockedBy = new ArrayList<String>();
+        boolean ready;
+
+        public boolean isReady() {
+            return ready;
+        }
+    }
+
+    public PlaynGameData() {
+        assets = new WatchedAssets(PlayN.assets());
+        assets.getText("assets.txt", new Callback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                HashSet<String> newAssets = new HashSet<String>();
+                for (String s : result.split("[\r\n]+")) {
+                    if (!s.isEmpty()) {
+                        newAssets.add(s);
+                    }
+                }
+                assetsList = newAssets;
+            }
+
+            @Override
+            public void onFailure(Throwable cause) {
+                LOGGER.log(Level.SEVERE, "Cannot load assets.txt", cause);
+            }
+        });
+        assets.getText("quests/quests.json", new Callback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                //TODO dont forget bonus quest...
+                for (String questName : PlayN.json().parse(result).getArray("quests", String.class)) {
+                    final QuestConfig questConfig = new QuestConfig();
+                    questsConfig.quests.put(questName, questConfig);
+                    final String questFile = "quests/" + questName + "/quest.json";
+                    assets.getText(questFile, new Callback<String>() {
+
+                        @Override
+                        public void onSuccess(String result) {
+                            final Json.Object json = PlayN.json().parse(result);
+                            for (String levelName : json.getArray("levels", String.class)) {
+                                questConfig.levels.add(levelName);
+                            }
+                            final Json.TypedArray<String> lockedBy = json.getArray("lockedBy", String.class);
+                            if (null != lockedBy) {
+                                for (String lockQuestName : lockedBy) {
+                                    questConfig.lockedBy.add(lockQuestName);
+                                }
+                            }
+                            questsConfig.ready = true;
+                        }
+
+                        @Override
+                        public void onFailure(Throwable cause) {
+                            LOGGER.log(Level.SEVERE, "Cannot load " + questFile, cause);
+
+                        }
+                    });
+                }
+                questsConfig.ready = true;
+            }
+
+            @Override
+            public void onFailure(Throwable cause) {
+                LOGGER.log(Level.SEVERE, "Cannot load quests.json", cause);
+
+            }
+        });
     }
 
     @Override
-    public String getFile(String file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<String> listQuests() {
+        return new ArrayList<String>(questsConfig.quests.keySet());
+    }
+
+    @Override
+    public String getFile(String filepath) {
+        return filepath;
     }
 
     @Override
     public String getQuestFile(String questName, String file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "quests/" + questName + "/" + file;
     }
 
     @Override
     public List<String> listQuestLevels(String questName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return questsConfig.quests.get(questName).levels;
     }
 
     @Override
-    public TmxMap openLevelTmx(String questName, String levelName) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public TmxMap openLevelTmx(String questName, String levelName) {
+        final TmxMap map = new TmxMap();
+        final TmxLoader loader = new TmxLoader();
+        final String tmxDir = "quests/" + questName + "/levels/" + levelName;
+        final String tsxDir = "quests/" + questName;
+        final String tmxFile = tmxDir + "/" + levelName + ".tmx";
+        assets.getText(tmxFile, new Callback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                loader.parseTmx(map, result);
+                loadNextTileset();
+            }
+
+            @Override
+            public void onFailure(Throwable cause) {
+                LOGGER.log(Level.SEVERE, "Cannot load " + tmxFile, cause);
+            }
+
+            private void loadNextTileset() {
+                for (final TmxTileset tileset : map.getTilesets()) {
+                    if (!tileset.isReady() && null != tileset.getSource()) {
+                        final String tsxFile = tsxDir + tileset.getSource();
+                        assets.getText(tsxFile, new Callback<String>() {
+
+                            @Override
+                            public void onSuccess(String result) {
+                                loader.parseTsx(map, tileset, result);
+                                loadNextTileset();
+                            }
+
+                            @Override
+                            public void onFailure(Throwable cause) {
+                                LOGGER.log(Level.SEVERE, "Cannot load " + tsxFile, cause);
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        });
+        return map;
     }
 
     @Override
     public String getLevelFilePath(String questName, String levelName, String filename) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean fileExists(String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String file = "quests/" + questName + "/levels/" + levelName + "/" + filename;
+        if (fileExists(file)) {
+            return file;
+        }
+        file = "quests/" + questName + "/" + filename;
+        if (fileExists(file)) {
+            return file;
+        }
+        return "default_level_data/" + filename;
     }
 
     @Override
     public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return questsConfig.quests.get(questName).lockedBy;
     }
-    
+
+    @Override
+    public boolean fileExists(String path) {
+        return assetsList.contains(path);
+    }
+
+    public boolean isReady() {
+        return assets.isDone() && !assetsList.isEmpty() && questsConfig.isReady();
+    }
+
 }
