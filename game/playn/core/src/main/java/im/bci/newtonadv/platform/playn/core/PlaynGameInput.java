@@ -29,11 +29,16 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package im.bci.newtonadv.platform.playn.core;
 
 import im.bci.newtonadv.platform.interfaces.IGameInput;
+import java.util.EnumSet;
 import net.phys2d.math.ROVector2f;
+import net.phys2d.math.Vector2f;
+import playn.core.Key;
+import playn.core.Keyboard;
+import playn.core.PlayN;
+import playn.core.Pointer;
 
 /**
  *
@@ -41,114 +46,167 @@ import net.phys2d.math.ROVector2f;
  */
 public class PlaynGameInput implements IGameInput {
 
+    private EnumSet<Key> keysDown = EnumSet.noneOf(Key.class);
+    private ROVector2f mousePos;
+    private boolean mouseButtonDown;
+
+    public PlaynGameInput() {
+        PlayN.keyboard().setListener(new Keyboard.Listener() {
+
+            @Override
+            public void onKeyDown(Keyboard.Event event) {
+                keysDown.add(event.key());
+            }
+
+            @Override
+            public void onKeyTyped(Keyboard.TypedEvent event) {
+            }
+
+            @Override
+            public void onKeyUp(Keyboard.Event event) {
+                keysDown.remove(event.key());
+            }
+        });
+
+        PlayN.pointer().setListener(new Pointer.Listener() {
+
+            @Override
+            public void onPointerStart(Pointer.Event event) {
+                mousePos = new Vector2f(event.x(), event.y());
+                mouseButtonDown = true;
+            }
+
+            @Override
+            public void onPointerDrag(Pointer.Event event) {
+                mousePos = new Vector2f(event.x(), event.y());
+                mouseButtonDown = true;            }
+
+            @Override
+            public void onPointerCancel(Pointer.Event event) {
+                mousePos = new Vector2f(event.x(), event.y());
+                mouseButtonDown = false;
+            }
+
+            @Override
+            public void onPointerEnd(Pointer.Event event) {
+                mousePos = new Vector2f(event.x(), event.y());
+                mouseButtonDown = false;
+            }
+
+        });
+    }
+
     @Override
     public boolean isKeyCheatActivateAllDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.F12);
     }
 
     @Override
     public boolean isKeyCheatGotoNextLevelDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.F12);
     }
 
     @Override
     public boolean isKeyDownDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.DOWN);
     }
 
     @Override
     public boolean isKeyJumpDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.UP);
     }
 
     @Override
     public boolean isKeyLeftDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.LEFT);
     }
 
     @Override
     public boolean isKeyReturnDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.ENTER);
     }
 
     @Override
     public boolean isKeyReturnToMenuDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.ESCAPE);
     }
 
     @Override
     public boolean isKeyRightDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.RIGHT);
     }
 
     @Override
     public boolean isKeyRotate90ClockwiseDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.S);
     }
 
     @Override
     public boolean isKeyRotate90CounterClockwiseDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.D);
     }
 
     @Override
     public boolean isKeyRotateClockwiseDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.C);
     }
 
     @Override
     public boolean isKeyRotateCounterClockwiseDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.X);
     }
 
     @Override
     public boolean isKeyToggleFullscreenDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public boolean isKeyUpDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.UP);
     }
 
     @Override
     public boolean isKeyCheatGotoNextBonusLevelDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.F10);
     }
 
     @Override
     public ROVector2f getMousePos() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return mousePos;
     }
 
     @Override
     public boolean isMouseButtonDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return mouseButtonDown;
     }
 
     @Override
     public boolean isKeyCheatGetWorldMapDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.F9);
     }
 
     @Override
     public boolean isKeyCheatGetCompassDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.F8);
     }
+
+    private static final int NB_POLL_PER_TICK = 1;
+    private int pollCount;
 
     @Override
     public void beginPoll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        pollCount = NB_POLL_PER_TICK;
     }
 
     @Override
     public boolean poll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return pollCount-- > 0;
     }
 
     @Override
     public boolean isKeyCheatSetAllCompletedDown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return keysDown.contains(Key.F12);
     }
-    
+
 }
