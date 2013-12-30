@@ -29,7 +29,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package im.bci.newtonadv.platform.playn.core;
 
 import im.bci.newtonadv.anim.Animation;
@@ -70,8 +69,14 @@ import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.StaticPlatformDrawable;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import playn.core.ImageLayer;
+import playn.core.Json;
+import playn.core.PlayN;
+import playn.core.util.Callback;
+import pythagoras.f.Transform;
 
 /**
  *
@@ -79,219 +84,282 @@ import java.io.IOException;
  */
 public class PlaynGameView implements IGameView {
 
+    private final PlaynTextureCache textureCache;
+    private static final Logger LOGGER = Logger.getLogger(PlaynGameView.class.getName());
+
+    PlaynGameView() {
+        float screenW = (float) PlayN.graphics().width();
+        float screenH = (float) PlayN.graphics().height();
+        float gameW = World.ortho2DRight - World.ortho2DLeft;
+        float gameH = World.ortho2DTop - World.ortho2DBottom;
+        float aspectRatio = screenW / screenH;
+        float scaleX =  screenW / (aspectRatio *gameW);
+        float scaleY = screenH / gameH;
+        PlayN.graphics().rootLayer().setScale(scaleX, scaleY);
+        PlayN.graphics().rootLayer().setTranslation(screenW/2.0f, screenH/2.0f);
+        final ImageLayer apple = PlayN.graphics().createImageLayer(PlayN.assets().getImage("default_level_data/apple.png"));
+        apple.setTranslation(-World.distanceUnit, -World.distanceUnit);
+        apple.setSize(2 * World.distanceUnit, 2 * World.distanceUnit);
+        PlayN.graphics().rootLayer().add(apple);
+        textureCache = new PlaynTextureCache();
+    }
+
+    private static void setToOrtho(Transform transform, float left, float right, float bottom, float top) {
+        float xOrth = 2.0f / (right - left);
+        float yOrth = 2.0f / (top - bottom);
+        float tx = -(right + left) / (right - left);
+        float ty = -(top + bottom) / (top - bottom);
+        transform.setTransform(xOrth, 0, 0, yOrth,
+                tx, ty);
+    }
+
     @Override
     public void draw(Sequence sequence) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawPickableObject(PickableObject pickable, AnimationFrame texture, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawAxe(Axe axe, AnimationFrame texture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawAxeAnchor(AxeAnchor axeAnchor, float radius, AnimationFrame texture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawBat(Bat bat, float scale, AnimationFrame frame, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawBlocker(Blocker blocker, float alpha) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawButton(MenuSequence.Button button) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawCloud(Cloud cloud, float alpha) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawDoor(Door door, AnimationFrame texture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawBoss(Boss boss, AnimationFrame bodyTexture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawBossHand(BossHand hand, AnimationFrame texture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawExplosion(Explosion explosion, AnimationFrame texture, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawFPS(int nbFps) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawFireBall(FireBall fireball, AnimationFrame texture, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawHero(Hero hero, AnimationFrame texture, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawKey(Key key, AnimationFrame texture, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawLevelIndicators(String indicators) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawLosedApple(LosedApple apple, World world, AnimationFrame texture, float alpha) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawMenuSequence(MenuSequence sequence) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawMobilePikeAnchor(MobilePikeAnchor anchor, AnimationFrame texture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawMobilePikes(MobilePikes pikes, AnimationFrame texture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawMummy(Mummy mummy, World world, AnimationFrame texture, float scale) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawPickedUpObject(PickedUpObject apple, World world, AnimationFrame texture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawPlatform(AnimatedPlatform platform) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawMenuButton(MenuSequence.Button button, String leftLabel, String rightLabel) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawScoreSequence(ScoreSequence sequence, QuestScore questScore, long scorePerCentToShow) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawSnowLayer(SnowLayer layer) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawUsedKey(UsedKey key, AnimationFrame texture, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawWorld(World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public ITextureCache getTextureCache() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return textureCache;
     }
 
     @Override
     public void toggleFullscreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
-    public AnimationCollection loadFromAnimation(String name) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public AnimationCollection loadFromAnimation(final String filename) throws IOException {
+        final AnimationCollection nanim = new AnimationCollection();
+        PlayN.assets().getText(filename, new Callback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                String path;
+                final int lastIndexOfSlash = filename.lastIndexOf("/");
+                if (lastIndexOfSlash < 0) {
+                    path = "";
+                } else {
+                    path = filename.substring(0, filename.lastIndexOf("/") + 1);
+                }
+                Json.Object json = PlayN.json().parse(result);
+                Json.Array jsonAnimations = json.getArray("animations");
+                for (int a = 0, na = jsonAnimations.length(); a < na; ++a) {
+                    Json.Object jsonAnimation = jsonAnimations.getObject(a);
+                    Animation animation = new Animation(jsonAnimation.getString("name"));
+                    Json.Array jsonFrames = jsonAnimation.getArray("frames");
+                    for (int f = 0, nf = jsonFrames.length(); f < nf; ++f) {
+                        Json.Object jsonFrame = jsonFrames.getObject(f);
+                        final String imageFilename = jsonFrame.getString("image");
+                        ITexture texture = textureCache.getTexture(path + imageFilename);
+                        animation.addFrame(texture, jsonFrame.getInt("duration"), jsonFrame.getNumber("u1"), jsonFrame.getNumber("v1"), jsonFrame.getNumber("u2"), jsonFrame.getNumber("v2"));
+                    }
+                    nanim.addAnimation(animation);
+                }
+                nanim.setReady(true);
+            }
+
+            @Override
+            public void onFailure(Throwable cause) {
+                LOGGER.log(Level.SEVERE, "Cannot load " + filename, cause);
+            }
+        });
+        return nanim;
     }
 
     @Override
     public void drawFadeSequence(ITexture backgroundTexture, Animation.Play loadingPlay, float r, float g, float b, float a) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawMainMenuSequence(MainMenuSequence mainMenuSequence) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public float getWidth() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return PlayN.graphics().width();
     }
 
     @Override
     public float getHeight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return PlayN.graphics().height();
     }
 
     @Override
     public void drawMinimap(World world, ITexture minimapTexture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawKeyLock(KeyLock keyLock, float alpha) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawScoreVisualIndicator(World world, ScoreVisualIndicator scoreVisualIndicator) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawLoading(Animation.Play loadingPlay) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 
     @Override
     public void drawStaticPlatforms(StaticPlatformDrawable staticPlatformDrawable) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
-    
+
 }
