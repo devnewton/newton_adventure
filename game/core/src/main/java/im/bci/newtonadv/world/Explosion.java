@@ -35,8 +35,9 @@ import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
+import im.bci.newtonadv.anim.PlayMode;
 
 /**
  *
@@ -46,13 +47,13 @@ public strictfp class Explosion extends AbstractEntity {
     
     float size = World.distanceUnit * 2.0f;
     private World world;
-    private Animation.Play play;
+    private Play play;
     private Vector2f position;
 
     Explosion(World world, ROVector2f position, AnimationCollection explosionAnimation) {
         this.world = world;
         this.position = new Vector2f(position);
-        this.play = explosionAnimation.getFirst().start(Animation.PlayMode.ONCE);
+        this.play = explosionAnimation.getFirst().start(PlayMode.ONCE);
     }
 
     @Override

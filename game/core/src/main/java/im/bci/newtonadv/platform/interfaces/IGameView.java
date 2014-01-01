@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.platform.interfaces;
 
-import im.bci.newtonadv.anim.Animation.Play;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.MainMenuSequence;
@@ -63,8 +63,9 @@ import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.AnimatedPlatform;
+import im.bci.newtonadv.world.IStaticPlatformDrawable;
+import im.bci.newtonadv.world.IStaticPlatformDrawer;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
-import im.bci.newtonadv.world.StaticPlatformDrawable;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
@@ -160,5 +161,7 @@ public interface IGameView {
 
     void drawLoading(Play loadingPlay);
 
-    void drawStaticPlatforms(StaticPlatformDrawable staticPlatformDrawable);
+    void drawStaticPlatforms(IStaticPlatformDrawable staticPlatformDrawable);
+
+    public IStaticPlatformDrawer createStaticPlatformDrawer();
 }

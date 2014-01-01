@@ -32,7 +32,7 @@
 package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.anim.Animation.Play;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import java.io.IOException;
 

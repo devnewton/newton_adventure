@@ -36,7 +36,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
-import im.bci.newtonadv.anim.Animation.Play;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.Drawable;
@@ -76,9 +76,9 @@ import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.AnimatedPlatform;
+import im.bci.newtonadv.world.IStaticPlatformDrawable;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.StaticPlatform;
-import im.bci.newtonadv.world.StaticPlatformDrawable;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
@@ -558,7 +558,8 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawStaticPlatforms(
-            StaticPlatformDrawable platforms) {
+            IStaticPlatformDrawable iplatforms) {
+        StaticPlatformDrawable platforms = (StaticPlatformDrawable) iplatforms;
         final boolean hasAlpha = platforms.texture.hasAlpha();
         if (hasAlpha) {
             GL11.glEnable(GL11.GL_BLEND);
@@ -1609,5 +1610,10 @@ public strictfp class GameView implements IGameView {
             Logger.getLogger(GameView.class.getName()).warning("Cannot load default_level_data/apple.png");
         }
         return new TrueTypeFont(new Font("monospaced", Font.BOLD, 24), true, new char[0], fontSpecialCharacters);
+    }
+
+    @Override
+    public StaticPlatformDrawer createStaticPlatformDrawer() {
+        return new StaticPlatformDrawer();
     }
 }

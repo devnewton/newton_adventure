@@ -46,6 +46,10 @@ class PlaynTexture implements ITexture {
         this.image = image;
     }
 
+    public Image getImage() {
+        return image;
+    }
+
     @Override
     public int getHeight() {
         return (int) image.height();

@@ -35,6 +35,9 @@ import im.bci.newtonadv.game.RestartGameException;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 
 import playn.core.Game;
+import playn.core.ImmediateLayer;
+import playn.core.PlayN;
+import playn.core.Surface;
 
 public class PlaynNewtonAdventureGame extends Game.Default {
 
@@ -52,31 +55,39 @@ public class PlaynNewtonAdventureGame extends Game.Default {
         } catch (Exception ex) {
             throw new RuntimeException("Error during init", ex);
         }
+        ImmediateLayer immediateLayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+            
+            @Override
+            public void render(Surface surface) {
+                try {
+                    if (null == game) {
+                        if (((PlaynGameData) platform.getGameData()).isReady()) {
+                            game = new im.bci.newtonadv.Game(platform);
+                            game.start();
+                        }
+                    } else if (game.isRunning()) {
+                        try {
+                            ((PlaynGameView)game.getView()).setCurrentSurface(surface);
+                            game.tick();
+                        } catch (RestartGameException e) {
+                            game = new im.bci.newtonadv.Game(platform);
+                            game.start();
+                            game.tick();
+                            platform.saveConfig();//only save config if everything seems ok
+                        }
+                    }
+                } catch (Exception ex) {
+                    throw new RuntimeException("Error during update", ex);
+                }
+            }
+        });
+        PlayN.graphics().rootLayer().add(immediateLayer);
     }
 
     float s;
 
     @Override
     public void update(int delta) {
-        try {
-            if (null == game) {
-                if (((PlaynGameData) platform.getGameData()).isReady()) {
-                    game = new im.bci.newtonadv.Game(platform);
-                    game.start();
-                }
-            } else if (game.isRunning()) {
-                try {
-                    game.tick();
-                } catch (RestartGameException e) {
-                    game = new im.bci.newtonadv.Game(platform);
-                    game.start();
-                    game.tick();
-                    platform.saveConfig();//only save config if everything seems ok
-                }
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException("Error during update", ex);
-        }
     }
 
     @Override

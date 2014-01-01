@@ -29,44 +29,32 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.world;
 
-import net.phys2d.raw.Body;
-import net.phys2d.raw.shapes.Shape;
-import im.bci.newtonadv.anim.PlayMode;
-import im.bci.newtonadv.game.FrameTimeInfos;
-import im.bci.newtonadv.game.Updatable;
+package im.bci.newtonadv.anim;
 
-public strictfp class Crate extends AnimatedPlatform implements Updatable {
+/**
+ *
+ * @author devnewton <devnewton@bci.im>
+ */
+public interface IAnimation {
 
-	private boolean touched = false;
+    Play start();
 
-	public Crate(World world, float w, float h) {
-		super(world, w, h);
-		changeAnimation("crate", PlayMode.LOOP);
-	}
+    Play start(PlayMode mode);
 
-	public Crate(World world, Shape shape) {
-		super(world, shape);
-		changeAnimation("crate", PlayMode.LOOP);
-	}
+    /**
+     * Call play.stop
+     *
+     * @param play
+     */
+    void stop(Play play);
 
-	@Override
-	public void collided(Body body) {
-		if (body instanceof FireBall) {
-			if(!touched) {
-				touched = true;
-				changeAnimation("burning_crate", PlayMode.ONCE);
-			}
-		}
-	}
+    String getName();
 
-	@Override
-	public void update(FrameTimeInfos frameTimeInfos) {
-		super.update(frameTimeInfos);
-		if (touched && play.isStopped()) {
-			world.remove(this);
-		}
-	}
+    AnimationFrame getFrame(int i);
 
+    int getFrameCount();
+
+    long getTotalDuration();
+    
 }

@@ -32,8 +32,8 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.raw.BodyList;
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -61,7 +61,7 @@ public strictfp class Boss extends AbstractDrawableBody implements
     public BossHand getRightHand() {
         return rightHand;
     }
-    private Animation.Play play;
+    private Play play;
     private static final float weight = 10.0f;
     static final float normalSpeed = 1.0f;
     float speed = normalSpeed;

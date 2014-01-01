@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 devnewton <devnewton@bci.im>
+ * Copyright (c) 2014 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,79 +29,47 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package im.bci.newtonadv.platform.playn.core;
 
-import im.bci.newtonadv.platform.interfaces.ISoundCache;
+import im.bci.newtonadv.game.Drawable;
+import im.bci.newtonadv.platform.interfaces.IGameView;
+import im.bci.newtonadv.world.IStaticPlatformDrawer;
+import im.bci.newtonadv.world.StaticPlatform;
+import java.util.List;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
-public class PlaynSoundCache implements ISoundCache {
+class PlaynStaticPlatformDrawer implements IStaticPlatformDrawer {
+
+    public PlaynStaticPlatformDrawer() {
+    }
 
     @Override
-    public void update() {
+    public void addVisible(StaticPlatform platform) {
+//TODO
+    }
+
+    @Override
+    public void postConstruct(IGameView view) {
         //TODO
     }
 
     @Override
-    public void close() {
-        //TODO
+    public void getVisibleDrawables(List<Drawable> visibleDrawables) {
+//TODO
     }
 
     @Override
-    public boolean isSoundEnabled() {
-        return false;
+    public void resetVisibles() {
+//TODO
     }
 
     @Override
-    public boolean isMusicEnabled() {
-        return false;
+    public void add(StaticPlatform platform) {
+//TODO
     }
-
-    @Override
-    public void setSoundEnabled(boolean active) {
-        //TODO
-    }
-
-    @Override
-    public void setMusicEnabled(boolean active) {
-        //TODO
-    }
-
-    @Override
-    public void clearAll() {
-        //TODO
-    }
-
-    @Override
-    public void clearUseless() {
-        //TODO
-    }
-
-    @Override
-    public Playable getSound(String name) {
-        //TODO
-        return new Playable() {
-
-            @Override
-            public void play() {
-            }
-
-            @Override
-            public void stop() {
-            }
-        };
-    }
-
-    @Override
-    public void playMusicIfEnabled(String name) {
-        //TODO
-    }
-
-    @Override
-    public void stopMusic() {
-        //TODO
-    }
-
+    
 }

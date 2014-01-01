@@ -34,7 +34,7 @@ package im.bci.newtonadv.world;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Circle;
 
-import im.bci.newtonadv.anim.Animation.Play;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;

@@ -39,83 +39,21 @@ import java.util.ArrayList;
  *
  * @author devnewton
  */
-public class Animation {
+public class Animation implements IAnimation {
 
-    public class Play {
-
-        private int currentFrameIndex;
-        private long currentTime;
-        private PlayMode mode = PlayMode.LOOP;
-        private State state = State.STOPPED;
-
-        public String getName() {
-            return Animation.this.name;
-        }
-
-        public AnimationFrame getCurrentFrame() {
-            return frames.get(currentFrameIndex);
-        }
-
-        public void start() {
-            start(PlayMode.LOOP);
-        }
-
-        public void start(PlayMode mode) {
-            this.state = State.STARTED;
-            this.mode = mode;
-            this.currentTime = 0;
-            this.currentFrameIndex = 0;
-        }
-
-        public void stop() {
-            state = State.STOPPED;
-            currentTime = 0;
-            currentFrameIndex = 0;
-        }
-
-        public boolean isStopped() {
-            return state == State.STOPPED;
-        }
-
-        public void update(long elapsedTime) {
-
-            if (state == State.STOPPED) {
-                return;
-            }
-
-            this.currentTime += elapsedTime;
-            if (currentTime >= totalDuration) {
-
-                switch (mode) {
-                    case ONCE:
-                        currentFrameIndex = frames.size() - 1;
-                        state = State.STOPPED;
-                        return;
-                    case LOOP:
-                        if (totalDuration > 0) {
-                            currentTime %= totalDuration;
-                        } else {
-                            currentTime = 0;
-                        }
-                        currentFrameIndex = 0;
-                        break;
-                }
-            }
-
-            while (currentTime > frames.get(currentFrameIndex).getEndTime()) {
-                ++this.currentFrameIndex;
-            }
-        }
+    @Override
+    public AnimationFrame getFrame(int i) {
+        return frames.get(i);
     }
 
-    public enum PlayMode {
-
-        ONCE, LOOP
+    @Override
+    public int getFrameCount() {
+        return frames.size();
     }
 
-    enum State {
-
-        STARTED, STOPPED
+    @Override
+    public long getTotalDuration() {
+        return totalDuration;
     }
 
     private final ArrayList<AnimationFrame> frames = new ArrayList<>();
@@ -137,13 +75,15 @@ public class Animation {
         return frame;
     }
 
+    @Override
     public Play start() {
         return start(PlayMode.LOOP);
     }
 
+    @Override
     public Play start(PlayMode mode) {
         if (!frames.isEmpty()) {
-            Play play = new Play();
+            Play play = new Play(this);
             play.start(mode);
             return play;
         } else {
@@ -156,6 +96,7 @@ public class Animation {
      *
      * @param play
      */
+    @Override
     public void stop(Play play) {
         if (null != play) {
             play.stop();

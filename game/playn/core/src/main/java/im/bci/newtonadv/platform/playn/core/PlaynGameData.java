@@ -56,13 +56,14 @@ import playn.core.util.Callback;
 public class PlaynGameData implements IGameData {
 
     private Set<String> assetsList = Collections.emptySet();
-    private QuestsConfig questsConfig = new QuestsConfig();
+    private final QuestsConfig questsConfig = new QuestsConfig();
     private final WatchedAssets assets;
     private static final Logger LOGGER = Logger.getLogger(PlaynGameData.class.getName());
 
     public static class QuestsConfig {
 
         Map<String, QuestConfig> quests = new HashMap<String, QuestConfig>();
+        List<String> visibleQuests = new ArrayList<String>();
         private boolean ready;
 
         public boolean isReady() {
@@ -92,6 +93,61 @@ public class PlaynGameData implements IGameData {
 
     public PlaynGameData() {
         assets = new WatchedAssets(PlayN.assets());
+        initAssetsList();
+
+    }
+
+    private void initQuests() {
+        assets.getText("quests/quests.json", new Callback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                for (String questName : PlayN.json().parse(result).getArray("quests", String.class)) {
+                    questsConfig.visibleQuests.add(questName);
+                }
+                questsConfig.ready = true;
+            }
+
+            @Override
+            public void onFailure(Throwable cause) {
+                LOGGER.log(Level.SEVERE, "Cannot load quests.json", cause);
+
+            }
+        });
+        for (final String file : assetsList) {
+            if (file.endsWith("quest.json")) {
+                final QuestConfig questConfig = new QuestConfig();
+                String questName = file.replace("/quest.json", "");
+                questName = questName.substring(questName.lastIndexOf("/") + 1, questName.length());
+                questsConfig.quests.put(questName, questConfig);
+                assets.getText(file, new Callback<String>() {
+
+                    @Override
+                    public void onSuccess(String result) {
+                        final Json.Object json = PlayN.json().parse(result);
+                        for (String levelName : json.getArray("levels", String.class)) {
+                            questConfig.levels.add(levelName);
+                        }
+                        final Json.TypedArray<String> lockedBy = json.getArray("lockedBy", String.class);
+                        if (null != lockedBy) {
+                            for (String lockQuestName : lockedBy) {
+                                questConfig.lockedBy.add(lockQuestName);
+                            }
+                        }
+                        questConfig.ready = true;
+                    }
+
+                    @Override
+                    public void onFailure(Throwable cause) {
+                        LOGGER.log(Level.SEVERE, "Cannot load " + file, cause);
+
+                    }
+                });
+            }
+        }
+    }
+
+    private void initAssetsList() {
         assets.getText("assets.txt", new Callback<String>() {
 
             @Override
@@ -103,6 +159,7 @@ public class PlaynGameData implements IGameData {
                     }
                 }
                 assetsList = newAssets;
+                initQuests();
             }
 
             @Override
@@ -110,53 +167,11 @@ public class PlaynGameData implements IGameData {
                 LOGGER.log(Level.SEVERE, "Cannot load assets.txt", cause);
             }
         });
-        assets.getText("quests/quests.json", new Callback<String>() {
-
-            @Override
-            public void onSuccess(String result) {
-                //TODO dont forget bonus quest...
-                for (String questName : PlayN.json().parse(result).getArray("quests", String.class)) {
-                    final QuestConfig questConfig = new QuestConfig();
-                    questsConfig.quests.put(questName, questConfig);
-                    final String questFile = "quests/" + questName + "/quest.json";
-                    assets.getText(questFile, new Callback<String>() {
-
-                        @Override
-                        public void onSuccess(String result) {
-                            final Json.Object json = PlayN.json().parse(result);
-                            for (String levelName : json.getArray("levels", String.class)) {
-                                questConfig.levels.add(levelName);
-                            }
-                            final Json.TypedArray<String> lockedBy = json.getArray("lockedBy", String.class);
-                            if (null != lockedBy) {
-                                for (String lockQuestName : lockedBy) {
-                                    questConfig.lockedBy.add(lockQuestName);
-                                }
-                            }
-                            questsConfig.ready = true;
-                        }
-
-                        @Override
-                        public void onFailure(Throwable cause) {
-                            LOGGER.log(Level.SEVERE, "Cannot load " + questFile, cause);
-
-                        }
-                    });
-                }
-                questsConfig.ready = true;
-            }
-
-            @Override
-            public void onFailure(Throwable cause) {
-                LOGGER.log(Level.SEVERE, "Cannot load quests.json", cause);
-
-            }
-        });
     }
 
     @Override
     public List<String> listQuests() {
-        return new ArrayList<String>(questsConfig.quests.keySet());
+        return questsConfig.visibleQuests;
     }
 
     @Override
@@ -196,7 +211,8 @@ public class PlaynGameData implements IGameData {
             private void loadNextTileset() {
                 for (final TmxTileset tileset : map.getTilesets()) {
                     if (!tileset.isReady() && null != tileset.getSource()) {
-                        final String tsxFile = tsxDir + tileset.getSource();
+                        //TODO real path resolve...
+                        final String tsxFile = tsxDir + "/" + tileset.getSource().replaceAll("../", "");
                         assets.getText(tsxFile, new Callback<String>() {
 
                             @Override
@@ -210,9 +226,10 @@ public class PlaynGameData implements IGameData {
                                 LOGGER.log(Level.SEVERE, "Cannot load " + tsxFile, cause);
                             }
                         });
-                        break;
+                        return;
                     }
                 }
+                loader.decode(map);
             }
         });
         return map;

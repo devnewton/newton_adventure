@@ -33,9 +33,9 @@ package im.bci.newtonadv.world;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -81,7 +81,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITexture backgroundTexture;
     private List<Updatable> updatableBodies = new LinkedList<Updatable>();
     protected EntityList topLevelEntities = new EntityList();
-    private Animation.Play appleIconPlay;
+    private Play appleIconPlay;
     private boolean objectivesCompleted = false;
     private float nonProgressiveGravityRotationStep;
     private final String questName;
@@ -93,7 +93,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private boolean isRotateGravityPossible = true;
     private EnumMap<NewtonColor, BodyList> coloredStaticBodies;
     private Playable explodeSound;
-    public StaticPlatformDrawer staticPlatformDrawer = new StaticPlatformDrawer();
+    public IStaticPlatformDrawer staticPlatformDrawer;
 
     public void setAppleIcon(AnimationCollection appleIcon) {
         this.appleIconPlay = appleIcon.getFirst().start();
@@ -146,11 +146,12 @@ public strictfp class World extends net.phys2d.raw.World {
         this.game = game;
         progressiveRotateGravity(0.0f);
         this.questName = questName;
-        coloredStaticBodies = new EnumMap<NewtonColor, BodyList>(NewtonColor.class);
+        coloredStaticBodies = new EnumMap<>(NewtonColor.class);
         for (NewtonColor color : NewtonColor.values()) {
             coloredStaticBodies.put(color, new BodyList());
         }
         explodeSound = game.getSoundCache().getSound(game.getData().getFile("explode.wav"));
+        staticPlatformDrawer = game.getView().createStaticPlatformDrawer();
     }
 
     public AbsoluteAABox getStaticBounds() {

@@ -43,8 +43,8 @@ public strictfp class StaticPlatform extends StaticBody {
 
     private ITexture texture;
     private int zOrder;
-    int vertexBufferIndex;
-    StaticPlatformDrawable drawable;
+    public int vertexBufferIndex;
+    public IStaticPlatformDrawable drawable;
     private float u1 = 0, v1 = 0, u2 = 1, v2 = 1;
 
     StaticPlatform(float w, float h) {

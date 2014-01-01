@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2014 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,44 +29,18 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package im.bci.newtonadv.world;
 
-import net.phys2d.raw.Body;
-import net.phys2d.raw.shapes.Shape;
-import im.bci.newtonadv.anim.PlayMode;
-import im.bci.newtonadv.game.FrameTimeInfos;
-import im.bci.newtonadv.game.Updatable;
+import im.bci.newtonadv.game.Drawable;
+import java.util.List;
 
-public strictfp class Crate extends AnimatedPlatform implements Updatable {
+/**
+ *
+ * @author devnewton <devnewton@bci.im>
+ */
+public interface IStaticPlatformDrawable extends Drawable {
 
-	private boolean touched = false;
-
-	public Crate(World world, float w, float h) {
-		super(world, w, h);
-		changeAnimation("crate", PlayMode.LOOP);
-	}
-
-	public Crate(World world, Shape shape) {
-		super(world, shape);
-		changeAnimation("crate", PlayMode.LOOP);
-	}
-
-	@Override
-	public void collided(Body body) {
-		if (body instanceof FireBall) {
-			if(!touched) {
-				touched = true;
-				changeAnimation("burning_crate", PlayMode.ONCE);
-			}
-		}
-	}
-
-	@Override
-	public void update(FrameTimeInfos frameTimeInfos) {
-		super.update(frameTimeInfos);
-		if (touched && play.isStopped()) {
-			world.remove(this);
-		}
-	}
-
+    void addStaticPlatforms(List<StaticPlatform> platforms);
+    
 }

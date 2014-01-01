@@ -31,8 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -46,7 +46,7 @@ import net.phys2d.raw.shapes.Shape;
 public class AxeAnchor extends AbstractDrawableStaticBody implements Updatable {
 
 	static final float radius = World.distanceUnit;
-	private Animation.Play play;
+	private Play play;
 	private final World world;
 
 	AxeAnchor(World world) {
