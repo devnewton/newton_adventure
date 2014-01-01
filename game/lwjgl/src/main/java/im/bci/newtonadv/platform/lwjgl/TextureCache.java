@@ -32,7 +32,6 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
-import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 

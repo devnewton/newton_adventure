@@ -29,13 +29,14 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package im.bci.newtonadv.platform.playn.core;
 
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.world.IStaticPlatformDrawer;
 import im.bci.newtonadv.world.StaticPlatform;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,32 +45,53 @@ import java.util.List;
  */
 class PlaynStaticPlatformDrawer implements IStaticPlatformDrawer {
 
+    private List<PlaynStaticPlatformDrawable> drawables;
+    private final List<StaticPlatform> platforms = new ArrayList<>();
+
     public PlaynStaticPlatformDrawer() {
     }
 
     @Override
     public void addVisible(StaticPlatform platform) {
-//TODO
+        int v = platform.vertexBufferIndex * 4;
+        final IntBuffer indices = ((PlaynStaticPlatformDrawable) platform.drawable).indices;
+
+        indices.put(v);
+        indices.put(v + 1);
+        indices.put(v + 2);
+
+        indices.put(v);
+        indices.put(v + 2);
+        indices.put(v + 3);
     }
 
     @Override
     public void postConstruct(IGameView view) {
-        //TODO
+        drawables = PlaynStaticPlatformDrawable.create(view, platforms);
+        platforms.clear();
     }
 
     @Override
     public void getVisibleDrawables(List<Drawable> visibleDrawables) {
-//TODO
+        for (PlaynStaticPlatformDrawable drawable : drawables) {
+            drawable.indices.flip();
+            if (drawable.indices.limit() > 0) {
+                visibleDrawables.add(drawable);
+            }
+        }
     }
 
     @Override
     public void resetVisibles() {
-//TODO
+        for (PlaynStaticPlatformDrawable drawable : drawables) {
+            drawable.indices.rewind();
+            drawable.indices.limit(drawable.indices.capacity());
+        }
     }
 
     @Override
     public void add(StaticPlatform platform) {
-//TODO
+        platforms.add(platform);
     }
-    
+
 }

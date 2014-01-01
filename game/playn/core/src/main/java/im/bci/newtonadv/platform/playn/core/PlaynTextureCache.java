@@ -34,37 +34,32 @@ package im.bci.newtonadv.platform.playn.core;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import playn.core.Assets;
-import playn.core.CachingAssets;
-import playn.core.PlayN;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
 class PlaynTextureCache implements ITextureCache {
-    private Assets assets;
 
-    public PlaynTextureCache() {
-        resetCache();
-    }
+    private final Assets assets;
 
-    private void resetCache() {
-        assets = new CachingAssets(PlayN.assets());
+    public PlaynTextureCache(Assets assets) {
+         this.assets = assets;
     }
 
     @Override
     public void clearAll() {
-        resetCache();
+//TODO
     }
 
     @Override
     public void clearUseless() {
-        resetCache();
+//TODO
     }
 
     @Override
     public ITexture getTexture(String name) {
-        return new PlaynTexture(assets.getImage(name));
+        return new PlaynTexture(name, assets.getImage(name));
     }
 
     @Override

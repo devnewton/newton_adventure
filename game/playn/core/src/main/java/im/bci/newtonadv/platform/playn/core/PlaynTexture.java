@@ -40,9 +40,11 @@ import playn.core.Image;
  */
 class PlaynTexture implements ITexture {
 
+    private final String name;
     private final Image image;
 
-    PlaynTexture(Image image) {
+    PlaynTexture(String name, Image image) {
+        this.name = name;
         this.image = image;
     }
 
@@ -68,6 +70,15 @@ class PlaynTexture implements ITexture {
     @Override
     public boolean hasAlpha() {
         return true;
+    }
+
+    String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

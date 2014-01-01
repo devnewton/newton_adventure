@@ -59,22 +59,27 @@ public class Texture implements ITexture {
     }
 
     @Override
-	public int getId() {
+    public String toString() {
+        return String.valueOf(id);
+    }
+
+    @Override
+    public int getId() {
         return id;
     }
 
     @Override
-	public int getHeight() {
+    public int getHeight() {
         return height;
     }
 
     @Override
-	public int getWidth() {
+    public int getWidth() {
         return width;
     }
 
-	@Override
-	public boolean hasAlpha() {
-		return alpha;
-	}
+    @Override
+    public boolean hasAlpha() {
+        return alpha;
+    }
 }

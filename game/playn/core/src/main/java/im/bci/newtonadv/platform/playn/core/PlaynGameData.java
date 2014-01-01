@@ -34,6 +34,7 @@ package im.bci.newtonadv.platform.playn.core;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.tmxloader.TmxLoader;
 import im.bci.tmxloader.TmxMap;
+import im.bci.tmxloader.TmxTile;
 import im.bci.tmxloader.TmxTileset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +47,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import playn.core.Json;
 import playn.core.PlayN;
-import playn.core.WatchedAssets;
 import playn.core.util.Callback;
 
 /**
@@ -57,13 +57,13 @@ public class PlaynGameData implements IGameData {
 
     private Set<String> assetsList = Collections.emptySet();
     private final QuestsConfig questsConfig = new QuestsConfig();
-    private final WatchedAssets assets;
+    private final RealWatchedAssets assets;
     private static final Logger LOGGER = Logger.getLogger(PlaynGameData.class.getName());
 
     public static class QuestsConfig {
 
-        Map<String, QuestConfig> quests = new HashMap<String, QuestConfig>();
-        List<String> visibleQuests = new ArrayList<String>();
+        Map<String, QuestConfig> quests = new HashMap<>();
+        List<String> visibleQuests = new ArrayList<>();
         private boolean ready;
 
         public boolean isReady() {
@@ -82,8 +82,8 @@ public class PlaynGameData implements IGameData {
 
     public static class QuestConfig {
 
-        List<String> levels = new ArrayList<String>();
-        List<String> lockedBy = new ArrayList<String>();
+        List<String> levels = new ArrayList<>();
+        List<String> lockedBy = new ArrayList<>();
         boolean ready;
 
         public boolean isReady() {
@@ -91,10 +91,9 @@ public class PlaynGameData implements IGameData {
         }
     }
 
-    public PlaynGameData() {
-        assets = new WatchedAssets(PlayN.assets());
+    public PlaynGameData(RealWatchedAssets assets) {
+        this.assets = assets;
         initAssetsList();
-
     }
 
     private void initQuests() {
@@ -152,13 +151,20 @@ public class PlaynGameData implements IGameData {
 
             @Override
             public void onSuccess(String result) {
-                HashSet<String> newAssets = new HashSet<String>();
+                HashSet<String> newAssets = new HashSet<>();
                 for (String s : result.split("[\r\n]+")) {
                     if (!s.isEmpty()) {
                         newAssets.add(s);
                     }
                 }
                 assetsList = newAssets;
+               
+                /* Charge tout comme un bourrin...
+                for(String a : assetsList) {
+                    if(a.endsWith(".png")) {
+                        assets.getImage(a);
+                    }
+                }*/
                 initQuests();
             }
 
@@ -218,6 +224,9 @@ public class PlaynGameData implements IGameData {
                             @Override
                             public void onSuccess(String result) {
                                 loader.parseTsx(map, tileset, result);
+                                for(TmxTile tile : tileset.getTiles()) {
+                                    tile.getFrame().getImage().setSource(tsxDir + "/" + tile.getFrame().getImage().getSource());
+                                }
                                 loadNextTileset();
                             }
 

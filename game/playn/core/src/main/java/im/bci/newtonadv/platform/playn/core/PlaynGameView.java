@@ -46,6 +46,7 @@ import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.score.QuestScore;
+import im.bci.newtonadv.util.NewtonColor;
 import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.Axe;
 import im.bci.newtonadv.world.AxeAnchor;
@@ -79,16 +80,16 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.phys2d.math.ROVector2f;
-import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
+import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
+import playn.core.Assets;
 import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.Color;
 import playn.core.Font;
 import playn.core.Image;
-import playn.core.ImageLayer;
 import playn.core.Json;
 import playn.core.PlayN;
 import playn.core.Surface;
@@ -106,33 +107,28 @@ public class PlaynGameView implements IGameView {
     private static final Logger LOGGER = Logger.getLogger(PlaynGameView.class.getName());
     private Surface surface;
     private final TextFormat textFormat;
+    private Assets assets;
 
     public void setCurrentSurface(Surface currentSurface) {
         this.surface = currentSurface;
     }
 
-    PlaynGameView() {
+    PlaynGameView(Assets assets) {
+        this.assets = assets;
         textFormat = new TextFormat(PlayN.graphics().createFont("monospaced", Font.Style.BOLD, 24), true);
-        //setOrtho2D(World.ortho2DLeft, World.ortho2DRight, World.ortho2DBottom, World.ortho2DTop);
-        final ImageLayer apple = PlayN.graphics().createImageLayer(PlayN.assets().getImage("default_level_data/apple.png"));
-        apple.setTranslation(-World.distanceUnit, -World.distanceUnit);
-        apple.setSize(2 * World.distanceUnit, 2 * World.distanceUnit);
-        PlayN.graphics().rootLayer().add(apple);
-        textureCache = new PlaynTextureCache();
+        textureCache = new PlaynTextureCache(assets);
     }
 
     private void setOrtho2D(Surface surface, float left, float right, float bottom, float top) {
         float screenW = surface.width();
-        float screenH = (float) surface.height();
+        float screenH = surface.height();
         float gameW = right - left;
         float gameH = top - bottom;
         float aspectRatio = screenW / screenH;
         float scaleX = screenW / (aspectRatio * gameW);
         float scaleY = screenH / gameH;
         surface.translate(screenW / 2.0f, screenH / 2.0f);
-        surface.scale(scaleX, scaleY);
-
-//        
+        surface.scale(scaleX, -scaleY);
     }
 
     @Override
@@ -180,9 +176,30 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawDoor(Door door, AnimationFrame texture) {
-        Box box = (Box) door.getShape();
-        final Image image = ((PlaynTexture) texture.getImage()).getImage();
-        surface.drawImage(image, door.getPosition().getX(), door.getPosition().getY(), box.getSize().getX(), box.getSize().getY(), texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1())  * image.width(), (texture.getV2() - texture.getV1())* image.height());
+        if (null != texture) {
+            Box box = (Box) door.getShape();
+
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+
+            final float w = box.getSize().getX();
+            final float h = box.getSize().getY();
+            final float x = door.getPosition().getX() - w;
+            final float y = door.getPosition().getY() + h/2.0f;
+            surface.save();
+            surface.translate(x, y);
+            surface.scale(1, -1);
+            surface.drawImage(image, 0, 0, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+            /*
+            *           final float w = box.getSize().getX();
+            final float h = box.getSize().getY();
+            final float x = door.getPosition().getX() - w;
+            final float y = door.getPosition().getY() - h;
+            surface.save();
+            surface.drawImage(image, x, y, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+            */
+        }
     }
 
     @Override
@@ -212,7 +229,43 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawHero(Hero hero, AnimationFrame texture, World world) {
-        //TODO
+        if (null != texture) {
+            if (null != hero) {
+                AABox bounds = hero.getShape().getBounds();
+                float r = (float) Math.toDegrees(world.getGravityAngle());
+                float scale = 1.0f;
+                if (null != world.getHero().getDyingTimedAction()) {
+                    float p = world.getHero().getDyingTimedAction().getProgress();
+                    if (p >= 0.5f) {
+                        p -= 0.5f;
+                        p *= 2.0f;
+                        r += 500 * p;
+                        scale += Math.sin(p * 1.5f * Math.PI) * 4.0f;
+                        if (scale < 0.0f) {
+                            return;
+                        }
+                    }
+                }
+                surface.save();
+                surface.translate(hero.getPosition().getX(), hero.getPosition().getY());
+                surface.rotate(r);
+                surface.scale(scale, scale);
+                float x1 = -bounds.getWidth() / 2.0f;
+                float y1 = -bounds.getHeight() / 2.0f;
+                Image image = ((PlaynTexture) texture.getImage()).getImage();
+                if (hero.isLookingLeft()) {
+                    surface.scale(-1.0f, 1.0f);
+                }
+                NewtonColor color = hero.getColor();
+                surface.setTint(Color.rgb((int) (color.r * 255), (int) (color.g * 255), (int) (color.r * 255)));
+                surface.drawImage(image, x1, y1, bounds.getWidth(), bounds.getHeight(),
+                        texture.getU1()
+                        * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(),
+                        (texture.getV2() - texture.getV1()) * image.height());
+                surface.setTint(Color.rgb(255, 255, 255));
+                surface.restore();
+            }
+        }
     }
 
     @Override
@@ -341,7 +394,7 @@ public class PlaynGameView implements IGameView {
                 - cameraSize, heroPos.getY() - cameraSize, heroPos.getX()
                 + cameraSize, heroPos.getY() + cameraSize);
 
-        ArrayList<Drawable> drawableBodies = new ArrayList<Drawable>();
+        ArrayList<Drawable> drawableBodies = new ArrayList<>();
         world.staticPlatformDrawer.resetVisibles();
         for (int i = 0; i < visibleBodies.size(); i++) {
             Body body = visibleBodies.get(i);
@@ -373,9 +426,9 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public AnimationCollection loadFromAnimation(final String filename) throws IOException {
-        if(filename.endsWith(".json")) {
-        return loadNanim(filename);
-        } else if(filename.endsWith(".png")) {
+        if (filename.endsWith(".json")) {
+            return loadNanim(filename);
+        } else if (filename.endsWith(".png")) {
             return new AnimationCollection(textureCache.getTexture(filename));
         } else {
             throw new RuntimeException("Unknow animation format of " + filename);
@@ -384,7 +437,7 @@ public class PlaynGameView implements IGameView {
 
     private AnimationCollection loadNanim(final String filename) {
         final AnimationCollection nanim = new AnimationCollection();
-        PlayN.assets().getText(filename, new Callback<String>() {
+        assets.getText(filename, new Callback<String>() {
 
             @Override
             public void onSuccess(String result) {
@@ -477,8 +530,25 @@ public class PlaynGameView implements IGameView {
     }
 
     @Override
-    public void drawStaticPlatforms(IStaticPlatformDrawable platforms) {
-        //TODO
+    public void drawStaticPlatforms(IStaticPlatformDrawable drawable) {
+        final PlaynStaticPlatformDrawable platforms = (PlaynStaticPlatformDrawable) drawable;
+        final Image image = platforms.texture.getImage();
+        /* for (StaticPlatform platform : platforms.platforms) {
+         if (platform.getShape() instanceof Box) {
+         final Box box = (Box) platform.getShape();
+         final float w = box.getSize().getX();
+         final float h = box.getSize().getY();
+         final float x = platform.getPosition().getX() - w;
+         final float y = platform.getPosition().getY() - h;
+         surface.drawImage(image, x, y, w, h);
+         }
+         }*/
+        if (image.isReady()) {
+            surface.setFillPattern(image.toPattern());
+            int[] indices = new int[platforms.indices.limit()];
+            platforms.indices.get(indices);
+            surface.fillTriangles(platforms.vertices.array(), platforms.texCoords.array(), indices);
+        }
     }
 
     private void doDrawMenuSequence(final MenuSequence sequence) {

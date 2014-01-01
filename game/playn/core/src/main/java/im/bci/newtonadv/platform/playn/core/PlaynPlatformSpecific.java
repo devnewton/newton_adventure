@@ -44,17 +44,22 @@ import im.bci.newtonadv.score.GameScore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import playn.core.CachingAssets;
 import playn.core.PlayN;
+import playn.core.WatchedAssets;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
 public class PlaynPlatformSpecific implements IPlatformSpecific {
+
+    private final RealWatchedAssets assets = new RealWatchedAssets(new CachingAssets(PlayN.assets()));
     private final PlaynGameInput gameInput = new PlaynGameInput();
-    private final PlaynGameView gameView = new PlaynGameView();
+    private final PlaynGameView gameView = new PlaynGameView(assets);
     private final PlaynSoundCache soundCache = new PlaynSoundCache();
-    private final PlaynGameData data = new PlaynGameData();
+    private final PlaynGameData data = new PlaynGameData(assets);
+
     @Override
     public void saveConfig() {
     }
@@ -136,6 +141,10 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
     @Override
     public String getLocaleSuffix() {
         return "_en_US";
+    }
+
+    public RealWatchedAssets getAssets() {
+        return assets;
     }
 
 }
