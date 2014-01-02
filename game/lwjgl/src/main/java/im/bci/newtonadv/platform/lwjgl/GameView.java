@@ -1398,8 +1398,9 @@ public strictfp class GameView implements IGameView {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
         final float x1 = screenWidth - 256;
         final float x2 = screenWidth;
-        final float y1 = Game.DEFAULT_SCREEN_HEIGHT - 256;
-        final float y2 = Game.DEFAULT_SCREEN_HEIGHT;
+        final float y1 = Game.DEFAULT_SCREEN_HEIGHT;
+        final float y2 = Game.DEFAULT_SCREEN_HEIGHT - 256;
+
         final float u1 = texture.getU1(), u2 = texture.getU2();
         final float v1 = texture.getV1(), v2 = texture.getV2();
         GL11.glBegin(GL11.GL_QUADS);
@@ -1587,19 +1588,6 @@ public strictfp class GameView implements IGameView {
         GL11.glPopMatrix();
         GL11.glDisable(GL11.GL_BLEND);
 
-    }
-
-    @Override
-    public void drawLoading(Play loadingPlay) {
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        GL11.glPushMatrix();
-        final float aspectRatio = (float) LwjglHelper.getWidth()
-                / (float) LwjglHelper.getHeight();
-        final float screenWidth = Game.DEFAULT_SCREEN_WIDTH
-                * aspectRatio;
-        GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);
-        drawLoadingIcon(loadingPlay, screenWidth);
-        GL11.glPopMatrix();
     }
 
     private TrueTypeFont initFont() {

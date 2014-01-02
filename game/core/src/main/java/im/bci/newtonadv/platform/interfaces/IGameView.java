@@ -159,8 +159,6 @@ public interface IGameView {
 
     void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
 
-    void drawLoading(Play loadingPlay);
-
     void drawStaticPlatforms(IStaticPlatformDrawable staticPlatformDrawable);
 
     public IStaticPlatformDrawer createStaticPlatformDrawer();
