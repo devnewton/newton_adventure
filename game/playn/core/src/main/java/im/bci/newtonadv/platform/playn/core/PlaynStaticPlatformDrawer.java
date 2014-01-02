@@ -35,7 +35,6 @@ import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.world.IStaticPlatformDrawer;
 import im.bci.newtonadv.world.StaticPlatform;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +45,7 @@ import java.util.List;
 class PlaynStaticPlatformDrawer implements IStaticPlatformDrawer {
 
     private List<PlaynStaticPlatformDrawable> drawables;
-    private final List<StaticPlatform> platforms = new ArrayList<>();
+    private final List<StaticPlatform> platforms = new ArrayList<StaticPlatform>();
 
     public PlaynStaticPlatformDrawer() {
     }
@@ -54,15 +53,15 @@ class PlaynStaticPlatformDrawer implements IStaticPlatformDrawer {
     @Override
     public void addVisible(StaticPlatform platform) {
         int v = platform.vertexBufferIndex * 4;
-        final IntBuffer indices = ((PlaynStaticPlatformDrawable) platform.drawable).indices;
+        final PlaynStaticPlatformDrawable drawable = (PlaynStaticPlatformDrawable) platform.drawable;
 
-        indices.put(v);
-        indices.put(v + 1);
-        indices.put(v + 2);
+        drawable.indices[drawable.indicesLimit++] = v;
+        drawable.indices[drawable.indicesLimit++] = v + 1;
+        drawable.indices[drawable.indicesLimit++] = v + 2;
 
-        indices.put(v);
-        indices.put(v + 2);
-        indices.put(v + 3);
+        drawable.indices[drawable.indicesLimit++] = v;
+        drawable.indices[drawable.indicesLimit++] = v + 2;
+        drawable.indices[drawable.indicesLimit++] = v + 3;
     }
 
     @Override
@@ -74,8 +73,7 @@ class PlaynStaticPlatformDrawer implements IStaticPlatformDrawer {
     @Override
     public void getVisibleDrawables(List<Drawable> visibleDrawables) {
         for (PlaynStaticPlatformDrawable drawable : drawables) {
-            drawable.indices.flip();
-            if (drawable.indices.limit() > 0) {
+            if (drawable.indicesLimit > 0) {
                 visibleDrawables.add(drawable);
             }
         }
@@ -84,8 +82,7 @@ class PlaynStaticPlatformDrawer implements IStaticPlatformDrawer {
     @Override
     public void resetVisibles() {
         for (PlaynStaticPlatformDrawable drawable : drawables) {
-            drawable.indices.rewind();
-            drawable.indices.limit(drawable.indices.capacity());
+            drawable.indicesLimit=0;
         }
     }
 

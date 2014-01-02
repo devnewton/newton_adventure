@@ -89,7 +89,7 @@ public class ScoreSequence extends MenuSequence {
     @Override
 	public void update() {
         super.update();
-        timeInfos.update();
+        timeInfos.update(game.nanoTime());
         long newScorePercentToShow = Math.min(100, timeInfos.currentTime * 100 / (10 * 1000000000));
         if (newScorePercentToShow != scorePerCentToShow) {
             scorePerCentToShow = newScorePercentToShow;

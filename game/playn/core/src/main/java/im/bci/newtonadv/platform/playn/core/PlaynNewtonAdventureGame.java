@@ -32,7 +32,6 @@
 package im.bci.newtonadv.platform.playn.core;
 
 import im.bci.newtonadv.game.RestartGameException;
-import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 
 import playn.core.Game;
 import playn.core.ImmediateLayer;

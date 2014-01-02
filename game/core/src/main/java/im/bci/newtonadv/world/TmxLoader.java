@@ -42,10 +42,9 @@ import im.bci.tmxloader.TmxLayer;
 import im.bci.tmxloader.TmxMap;
 import im.bci.tmxloader.TmxTileInstance;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.Level;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import net.phys2d.math.ROVector2f;
@@ -99,6 +98,7 @@ public class TmxLoader {
     static final float defaultPickableObjectSize = 2.0f * World.distanceUnit;
     private static final Circle defaultPickableObjectShape = new Circle(
             defaultPickableObjectSize / 2.0f);
+
     public TmxLoader(Game game, String questName, String levelName) throws Exception {
         this.game = game;
         this.questName = questName;
@@ -106,10 +106,10 @@ public class TmxLoader {
     }
 
     public void preloading() {
-        map = game.getData().openLevelTmx(questName,levelName);
+        map = game.getData().openLevelTmx(questName, levelName);
     }
 
-    public void startLoading(World world) throws FileNotFoundException, IOException, Exception {
+    public void startLoading(World world) throws IOException, Exception {
         this.world = world;
         world.setAppleIcon(getAppleIconTexture());
         iterator = new MultidimensionnalIterator(new int[]{map.getLayers().size(), map.getWidth(), map.getHeight()});
@@ -331,7 +331,7 @@ public class TmxLoader {
                 }
                 world.setHero(hero);
             } else {
-                LOGGER.log(Level.WARNING, "One hero is enough for level {0} in quest {1}", new Object[]{levelName, questName});
+                LOGGER.warning("One hero is enough for level " + levelName + " in quest " + questName);
             }
         } else if (c.equals("mummy")) {
             Mummy mummy = new Mummy(world, new Circle(World.distanceUnit), getMummyAnimation());
@@ -703,7 +703,7 @@ public class TmxLoader {
 
     private AnimationCollection getAnimationForTile(TmxMap map,
             TmxTileInstance tile, ITextureCache textureCache)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         AnimationCollection animation;
         String gfx = tile.getProperty("newton_adventure.gfx", null);
         if (null != gfx) {
@@ -721,7 +721,7 @@ public class TmxLoader {
 
     private AnimationCollection getAnimationForTile(TmxMap map,
             TmxTileInstance tile, AnimationCollection defaultAnimation)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         AnimationCollection animation;
         String gfx = tile.getProperty("newton_adventure.gfx", null);
         if (null != gfx) {
@@ -801,14 +801,14 @@ public class TmxLoader {
             String filePropertyName) {
         String filename = map.getProperty(filePropertyName, null);
         if (filename == null) {
-            filename = defaultMapProperties.getProperty(filePropertyName);
+            filename = defaultMapProperties.get(filePropertyName);
             if (filename == null) {
                 return null;
             }
         }
         return game.getData().getLevelFilePath(questName, levelName, filename);
     }
-    private static final Properties defaultMapProperties = new Properties();
+    private static final Map<String,String> defaultMapProperties = new HashMap<String, String>();
 
     static {
         defaultMapProperties.put("newton_adventure.mummy", "mummy.gif");
@@ -855,7 +855,7 @@ public class TmxLoader {
     private String getMapProperty(TmxMap map, String prop) {
         String value = map.getProperty(prop, null);
         if (null == value) {
-            return defaultMapProperties.getProperty(prop);
+            return defaultMapProperties.get(prop);
         }
         return value;
     }

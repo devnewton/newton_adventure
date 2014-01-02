@@ -50,11 +50,12 @@ import net.phys2d.raw.shapes.Shape;
  */
 class PlaynStaticPlatformDrawable implements IStaticPlatformDrawable {
 
-    final List<StaticPlatform> platforms = new ArrayList<>();
+    final List<StaticPlatform> platforms = new ArrayList<StaticPlatform>();
 
-    FloatBuffer vertices;
-    FloatBuffer texCoords;
-    IntBuffer indices;
+    float[] vertices;
+    float[] texCoords;
+    int indices[];
+    int indicesLimit;
     private int zOrder;
     private IGameView view;
     public PlaynTexture texture;
@@ -62,7 +63,14 @@ class PlaynStaticPlatformDrawable implements IStaticPlatformDrawable {
 
         @Override
         public int compare(StaticPlatform o1, StaticPlatform o2) {
-            int result = Integer.compare(o1.getZOrder(), o2.getZOrder());
+            final int z1 = o1.getZOrder();
+            final int z2 = o2.getZOrder();
+            int result = 0;
+            if (z1 < z2) {
+                result = -1;
+            } else if (z1 > z2) {
+                result = 1;
+            }
             if (result == 0) {
                 final PlaynTexture texture1 = (PlaynTexture) o1.getTexture();
                 final PlaynTexture texture2 = (PlaynTexture) o2.getTexture();
@@ -74,7 +82,7 @@ class PlaynStaticPlatformDrawable implements IStaticPlatformDrawable {
     };
 
     static List<PlaynStaticPlatformDrawable> create(IGameView view, List<StaticPlatform> platforms) {
-        List<PlaynStaticPlatformDrawable> result = new ArrayList<>();
+        List<PlaynStaticPlatformDrawable> result = new ArrayList<PlaynStaticPlatformDrawable>();
         java.util.Collections.sort(platforms, COMPARATOR);
         for (List<StaticPlatform> partitionedPlatforms : partition(platforms)) {
             if (!partitionedPlatforms.isEmpty()) {
@@ -91,12 +99,12 @@ class PlaynStaticPlatformDrawable implements IStaticPlatformDrawable {
     }
 
     private static List<List<StaticPlatform>> partition(List<StaticPlatform> platforms) {
-        List<List<StaticPlatform>> result = new ArrayList<>();
+        List<List<StaticPlatform>> result = new ArrayList<List<StaticPlatform>>();
         StaticPlatform previousPlatform = null;
         List<StaticPlatform> currentPlatforms = null;
         for (StaticPlatform platform : platforms) {
             if (null == currentPlatforms || 0 != COMPARATOR.compare(previousPlatform, platform)) {
-                currentPlatforms = new ArrayList<>();
+                currentPlatforms = new ArrayList<StaticPlatform>();
                 result.add(currentPlatforms);
             }
             currentPlatforms.add(platform);
@@ -108,38 +116,42 @@ class PlaynStaticPlatformDrawable implements IStaticPlatformDrawable {
     @Override
     public void addStaticPlatforms(List<StaticPlatform> platforms) {
         final int nb = platforms.size();
-        vertices = FloatBuffer.wrap(new float[nb * 2 * 4]);
-        texCoords = FloatBuffer.wrap(new float[nb * 2 * 4]);
-        indices = IntBuffer.wrap(new int[nb * 6]);
+        FloatBuffer verticesBuffer = FloatBuffer.allocate(nb * 2 * 4);
+        FloatBuffer texCoordsBuffer = FloatBuffer.allocate(nb * 2 * 4);
+        indices = new int[nb * 6];
         for (int i = 0; i < nb; ++i) {
             StaticPlatform platform = platforms.get(i);
             platform.vertexBufferIndex = i;
-            addStaticPlatform(platform);
+            addStaticPlatform(platform, verticesBuffer, texCoordsBuffer);
         }
-        vertices.flip();
-        texCoords.flip();
+        vertices = new float[nb * 2 * 4];
+        verticesBuffer.flip();
+        verticesBuffer.get(vertices);
+        texCoords = new float[nb * 2 * 4];
+        texCoordsBuffer.flip();
+        texCoordsBuffer.get(texCoords);
     }
 
-    private void addStaticPlatform(StaticPlatform platform) {
+    private void addStaticPlatform(StaticPlatform platform, FloatBuffer verticesBuffer, FloatBuffer texCoordsBuffer) {
         platforms.add(platform);
         platform.drawable = this;
         Shape shape = platform.getShape();
         Vector2f[] points = ShapeUtils.getVertices(shape, platform.getPosition(),
                 platform.getRotation());
-        int nbPoints = Math.min(points.length, vertices.capacity());
+        int nbPoints = Math.min(points.length, verticesBuffer.capacity());
         for (int i = 0; i < nbPoints; ++i) {
             Vector2f point = points[i];
-            vertices.put(point.x);
-            vertices.put(point.y);
+            verticesBuffer.put(point.x);
+            verticesBuffer.put(point.y);
         }
-        texCoords.put(platform.getU1());
-        texCoords.put(platform.getV2());
-        texCoords.put(platform.getU2());
-        texCoords.put(platform.getV2());
-        texCoords.put(platform.getU2());
-        texCoords.put(platform.getV1());
-        texCoords.put(platform.getU1());
-        texCoords.put(platform.getV1());
+        texCoordsBuffer.put(platform.getU1());
+        texCoordsBuffer.put(platform.getV2());
+        texCoordsBuffer.put(platform.getU2());
+        texCoordsBuffer.put(platform.getV2());
+        texCoordsBuffer.put(platform.getU2());
+        texCoordsBuffer.put(platform.getV1());
+        texCoordsBuffer.put(platform.getU1());
+        texCoordsBuffer.put(platform.getV1());
     }
 
     @Override

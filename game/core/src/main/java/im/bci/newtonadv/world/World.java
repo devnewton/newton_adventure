@@ -146,7 +146,7 @@ public strictfp class World extends net.phys2d.raw.World {
         this.game = game;
         progressiveRotateGravity(0.0f);
         this.questName = questName;
-        coloredStaticBodies = new EnumMap<>(NewtonColor.class);
+        coloredStaticBodies = new EnumMap<NewtonColor, BodyList>(NewtonColor.class);
         for (NewtonColor color : NewtonColor.values()) {
             coloredStaticBodies.put(color, new BodyList());
         }

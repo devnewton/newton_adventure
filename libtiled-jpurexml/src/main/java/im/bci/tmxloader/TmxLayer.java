@@ -36,7 +36,7 @@ public class TmxLayer {
     private int x, y;
     private int width;
     private int height;
-    private List<TmxProperty> properties = new ArrayList<>();
+    private List<TmxProperty> properties = new ArrayList<TmxProperty>();
     private TmxData data;
     private TmxTileInstance tiles[][];
 

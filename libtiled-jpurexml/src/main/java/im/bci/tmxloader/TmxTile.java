@@ -33,7 +33,7 @@ import java.util.List;
 public class TmxTile {
 
     private int id;
-    private List<TmxProperty> properties = new ArrayList<>();
+    private List<TmxProperty> properties = new ArrayList<TmxProperty>();
     private TmxFrame frame;
 
     public int getId() {

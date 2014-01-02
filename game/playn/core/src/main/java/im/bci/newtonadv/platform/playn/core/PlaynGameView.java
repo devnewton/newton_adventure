@@ -77,6 +77,7 @@ import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.phys2d.math.ROVector2f;
@@ -184,21 +185,21 @@ public class PlaynGameView implements IGameView {
             final float w = box.getSize().getX();
             final float h = box.getSize().getY();
             final float x = door.getPosition().getX() - w;
-            final float y = door.getPosition().getY() + h/2.0f;
+            final float y = door.getPosition().getY() + h / 2.0f;
             surface.save();
             surface.translate(x, y);
             surface.scale(1, -1);
             surface.drawImage(image, 0, 0, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
             surface.restore();
             /*
-            *           final float w = box.getSize().getX();
-            final float h = box.getSize().getY();
-            final float x = door.getPosition().getX() - w;
-            final float y = door.getPosition().getY() - h;
-            surface.save();
-            surface.drawImage(image, x, y, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
-            surface.restore();
-            */
+             *           final float w = box.getSize().getX();
+             final float h = box.getSize().getY();
+             final float x = door.getPosition().getX() - w;
+             final float y = door.getPosition().getY() - h;
+             surface.save();
+             surface.drawImage(image, x, y, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+             surface.restore();
+             */
         }
     }
 
@@ -394,7 +395,7 @@ public class PlaynGameView implements IGameView {
                 - cameraSize, heroPos.getY() - cameraSize, heroPos.getX()
                 + cameraSize, heroPos.getY() + cameraSize);
 
-        ArrayList<Drawable> drawableBodies = new ArrayList<>();
+        ArrayList<Drawable> drawableBodies = new ArrayList<Drawable>();
         world.staticPlatformDrawer.resetVisibles();
         for (int i = 0; i < visibleBodies.size(); i++) {
             Body body = visibleBodies.get(i);
@@ -545,9 +546,11 @@ public class PlaynGameView implements IGameView {
          }*/
         if (image.isReady()) {
             surface.setFillPattern(image.toPattern());
-            int[] indices = new int[platforms.indices.limit()];
-            platforms.indices.get(indices);
-            surface.fillTriangles(platforms.vertices.array(), platforms.texCoords.array(), indices);
+            int[] indices = new int[platforms.indicesLimit];
+            System.arraycopy(platforms.indices, 0, indices, 0, platforms.indicesLimit);
+            surface.fillTriangles(platforms.vertices, platforms.texCoords, indices);
+           /* platforntms.vertices.rewind();
+            platforms.texCoords.rewind();*/
         }
     }
 

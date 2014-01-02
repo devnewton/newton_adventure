@@ -10,7 +10,7 @@ public class AnimationCollection {
     private boolean ready;
     
     public AnimationCollection(ITexture texture) {
-        animations = new LinkedHashMap<>(1);
+        animations = new LinkedHashMap<String, Animation>(1);
         Animation animation = new Animation("" + texture);
         animation.addFrame(texture, Integer.MAX_VALUE);
         addAnimation(animation);
@@ -18,7 +18,7 @@ public class AnimationCollection {
     }
     
     public AnimationCollection(ITexture texture, float u1, float v1, float u2, float v2) {
-        animations = new LinkedHashMap<>(1);
+        animations = new LinkedHashMap<String, Animation>(1);
         Animation animation = new Animation("" + texture);
         animation.addFrame(texture, Integer.MAX_VALUE, u1, v1, u2, v2);
         addAnimation(animation);
@@ -26,7 +26,7 @@ public class AnimationCollection {
     }
     
     public AnimationCollection() {
-        animations = new LinkedHashMap<>();
+        animations = new LinkedHashMap<String, Animation>();
         ready = false;
     }
     

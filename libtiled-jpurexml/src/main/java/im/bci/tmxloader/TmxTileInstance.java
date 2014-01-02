@@ -24,8 +24,6 @@
 package im.bci.tmxloader;
 
 import java.util.EnumSet;
-import java.util.Objects;
-
 /**
  *
  * @author devnewton
@@ -51,8 +49,8 @@ public class TmxTileInstance {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.tile);
-        hash = 89 * hash + Objects.hashCode(this.effect);
+        hash = 89 * hash + (this.tile != null ? this.tile.hashCode() : 0);
+        hash = 89 * hash + (this.effect != null ? this.effect.hashCode() : 0);
         return hash;
     }
 
@@ -65,10 +63,10 @@ public class TmxTileInstance {
             return false;
         }
         final TmxTileInstance other = (TmxTileInstance) obj;
-        if (!Objects.equals(this.tile, other.tile)) {
+        if (!TmxUtils.equals(this.tile, other.tile)) {
             return false;
         }
-        if (!Objects.equals(this.effect, other.effect)) {
+        if (!TmxUtils.equals(this.effect, other.effect)) {
             return false;
         }
         return true;

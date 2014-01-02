@@ -60,7 +60,7 @@ public class TmxLoader {
     }
     
     public void decode(TmxMap map) {
-        HashMap<TmxTileInstance, TmxTileInstance> tileInstancePool = new HashMap<>();
+        HashMap<TmxTileInstance, TmxTileInstance> tileInstancePool = new HashMap<TmxTileInstance, TmxTileInstance>();
         for (TmxLayer layer : map.getLayers()) {
             int[][] data = new int[layer.getWidth()][layer.getHeight()];
             layer.getData().decodeTo(layer.getWidth(), layer.getHeight(), data);
@@ -103,7 +103,7 @@ public class TmxLoader {
         map.setTileheight(getMandatoryIntAttribute(xmlMap, "tileheight"));
         map.setOrientation(TmxMapOrientation.valueOf(xmlMap.attributes.get("orientation").toUpperCase()));
         map.setProperties(parseProperties(findChild(xmlMap, "properties")));
-        List<TmxLayer> layers = new ArrayList<>();
+        List<TmxLayer> layers = new ArrayList<TmxLayer>();
         for (XmlTag child : xmlMap.children) {
             if ("layer".equals(child.name)) {
                 TmxLayer layer = new TmxLayer();
@@ -125,7 +125,7 @@ public class TmxLoader {
     }
 
     private List<TmxProperty> parseProperties(XmlTag xmlProperties) {
-        List<TmxProperty> properties = new ArrayList<>();
+        List<TmxProperty> properties = new ArrayList<TmxProperty>();
         if (null != xmlProperties) {
             for (XmlTag child : xmlProperties.children) {
                 if ("property".equals(child.name)) {
@@ -140,7 +140,7 @@ public class TmxLoader {
     }
 
     private void parseTilesets(XmlTag xmlMap, TmxMap map) throws XmlParseException {
-        List<TmxTileset> tilesets = new ArrayList<>();
+        List<TmxTileset> tilesets = new ArrayList<TmxTileset>();
         for (XmlTag child : xmlMap.children) {
             if ("tileset".equals(child.name)) {
                 TmxTileset tileset = new TmxTileset();
@@ -167,7 +167,7 @@ public class TmxLoader {
         tileset.setTileheight(getIntAttribute(xmlTileset, "tileheight", map.getTileheight()));
         tileset.setProperties(parseProperties(findChild(xmlTileset, "properties")));
         tileset.setImage(parseImage(findChild(xmlTileset, "image")));
-        List<TmxTile> tiles = new ArrayList<>();
+        List<TmxTile> tiles = new ArrayList<TmxTile>();
         for (XmlTag child : xmlTileset.children) {
             if ("tile".equals(child.name)) {
                 tiles.add(parseTile(tileset, child));

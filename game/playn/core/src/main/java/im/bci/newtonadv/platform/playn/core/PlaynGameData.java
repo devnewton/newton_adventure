@@ -62,8 +62,8 @@ public class PlaynGameData implements IGameData {
 
     public static class QuestsConfig {
 
-        Map<String, QuestConfig> quests = new HashMap<>();
-        List<String> visibleQuests = new ArrayList<>();
+        Map<String, QuestConfig> quests = new HashMap<String, QuestConfig>();
+        List<String> visibleQuests = new ArrayList<String>();
         private boolean ready;
 
         public boolean isReady() {
@@ -82,8 +82,8 @@ public class PlaynGameData implements IGameData {
 
     public static class QuestConfig {
 
-        List<String> levels = new ArrayList<>();
-        List<String> lockedBy = new ArrayList<>();
+        List<String> levels = new ArrayList<String>();
+        List<String> lockedBy = new ArrayList<String>();
         boolean ready;
 
         public boolean isReady() {
@@ -151,7 +151,7 @@ public class PlaynGameData implements IGameData {
 
             @Override
             public void onSuccess(String result) {
-                HashSet<String> newAssets = new HashSet<>();
+                HashSet<String> newAssets = new HashSet<String>();
                 for (String s : result.split("[\r\n]+")) {
                     if (!s.isEmpty()) {
                         newAssets.add(s);

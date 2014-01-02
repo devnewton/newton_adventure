@@ -73,4 +73,6 @@ public interface IPlatformSpecific {
     String getMessage(String msg);
 
     String getLocaleSuffix();
+
+    public long nanoTime();
 }

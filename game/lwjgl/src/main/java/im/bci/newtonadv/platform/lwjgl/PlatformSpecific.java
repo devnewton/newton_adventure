@@ -447,4 +447,9 @@ public class PlatformSpecific implements IPlatformSpecific {
     public String getLocaleSuffix() {
         return "_" + messages.getLocale().getLanguage() + "_" + messages.getLocale().getCountry();
     }
+
+    @Override
+    public long nanoTime() {
+        return System.nanoTime();
+    }
 }

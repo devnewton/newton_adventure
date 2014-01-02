@@ -112,7 +112,7 @@ public strictfp class Game {
                     mainMenuSequence.start();
                 }
             }
-            frameTimeInfos.update();
+            frameTimeInfos.update(nanoTime());
             soundCache.update();
             if (currentSequence instanceof CustomTickSequence) {
                 ((CustomTickSequence) currentSequence).tick();
@@ -245,7 +245,7 @@ public strictfp class Game {
     }
 
     private void loadBonusSequences() {
-        bonusSequences = new ArrayList<>();
+        bonusSequences = new ArrayList<BonusSequence>();
         List<String> levelNames = getData().listQuestLevels("bonus");
 
         for (String levelName : levelNames) {
@@ -335,5 +335,9 @@ public strictfp class Game {
         } else {
             return data.getFile(baseName + ".png");
         }
+    }
+
+    public long nanoTime() {
+        return platform.nanoTime();
     }
 }

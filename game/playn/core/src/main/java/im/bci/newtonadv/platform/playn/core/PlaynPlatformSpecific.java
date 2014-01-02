@@ -43,10 +43,8 @@ import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.GameScore;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import playn.core.CachingAssets;
 import playn.core.PlayN;
-import playn.core.WatchedAssets;
 
 /**
  *
@@ -145,6 +143,11 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
 
     public RealWatchedAssets getAssets() {
         return assets;
+    }
+
+    @Override
+    public long nanoTime() {
+        return PlayN.tick() * 1000000L;
     }
 
 }

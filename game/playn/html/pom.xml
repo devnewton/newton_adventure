@@ -64,6 +64,13 @@
         <classifier>sources</classifier>
         <version>0.2-SNAPSHOT</version>
     </dependency>
+    
+    <dependency>
+            <groupId>com.github.asilvestre</groupId>
+            <artifactId>jpurexml</artifactId>
+            <classifier>sources</classifier>
+            <version>0.10</version>
+    </dependency>
 
     <dependency>
       <groupId>com.googlecode.playn</groupId>
@@ -110,6 +117,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>

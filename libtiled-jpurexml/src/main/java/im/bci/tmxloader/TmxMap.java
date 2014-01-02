@@ -38,9 +38,9 @@ public class TmxMap {
     private int tilewidth;
     private int tileheight;
     private TmxMapOrientation orientation;
-    private List<TmxTileset> tilesets = new ArrayList<>();
-    private List<TmxProperty> properties = new ArrayList<>();
-    private List<TmxLayer> layers = new ArrayList<>();
+    private List<TmxTileset> tilesets = new ArrayList<TmxTileset>();
+    private List<TmxProperty> properties = new ArrayList<TmxProperty>();
+    private List<TmxLayer> layers = new ArrayList<TmxLayer>();
 
     public TmxMapOrientation getOrientation() {
         return orientation;

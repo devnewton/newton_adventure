@@ -56,7 +56,7 @@ public class Animation implements IAnimation {
         return totalDuration;
     }
 
-    private final ArrayList<AnimationFrame> frames = new ArrayList<>();
+    private final ArrayList<AnimationFrame> frames = new ArrayList<AnimationFrame>();
     private long totalDuration;// milliseconds
     private final String name;
 
