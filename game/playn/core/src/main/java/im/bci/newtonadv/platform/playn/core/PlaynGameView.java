@@ -31,7 +31,6 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
-import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
@@ -47,7 +46,9 @@ import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
 import im.bci.newtonadv.score.QuestScore;
+import im.bci.newtonadv.util.AbsoluteAABox;
 import im.bci.newtonadv.util.NewtonColor;
+import im.bci.newtonadv.util.ShapeUtils;
 import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.Axe;
 import im.bci.newtonadv.world.AxeAnchor;
@@ -78,14 +79,15 @@ import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.phys2d.math.ROVector2f;
+import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
+import net.phys2d.raw.shapes.Shape;
 import playn.core.Assets;
 import playn.core.Canvas;
 import playn.core.CanvasImage;
@@ -109,7 +111,7 @@ public class PlaynGameView implements IGameView {
     private static final Logger LOGGER = Logger.getLogger(PlaynGameView.class.getName());
     private Surface surface;
     private final TextFormat textFormat;
-    private Assets assets;
+    private final Assets assets;
 
     public void setCurrentSurface(Surface currentSurface) {
         this.surface = currentSurface;
@@ -145,12 +147,34 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawAxe(Axe axe, AnimationFrame texture) {
-        //TODO
+        if (null != texture) {
+            Box box = (Box) axe.getShape();
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = box.getSize().getX();
+            final float h = box.getSize().getY();
+            surface.save();
+            surface.translate(axe.getPosition().getX(), axe.getPosition().getY());
+            surface.rotate(axe.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
     public void drawAxeAnchor(AxeAnchor axeAnchor, float radius, AnimationFrame texture) {
-        //TODO
+        if (null != texture) {
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+
+            final float u1 = 0.18f, u2 = 0.8f;
+            final float v1 = 0.2f, v2 = 0.8f;
+            surface.save();
+            surface.translate(axeAnchor.getPosition().getX(), axeAnchor.getPosition().getY());
+            surface.rotate(axeAnchor.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -radius, -radius, 2.0f * radius, 2.0f * radius, u1 * image.width(), v1 * image.height(), (u2 - u1) * image.width(), (v2 - v1) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -160,7 +184,9 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawBlocker(Blocker blocker, float alpha) {
-        //TODO
+        surface.setAlpha(alpha);
+        drawPlatform(blocker);
+        surface.setAlpha(1.0f);
     }
 
     @Override
@@ -173,7 +199,9 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawCloud(Cloud cloud, float alpha) {
-        //TODO
+        surface.setAlpha(alpha);
+        drawPlatform(cloud);
+        surface.setAlpha(1.0f);
     }
 
     @Override
@@ -192,15 +220,6 @@ public class PlaynGameView implements IGameView {
             surface.scale(1, -1);
             surface.drawImage(image, 0, 0, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
             surface.restore();
-            /*
-             *           final float w = box.getSize().getX();
-             final float h = box.getSize().getY();
-             final float x = door.getPosition().getX() - w;
-             final float y = door.getPosition().getY() - h;
-             surface.save();
-             surface.drawImage(image, x, y, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
-             surface.restore();
-             */
         }
     }
 
@@ -272,7 +291,21 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawKey(Key key, AnimationFrame texture, World world) {
-        //TODO
+        if (null != texture) {
+            AABox bounds = key.getShape().getBounds();
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = bounds.getWidth();
+            final float h = bounds.getHeight();
+            surface.save();
+            surface.translate(key.getPosition().getX(), key.getPosition().getY());
+            surface.rotate(world.getGravityAngle());
+            surface.scale(1, -1);
+            NewtonColor color = key.getColor();
+            surface.setTint(Color.rgb((int) (color.r * 255), (int) (color.g * 255), (int) (color.r * 255)));
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.setTint(Color.rgb(255, 255, 255));
+            surface.restore();
+        }
     }
 
     @Override
@@ -312,7 +345,19 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawPlatform(AnimatedPlatform platform) {
-        //TODO
+        AnimationFrame texture = platform.frame;
+        if (null != texture) {
+            ROVector2f size = ShapeUtils.getSize(platform.getShape());
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = size.getX();
+            final float h = size.getY();
+            surface.save();
+            surface.translate(platform.getPosition().getX(), platform.getPosition().getY());
+            surface.rotate(platform.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -381,9 +426,8 @@ public class PlaynGameView implements IGameView {
         setOrtho2D(surface, World.ortho2DLeft, World.ortho2DRight, World.ortho2DBottom, World.ortho2DTop);
 
         surface.rotate(-world.getGravityAngle());
-         //GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,         1.0f);
 
-        //TODO drawWorldBackground(world, 1.0f);
+        drawWorldBackground(world, 1.0f);
         ROVector2f heroPos = world.getHero().getPosition();
         surface.translate(-heroPos.getX(), -heroPos.getY());
 
@@ -581,6 +625,52 @@ public class PlaynGameView implements IGameView {
     @Override
     public IStaticPlatformDrawer createStaticPlatformDrawer() {
         return new PlaynStaticPlatformDrawer();
+    }
+
+    private void drawWorldBackground(World world, float aspectRatio) {
+        PlaynTexture backgroundTexture = (PlaynTexture) world.getBackgroundTexture();
+        if (null != backgroundTexture) {
+            surface.save();
+            surface.scale(1, -1);
+            ROVector2f heroPos = world.getHero().getPosition();
+
+            float color = 1.0f;
+            if (null != world.getHero().getDyingTimedAction()) {
+                color -= world.getHero().getDyingTimedAction().getProgress() * 2.0f;
+                if (color <= 0.0f) {
+                    color = 0.0f;
+                }
+            }
+            int icolor = (int) (255 * color);
+            surface.setTint(Color.rgb(icolor, icolor, icolor));
+
+            AbsoluteAABox worldStaticBounds = world.getStaticBounds();
+            AbsoluteAABox staticBounds = new AbsoluteAABox();
+            staticBounds.x1 = World.ortho2DLeft * aspectRatio * 2.0f;
+            staticBounds.x2 = World.ortho2DRight * aspectRatio * 2.0f;
+            staticBounds.y1 = World.ortho2DBottom * aspectRatio * 2.0f;
+            staticBounds.y2 = World.ortho2DTop * aspectRatio * 2.0f;
+            float xt = -heroPos.getX()
+                    * (staticBounds.getWidth() / worldStaticBounds.getWidth());
+            float yt = -heroPos.getY()
+                    * (staticBounds.getHeight() / worldStaticBounds.getHeight());
+
+            xt *= 0.1f;
+            yt *= 0.1f;
+
+            xt = Math.max(xt, -World.ortho2DBaseSize / 2.0f);
+            xt = Math.min(xt, World.ortho2DBaseSize / 2.0f);
+            yt = Math.max(yt, -World.ortho2DBaseSize / 2.0f);
+            yt = Math.min(yt, World.ortho2DBaseSize / 2.0f);
+
+            staticBounds.x1 += xt;
+            staticBounds.x2 += xt;
+            staticBounds.y1 += yt;
+            staticBounds.y2 += yt;
+            surface.drawImage(backgroundTexture.getImage(), staticBounds.x1, staticBounds.y1, staticBounds.x2 - staticBounds.x1, staticBounds.y2 - staticBounds.y1);
+            surface.setTint(Color.rgb(255, 255, 255));
+            surface.restore();
+        }
     }
 
 }
