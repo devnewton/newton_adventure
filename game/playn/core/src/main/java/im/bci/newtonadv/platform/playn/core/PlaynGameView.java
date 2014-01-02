@@ -234,7 +234,7 @@ public class PlaynGameView implements IGameView {
         if (null != texture) {
             if (null != hero) {
                 AABox bounds = hero.getShape().getBounds();
-                float r = (float) Math.toDegrees(world.getGravityAngle());
+                float r = (float) world.getGravityAngle();
                 float scale = 1.0f;
                 if (null != world.getHero().getDyingTimedAction()) {
                     float p = world.getHero().getDyingTimedAction().getProgress();
@@ -251,7 +251,7 @@ public class PlaynGameView implements IGameView {
                 surface.save();
                 surface.translate(hero.getPosition().getX(), hero.getPosition().getY());
                 surface.rotate(r);
-                surface.scale(scale, scale);
+                surface.scale(scale, -scale);
                 float x1 = -bounds.getWidth() / 2.0f;
                 float y1 = -bounds.getHeight() / 2.0f;
                 Image image = ((PlaynTexture) texture.getImage()).getImage();
@@ -380,11 +380,9 @@ public class PlaynGameView implements IGameView {
         surface.save();
         setOrtho2D(surface, World.ortho2DLeft, World.ortho2DRight, World.ortho2DBottom, World.ortho2DTop);
 
-        /*TODO
-         if (rotateViewWithGravity) {
-         GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
-         1.0f);
-         }*/
+        surface.rotate(-world.getGravityAngle());
+         //GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,         1.0f);
+
         //TODO drawWorldBackground(world, 1.0f);
         ROVector2f heroPos = world.getHero().getPosition();
         surface.translate(-heroPos.getX(), -heroPos.getY());
