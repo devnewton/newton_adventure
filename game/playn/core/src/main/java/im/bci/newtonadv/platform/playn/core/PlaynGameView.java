@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
@@ -482,7 +483,16 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a) {
-        //TODO
+        if (null != backgroundTexture) {
+            surface.drawImage(((PlaynTexture) backgroundTexture).getImage(), 0, 0, surface.width(), surface.height());
+        }
+        AnimationFrame loadingFrame = loadingPlay.getCurrentFrame();
+        if (null != loadingFrame) {
+            Image image = ((PlaynTexture) loadingFrame.getImage()).getImage();
+            if (image.isReady()) {
+                surface.drawImage(image, surface.width() * 0.8f, surface.height() * 0.8f, surface.width() * 0.2f, surface.height() * 0.2f, loadingFrame.getU1() * image.width(), loadingFrame.getV1() * image.height(), (loadingFrame.getU2() - loadingFrame.getU1()) * image.width(), (loadingFrame.getV2() - loadingFrame.getV1()) * image.height());
+            }
+        }
     }
 
     @Override
@@ -526,11 +536,6 @@ public class PlaynGameView implements IGameView {
     }
 
     @Override
-    public void drawLoading(Play loadingPlay) {
-        //TODO
-    }
-
-    @Override
     public void drawStaticPlatforms(IStaticPlatformDrawable drawable) {
         final PlaynStaticPlatformDrawable platforms = (PlaynStaticPlatformDrawable) drawable;
         final Image image = platforms.texture.getImage();
@@ -549,8 +554,8 @@ public class PlaynGameView implements IGameView {
             int[] indices = new int[platforms.indicesLimit];
             System.arraycopy(platforms.indices, 0, indices, 0, platforms.indicesLimit);
             surface.fillTriangles(platforms.vertices, platforms.texCoords, indices);
-           /* platforntms.vertices.rewind();
-            platforms.texCoords.rewind();*/
+            /* platforntms.vertices.rewind();
+             platforms.texCoords.rewind();*/
         }
     }
 
