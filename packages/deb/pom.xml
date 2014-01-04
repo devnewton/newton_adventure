@@ -112,6 +112,14 @@ THE SOFTWARE. -->
                                             </mapper>
                                         </data>
                                         <data>
+                                            <src>${basedir}/../../game/lwjgl/src/main/resources/icon.png</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/opt/newton-adventure</prefix>
+                                            </mapper>
+                                        </data>
+                                        <data>
                                             <src>${basedir}/../../game/data</src>
                                             <type>directory</type>
                                             <mapper>
@@ -167,6 +175,14 @@ THE SOFTWARE. -->
                                         </data>
                                         <data>
                                             <src>${project.build.directory}/newton-adventure.desktop</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/usr/share/applications</prefix>
+                                            </mapper>
+                                        </data>
+                                        <data>
+                                            <src>${project.build.directory}/newton-adventure-safe.desktop</src>
                                             <type>file</type>
                                             <mapper>
                                                 <type>perm</type>

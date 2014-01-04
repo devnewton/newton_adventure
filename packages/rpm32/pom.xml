@@ -25,8 +25,8 @@ THE SOFTWARE. -->
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>im.bci.newtonadv</groupId>
-	<artifactId>newton-adventure</artifactId>
-	<version>1.14-SNAPSHOT</version>
+        <artifactId>newton-adventure</artifactId>
+        <version>1.14-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>newton-adventure-rpm32</artifactId>
@@ -130,6 +130,16 @@ THE SOFTWARE. -->
                                             <groupname>root</groupname>
                                             <sources>
                                                 <source>
+                                                    <location>${basedir}/../../game/lwjgl/src/main/resources/icon.png</location>
+                                                </source>
+                                            </sources>
+                                        </mapping>
+                                        <mapping>
+                                            <directory>/opt/newton-adventure</directory>
+                                            <username>root</username>
+                                            <groupname>root</groupname>
+                                            <sources>
+                                                <source>
                                                     <location>${project.build.directory}/README.txt</location>
                                                 </source>
                                             </sources>
@@ -189,6 +199,9 @@ THE SOFTWARE. -->
                                             <sources>
                                                 <source>
                                                     <location>${project.build.directory}/newton-adventure.desktop</location>
+                                                </source>
+                                                <source>
+                                                    <location>${project.build.directory}/newton-adventure-safe.desktop</location>
                                                 </source>
                                             </sources>
                                         </mapping>
