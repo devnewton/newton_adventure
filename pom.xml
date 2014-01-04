@@ -22,6 +22,7 @@
         <module>packages/rpm32</module>
         <module>packages/rpm64</module>
         <module>packages/win</module>
+        <module>mods/bald</module>
         <module>mods/duchatelet</module>
         <module>mods/pack1</module>
     </modules>
