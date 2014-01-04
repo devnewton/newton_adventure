@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<installation version="1.0">
+    <info>
+        <appname>@{project.name}</appname>
+        <appversion>@{project.version}</appversion>
+        <authors>
+            <author name="devnewton" email="devnewton@bci.Im" />
+        </authors>
+        <url>http://devnewton.bci.im</url>
+        <javaversion>1.7</javaversion>
+        <requiresjdk>no</requiresjdk>
+    </info>
+ 
+    <guiprefs width="800" height="480" resizable="yes" />
+ 
+    <locale>
+        <langpack iso3="eng" />
+    </locale>
+    
+    <variables>
+        <variable name="TargetPanel.dir.windows" value="${ENV[APPDATA]}\newton_adventure\mods\bald"/>
+	<variable name="TargetPanel.dir" value="$USER_HOME/.config/newton_adventure/mods/bald"/>
+	<variable name="ShowCreateDirectoryMessage" value="false"/>
+    </variables>
+    
+    <resources>
+	<res id="HTMLHelloPanel.info" src="../../src/izpack/hello.html"/>
+	<res id="Installer.image" src="../../src/izpack/cover.png" />
+	<res src="../../src/izpack/Win_shortcutSpec.xml" id="Win_shortcutSpec.xml" parse="yes"/>
+        <res src="../../src/izpack/Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml" parse="yes"/>
+    </resources>
+ 
+    <panels>
+        <panel classname="HTMLHelloPanel" />
+        <panel classname="TargetPanel"/>
+        <panel classname="InstallPanel"/>
+	<panel classname="ShortcutPanel"/>
+        <panel classname="SimpleFinishPanel" />
+    </panels>
+ 
+    <packs>
+        <pack name="Core" required="yes">
+            <description>Core installation files</description>
+	    <singlefile src="../../../../licenses/data.txt" target="$INSTALL_PATH/licenses.txt" override="true"/>
+	    <fileset dir="../../data" targetdir="$INSTALL_PATH" override="true"/>
+        </pack>
+    </packs> 
+</installation>
+
