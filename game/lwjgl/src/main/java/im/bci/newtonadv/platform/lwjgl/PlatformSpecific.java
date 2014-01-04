@@ -78,7 +78,8 @@ public class PlatformSpecific implements IPlatformSpecific {
     public PlatformSpecific() throws Exception {
         messages = ResourceBundle.getBundle("messages");
 
-        loadConfig();
+        config = new Properties();
+        loadConfig(config);
 
         createGameData();
         createSoundCache();
@@ -115,12 +116,11 @@ public class PlatformSpecific implements IPlatformSpecific {
         return input;
     }
 
-    private void loadConfig() {
+    public static void loadConfig(Properties conf) {
         URL configFilePath = getUserOrDefaultConfigFilePath();
         Logger.getLogger(PlatformSpecific.class.getName()).log(Level.INFO, "Load config from file {0}", configFilePath);
         try (InputStream f = configFilePath.openStream()) {
-            config = new Properties();
-            config.load(f);
+            conf.load(f);
         } catch (IOException ex) {
             Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, "Cannot load config file " + configFilePath, ex);
         }
@@ -206,11 +206,11 @@ public class PlatformSpecific implements IPlatformSpecific {
         return getDefaultConfigFilePath();
     }
 
-    private void writeConfig(String path) throws FileNotFoundException,
+    private static void writeConfig(String path, Properties conf) throws FileNotFoundException,
             IOException {
         FileOutputStream os = new FileOutputStream(path);
         try {
-            config.store(os, "Newton adventure configuration, see "
+            conf.store(os, "Newton adventure configuration, see "
                     + PlatformSpecific.getDefaultConfigFilePath()
                     + " for example and documentation");
         } finally {
@@ -221,15 +221,19 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     @Override
     public void saveConfig() {
-        File userConfigFile = new File(getUserConfigFilePath());
+        saveConfig(config);
+    }
 
+    public static void saveConfig(Properties conf) {
+        File userConfigFile = new File(getUserConfigFilePath());
+        
         if (!userConfigFile.exists()) {
             (new File(getUserConfigDirPath())).mkdirs();
         }
         try {
-            writeConfig(userConfigFile.getAbsolutePath());
+            writeConfig(userConfigFile.getAbsolutePath(), conf);
         } catch (Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.WARNING, "Cannot save config", e);
         }
     }
 
@@ -356,7 +360,7 @@ public class PlatformSpecific implements IPlatformSpecific {
                 fs.close();
             }
         } catch (Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save progression", e);
         }
     }
 

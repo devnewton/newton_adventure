@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2014 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,101 +29,31 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package im.bci.newtonadv.platform.lwjgl;
 
-import im.bci.newtonadv.Game;
-import im.bci.newtonadv.game.RestartGameException;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+import im.bci.newtonadv.platform.lwjgl.launcher.NormalLauncher;
+import im.bci.newtonadv.platform.lwjgl.launcher.SafeLauncher;
 
 /**
  *
  * @author devnewton
  */
 public class Main {
-
-    static void setupLibraryPath() {
-        if (System.getProperty("javawebstart.version") != null) {
-            return;
+    
+    public static void main(String args[]) throws Exception {
+        boolean safeLauncher = false;
+        for(String arg : args) {
+            if("--safe".equals(arg)) {
+                safeLauncher = true;
+                break;
+            }
         }
-
-        String libraryPath = System.getProperty("java.library.path");
-        if (libraryPath != null && libraryPath.contains("natives")) {
-            return;
-        }
-
-        try {
-            File nativeDir = new File(RuntimeUtils.getApplicationDir(),"natives");
-            if (nativeDir.exists()) {
-                String nativePath = nativeDir.getCanonicalPath();
-                System.setProperty("org.lwjgl.librarypath", nativePath);
-                System.setProperty("net.java.games.input.librarypath", nativePath);
-                return;
-            } else {
-                System.out.println("Cannot find 'natives' library folder, try system libraries");
-            }
-        } catch (IOException e) {
-            Logger.getLogger(Main.class.getName()).log(Level.WARNING, "error", e);
-        }
-        Logger.getLogger(Main.class.getName()).log(Level.WARNING,
-                "Cannot find 'natives' library folder, try system libraries");
-    }
-
-    public static void main(String[] args) throws IOException,
-            ClassNotFoundException, Exception {
-
-        Game game;
-        PlatformSpecific platform = null;
-        try {
-            try {
-                setupLibraryPath();
-
-                platform = new PlatformSpecific();
-                game = new Game(platform);
-                game.start();
-                game.tick();
-            } catch (GameCloseException e) {
-                return;
-            } catch (Throwable e) {
-                handleError(e, "Unexpected error during newton adventure startup. Check your java version and your opengl driver.\n");
-                return;
-            }
-
-            try {
-                while (game.isRunning()) {
-                    try {
-                        game.tick();
-                    } catch (RestartGameException e) {
-                        game = new Game(platform);
-                        game.start();
-                        game.tick();
-                        platform.saveConfig();//only save config if everything seems ok
-                    }
-                }
-            } catch (GameCloseException e) {
-            } catch (Throwable e) {
-                handleError(e, "Unexpected error during newton adventure execution.\n");
-            }
-        } finally {
-            if (null != platform) {
-                platform.close();
-            }
-            System.exit(0);
+        if(safeLauncher) {
+            SafeLauncher.launch(args);
+        } else {
+            NormalLauncher.launch(args);
         }
     }
-
-    public static void handleError(Throwable e, final String defaultMessage) {
-        Logger.getLogger(Main.class.getName()).log(Level.SEVERE,
-                defaultMessage, e);
-        JOptionPane.showMessageDialog(null,
-                defaultMessage
-                + "\n"
-                + e.getMessage()
-                + (e.getCause() != null ? "\nCause: "
-                + e.getCause().getMessage() : ""), "Error",
-                JOptionPane.ERROR_MESSAGE);
-    }
+    
 }

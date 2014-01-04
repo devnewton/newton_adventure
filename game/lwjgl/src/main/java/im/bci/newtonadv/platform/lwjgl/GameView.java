@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.newtonadv.platform.lwjgl.launcher.NormalLauncher;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -249,7 +250,7 @@ public strictfp class GameView implements IGameView {
                 return Display.getDesktopDisplayMode();
             }
         } catch (LWJGLException e) {
-            Main.handleError(e, "Unable to determine display modes.");
+            NormalLauncher.handleError(e, "Unable to determine display modes.");
         }
         return Display.getDesktopDisplayMode();
     }
