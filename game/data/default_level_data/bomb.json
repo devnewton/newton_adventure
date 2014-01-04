@@ -1,0 +1,54 @@
+{
+  "animations": [
+    {
+      "name": "bomb_inactive",
+      "frames": [
+        {
+          "duration": 1000,
+          "image": "bomb.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 0.25,
+          "v2": 0.25
+        }
+      ]
+    },
+    {
+      "name": "bomb_about_to_explode",
+      "frames": [
+        {
+          "duration": 100,
+          "image": "bomb.png",
+          "u1": 0.0,
+          "v1": 0.25,
+          "u2": 0.25,
+          "v2": 0.5
+        },
+        {
+          "duration": 100,
+          "image": "bomb.png",
+          "u1": 0.0,
+          "v1": 0.5,
+          "u2": 0.25,
+          "v2": 0.75
+        },
+        {
+          "duration": 100,
+          "image": "bomb.png",
+          "u1": 0.0,
+          "v1": 0.75,
+          "u2": 0.25,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "bomb.png",
+          "u1": 0.25,
+          "v1": 0.0,
+          "u2": 0.5,
+          "v2": 0.25
+        }
+      ]
+    }
+  ]
+}

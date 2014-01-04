@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.platform.interfaces;
 
-import im.bci.newtonadv.anim.Animation.Play;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.MainMenuSequence;
@@ -63,12 +63,12 @@ import im.bci.newtonadv.world.Mummy;
 import im.bci.newtonadv.world.PickableObject;
 import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.AnimatedPlatform;
+import im.bci.newtonadv.world.IStaticPlatformDrawable;
+import im.bci.newtonadv.world.IStaticPlatformDrawer;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
-import im.bci.newtonadv.world.StaticPlatformDrawable;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -139,11 +139,8 @@ public interface IGameView {
 
     void toggleFullscreen();
 
-    AnimationCollection loadFromAnimation(String name) throws FileNotFoundException, IOException;
-
-    AnimationCollection loadSomeAnimations(String file, String... animationNames)
-            throws IOException;
-
+    AnimationCollection loadFromAnimation(String name) throws IOException;
+    
     void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a);
 
     void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture);
@@ -162,7 +159,7 @@ public interface IGameView {
 
     void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
 
-    void drawLoading(Play loadingPlay);
+    void drawStaticPlatforms(IStaticPlatformDrawable staticPlatformDrawable);
 
-	void drawStaticPlatforms(StaticPlatformDrawable staticPlatformDrawable);
+    public IStaticPlatformDrawer createStaticPlatformDrawer();
 }

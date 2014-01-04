@@ -34,6 +34,7 @@
 package im.bci.newtonadv.platform.lwjgl.openal;
 
 import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.newtonadv.platform.lwjgl.FileGameData;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -64,7 +65,7 @@ class SoundData {
         this.samplerate = samplerate;
     }
     
-    public static SoundData create(String path, IGameData gameData){
+    public static SoundData create(String path, FileGameData gameData){
         if(path.endsWith(".wav")){
             return createFromWav(path, gameData);
         }else if(path.endsWith(".ogg")){
@@ -73,7 +74,7 @@ class SoundData {
         return null;
     }
     
-    private static SoundData createFromWav(String path, IGameData gameData) {
+    private static SoundData createFromWav(String path, FileGameData gameData) {
         InputStream fis = null;
         BufferedInputStream bis = null;
         AudioInputStream ais = null;
@@ -101,7 +102,7 @@ class SoundData {
         return null;
     }
     
-    private static SoundData createFromOgg(String path, IGameData gameData) {
+    private static SoundData createFromOgg(String path, FileGameData gameData) {
         InputStream fis = null;
         BufferedInputStream bis = null;
         OggInputStream ogg = null;

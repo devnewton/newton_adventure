@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="24" height="16" tilewidth="32" tileheight="32">
  <properties>
   <property name="newton_adventure.background" value="prison_background.png"/>
   <property name="newton_adventure.music" value="Lava_City.ogg"/>
  </properties>
  <tileset firstgid="1" source="../../prison.tsx"/>
- <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
  <layer name="level" width="24" height="16">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAGNgGB5ABogZqYRlsJgvTUW3YjNr1PxR85GBKo3NxwcG0nwmMs1kJWA+rcuHoQoARIgEiwAGAAA=
+  <data encoding="csv">
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+,0,0,28,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,28,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,27,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0
+,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0
+,0,0,27,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,27,0,0
+,0,0,28,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,28,0,0
+,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
   </data>
  </layer>
 </map>

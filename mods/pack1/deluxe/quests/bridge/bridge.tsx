@@ -25,7 +25,7 @@
   </properties>
  </tile>
  <tile id="4">
-  <image source="bridge_4.png"/>
+  <image source="bridge_4.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door"/>
   </properties>
@@ -237,7 +237,7 @@
   </properties>
  </tile>
  <tile id="38">
-  <image source="bridge_38.png"/>
+  <image source="bridge_38.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door_to_bonus_world"/>
   </properties>

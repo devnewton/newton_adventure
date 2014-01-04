@@ -25,7 +25,7 @@
   </properties>
  </tile>
  <tile id="4">
-  <image source="vatican_4.png"/>
+  <image source="vatican_4.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door"/>
   </properties>
@@ -301,7 +301,7 @@
   </properties>
  </tile>
  <tile id="50">
-  <image source="vatican_50.png"/>
+  <image source="vatican_50.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door_to_bonus_world"/>
   </properties>

@@ -50,7 +50,6 @@ import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
 import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.JoyButtonItem;
-import im.bci.newtonadv.score.ScoreServer;
 
 import java.lang.reflect.Field;
 import java.util.Properties;
@@ -73,17 +72,15 @@ public class OptionsSequence implements IOptionsSequence {
     private final GameView view;
     private final GameInput input;
     private final Properties config;
-    private final ScoreServer scoreServer;
     private final ISoundCache soundCache;
-    private IPlatformSpecific platform;
+    private final IPlatformSpecific platform;
 
     public OptionsSequence(IPlatformSpecific platform, GameView view,
-            GameInput input, ScoreServer scoreServer, ISoundCache soundCache,
+            GameInput input, ISoundCache soundCache,
             Properties config) {
         this.platform = platform;
         this.view = view;
         this.input = input;
-        this.scoreServer = scoreServer;
         this.soundCache = soundCache;
         this.config = config;
     }
@@ -94,6 +91,7 @@ public class OptionsSequence implements IOptionsSequence {
         try {
             renderer = new LWJGLRenderer();
             Widget root = new Widget() {
+                @Override
                 protected void layout() {
                     layoutChildrenFullInnerArea();
                 }
@@ -104,7 +102,7 @@ public class OptionsSequence implements IOptionsSequence {
                     getClass().getClassLoader().getResource("twl/RadicalFish/RadicalFish.xml"),
                     renderer);
             gui.applyTheme(themeManager);
-            optionsGui = new OptionsGUI(view, input, scoreServer, soundCache, platform);
+            optionsGui = new OptionsGUI(view, input, soundCache, platform);
             root.add(optionsGui);
 
         } catch (Exception e) {
@@ -174,16 +172,12 @@ public class OptionsSequence implements IOptionsSequence {
                 input.joypadKeyRotateCounterClockwise = findJoypadButtonIndex(
                         input.joypad, optionsGui.keyRotateCounterClockwise);
                 if (null == JoypadPreset.find(input.joypad)) {
-                    Logger.getLogger(JoypadPreset.class.getName()).log(Level.INFO, "This joypad has no preset. Please copy and send this message by mail to devnewton@bci.im to improve Newton Adventure joypad support:  name '" + input.joypad.getName() + "', xAxis=" + input.joypadXAxis + ", yAxis=" + input.joypadYAxis + ", keyJump=" + input.joypadKeyJump + ", keyLeft=" + input.joypadKeyLeft + ", keyRight=" + input.joypadKeyRight + ", keyRotateClockwise=" + input.joypadKeyRotateClockwise + ", keyRotateCounterClock=" + input.joypadKeyRotateCounterClockwise + ", keyRotate90Clockwise=" + input.joypadKeyRotate90Clockwise + ", keyRotate90CounterClock=" + input.joypadKeyRotate90CounterClockwise + ", keyReturn=" + input.joypadKeyReturn + ", keyReturnToMenu=" + input.joypadKeyReturnToMenu + "]");
+                    Logger.getLogger(JoypadPreset.class.getName()).log(Level.INFO, "This joypad has no preset. Please copy and send this message by mail to devnewton@bci.im to improve Newton Adventure joypad support:  name ''{0}'', xAxis={1}, yAxis={2}, keyJump={3}, keyLeft={4}, keyRight={5}, keyRotateClockwise={6}, keyRotateCounterClock={7}, keyRotate90Clockwise={8}, keyRotate90CounterClock={9}, keyReturn={10}, keyReturnToMenu={11}]", new Object[]{input.joypad.getName(), input.joypadXAxis, input.joypadYAxis, input.joypadKeyJump, input.joypadKeyLeft, input.joypadKeyRight, input.joypadKeyRotateClockwise, input.joypadKeyRotateCounterClockwise, input.joypadKeyRotate90Clockwise, input.joypadKeyRotate90CounterClockwise, input.joypadKeyReturn, input.joypadKeyReturnToMenu});
                 }
             }
         } else {
             input.joypad = null;
         }
-        scoreServer.setPlayer(optionsGui.scorePlayer.getText());
-        scoreServer.setSecret(optionsGui.scoreSecret.getText());
-        scoreServer.setServerUrl(optionsGui.scoreServerUrl.getText());
-        scoreServer.setScoreShareEnabled(optionsGui.scoreShareEnabled.isActive());
         soundCache.setSoundEnabled(optionsGui.soundEnabled.isActive());
         soundCache.setMusicEnabled(optionsGui.musicEnabled.isActive());
     }
@@ -298,11 +292,6 @@ public class OptionsSequence implements IOptionsSequence {
                     "joypad.button.rotate_90_counter_clockwise",
                     getJoypadButtonName(input.joypadKeyRotate90CounterClockwise));
         }
-
-        config.setProperty("scoreserver.url", scoreServer.getServerUrl());
-        config.setProperty("scoreserver.player", scoreServer.getPlayer());
-        config.setProperty("scoreserver.secret", scoreServer.getSecret());
-        config.setProperty("scoreserver.share", "" + scoreServer.isScoreShareEnabled());
         config.setProperty("sound.enabled", "" + soundCache.isSoundEnabled());
         config.setProperty("music.enabled", "" + soundCache.isMusicEnabled());
         config.setProperty("newton_adventure.mod", optionsGui.getSelectedModName());

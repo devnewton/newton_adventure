@@ -31,145 +31,79 @@
  */
 package im.bci.newtonadv.anim;
 
-import im.bci.nanim.NanimParser.Frame;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
- * 
+ *
  * @author devnewton
  */
-public class Animation {
+public class Animation implements IAnimation {
 
-	public class Play {
-		public int currentFrameIndex;
-		public long currentTime;
-		public PlayMode mode = PlayMode.LOOP;
-		public State state = State.STOPPED;
-		
-		public String getName() {
-			return Animation.this.name;
-		}
+    @Override
+    public AnimationFrame getFrame(int i) {
+        return frames.get(i);
+    }
 
-		public AnimationFrame getCurrentFrame() {
-			return frames.get(currentFrameIndex);
-		}
-		
-		public void start() {
-			start(PlayMode.LOOP);
-		}
+    @Override
+    public int getFrameCount() {
+        return frames.size();
+    }
 
-		public void start(PlayMode mode) {
-			this.state = State.STARTED;
-			this.mode = mode;
-			this.currentTime = 0;
-			this.currentFrameIndex = 0;
-		}
+    @Override
+    public long getTotalDuration() {
+        return totalDuration;
+    }
 
-		public void stop() {
-			state = State.STOPPED;
-			currentTime = 0;
-			currentFrameIndex = 0;
-		}
+    private final ArrayList<AnimationFrame> frames = new ArrayList<AnimationFrame>();
+    private long totalDuration;// milliseconds
+    private final String name;
 
-		public boolean isStopped() {
-			return state == State.STOPPED;
-		}
+    public Animation(String name) {
+        this.name = name;
+    }
 
-		public void update(long elapsedTime) {
+    public AnimationFrame addFrame(ITexture image, long duration) {
+        return addFrame(image, duration, 0f, 0f, 1f, 1f);
+    }
 
-			if (state == State.STOPPED) {
-				return;
-			}
+    public AnimationFrame addFrame(ITexture image, long duration, float u1, float v1, float u2, float v2) {
+        totalDuration += duration;
+        final AnimationFrame frame = new AnimationFrame(image, totalDuration, u1, v1, u2, v2);
+        frames.add(frame);
+        return frame;
+    }
 
-			this.currentTime += elapsedTime;
-			if (currentTime >= totalDuration) {
+    @Override
+    public Play start() {
+        return start(PlayMode.LOOP);
+    }
 
-				switch (mode) {
-				case ONCE:
-					currentFrameIndex = frames.size() - 1;
-					state = State.STOPPED;
-					return;
-				case LOOP:
-					currentTime %= totalDuration;
-					currentFrameIndex = 0;
-					break;
-				}
-			}
+    @Override
+    public Play start(PlayMode mode) {
+        if (!frames.isEmpty()) {
+            Play play = new Play(this);
+            play.start(mode);
+            return play;
+        } else {
+            return null;
+        }
+    }
 
-			while (currentTime > frames.get(currentFrameIndex).endTime) {
-				++this.currentFrameIndex;
-			}
-		}
-	}
+    /**
+     * Call play.stop
+     *
+     * @param play
+     */
+    @Override
+    public void stop(Play play) {
+        if (null != play) {
+            play.stop();
+        }
+    }
 
-	public enum PlayMode {
-
-		ONCE, LOOP
-	}
-
-	enum State {
-
-		STARTED, STOPPED
-	}
-
-	private ArrayList<AnimationFrame> frames = new ArrayList<AnimationFrame>();
-	private long totalDuration;// milliseconds
-	private final String name;
-
-	public Animation(String name) {
-		this.name = name;
-	}
-
-	public Animation(im.bci.nanim.NanimParser.Animation nanimation,
-			Map<String, ITexture> textures) {
-		name = nanimation.getName();
-		frames.ensureCapacity(nanimation.getFramesCount());
-		for (Frame nframe : nanimation.getFramesList()) {
-			AnimationFrame frame = addFrame(
-					textures.get(nframe.getImageName()), nframe.getDuration());
-			frame.u1 = nframe.getU1();
-			frame.v1 = nframe.getV1();
-			frame.u2 = nframe.getU2();
-			frame.v2 = nframe.getV2();
-		}
-	}
-
-	public AnimationFrame addFrame(ITexture image, long duration) {
-		final AnimationFrame frame = new AnimationFrame(image, duration);
-		frames.add(frame);
-		totalDuration += duration;
-		frame.endTime = totalDuration;
-		return frame;
-	}
-
-	public Play start() {
-		return start(PlayMode.LOOP);
-	}
-
-	public Play start(PlayMode mode) {
-		if (!frames.isEmpty()) {
-			Play play = new Play();
-			play.start(mode);
-			return play;
-		} else {
-			return null;
-		}
-	}
-	
-	/**
-	 * Call play.stop
-	 * @param play
-	 */
-	public void stop(Play play) {
-		if(null != play) {
-			play.stop();
-		}
-	}
-
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 }

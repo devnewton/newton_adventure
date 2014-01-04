@@ -54,12 +54,11 @@ public class FrameTimeInfos {
     }
     private long lastNanoTime = -1;
 
-    public void update() {
+    public void update(final long nanoTime) {
         if (paused) {
             return;
         }
 
-        long nanoTime = System.nanoTime();
         if (lastNanoTime > 0) {
             currentTime += nanoTime - lastNanoTime;
         }

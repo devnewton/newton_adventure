@@ -35,8 +35,8 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.CollisionEvent;
 import net.phys2d.raw.shapes.Box;
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -50,7 +50,7 @@ public strictfp class Axe extends AbstractDrawableBody implements Updatable {
 	private static final float weight = 10.0f;
 	static final float width = World.distanceUnit;
 	static final float height = 3.9f * World.distanceUnit;
-	private Animation.Play play;
+	private Play play;
 	private World world;
 
 	Axe(World world) {

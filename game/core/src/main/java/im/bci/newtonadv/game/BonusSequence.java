@@ -75,7 +75,11 @@ public strictfp class BonusSequence extends LevelSequence {
         long seconds = (endTime - game.getFrameTimeInfos().currentTime) / 1000000000L;
         b.append(seconds / 60);
         b.append(":");
-        b.append(String.format("%02d", seconds % 60));
+        final long remainingSeconds = seconds % 60;
+        if (remainingSeconds < 10) {
+            b.append('0');
+        }
+        b.append(remainingSeconds);
         game.getView().drawLevelIndicators(b.toString());
     }
 }

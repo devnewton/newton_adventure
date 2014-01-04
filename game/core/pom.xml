@@ -25,8 +25,8 @@ SUCH DAMAGE. */ -->
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>im.bci.newtonadv</groupId>
-	<artifactId>newton-adventure</artifactId>
-	<version>1.14-SNAPSHOT</version>
+        <artifactId>newton-adventure</artifactId>
+        <version>1.14-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>im.bci.newtonadv</groupId>
@@ -53,12 +53,27 @@ SUCH DAMAGE. */ -->
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <!-- build a -sources.jar always, rather than only on deploy -->
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
         <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
+            <groupId>im.bci</groupId>
+            <artifactId>libtiled-jpurexml</artifactId>
         </dependency>
     </dependencies>
 </project>

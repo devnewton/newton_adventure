@@ -1,0 +1,25 @@
+{
+  "animations": [
+    {
+      "name": "bat.fly",
+      "frames": [
+        {
+          "duration": 200,
+          "image": "bat.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 0.5
+        },
+        {
+          "duration": 200,
+          "image": "bat.png",
+          "u1": 0.0,
+          "v1": 0.5,
+          "u2": 1.0,
+          "v2": 1.0
+        }
+      ]
+    }
+  ]
+}

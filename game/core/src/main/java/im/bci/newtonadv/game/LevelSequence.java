@@ -74,8 +74,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
             worldLoader = new TmxLoader(game, questName, levelName);
             worldLoader.preloading();
         } catch (Exception ex) {
-            Logger.getLogger(LevelSequence.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(-1);
+            throw new RuntimeException("Error during preloading", ex);
         }
     }
 
@@ -89,11 +88,11 @@ strictfp public class LevelSequence implements PreloadableSequence {
                 }
                 return false;
             } else {
-                long startLoadingTime = System.nanoTime();
+                long startLoadingTime = game.nanoTime();
                 for (;;) {
                     if (worldLoader.hasMoreToLoad()) {
                         worldLoader.loadSome();
-                        long currentLoadingTime = System.nanoTime();
+                        long currentLoadingTime = game.nanoTime();
                         long elapsedLoadingDuration = currentLoadingTime - startLoadingTime;
                         if (elapsedLoadingDuration > (1000000000L / 24L)) {
                             return false;
@@ -122,14 +121,9 @@ strictfp public class LevelSequence implements PreloadableSequence {
 
     @Override
     public void start() {
-        try {
-            cheatCodeGotoNextLevel = false;
-            cheatCodeGotoNextBonusLevel = false;
-            frameTimeInfos = game.getFrameTimeInfos();
-        } catch (Exception ex) {
-            Logger.getLogger(LevelSequence.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(-1);
-        }
+        cheatCodeGotoNextLevel = false;
+        cheatCodeGotoNextBonusLevel = false;
+        frameTimeInfos = game.getFrameTimeInfos();
     }
 
     @Override
@@ -271,7 +265,11 @@ strictfp public class LevelSequence implements PreloadableSequence {
             long seconds = deadClock.getRemainingTime() / 1000000000L;
             b.append(seconds / 60);
             b.append(":");
-            b.append(String.format("%02d", seconds % 60));
+            final long remainingSeconds = seconds % 60;
+            if (remainingSeconds < 10) {
+                b.append('0');
+            }
+            b.append(remainingSeconds);
         }
         game.getView().drawLevelIndicators(b.toString());
     }

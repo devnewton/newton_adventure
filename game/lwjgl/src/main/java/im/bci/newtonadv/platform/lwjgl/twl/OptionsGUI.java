@@ -36,7 +36,6 @@ import com.esotericsoftware.tablelayout.twl.Table;
 import de.matthiasmann.twl.BoxLayout;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ComboBox;
-import de.matthiasmann.twl.EditField;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TabbedPane;
 import de.matthiasmann.twl.ToggleButton;
@@ -49,7 +48,6 @@ import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
 import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.score.ScoreServer;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -83,8 +81,6 @@ public class OptionsGUI extends Table {
     InputChoice keyRotate90CounterClockwise;
     InputChoice keyReturn;
     InputChoice keyReturnToMenu;
-    ToggleButton scoreShareEnabled;
-    EditField scoreServerUrl, scorePlayer, scoreSecret;
     ToggleButton musicEnabled;
     ComboBox<ControllerItem> joypad;
     ComboBox<String> joypadXAxis;
@@ -94,12 +90,12 @@ public class OptionsGUI extends Table {
     private static SimpleChangableListModel<String> keyModel = buildKeyListModel();
     private SimpleChangableListModel<ControllerItem> controllerModel = buildControllerListModel();
     private SimpleChangableListModel<QualityItem> qualityModel = buildQualityListModel();
-    private SimpleChangableListModel<IMod> modModel = new SimpleChangableListModel<IMod>();
-    private SimpleChangableListModel<String> joyAxisModel = new SimpleChangableListModel<String>();
-    private SimpleChangableListModel<JoyButtonItem> joyButtonModel = new SimpleChangableListModel<JoyButtonItem>();
+    private SimpleChangableListModel<IMod> modModel = new SimpleChangableListModel<>();
+    private SimpleChangableListModel<String> joyAxisModel = new SimpleChangableListModel<>();
+    private SimpleChangableListModel<JoyButtonItem> joyButtonModel = new SimpleChangableListModel<>();
     private final IPlatformSpecific platform;
 
-    OptionsGUI(GameView gameView, GameInput gameInput, ScoreServer scoreServer, ISoundCache soundCache, IPlatformSpecific platform) throws LWJGLException {
+    OptionsGUI(GameView gameView, GameInput gameInput, ISoundCache soundCache, IPlatformSpecific platform) throws LWJGLException {
         this.platform = platform;
         setSize(LwjglHelper.getWidth(), LwjglHelper.getHeight());
         
@@ -125,7 +121,7 @@ public class OptionsGUI extends Table {
         videoTable.columnDefaults(0).pad(10);
         videoTable.columnDefaults(1).expandX();
 
-        mode = new ComboBox<DisplayMode>(new SimpleChangableListModel<DisplayMode>(getDisplayModes()));
+        mode = new ComboBox<>(new SimpleChangableListModel<>(getDisplayModes()));
         mode.setSelected(0);
         videoTable.addCell(new Label(platform.getMessage("options.video.mode")));
         videoTable.addCell(mode).fillX();
@@ -138,7 +134,7 @@ public class OptionsGUI extends Table {
         videoTable.addCell(addWithLabel(fullscreen, platform.getMessage("options.fullscreen")));
         videoTable.row();
         
-        quality = new ComboBox<QualityItem>(qualityModel);
+        quality = new ComboBox<>(qualityModel);
         quality.setSelected(qualityModel.findElement(new QualityItem(gameView.getQuality())));
         videoTable.addCell(new Label(platform.getMessage("options.quality")));
         videoTable.addCell(quality).fillX();
@@ -169,7 +165,7 @@ public class OptionsGUI extends Table {
         keyboardTable.columnDefaults(1).expandX();
         keyboardTable.columnDefaults(2).expandX();
 
-        joypad = new ComboBox<ControllerItem>(controllerModel);
+        joypad = new ComboBox<>(controllerModel);
         joypad.setNoSelectionIsError(false);
         joypad.addCallback(new Runnable() {
             @Override
@@ -178,8 +174,8 @@ public class OptionsGUI extends Table {
                 controllerSelected(item.getController());
             }
         });
-        joypadXAxis = new ComboBox<String>(joyAxisModel);
-        joypadYAxis = new ComboBox<String>(joyAxisModel);
+        joypadXAxis = new ComboBox<>(joyAxisModel);
+        joypadYAxis = new ComboBox<>(joyAxisModel);
         joypadTable.addCell(new Label(platform.getMessage("options.joypad")));
         joypadTable.addCell(joypad).fillX();
         joypadTable.row();
@@ -211,37 +207,6 @@ public class OptionsGUI extends Table {
         keyRotate90CounterClockwise = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.rotate.counterclockwise90"), gameInput.keyRotate90CounterClockwise, gameInput.joypadKeyRotate90CounterClockwise);
         keyReturn = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.input.return"), gameInput.keyReturn, gameInput.joypadKeyReturn);
         keyReturnToMenu = addInputChoice(joypadTable, keyboardTable,platform.getMessage("options.return.to.menu"), gameInput.keyReturnToMenu, gameInput.joypadKeyReturnToMenu);
-
-        Table scoreTable= new Table();
-        scoreTable.defaults().pad(3);
-        scoreTable.columnDefaults(0).pad(10);
-        scoreTable.columnDefaults(1).expandX();
-        scoreTable.columnDefaults(2).expandX();
-        
-        scoreShareEnabled = new ToggleButton();
-        scoreShareEnabled.setTheme("checkbox");
-        scoreShareEnabled.setActive(scoreServer.isScoreShareEnabled());
-        scoreTable.addCell(new Widget());
-        scoreTable.addCell(addWithLabel(scoreShareEnabled,platform.getMessage("options.share.score")));
-        scoreTable.row();
-        
-        scoreServerUrl = new EditField();
-        scoreServerUrl.setText(scoreServer.getServerUrl());
-        scoreTable.addCell(new Label(platform.getMessage("options.score.server")));
-        scoreTable.addCell(scoreServerUrl).fillX();
-        scoreTable.row();
-
-        scorePlayer = new EditField();
-        scorePlayer.setText(scoreServer.getPlayer());
-        scoreTable.addCell(new Label(platform.getMessage("options.player.name")));
-        scoreTable.addCell(scorePlayer).fillX();
-        scoreTable.row();
-
-        scoreSecret = new EditField();
-        scoreSecret.setText(scoreServer.getSecret());
-        scoreTable.addCell(new Label(platform.getMessage("options.player.password")));
-        scoreTable.addCell(scoreSecret).fillX();
-        scoreTable.row();
         
         Table modTable= new Table();
         modTable.defaults().pad(3);
@@ -251,7 +216,7 @@ public class OptionsGUI extends Table {
         
         modModel.addElement(new NullMod());
         modModel.addElements(platform.listMods());
-        mod = new ComboBox<IMod>(modModel);
+        mod = new ComboBox<>(modModel);
         mod.setNoSelectionIsError(false);
         if (null != platform.getCurrentMod()) {
             mod.setSelected(modModel.findElement(platform.getCurrentMod()));
@@ -290,7 +255,6 @@ public class OptionsGUI extends Table {
         tabbedPane.addTab(platform.getMessage("options.sound"), soundTable);
         tabbedPane.addTab(platform.getMessage("options.input.keyboard"), keyboardTable);
         tabbedPane.addTab(platform.getMessage("options.input.joypad"), joypadTable);
-        tabbedPane.addTab(platform.getMessage("options.score"), scoreTable);
         tabbedPane.addTab(platform.getMessage("options.mod"), modTable);
         
         this.defaults().pad(10);
@@ -344,11 +308,11 @@ public class OptionsGUI extends Table {
     }
 
     private SimpleChangableListModel<QualityItem> buildQualityListModel() {
-        ArrayList<QualityItem> items = new ArrayList<QualityItem>();
+        ArrayList<QualityItem> items = new ArrayList<>();
         for (GameViewQuality q : GameViewQuality.values()) {
             items.add(new QualityItem(q));
         }
-        return new SimpleChangableListModel<QualityItem>(items);
+        return new SimpleChangableListModel<>(items);
     }
 
     private Widget addWithLabel(ToggleButton button, String message) {
@@ -486,7 +450,7 @@ public class OptionsGUI extends Table {
     }
 
     private SimpleChangableListModel<ControllerItem> buildControllerListModel() {
-        SimpleChangableListModel<ControllerItem> model = new SimpleChangableListModel<ControllerItem>();
+        SimpleChangableListModel<ControllerItem> model = new SimpleChangableListModel<>();
         model.addElement(new ControllerItem());
         for (int i = 0, n = Controllers.getControllerCount(); i < n; ++i) {
             model.addElement(new ControllerItem(Controllers.getController(i)));
@@ -526,8 +490,8 @@ public class OptionsGUI extends Table {
     private InputChoice addInputChoice(Table joypadTable, Table keyboardTable, String label, int key, int button) {
         ++button;
         InputChoice choice = new InputChoice();
-        choice.key = new ComboBox<String>(keyModel);
-        choice.joyButton = new ComboBox<JoyButtonItem>(joyButtonModel);
+        choice.key = new ComboBox<>(keyModel);
+        choice.joyButton = new ComboBox<>(joyButtonModel);
         joypadTable.addCell(new Label(label));
         joypadTable.addCell(choice.joyButton).fillX();
         joypadTable.row();
@@ -542,7 +506,7 @@ public class OptionsGUI extends Table {
     }
 
     private static SimpleChangableListModel<String> buildKeyListModel() {
-        SimpleChangableListModel<String> model = new SimpleChangableListModel<String>();
+        SimpleChangableListModel<String> model = new SimpleChangableListModel<>();
         for (Field field : Keyboard.class.getFields()) {
             String name = field.getName();
             if (name.startsWith("KEY_")) {

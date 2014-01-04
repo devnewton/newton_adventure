@@ -36,7 +36,7 @@ THE SOFTWARE. -->
         <dependency>
             <groupId>com.github.asilvestre</groupId>
             <artifactId>jpurexml</artifactId>
-            <version>0.11-SNAPSHOT</version>
+            <version>0.10</version>
         </dependency>
     </dependencies>
     <build>

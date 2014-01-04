@@ -32,8 +32,8 @@
 package im.bci.newtonadv.world;
 
 import net.phys2d.math.Matrix2f;
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -49,7 +49,7 @@ import im.bci.newtonadv.util.Vector;
  */
 public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 
-	private Animation.Play play;
+	private Play play;
 	private static final float weight = 0.1f;
 	private static final float speed = 4.0f;
 	private static final long maxMoveStraightDuration = 1000000000L;

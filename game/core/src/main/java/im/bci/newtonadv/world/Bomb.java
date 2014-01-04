@@ -34,8 +34,8 @@ package im.bci.newtonadv.world;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -51,7 +51,7 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
     static final float size = 1.95f * World.distanceUnit;
     private World world;
     private AnimationCollection texture;
-    private Animation.Play play;
+    private Play play;
     private boolean triggered;
     private long explodeTime = -1;
     private static final float explosionForce = 10000.0f;

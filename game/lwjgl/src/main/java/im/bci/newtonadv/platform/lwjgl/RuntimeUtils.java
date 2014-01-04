@@ -32,8 +32,6 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,25 +54,6 @@ public class RuntimeUtils {
                     "Cannot find application directory, try current", uriEx);
             return new File(".");
         }
-    }
-    
-    public static Properties loadPropertiesFromFile(File f) {
-        try {
-            FileInputStream fs = new FileInputStream(f);
-            try {
-                Properties config = new Properties();
-                config.load(fs);
-                return config;
-            } finally {
-                fs.close();
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public static Properties loadPropertiesFromFile(String f) {
-        return loadPropertiesFromFile(new File(f));
     }
 
     static List<String> getPropertyAsList(Properties properties, String name) {

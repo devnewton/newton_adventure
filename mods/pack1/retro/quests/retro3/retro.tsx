@@ -13,7 +13,7 @@
   </properties>
  </tile>
  <tile id="2">
-  <image source="retro_2.png"/>
+  <image source="retro_2.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door"/>
   </properties>

@@ -31,8 +31,8 @@
  */
 package im.bci.newtonadv.platform.lwjgl.openal;
 
-import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
+import im.bci.newtonadv.platform.lwjgl.FileGameData;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -51,7 +51,7 @@ public class OpenALSoundCache implements ISoundCache {
     private static final Logger logger = Logger.getLogger(OpenALSoundCache.class.getName());
     private boolean soundEnabled;
     private boolean musicEnabled;
-    private final IGameData gameData;
+    private final FileGameData gameData;
     private SimpleSoundEngine engine;
     private final ExecutorService executor;
     private Runnable poll = new AbstractOpenALTask() {
@@ -80,7 +80,7 @@ public class OpenALSoundCache implements ISoundCache {
         protected abstract void doRun() throws Exception;
     }
 
-    public OpenALSoundCache(IGameData gd, Properties config) {
+    public OpenALSoundCache(FileGameData gd, Properties config) {
         this.gameData = gd;
         this.soundEnabled = config.getProperty("sound.enabled").equals("true");
         this.musicEnabled = config.getProperty("music.enabled").equals("true");

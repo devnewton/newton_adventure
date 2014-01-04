@@ -127,11 +127,12 @@ public class PlaynGameData implements IGameData {
                         for (String levelName : json.getArray("levels", String.class)) {
                             questConfig.levels.add(levelName);
                         }
-                       /* if (json.containsKey("lockedBy")) {
-                            for (String lockQuestName : json.getArray("lockedBy", String.class)) {
+                        final Json.TypedArray<String> lockedBy = json.getArray("lockedBy", String.class);
+                        if (null != lockedBy) {
+                            for (String lockQuestName : lockedBy) {
                                 questConfig.lockedBy.add(lockQuestName);
                             }
-                        }*/
+                        }
                         questConfig.ready = true;
                     }
 
@@ -157,13 +158,13 @@ public class PlaynGameData implements IGameData {
                     }
                 }
                 assetsList = newAssets;
-
+               
                 /* Charge tout comme un bourrin...
-                 for(String a : assetsList) {
-                 if(a.endsWith(".png")) {
-                 assets.getImage(a);
-                 }
-                 }*/
+                for(String a : assetsList) {
+                    if(a.endsWith(".png")) {
+                        assets.getImage(a);
+                    }
+                }*/
                 initQuests();
             }
 
@@ -223,7 +224,7 @@ public class PlaynGameData implements IGameData {
                             @Override
                             public void onSuccess(String result) {
                                 loader.parseTsx(map, tileset, result);
-                                for (TmxTile tile : tileset.getTiles()) {
+                                for(TmxTile tile : tileset.getTiles()) {
                                     tile.getFrame().getImage().setSource(tsxDir + "/" + tile.getFrame().getImage().getSource());
                                 }
                                 loadNextTileset();

@@ -25,7 +25,7 @@
   </properties>
  </tile>
  <tile id="4">
-  <image source="lab_4.png"/>
+  <image source="lab_4.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door"/>
   </properties>
@@ -192,7 +192,7 @@
   <image source="lab_33.png"/>
   <properties>
    <property name="newton_adventure.color" value="red"/>
-   <property name="newton_adventure.gfx" value="red_colorizer.nanim"/>
+   <property name="newton_adventure.gfx" value="red_colorizer.json"/>
    <property name="newton_adventure.type" value="colorizer"/>
   </properties>
  </tile>
@@ -200,7 +200,7 @@
   <image source="lab_34.png"/>
   <properties>
    <property name="newton_adventure.color" value="green"/>
-   <property name="newton_adventure.gfx" value="green_colorizer.nanim"/>
+   <property name="newton_adventure.gfx" value="green_colorizer.json"/>
    <property name="newton_adventure.type" value="colorizer"/>
   </properties>
  </tile>
@@ -208,7 +208,7 @@
   <image source="lab_35.png"/>
   <properties>
    <property name="newton_adventure.color" value="blue"/>
-   <property name="newton_adventure.gfx" value="blue_colorizer.nanim"/>
+   <property name="newton_adventure.gfx" value="blue_colorizer.json"/>
    <property name="newton_adventure.type" value="colorizer"/>
   </properties>
  </tile>
@@ -235,7 +235,7 @@
   </properties>
  </tile>
  <tile id="38">
-  <image source="lab_38.png"/>
+  <image source="lab_38.png" width="32" height="64"/>
   <properties>
    <property name="newton_adventure.type" value="door_to_bonus_world"/>
   </properties>

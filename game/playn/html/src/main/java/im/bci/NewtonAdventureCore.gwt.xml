@@ -1,0 +1,5 @@
+<module>
+    <inherits name='im.bci.TmxLoader'/>
+    <inherits name='net.Phys2d'/>
+    <source path='newtonadv'/>
+</module>

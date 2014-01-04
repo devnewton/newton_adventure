@@ -31,8 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -47,7 +47,7 @@ import net.phys2d.raw.shapes.Shape;
 public abstract strictfp class PickableObject extends StaticBody implements
 		Drawable, CollisionDetectionOnly, Updatable {
 
-	protected Animation.Play play;
+	protected Play play;
 	protected World world;
 	private int zOrder = 0;
 

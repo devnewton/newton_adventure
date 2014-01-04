@@ -33,8 +33,9 @@ package im.bci.newtonadv.world;
 
 import net.phys2d.raw.Body;
 
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
+import im.bci.newtonadv.anim.PlayMode;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -51,7 +52,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	protected final World world;
 	private AnimationCollection texture;
-	private Animation.Play play;
+	private Play play;
 	private NewtonColor color;
 	protected boolean isClose = true;
 
@@ -88,7 +89,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 
 	void open() {
 		isClose = false;
-		play = texture.getAnimationByName("open").start(Animation.PlayMode.ONCE);
+		play = texture.getAnimationByName("open").start(PlayMode.ONCE);
 	}
 
 	public boolean isOpenableWithKey(Key key) {

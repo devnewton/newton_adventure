@@ -31,8 +31,8 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -51,7 +51,7 @@ public strictfp class MovingPlatform extends AbstractDrawableBody implements
 	private int currentDestination = 0;
 	private static final float weight = 10000.0f;
 	final World world;
-	final Animation.Play play;
+	final Play play;
 	final Vector2f f = new Vector2f();
 
 	public MovingPlatform(World world, AnimationCollection texture,
