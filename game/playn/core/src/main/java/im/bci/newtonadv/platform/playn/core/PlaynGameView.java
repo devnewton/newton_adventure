@@ -142,7 +142,18 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawPickableObject(PickableObject pickable, AnimationFrame texture, World world) {
-        //TODO
+        if (null != texture) {
+            AABox bounds = pickable.getShape().getBounds();
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = bounds.getWidth();
+            final float h = bounds.getHeight();
+            surface.save();
+            surface.translate(pickable.getPosition().getX(), pickable.getPosition().getY());
+            surface.rotate(world.getGravityAngle());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -178,8 +189,19 @@ public class PlaynGameView implements IGameView {
     }
 
     @Override
-    public void drawBat(Bat bat, float scale, AnimationFrame frame, World world) {
-        //TODO
+    public void drawBat(Bat bat, float scale, AnimationFrame texture, World world) {
+        if (null != texture) {
+            ROVector2f size = ShapeUtils.getSize(bat.getShape());
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = size.getX();
+            final float h = size.getY();
+            surface.save();
+            surface.translate(bat.getPosition().getX(), bat.getPosition().getY());
+            surface.rotate(bat.getRotation());
+            surface.scale(scale, -scale);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -224,18 +246,50 @@ public class PlaynGameView implements IGameView {
     }
 
     @Override
-    public void drawBoss(Boss boss, AnimationFrame bodyTexture) {
-        //TODO
+    public void drawBoss(Boss boss, AnimationFrame texture) {
+        if (null != texture) {
+            ROVector2f size = ShapeUtils.getSize(boss.getShape());
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = size.getX();
+            final float h = size.getY();
+            surface.save();
+            surface.translate(boss.getPosition().getX(), boss.getPosition().getY());
+            surface.rotate(boss.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
-    public void drawBossHand(BossHand hand, AnimationFrame texture) {
-        //TODO
+    public void drawBossHand(BossHand boss, AnimationFrame texture) {
+        if (null != texture) {
+            ROVector2f size = ShapeUtils.getSize(boss.getShape());
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = size.getX();
+            final float h = size.getY();
+            surface.save();
+            surface.translate(boss.getPosition().getX(), boss.getPosition().getY());
+            surface.rotate(boss.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
     public void drawExplosion(Explosion explosion, AnimationFrame texture, World world) {
-        //TODO
+        if (null != texture) {
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = explosion.getSize();
+            final float h = w;
+            surface.save();
+            surface.translate(explosion.getPosition().getX(), explosion.getPosition().getY());
+            surface.rotate(world.getGravityAngle());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -245,7 +299,18 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawFireBall(FireBall fireball, AnimationFrame texture, World world) {
-        //TODO
+        if (null != texture) {
+            ROVector2f size = ShapeUtils.getSize(fireball.getShape());
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = size.getX();
+            final float h = size.getY();
+            surface.save();
+            surface.translate(fireball.getPosition().getX(), fireball.getPosition().getY());
+            surface.rotate(fireball.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -315,7 +380,19 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawLosedApple(LosedApple apple, World world, AnimationFrame texture, float alpha) {
-        //TODO
+        if (null != texture) {
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = apple.getSize();
+            final float h = w;
+            surface.save();
+            surface.setAlpha(alpha);
+            surface.translate(apple.getPosition().getX(), apple.getPosition().getY());
+            surface.rotate(world.getGravityAngle());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.setAlpha(1.0f);
+            surface.restore();
+        }
     }
 
     @Override
@@ -325,22 +402,68 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawMobilePikeAnchor(MobilePikeAnchor anchor, AnimationFrame texture) {
-        //TODO
+        if (null != texture) {
+            AABox bounds = anchor.getShape().getBounds();
+            final float w = bounds.getWidth();
+            final float h = bounds.getHeight();
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+
+            final float u1 = 0.18f, u2 = 0.8f;
+            final float v1 = 0.2f, v2 = 0.8f;
+            surface.save();
+            surface.translate(anchor.getPosition().getX(), anchor.getPosition().getY());
+            surface.rotate(anchor.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, u1 * image.width(), v1 * image.height(), (u2 - u1) * image.width(), (v2 - v1) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
     public void drawMobilePikes(MobilePikes pikes, AnimationFrame texture) {
-        //TODO
+        if (null != texture) {
+            Box box = (Box) pikes.getShape();
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = box.getSize().getX();
+            final float h = box.getSize().getY();
+            surface.save();
+            surface.translate(pikes.getPosition().getX(), pikes.getPosition().getY());
+            surface.rotate(pikes.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
     public void drawMummy(Mummy mummy, World world, AnimationFrame texture, float scale) {
-        //TODO
+        if (null != texture) {
+            ROVector2f size = ShapeUtils.getSize(mummy.getShape());
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = size.getX();
+            final float h = size.getY();
+            surface.save();
+            surface.translate(mummy.getPosition().getX(), mummy.getPosition().getY());
+            surface.rotate(mummy.getRotation());
+            surface.scale(scale, -scale);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
     public void drawPickedUpObject(PickedUpObject apple, World world, AnimationFrame texture) {
-        //TODO
+        if (null != texture) {
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = apple.getSize();
+            final float h = w;
+            surface.save();
+            surface.translate(apple.getPosition().getX(), apple.getPosition().getY());
+            surface.rotate(world.getGravityAngle());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -387,22 +510,6 @@ public class PlaynGameView implements IGameView {
         canvas.setFillColor(Color.rgb(255, 255, 255));
         canvas.fillText(textLayout, 0, 0);
         surface.drawImage(textImage, x, y);
-        /*       GL11.glEnable(GL11.GL_BLEND);
-         GL11.glPushMatrix();
-         GL11.glTranslatef(button.x,
-         button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
-         + font.getHeight(), 0);
-         GL11.glScalef(1, -1, 1);
-         font.drawString(leftLabel, TrueTypeFont.Align.LEFT);
-         GL11.glPopMatrix();
-         GL11.glPushMatrix();
-         GL11.glTranslatef(button.x + QuestMenuSequence.QUEST_MINIATURE_WIDTH,
-         button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
-         + font.getHeight(), 0);
-         GL11.glScalef(1, -1, 1);
-         font.drawString(rightLabel, TrueTypeFont.Align.RIGHT);
-         GL11.glPopMatrix();
-         GL11.glDisable(GL11.GL_BLEND);*/
     }
 
     @Override
@@ -417,7 +524,17 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawUsedKey(UsedKey key, AnimationFrame texture, World world) {
-        //TODO
+        if (null != texture) {
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = key.getSize();
+            final float h = w;
+            surface.save();
+            surface.translate(key.getPosition().getX(), key.getPosition().getY());
+            surface.rotate(world.getGravityAngle());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -538,8 +655,19 @@ public class PlaynGameView implements IGameView {
     }
 
     @Override
-    public void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture) {
-        //TODO
+    public void drawMovingPlatform(MovingPlatform platform, AnimationFrame texture) {
+        if (null != texture) {
+            ROVector2f size = ShapeUtils.getSize(platform.getShape());
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = size.getX();
+            final float h = size.getY();
+            surface.save();
+            surface.translate(platform.getPosition().getX(), platform.getPosition().getY());
+            surface.rotate(platform.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
@@ -564,7 +692,9 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawKeyLock(KeyLock keyLock, float alpha) {
-        //TODO
+        surface.setAlpha(alpha);
+        drawPlatform(keyLock);
+        surface.setAlpha(1.0f);
     }
 
     @Override
@@ -573,8 +703,19 @@ public class PlaynGameView implements IGameView {
     }
 
     @Override
-    public void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world) {
-        //TODO
+    public void drawBomb(Bomb bomb, AnimationFrame texture, World world) {
+        if (null != texture) {
+            ROVector2f size = ShapeUtils.getSize(bomb.getShape());
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            final float w = size.getX();
+            final float h = size.getY();
+            surface.save();
+            surface.translate(bomb.getPosition().getX(), bomb.getPosition().getY());
+            surface.rotate(bomb.getRotation());
+            surface.scale(1, -1);
+            surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
