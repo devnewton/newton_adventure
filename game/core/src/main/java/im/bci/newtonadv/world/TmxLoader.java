@@ -811,9 +811,9 @@ public class TmxLoader {
     private static final Map<String,String> defaultMapProperties = new HashMap<String, String>();
 
     static {
-        defaultMapProperties.put("newton_adventure.mummy", "mummy.gif");
+        defaultMapProperties.put("newton_adventure.mummy", "mummy.json");
         defaultMapProperties.put("newton_adventure.bat", "bat.json");
-        defaultMapProperties.put("newton_adventure.explosion", "explosion.gif");
+        defaultMapProperties.put("newton_adventure.explosion", "explosion.json");
         defaultMapProperties.put("newton_adventure.fireball", "fireball.png");
         defaultMapProperties.put("newton_adventure.bomb", "bomb.json");
         defaultMapProperties.put("newton_adventure.crate", "crate.json");

@@ -1,0 +1,41 @@
+{
+  "animations": [
+    {
+      "name": "animation_0",
+      "frames": [
+        {
+          "duration": 250,
+          "image": "robot.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 0.5,
+          "v2": 0.5
+        },
+        {
+          "duration": 250,
+          "image": "robot.png",
+          "u1": 0.0,
+          "v1": 0.5,
+          "u2": 0.5,
+          "v2": 1.0
+        },
+        {
+          "duration": 250,
+          "image": "robot.png",
+          "u1": 0.5,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 0.5
+        },
+        {
+          "duration": 250,
+          "image": "robot.png",
+          "u1": 0.5,
+          "v1": 0.5,
+          "u2": 1.0,
+          "v2": 1.0
+        }
+      ]
+    }
+  ]
+}

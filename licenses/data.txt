@@ -14,7 +14,7 @@ Author: Bart Kelsey (http://opengameart.org/user/1)
 License: CC-BY-SA 3.0
 Author: Delfos (aka Matías Poggini http://opengameart.org/users/delfos)
 
-* explosion.gif
+* explosion.png
 
 License: CC-BY 3.0
 Author: Daniel Cook (http://lostgarden.com, http://opengameart.org/content/iron-plague-explode5bmp)
@@ -43,7 +43,7 @@ Author: yd (http://opengameart.org/content/desert-theme)
 License: CC-BY-SA 3.0
 Author: Harlad
 
-* toad.gif
+* toad.png
 
 Author: Redshrike (Stephen Challener) ( http://opengameart.org/content/a-load-of-overworld-34-rpg-sprites ) 
 License: CC-BY 3.0

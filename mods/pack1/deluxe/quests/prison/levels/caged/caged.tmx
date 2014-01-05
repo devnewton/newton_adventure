@@ -2,7 +2,7 @@
 <map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32">
  <properties>
   <property name="newton_adventure.background" value="prison_background.png"/>
-  <property name="newton_adventure.mummy" value="robot.gif"/>
+  <property name="newton_adventure.mummy" value="robot.json"/>
   <property name="newton_adventure.music" value="tomsong8.ogg"/>
  </properties>
  <tileset firstgid="1" source="../../prison.tsx"/>

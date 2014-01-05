@@ -4,7 +4,7 @@
   <property name="newton_adventure.background" value="retro_background.png"/>
   <property name="newton_adventure.coin" value="coin.png"/>
   <property name="newton_adventure.deadclock" value="150"/>
-  <property name="newton_adventure.mummy" value="toad.gif"/>
+  <property name="newton_adventure.mummy" value="toad.json"/>
   <property name="newton_adventure.music" value="game_on_0.ogg"/>
  </properties>
  <tileset firstgid="1" source="../../retro.tsx"/>

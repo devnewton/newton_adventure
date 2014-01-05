@@ -1304,9 +1304,7 @@ public strictfp class GameView implements IGameView {
     @Override
     public AnimationCollection loadFromAnimation(String filename)
             throws IOException {
-        if (filename.endsWith("gif")) {
-            return loadGif(filename);
-        } else if (filename.endsWith("json")) {
+        if (filename.endsWith("json")) {
             return loadNanim(filename);
         } else {
             return new AnimationCollection(textureCache.getTexture(filename));
@@ -1331,25 +1329,6 @@ public strictfp class GameView implements IGameView {
         }
         nanim.setReady(true);
         return nanim;
-    }
-
-    private AnimationCollection loadGif(String filename) throws IOException {
-        GifDecoder d = new GifDecoder();
-        d.read(data.openFile(filename));
-        Animation animation = new Animation(filename);
-        int n = d.getFrameCount();
-        for (int i = 0; i < n; i++) {
-            BufferedImage frameImage = d.getFrame(i); // frame i
-            int t = d.getDelay(i); // display duration of frame in
-            // milliseconds
-            animation.addFrame(
-                    textureCache.createTexture(filename + '#' + i, frameImage),
-                    t);
-        }
-        AnimationCollection collection = new AnimationCollection();
-        collection.addAnimation(animation);
-        collection.setReady(true);
-        return collection;
     }
 
     @Override

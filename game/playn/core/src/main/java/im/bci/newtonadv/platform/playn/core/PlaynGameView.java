@@ -445,7 +445,7 @@ public class PlaynGameView implements IGameView {
             surface.save();
             surface.translate(mummy.getPosition().getX(), mummy.getPosition().getY());
             surface.rotate(mummy.getRotation());
-            surface.scale(scale, -scale);
+            surface.scale(mummy.isLookingLeft() ? -scale : scale, -scale);
             surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
             surface.restore();
         }

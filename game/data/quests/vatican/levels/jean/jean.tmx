@@ -2,7 +2,7 @@
 <map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32">
  <properties>
   <property name="newton_adventure.background" value="sky_background.png"/>
-  <property name="newton_adventure.mummy" value="toad.gif"/>
+  <property name="newton_adventure.mummy" value="toad.json"/>
   <property name="newton_adventure.music" value="northindianbeat.ogg"/>
  </properties>
  <tileset firstgid="1" source="../../vatican.tsx"/>
