@@ -45,6 +45,7 @@ import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
 import im.bci.newtonadv.util.NewtonColor;
@@ -79,15 +80,14 @@ import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.phys2d.math.ROVector2f;
-import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
-import net.phys2d.raw.shapes.Shape;
 import playn.core.Assets;
 import playn.core.Canvas;
 import playn.core.CanvasImage;
@@ -487,7 +487,7 @@ public class PlaynGameView implements IGameView {
     public void drawMenuButton(MenuSequence.Button button, String leftLabel, String rightLabel) {
         drawButton(button);
         drawText(leftLabel, button.x, button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT);
-        drawRighAlignedText(rightLabel, button.x, button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT);
+        drawRighAlignedText(rightLabel, button.x + QuestMenuSequence.QUEST_MINIATURE_WIDTH, button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT);
     }
 
     private void drawText(String text, float x, float y) {
@@ -514,7 +514,16 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawScoreSequence(ScoreSequence sequence, QuestScore questScore, long scorePerCentToShow) {
-        //TODO
+            sequence.setDirty(false);
+            doDrawMenuSequence(sequence);
+            StringBuilder scores = new StringBuilder("SCORES\n");
+            for (Map.Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
+                scores.append(" ").append(levelEntry.getKey()).append(
+                         ": ").append(scorePerCentToShow
+                        * levelEntry.getValue().computeScore() / 100).append("\n");
+            }
+            scores.append("TOTAL: ").append(scorePerCentToShow * questScore.computeScore() / 100);
+            drawText(scores.toString(), 0, 0);
     }
 
     @Override
@@ -781,8 +790,6 @@ public class PlaynGameView implements IGameView {
             int[] indices = new int[platforms.indicesLimit];
             System.arraycopy(platforms.indices, 0, indices, 0, platforms.indicesLimit);
             surface.fillTriangles(platforms.vertices, platforms.texCoords, indices);
-            /* platforntms.vertices.rewind();
-             platforms.texCoords.rewind();*/
         }
     }
 
