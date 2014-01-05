@@ -161,22 +161,6 @@ public strictfp class MainMenuSequence extends MenuSequence {
         quitButton.h = 90;
         addButton(quitButton);
 
-        Button insertCoinsButton = new Button() {
-            @Override
-            void activate() throws Sequence.NormalTransitionException {
-                game.insertCoins();
-            }
-        };
-        insertCoinsButton.offTextureName = game.getButtonFile("main_menu/bt-insert-coins-off");
-        insertCoinsButton.onTextureName = game.getButtonFile(
-                "main_menu/bt-insert-coins-on");
-        insertCoinsButton.x = 920;
-        insertCoinsButton.y = 683;
-        insertCoinsButton.w = 312;
-        insertCoinsButton.h = 90;
-        addButton(insertCoinsButton);
-
-
     }
 
     @Override
