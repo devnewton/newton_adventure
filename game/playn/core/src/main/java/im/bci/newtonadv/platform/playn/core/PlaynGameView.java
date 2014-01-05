@@ -687,7 +687,51 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawMinimap(World world, ITexture minimapTexture) {
-        //TODO
+        if (!world.getHero().hasMap() && !world.getHero().hasCompass()) {
+            return;
+        }
+        final float minimapSize = 0.3f * surface.width();
+        surface.save();
+        surface.translate(surface.width() - minimapSize / 1.5f, surface.height() - minimapSize / 1.5f);
+
+        surface.save();
+        surface.rotate(world.getGravityAngle());
+        if (world.getHero().hasMap()) {
+            surface.drawImage(((PlaynTexture) minimapTexture).getImage(), -minimapSize / 2.0f, -minimapSize / 2.0f, minimapSize, minimapSize);
+        } else {
+            surface.setFillColor(Color.rgb(128, 128, 128));
+            surface.setAlpha(0.5f);
+            surface.fillRect(-minimapSize / 2.0f, -minimapSize / 2.0f, minimapSize, minimapSize);
+            surface.setAlpha(1f);
+            surface.setFillColor(Color.rgb(0, 0, 0));
+        }
+        if (world.getHero().hasCompass()) {
+            drawMinimapIcon(world, world.getHero().getPosition(), world.getHero().getAnimation().getCurrentFrame(), minimapSize);
+            for (Key key : world.getKeys()) {
+                drawMinimapIcon(world, key.getPosition(), key.getAnimation().getCurrentFrame(), minimapSize);
+            }
+        }
+        surface.restore();
+    }
+
+    private void drawMinimapIcon(World world, ROVector2f worldPos, AnimationFrame texture, float minimapSize) {
+        if (null != texture) {
+            float iconW = World.distanceUnit * 8.0f;
+            float iconH = World.distanceUnit * 8.0f;
+            surface.save();
+            //surface.rotate(-world.getGravityAngle());
+            final float miniMapPlatformSize = minimapSize * 4.0f / 256.0f;// harcoded,
+            // that's
+            // bad!
+            surface.scale(miniMapPlatformSize / (World.distanceUnit * 2.0f),
+                    -miniMapPlatformSize / (World.distanceUnit * 2.0f));
+            surface.translate(worldPos.getX(), worldPos.getY());
+            surface.rotate(world.getGravityAngle());
+            surface.scale(1, -1);
+            final Image image = ((PlaynTexture) texture.getImage()).getImage();
+            surface.drawImage(image, -iconW / 2.0f, -iconH / 2.0f, iconW, iconH, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
+            surface.restore();
+        }
     }
 
     @Override
