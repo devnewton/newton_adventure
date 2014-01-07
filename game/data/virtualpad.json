@@ -1,0 +1,69 @@
+{
+  "animations": [
+    {
+      "name": "up",
+      "frames": [
+        {
+          "duration": 1000,
+          "image": "virtualpad.png",
+          "u1": 0.38085938,
+          "v1": 0.0,
+          "u2": 0.6738281,
+          "v2": 0.27539062
+        }
+      ]
+    },
+    {
+      "name": "left",
+      "frames": [
+        {
+          "duration": 0,
+          "image": "virtualpad.png",
+          "u1": 0.65625,
+          "v1": 0.46679688,
+          "u2": 0.9296875,
+          "v2": 0.7597656
+        }
+      ]
+    },
+    {
+      "name": "right",
+      "frames": [
+        {
+          "duration": 1000,
+          "image": "virtualpad.png",
+          "u1": 0.38085938,
+          "v1": 0.46679688,
+          "u2": 0.65625,
+          "v2": 0.7597656
+        }
+      ]
+    },
+    {
+      "name": "rotate_clockwise",
+      "frames": [
+        {
+          "duration": 1000,
+          "image": "virtualpad.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 0.38085938,
+          "v2": 0.46679688
+        }
+      ]
+    },
+    {
+      "name": "rotate_counter_clockwise",
+      "frames": [
+        {
+          "duration": 1000,
+          "image": "virtualpad.png",
+          "u1": 0.0,
+          "v1": 0.46679688,
+          "u2": 0.30859375,
+          "v2": 0.984375
+        }
+      ]
+    }
+  ]
+}
