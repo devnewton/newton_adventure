@@ -514,16 +514,16 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawScoreSequence(ScoreSequence sequence, QuestScore questScore, long scorePerCentToShow) {
-            sequence.setDirty(false);
-            doDrawMenuSequence(sequence);
-            StringBuilder scores = new StringBuilder("SCORES\n");
-            for (Map.Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
-                scores.append(" ").append(levelEntry.getKey()).append(
-                         ": ").append(scorePerCentToShow
-                        * levelEntry.getValue().computeScore() / 100).append("\n");
-            }
-            scores.append("TOTAL: ").append(scorePerCentToShow * questScore.computeScore() / 100);
-            drawText(scores.toString(), 0, 0);
+        sequence.setDirty(false);
+        doDrawMenuSequence(sequence);
+        StringBuilder scores = new StringBuilder("SCORES\n");
+        for (Map.Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
+            scores.append(" ").append(levelEntry.getKey()).append(
+                    ": ").append(scorePerCentToShow
+                            * levelEntry.getValue().computeScore() / 100).append("\n");
+        }
+        scores.append("TOTAL: ").append(scorePerCentToShow * questScore.computeScore() / 100);
+        drawText(scores.toString(), 0, 0);
     }
 
     @Override
@@ -775,21 +775,27 @@ public class PlaynGameView implements IGameView {
     public void drawStaticPlatforms(IStaticPlatformDrawable drawable) {
         final PlaynStaticPlatformDrawable platforms = (PlaynStaticPlatformDrawable) drawable;
         final Image image = platforms.texture.getImage();
-        /* for (StaticPlatform platform : platforms.platforms) {
-         if (platform.getShape() instanceof Box) {
-         final Box box = (Box) platform.getShape();
-         final float w = box.getSize().getX();
-         final float h = box.getSize().getY();
-         final float x = platform.getPosition().getX() - w;
-         final float y = platform.getPosition().getY() - h;
-         surface.drawImage(image, x, y, w, h);
-         }
-         }*/
-        if (image.isReady()) {
-            surface.setFillPattern(image.toPattern());
-            int[] indices = new int[platforms.indicesLimit];
-            System.arraycopy(platforms.indices, 0, indices, 0, platforms.indicesLimit);
-            surface.fillTriangles(platforms.vertices, platforms.texCoords, indices);
+
+        final boolean useTriangles = null != PlayN.graphics().ctx();
+        if (useTriangles) {
+            if (image.isReady()) {
+                surface.setFillPattern(image.toPattern());
+                int[] indices = new int[platforms.indicesLimit];
+                System.arraycopy(platforms.indices, 0, indices, 0, platforms.indicesLimit);
+                surface.fillTriangles(platforms.vertices, platforms.texCoords, indices);
+            }
+        } else {
+            for (StaticPlatform platform : platforms.platforms) {
+                ROVector2f size = ShapeUtils.getSize(platform.getShape());
+                final float w = size.getX();
+                final float h = size.getY();
+                surface.save();
+                surface.translate(platform.getPosition().getX(), platform.getPosition().getY());
+                surface.rotate(platform.getRotation());
+                surface.scale(1, -1);
+                surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, platform.getU1() * image.width(), platform.getV1() * image.height(), (platform.getU2() - platform.getU1()) * image.width(), (platform.getV2() - platform.getV1()) * image.height());
+                surface.restore();
+            }
         }
     }
 
