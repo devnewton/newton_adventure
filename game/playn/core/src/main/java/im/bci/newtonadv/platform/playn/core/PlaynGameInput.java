@@ -72,28 +72,33 @@ public class PlaynGameInput implements IGameInput {
 
             @Override
             public void onPointerStart(Pointer.Event event) {
-                mousePos = new Vector2f(event.x(), event.y());
+                mousePos = eventToMousePos(event);
+                System.out.println("Mouse click at " + event.x() + "," + event.y());
                 mouseButtonDown = true;
             }
 
             @Override
             public void onPointerDrag(Pointer.Event event) {
-                mousePos = new Vector2f(event.x(), event.y());
+                mousePos = eventToMousePos(event);
                 mouseButtonDown = true;            }
 
             @Override
             public void onPointerCancel(Pointer.Event event) {
-                mousePos = new Vector2f(event.x(), event.y());
+                mousePos = eventToMousePos(event);
                 mouseButtonDown = false;
             }
 
             @Override
             public void onPointerEnd(Pointer.Event event) {
-                mousePos = new Vector2f(event.x(), event.y());
+                mousePos = eventToMousePos(event);
                 mouseButtonDown = false;
             }
 
         });
+    }
+
+    private Vector2f eventToMousePos(Pointer.Event event) {
+        return new Vector2f(event.x(), PlayN.graphics().height() - event.y());
     }
 
     @Override
