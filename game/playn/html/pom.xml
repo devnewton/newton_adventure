@@ -69,7 +69,7 @@
             <groupId>com.github.asilvestre</groupId>
             <artifactId>jpurexml</artifactId>
             <classifier>sources</classifier>
-            <version>0.10</version>
+            <version>0.12</version>
     </dependency>
 
     <dependency>
