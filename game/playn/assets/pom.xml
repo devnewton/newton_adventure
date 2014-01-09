@@ -22,6 +22,11 @@
                 <directory>../../data</directory>
                 <targetPath>assets</targetPath>
                 <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.nanim</exclude>
+                    <exclude>**/*.ogg</exclude>
+                    <exclude>**/*.wav</exclude>
+                </excludes>
             </resource>
             <resource>
                 <directory>${basedir}/target</directory>
