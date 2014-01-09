@@ -31,10 +31,16 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.newtonadv.game.BonusSequence;
+import im.bci.newtonadv.game.LevelSequence;
 import im.bci.newtonadv.game.RestartGameException;
 
 import playn.core.Game;
+import playn.core.GroupLayer;
+import playn.core.Image;
+import playn.core.ImageLayer;
 import playn.core.ImmediateLayer;
+import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Surface;
 
@@ -42,6 +48,12 @@ public class PlaynNewtonAdventureGame extends Game.Default {
 
     im.bci.newtonadv.Game game;
     private PlaynPlatformSpecific platform;
+    private boolean useVirtualPad = true;
+    private ImageLayer virtualPadUp;
+    private Layer virtualPadRight;
+    private ImageLayer virtualPadLeft;
+    private ImageLayer virtualPadRotateClockwise;
+    private ImageLayer virtualPadRotateCounterClockwise;
 
     public PlaynNewtonAdventureGame() {
         super(1000 / 60);
@@ -51,41 +63,94 @@ public class PlaynNewtonAdventureGame extends Game.Default {
     public void init() {
         try {
             platform = new PlaynPlatformSpecific();
+            platform.getAssets().getImage("images/virtualpad/rotate_counter_clockwise.png");
+            platform.getAssets().getImage("images/virtualpad/rotate_clockwise.png");
+            platform.getAssets().getImage("images/virtualpad/left.png");
+            platform.getAssets().getImage("images/virtualpad/right.png");
+            platform.getAssets().getImage("images/virtualpad/up.png");
+
+            ImmediateLayer immediateLayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+
+                @Override
+                public void render(Surface surface) {
+                    try {
+                        if (platform.getAssets().isDone()) {
+                            if (null == game) {
+                                if (((PlaynGameData) platform.getGameData()).isReady()) {
+                                    game = new im.bci.newtonadv.Game(platform);
+                                    game.start();
+                                    if (useVirtualPad) {
+                                        createVirtualPadLayer();
+                                    }
+                                }
+                            } else if (game.isRunning()) {
+                                try {
+                                    if (useVirtualPad) {
+                                        final boolean isLevel = game.getCurrentSequence() instanceof LevelSequence;
+                                        virtualPadUp.setVisible(isLevel);
+                                        virtualPadLeft.setVisible(isLevel);
+                                        virtualPadRight.setVisible(isLevel);
+                                        final boolean isBonusLevel = game.getCurrentSequence() instanceof BonusSequence;
+                                        virtualPadRotateClockwise.setVisible(isLevel && !isBonusLevel);
+                                        virtualPadRotateCounterClockwise.setVisible(isLevel && !isBonusLevel);
+                                    }
+                                    ((PlaynGameView) game.getView()).setCurrentSurface(surface);
+                                    game.tick();
+                                } catch (RestartGameException e) {
+                                    game = new im.bci.newtonadv.Game(platform);
+                                    game.start();
+                                    game.tick();
+                                    platform.saveConfig();//only save config if everything seems ok
+                                }
+                            }
+                        }
+                    } catch (Exception ex) {
+                        throw new RuntimeException("Error during update", ex);
+                    }
+                }
+            });
+            PlayN.graphics().rootLayer().add(immediateLayer);
         } catch (Exception ex) {
             throw new RuntimeException("Error during init", ex);
         }
-        ImmediateLayer immediateLayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-
-            @Override
-            public void render(Surface surface) {
-                try {
-                    if (platform.getAssets().isDone()) {
-                        if (null == game) {
-                            if (((PlaynGameData) platform.getGameData()).isReady()) {
-                                game = new im.bci.newtonadv.Game(platform);
-                                game.start();
-                            }
-                        } else if (game.isRunning()) {
-                            try {
-                                ((PlaynGameView) game.getView()).setCurrentSurface(surface);
-                                game.tick();
-                            } catch (RestartGameException e) {
-                                game = new im.bci.newtonadv.Game(platform);
-                                game.start();
-                                game.tick();
-                                platform.saveConfig();//only save config if everything seems ok
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    throw new RuntimeException("Error during update", ex);
-                }
-            }
-        });
-        PlayN.graphics().rootLayer().add(immediateLayer);
     }
 
-    float s;
+    private void createVirtualPadLayer() {
+        final Image upImage = platform.getAssets().getImage("images/virtualpad/up.png");
+        virtualPadUp = PlayN.graphics().createImageLayer(upImage);
+        virtualPadUp.setAlpha(0.4f);
+        virtualPadUp.setTranslation(0.0f, PlayN.graphics().height() * 1.5f / 4.0f);
+        virtualPadUp.setScale(PlayN.graphics().width() / 4.0f / upImage.width(), PlayN.graphics().height()/ 4.0f / upImage.height());
+        PlayN.graphics().rootLayer().add(virtualPadUp);
+        
+        final Image rotateCounterClockwiseImage = platform.getAssets().getImage("images/virtualpad/rotate_counter_clockwise.png");
+        virtualPadRotateCounterClockwise = PlayN.graphics().createImageLayer(rotateCounterClockwiseImage);
+        virtualPadRotateCounterClockwise.setAlpha(0.4f);
+        virtualPadRotateCounterClockwise.setTranslation(0.0f, 0.0f);
+        virtualPadRotateCounterClockwise.setScale(PlayN.graphics().width() / 4.0f / rotateCounterClockwiseImage.width(), PlayN.graphics().height()/ 4.0f / rotateCounterClockwiseImage.height());
+        PlayN.graphics().rootLayer().add(virtualPadRotateCounterClockwise);
+
+        final Image leftImage = platform.getAssets().getImage("images/virtualpad/left.png");
+        virtualPadLeft = PlayN.graphics().createImageLayer(leftImage);
+        virtualPadLeft.setAlpha(0.4f);
+        virtualPadLeft.setTranslation(0.0f, PlayN.graphics().height() * 3.0f / 4.0f);
+        virtualPadLeft.setScale(PlayN.graphics().width() / 4.0f / leftImage.width(), PlayN.graphics().height()/ 4.0f / leftImage.height());
+        PlayN.graphics().rootLayer().add(virtualPadLeft);
+        
+        final Image rightImage = platform.getAssets().getImage("images/virtualpad/right.png");
+        virtualPadRight = PlayN.graphics().createImageLayer(rightImage);
+        virtualPadRight.setAlpha(0.4f);
+        virtualPadRight.setTranslation(PlayN.graphics().width()* 3.0f / 4.0f, PlayN.graphics().height() * 3.0f / 4.0f);
+        virtualPadRight.setScale(PlayN.graphics().width() / 4.0f / rightImage.width(), PlayN.graphics().height()/ 4.0f / rightImage.height());
+        PlayN.graphics().rootLayer().add(virtualPadRight);
+
+        final Image rotateClockwiseImage = platform.getAssets().getImage("images/virtualpad/rotate_clockwise.png");
+        virtualPadRotateClockwise = PlayN.graphics().createImageLayer(rotateClockwiseImage);
+        virtualPadRotateClockwise.setAlpha(0.4f);
+        virtualPadRotateClockwise.setTranslation(PlayN.graphics().width()* 3.0f / 4.0f, 0.0f);
+        virtualPadRotateClockwise.setScale(PlayN.graphics().width() / 4.0f / rotateClockwiseImage.width(), PlayN.graphics().height()/ 4.0f / rotateClockwiseImage.height());
+        PlayN.graphics().rootLayer().add(virtualPadRotateClockwise);
+    }
 
     @Override
     public void update(int delta) {

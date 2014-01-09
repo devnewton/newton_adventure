@@ -336,4 +336,8 @@ public strictfp class Game {
     public long nanoTime() {
         return platform.nanoTime();
     }
+
+    public Sequence getCurrentSequence() {
+        return currentSequence;
+    }
 }
