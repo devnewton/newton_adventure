@@ -42,13 +42,14 @@ import playn.core.ImageLayer;
 import playn.core.ImmediateLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
+import playn.core.Pointer;
 import playn.core.Surface;
 
 public class PlaynNewtonAdventureGame extends Game.Default {
 
     im.bci.newtonadv.Game game;
     private PlaynPlatformSpecific platform;
-    private boolean useVirtualPad = true;
+    private boolean useVirtualPad;
     private ImageLayer virtualPadUp;
     private Layer virtualPadRight;
     private ImageLayer virtualPadLeft;
@@ -57,6 +58,11 @@ public class PlaynNewtonAdventureGame extends Game.Default {
 
     public PlaynNewtonAdventureGame() {
         super(1000 / 60);
+    }
+    
+    public  PlaynNewtonAdventureGame useVirtualPad(boolean b) {
+        this.useVirtualPad = b;
+        return this;
     }
 
     @Override
@@ -116,39 +122,105 @@ public class PlaynNewtonAdventureGame extends Game.Default {
     }
 
     private void createVirtualPadLayer() {
+        final PlaynGameInput input = (PlaynGameInput) game.getInput();
         final Image upImage = platform.getAssets().getImage("images/virtualpad/up.png");
         virtualPadUp = PlayN.graphics().createImageLayer(upImage);
+        virtualPadUp.setVisible(false);
         virtualPadUp.setAlpha(0.4f);
         virtualPadUp.setTranslation(0.0f, PlayN.graphics().height() * 1.5f / 4.0f);
-        virtualPadUp.setScale(PlayN.graphics().width() / 4.0f / upImage.width(), PlayN.graphics().height()/ 4.0f / upImage.height());
+        virtualPadUp.setScale(PlayN.graphics().width() / 4.0f / upImage.width(), PlayN.graphics().height() / 4.0f / upImage.height());
+        virtualPadUp.addListener(new Pointer.Adapter() {
+
+            @Override
+            public void onPointerStart(Pointer.Event event) {
+                input.virtualPadUpDown = true;
+            }
+
+            @Override
+            public void onPointerEnd(Pointer.Event event) {
+                input.virtualPadUpDown = false;
+            }
+        });
         PlayN.graphics().rootLayer().add(virtualPadUp);
-        
+
         final Image rotateCounterClockwiseImage = platform.getAssets().getImage("images/virtualpad/rotate_counter_clockwise.png");
         virtualPadRotateCounterClockwise = PlayN.graphics().createImageLayer(rotateCounterClockwiseImage);
+        virtualPadRotateCounterClockwise.setVisible(false);
         virtualPadRotateCounterClockwise.setAlpha(0.4f);
         virtualPadRotateCounterClockwise.setTranslation(0.0f, 0.0f);
-        virtualPadRotateCounterClockwise.setScale(PlayN.graphics().width() / 4.0f / rotateCounterClockwiseImage.width(), PlayN.graphics().height()/ 4.0f / rotateCounterClockwiseImage.height());
+        virtualPadRotateCounterClockwise.setScale(PlayN.graphics().width() / 4.0f / rotateCounterClockwiseImage.width(), PlayN.graphics().height() / 4.0f / rotateCounterClockwiseImage.height());
+        virtualPadRotateCounterClockwise.addListener(new Pointer.Adapter() {
+
+            @Override
+            public void onPointerStart(Pointer.Event event) {
+                input.virtualPadRotateCounterClockwiseDown = true;
+            }
+
+            @Override
+            public void onPointerEnd(Pointer.Event event) {
+                input.virtualPadRotateCounterClockwiseDown = false;
+            }
+        });
         PlayN.graphics().rootLayer().add(virtualPadRotateCounterClockwise);
 
         final Image leftImage = platform.getAssets().getImage("images/virtualpad/left.png");
         virtualPadLeft = PlayN.graphics().createImageLayer(leftImage);
+        virtualPadLeft.setVisible(false);
         virtualPadLeft.setAlpha(0.4f);
         virtualPadLeft.setTranslation(0.0f, PlayN.graphics().height() * 3.0f / 4.0f);
-        virtualPadLeft.setScale(PlayN.graphics().width() / 4.0f / leftImage.width(), PlayN.graphics().height()/ 4.0f / leftImage.height());
+        virtualPadLeft.setScale(PlayN.graphics().width() / 4.0f / leftImage.width(), PlayN.graphics().height() / 4.0f / leftImage.height());
+        virtualPadLeft.addListener(new Pointer.Adapter() {
+
+            @Override
+            public void onPointerStart(Pointer.Event event) {
+                input.virtualPadLeftDown = true;
+            }
+
+            @Override
+            public void onPointerEnd(Pointer.Event event) {
+                input.virtualPadLeftDown = false;
+            }
+        });
         PlayN.graphics().rootLayer().add(virtualPadLeft);
-        
+
         final Image rightImage = platform.getAssets().getImage("images/virtualpad/right.png");
         virtualPadRight = PlayN.graphics().createImageLayer(rightImage);
+        virtualPadRight.setVisible(false);
         virtualPadRight.setAlpha(0.4f);
-        virtualPadRight.setTranslation(PlayN.graphics().width()* 3.0f / 4.0f, PlayN.graphics().height() * 3.0f / 4.0f);
-        virtualPadRight.setScale(PlayN.graphics().width() / 4.0f / rightImage.width(), PlayN.graphics().height()/ 4.0f / rightImage.height());
+        virtualPadRight.setTranslation(PlayN.graphics().width() * 3.0f / 4.0f, PlayN.graphics().height() * 3.0f / 4.0f);
+        virtualPadRight.setScale(PlayN.graphics().width() / 4.0f / rightImage.width(), PlayN.graphics().height() / 4.0f / rightImage.height());
+        virtualPadRight.addListener(new Pointer.Adapter() {
+
+            @Override
+            public void onPointerStart(Pointer.Event event) {
+                input.virtualPadRightDown = true;
+            }
+
+            @Override
+            public void onPointerEnd(Pointer.Event event) {
+                input.virtualPadRightDown = false;
+            }
+        });
         PlayN.graphics().rootLayer().add(virtualPadRight);
 
         final Image rotateClockwiseImage = platform.getAssets().getImage("images/virtualpad/rotate_clockwise.png");
         virtualPadRotateClockwise = PlayN.graphics().createImageLayer(rotateClockwiseImage);
+        virtualPadRotateClockwise.setVisible(false);
         virtualPadRotateClockwise.setAlpha(0.4f);
-        virtualPadRotateClockwise.setTranslation(PlayN.graphics().width()* 3.0f / 4.0f, 0.0f);
-        virtualPadRotateClockwise.setScale(PlayN.graphics().width() / 4.0f / rotateClockwiseImage.width(), PlayN.graphics().height()/ 4.0f / rotateClockwiseImage.height());
+        virtualPadRotateClockwise.setTranslation(PlayN.graphics().width() * 3.0f / 4.0f, 0.0f);
+        virtualPadRotateClockwise.setScale(PlayN.graphics().width() / 4.0f / rotateClockwiseImage.width(), PlayN.graphics().height() / 4.0f / rotateClockwiseImage.height());
+        virtualPadRotateClockwise.addListener(new Pointer.Adapter() {
+
+            @Override
+            public void onPointerStart(Pointer.Event event) {
+                input.virtualPadRotateClockwiseDown = true;
+            }
+
+            @Override
+            public void onPointerEnd(Pointer.Event event) {
+                input.virtualPadRotateClockwiseDown = false;
+            }
+        });
         PlayN.graphics().rootLayer().add(virtualPadRotateClockwise);
     }
 

@@ -49,6 +49,11 @@ public class PlaynGameInput implements IGameInput {
     private EnumSet<Key> keysDown = EnumSet.noneOf(Key.class);
     private ROVector2f mousePos;
     private boolean mouseButtonDown;
+    boolean virtualPadUpDown;
+    boolean virtualPadRotateCounterClockwiseDown;
+    boolean virtualPadRotateClockwiseDown;
+    boolean virtualPadLeftDown;
+    boolean virtualPadRightDown;
 
     public PlaynGameInput() {
         PlayN.keyboard().setListener(new Keyboard.Listener() {
@@ -118,12 +123,12 @@ public class PlaynGameInput implements IGameInput {
 
     @Override
     public boolean isKeyJumpDown() {
-        return keysDown.contains(Key.UP);
+        return keysDown.contains(Key.UP) || virtualPadUpDown;
     }
 
     @Override
     public boolean isKeyLeftDown() {
-        return keysDown.contains(Key.LEFT);
+        return keysDown.contains(Key.LEFT) || virtualPadLeftDown;
     }
 
     @Override
@@ -138,7 +143,7 @@ public class PlaynGameInput implements IGameInput {
 
     @Override
     public boolean isKeyRightDown() {
-        return keysDown.contains(Key.RIGHT);
+        return keysDown.contains(Key.RIGHT) || virtualPadRightDown;
     }
 
     @Override
@@ -153,12 +158,12 @@ public class PlaynGameInput implements IGameInput {
 
     @Override
     public boolean isKeyRotateClockwiseDown() {
-        return keysDown.contains(Key.C);
+        return keysDown.contains(Key.C) || virtualPadRotateClockwiseDown;
     }
 
     @Override
     public boolean isKeyRotateCounterClockwiseDown() {
-        return keysDown.contains(Key.X);
+        return keysDown.contains(Key.X) || virtualPadRotateCounterClockwiseDown;
     }
 
     @Override
