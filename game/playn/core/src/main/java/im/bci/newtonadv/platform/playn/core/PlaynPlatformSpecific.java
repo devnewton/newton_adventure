@@ -57,6 +57,7 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
     private final PlaynGameView gameView = new PlaynGameView(assets);
     private final PlaynSoundCache soundCache = new PlaynSoundCache();
     private final PlaynGameData data = new PlaynGameData(assets);
+    private PlaynOptionsSequence options;
 
     @Override
     public void saveConfig() {
@@ -84,8 +85,10 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
 
     @Override
     public IOptionsSequence getOptionsSequence() {
-        //TODO
-        return null;
+        if(null == options) {
+            options = new PlaynOptionsSequence(this);
+        }
+        return options;
     }
 
     @Override
