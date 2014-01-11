@@ -114,4 +114,8 @@ public class PlaynNewtonAdventureGame extends Game.Default {
         // the background automatically paints itself, so no need to do anything here!
     }
 
+    public void onBackPressed() {
+        ((PlaynGameInput) platform.getGameInput()).onBackPressed();
+    }
+
 }

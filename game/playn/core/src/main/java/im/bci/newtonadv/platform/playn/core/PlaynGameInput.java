@@ -45,7 +45,7 @@ import playn.core.Pointer;
  * @author devnewton <devnewton@bci.im>
  */
 public class PlaynGameInput implements IGameInput {
-
+    
     private EnumSet<Key> keysDown = EnumSet.noneOf(Key.class);
     private ROVector2f mousePos;
     private boolean mouseButtonDown;
@@ -54,169 +54,182 @@ public class PlaynGameInput implements IGameInput {
     boolean virtualPadRotateClockwiseDown;
     boolean virtualPadLeftDown;
     boolean virtualPadRightDown;
-
+    boolean backButtonDown;
+    
     public PlaynGameInput() {
         PlayN.keyboard().setListener(new Keyboard.Listener() {
-
+            
             @Override
             public void onKeyDown(Keyboard.Event event) {
                 keysDown.add(event.key());
             }
-
+            
             @Override
             public void onKeyTyped(Keyboard.TypedEvent event) {
             }
-
+            
             @Override
             public void onKeyUp(Keyboard.Event event) {
                 keysDown.remove(event.key());
             }
         });
-
+        
         PlayN.pointer().setListener(new Pointer.Listener() {
-
+            
             @Override
             public void onPointerStart(Pointer.Event event) {
                 mousePos = eventToMousePos(event);
                 System.out.println("Mouse click at " + event.x() + "," + event.y());
                 mouseButtonDown = true;
             }
-
+            
             @Override
             public void onPointerDrag(Pointer.Event event) {
                 mousePos = eventToMousePos(event);
-                mouseButtonDown = true;            }
-
+                mouseButtonDown = true;
+            }
+            
             @Override
             public void onPointerCancel(Pointer.Event event) {
                 mousePos = eventToMousePos(event);
                 mouseButtonDown = false;
             }
-
+            
             @Override
             public void onPointerEnd(Pointer.Event event) {
                 mousePos = eventToMousePos(event);
                 mouseButtonDown = false;
             }
-
+            
         });
     }
-
+    
     private Vector2f eventToMousePos(Pointer.Event event) {
         return new Vector2f(event.x(), PlayN.graphics().height() - event.y());
     }
-
+    
     @Override
     public boolean isKeyCheatActivateAllDown() {
         return keysDown.contains(Key.F12);
     }
-
+    
     @Override
     public boolean isKeyCheatGotoNextLevelDown() {
         return keysDown.contains(Key.F12);
     }
-
+    
     @Override
     public boolean isKeyDownDown() {
         return keysDown.contains(Key.DOWN);
     }
-
+    
     @Override
     public boolean isKeyJumpDown() {
         return keysDown.contains(Key.UP) || virtualPadUpDown;
     }
-
+    
     @Override
     public boolean isKeyLeftDown() {
         return keysDown.contains(Key.LEFT) || virtualPadLeftDown;
     }
-
+    
     @Override
     public boolean isKeyReturnDown() {
         return keysDown.contains(Key.ENTER);
     }
-
+    
     @Override
     public boolean isKeyReturnToMenuDown() {
-        return keysDown.contains(Key.ESCAPE);
+        return keysDown.contains(Key.ESCAPE) || backButtonDown;
     }
-
+    
     @Override
     public boolean isKeyRightDown() {
         return keysDown.contains(Key.RIGHT) || virtualPadRightDown;
     }
-
+    
     @Override
     public boolean isKeyRotate90ClockwiseDown() {
         return keysDown.contains(Key.S);
     }
-
+    
     @Override
     public boolean isKeyRotate90CounterClockwiseDown() {
         return keysDown.contains(Key.D);
     }
-
+    
     @Override
     public boolean isKeyRotateClockwiseDown() {
         return keysDown.contains(Key.C) || virtualPadRotateClockwiseDown;
     }
-
+    
     @Override
     public boolean isKeyRotateCounterClockwiseDown() {
         return keysDown.contains(Key.X) || virtualPadRotateCounterClockwiseDown;
     }
-
+    
     @Override
     public boolean isKeyToggleFullscreenDown() {
         return false;
     }
-
+    
     @Override
     public boolean isKeyUpDown() {
         return keysDown.contains(Key.UP);
     }
-
+    
     @Override
     public boolean isKeyCheatGotoNextBonusLevelDown() {
         return keysDown.contains(Key.F10);
     }
-
+    
     @Override
     public ROVector2f getMousePos() {
         return mousePos;
     }
-
+    
     @Override
     public boolean isMouseButtonDown() {
         return mouseButtonDown;
     }
-
+    
     @Override
     public boolean isKeyCheatGetWorldMapDown() {
         return keysDown.contains(Key.F9);
     }
-
+    
     @Override
     public boolean isKeyCheatGetCompassDown() {
         return keysDown.contains(Key.F8);
     }
-
+    
     private static final int NB_POLL_PER_TICK = 1;
     private int pollCount;
-
+    
     @Override
     public void beginPoll() {
         pollCount = NB_POLL_PER_TICK;
     }
-
+    
     @Override
     public boolean poll() {
         return pollCount-- > 0;
     }
-
+    
     @Override
     public boolean isKeyCheatSetAllCompletedDown() {
         return keysDown.contains(Key.F12);
     }
-
+    
+    void onBackPressed() {
+        backButtonDown = true;
+        PlayN.invokeLater(new Runnable() {
+            
+            @Override
+            public void run() {
+                backButtonDown = false;
+            }
+        });
+    }
+    
 }

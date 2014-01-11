@@ -7,8 +7,19 @@ import im.bci.newtonadv.platform.playn.core.PlaynNewtonAdventureGame;
 
 public class PlaynNewtonAdventureGameActivity extends GameActivity {
 
-  @Override
-  public void main(){
-    PlayN.run(new PlaynNewtonAdventureGame());
-  }
+    private PlaynNewtonAdventureGame game;
+
+    @Override
+    public void main() {
+        game = new PlaynNewtonAdventureGame().useVirtualPad(true);
+        PlayN.run(game);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(null != game) {
+            game.onBackPressed();
+        }
+    }
+
 }

@@ -11,6 +11,7 @@
 /mods/pack1/target/
 *~
 /game/playn/assets/target/
+/game/playn/android/assets/
 /game/playn/core/target/
 /game/playn/java/target/
 /game/playn/html/target/
