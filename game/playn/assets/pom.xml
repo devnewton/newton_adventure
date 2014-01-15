@@ -11,7 +11,7 @@
 
     <artifactId>playn-assets</artifactId>
     <packaging>jar</packaging>
-    <name>PlaynNewtonAdventureGame Assets</name>
+    <name>newton-adventure-playn-assets</name>
     <build>
         <resources>
             <resource>

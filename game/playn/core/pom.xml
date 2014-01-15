@@ -11,7 +11,7 @@
 
     <artifactId>playn-core</artifactId>
     <packaging>jar</packaging>
-    <name>PlaynNewtonAdventureGame Core</name>
+    <name>newton-adventure-playn-core</name>
 
     <dependencies>
         <dependency>

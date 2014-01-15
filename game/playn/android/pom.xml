@@ -11,7 +11,7 @@
 
     <artifactId>playn-android</artifactId>
     <packaging>apk</packaging>
-    <name>PlaynNewtonAdventureGame Android</name>
+    <name>newton-adventure-playn-android</name>
 
     <properties>
         <sign.keystore>game.keystore</sign.keystore>

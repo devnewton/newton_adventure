@@ -11,7 +11,7 @@
 
     <artifactId>playn-java</artifactId>
     <packaging>jar</packaging>
-    <name>PlaynNewtonAdventureGame Java</name>
+    <name>newton-adventure-playn-java</name>
 
     <properties>
         <mainClass>im.bci.newtonadv.platform.playn.java.PlaynNewtonAdventureGameJava</mainClass>

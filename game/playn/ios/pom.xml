@@ -11,7 +11,7 @@
 
   <artifactId>playn-ios</artifactId>
   <packaging>dll</packaging>
-  <name>PlaynNewtonAdventureGame iOS</name>
+  <name>newton-adventure-playn-ios</name>
 
   <dependencies>
     <dependency>

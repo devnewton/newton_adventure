@@ -11,7 +11,7 @@
   <artifactId>playn</artifactId>
   <version>1.14-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>PlaynNewtonAdventureGame Metaproject</name>
+  <name>newton-adventure-playn</name>
 
   <properties>
     <playn.version>1.8</playn.version>
@@ -34,10 +34,6 @@
     <profile>
       <id>html</id>
       <modules><module>html</module></modules>
-    </profile>
-    <profile>
-      <id>flash</id>
-      <modules><module>flash</module></modules>
     </profile>
   </profiles>
   <modules>
