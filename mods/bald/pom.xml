@@ -26,10 +26,10 @@ SUCH DAMAGE. */ -->
     <parent>
         <groupId>im.bci.newtonadv</groupId>
 	<artifactId>newton-adventure</artifactId>
-	<version>1.14-SNAPSHOT</version>
+	<version>1.14</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>newton_adventure-mod-bald</artifactId>
+    <artifactId>newton-adventure-mod-bald</artifactId>
     <packaging>jar</packaging>
     <name>newton_adventure-mod-bald</name>
     <properties>

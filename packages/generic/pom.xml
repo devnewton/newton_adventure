@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <parent>
         <groupId>im.bci.newtonadv</groupId>
 	<artifactId>newton-adventure</artifactId>
-	<version>1.14-SNAPSHOT</version>
+	<version>1.14</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>newton-adventure-installer</artifactId>

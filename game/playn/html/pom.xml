@@ -6,7 +6,7 @@
     <parent>
         <groupId>im.bci.newtonadv</groupId>
         <artifactId>playn</artifactId>
-        <version>1.14-SNAPSHOT</version>
+        <version>1.14</version>
     </parent>
 
     <artifactId>playn-html</artifactId>

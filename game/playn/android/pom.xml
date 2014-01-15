@@ -6,7 +6,7 @@
     <parent>
         <groupId>im.bci.newtonadv</groupId>
         <artifactId>playn</artifactId>
-        <version>1.14-SNAPSHOT</version>
+        <version>1.14</version>
     </parent>
 
     <artifactId>playn-android</artifactId>
@@ -19,7 +19,7 @@
         <!-- you can pass these on the command line as -Dkeystore.password=foo etc. -->
         <keystore.password></keystore.password>
         <key.password></key.password>
-        <android.sdk.path>C:\Users\bob\Documents\NetBeansProjects\adt-bundle-windows-x86_64-20131030\sdk</android.sdk.path>
+        <android.sdk.path>${env.HOME}/dev/adt-bundle-linux-x86-20131030/sdk</android.sdk.path>
     </properties>
 
     <dependencies>
@@ -107,7 +107,7 @@
                     <assetsDirectory>${project.basedir}/assets</assetsDirectory>
                     <resourceDirectory>${project.basedir}/res</resourceDirectory>
                     <sdk>
-                        <platform>19</platform>
+                        <platform>11</platform>
                     </sdk>
                     <deleteConflictingFiles>true</deleteConflictingFiles>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>

@@ -6,7 +6,7 @@
     <parent>
         <groupId>im.bci.newtonadv</groupId>
         <artifactId>playn</artifactId>
-        <version>1.14-SNAPSHOT</version>
+        <version>1.14</version>
     </parent>
 
     <artifactId>playn-core</artifactId>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>im.bci.newtonadv</groupId>
             <artifactId>newton-adventure-core</artifactId>
-            <version>1.14-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>
