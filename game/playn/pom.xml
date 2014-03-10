@@ -9,7 +9,7 @@
 
   <groupId>im.bci.newtonadv</groupId>
   <artifactId>playn</artifactId>
-  <version>1.14</version>
+  <version>1.15-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>newton-adventure-playn</name>
 

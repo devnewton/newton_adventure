@@ -72,30 +72,39 @@ public class PlaynOptionsSequence implements IOptionsSequence {
         mustQuit = false;
         optionsLayer = PlayN.graphics().createGroupLayer();
         PlayN.graphics().rootLayer().add(optionsLayer);
-        useVirtualPad = new PlaynToggleButton("Virtual pad: ", 0f, 0f);
-        new PlaynButton("Apply", 0, PlayN.graphics().height() - textFormat.font.size()) {
+        useVirtualPad = new PlaynToggleButton("Virtual pad: ", false);
+        PlaynButton apply = new PlaynButton("Apply") {
 
             @Override
             public void onActivate() {
                 mustQuit = true;
             }
         };
+        apply.setPos(PlayN.graphics().width() / 2.0f - apply.getWidth() / 2.0f, PlayN.graphics().height() - apply.getHeight());
     }
 
     public class PlaynBaseButton {
 
         protected ImageLayer layer;
+        
+        float getWidth() {
+            return layer.width();
+        }
 
         float getHeight() {
             return layer.height();
+        }
+        
+        void setPos(float x,  float y) {
+            layer.setTranslation(x, y);
         }
     }
 
     public abstract class PlaynButton extends PlaynBaseButton {
 
-        PlaynButton(String label, float x, float y) {
-            layer = PlayN.graphics().createImageLayer();
-            optionsLayer.addAt(layer, x, y);
+        PlaynButton(String label) {
+            layer = PlayN.graphics().createImageLayer(createButtonLabel(label));
+            optionsLayer.add(layer);
             layer.addListener(new Pointer.Adapter() {
 
                 @Override
@@ -112,11 +121,13 @@ public class PlaynOptionsSequence implements IOptionsSequence {
     public class PlaynToggleButton extends PlaynBaseButton {
 
         private boolean checked;
-        private String label;
+        private final String label;
 
-        PlaynToggleButton(String label, float x, float y) {
+        PlaynToggleButton(String label, boolean defaultChecked) {
             layer = PlayN.graphics().createImageLayer();
-            optionsLayer.addAt(layer, x, y);
+            this.label = label;
+            setChecked(defaultChecked);
+            optionsLayer.add(layer);
             layer.addListener(new Pointer.Adapter() {
 
                 @Override
@@ -127,7 +138,7 @@ public class PlaynOptionsSequence implements IOptionsSequence {
             });
         }
 
-        void setChecked(boolean c) {
+        final void setChecked(boolean c) {
             layer.setImage(createButtonLabel(label + ": " + (c ? "yes" : "no")));
             checked = c;
         }
@@ -157,16 +168,19 @@ public class PlaynOptionsSequence implements IOptionsSequence {
     @Override
     public void stop() {
         useVirtualPad = null;
-        PlayN.graphics().rootLayer().remove(optionsLayer);
-        optionsLayer.destroyAll();
-        optionsLayer = null;
+        PlayN.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                PlayN.graphics().rootLayer().remove(optionsLayer);
+                optionsLayer = null;
+            }
+        });
+
     }
 
     @Override
     public void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
-        if (mustQuit) {
-            throw new Sequence.ResumeTransitionException(nextSequence);
-        }
     }
 
     @Override
@@ -179,6 +193,9 @@ public class PlaynOptionsSequence implements IOptionsSequence {
 
     @Override
     public void tick() throws NormalTransitionException, ResumeTransitionException, RestartGameException {
+        if (mustQuit) {
+            throw new Sequence.ResumeTransitionException(nextSequence);
+        }
     }
 
 }

@@ -31,11 +31,15 @@
  */
 package im.bci.newtonadv.platform.lwjgl.twl;
 
-import de.matthiasmann.twl.ComboBox;
-import de.matthiasmann.twl.GUI;
-import de.matthiasmann.twl.Widget;
-import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
-import de.matthiasmann.twl.theme.ThemeManager;
+import im.bci.newtonadv.ui.OptionsGUI;
+import im.bci.jnuit.NuitToolkit;
+import im.bci.jnuit.NuitTranslator;
+import im.bci.jnuit.lwjgl.LwjglNuitControls;
+import im.bci.jnuit.lwjgl.LwjglNuitDisplay;
+import im.bci.jnuit.lwjgl.LwjglNuitFont;
+import im.bci.jnuit.lwjgl.LwjglNuitRenderer;
+import im.bci.jnuit.noop.NoopNuitAudio;
+import im.bci.jnuit.widgets.Root;
 import im.bci.newtonadv.platform.lwjgl.LwjglHelper;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.RestartGameException;
@@ -46,27 +50,25 @@ import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.platform.lwjgl.GameCloseException;
 import im.bci.newtonadv.platform.lwjgl.GameInput;
 import im.bci.newtonadv.platform.lwjgl.GameView;
-import im.bci.newtonadv.platform.lwjgl.GameViewQuality;
-import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.ControllerItem;
-import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.InputChoice;
-import im.bci.newtonadv.platform.lwjgl.twl.OptionsGUI.JoyButtonItem;
+import im.bci.newtonadv.ui.NewtonAdventureNuitTranslator;
+import java.awt.Font;
+import java.awt.image.BufferedImage;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
 
 public class OptionsSequence implements IOptionsSequence {
 
-    private GUI gui;
+    private NuitToolkit toolkit;
+    private Root root;
     private OptionsGUI optionsGui;
     private Sequence nextSequence;
     private final GameView view;
@@ -87,32 +89,21 @@ public class OptionsSequence implements IOptionsSequence {
 
     @Override
     public void start() {
-        LWJGLRenderer renderer;
-        try {
-            renderer = new LWJGLRenderer();
-            Widget root = new Widget() {
-                @Override
-                protected void layout() {
-                    layoutChildrenFullInnerArea();
-                }
-            };
-            gui = new GUI(root, renderer);
-            gui.setSize();
-            ThemeManager themeManager = ThemeManager.createThemeManager(
-                    getClass().getClassLoader().getResource("twl/RadicalFish/RadicalFish.xml"),
-                    renderer);
-            gui.applyTheme(themeManager);
-            optionsGui = new OptionsGUI(view, input, soundCache, platform);
-            root.add(optionsGui);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        final NuitTranslator nuitTranslator = new NewtonAdventureNuitTranslator();
+        final LwjglNuitFont lwjglNuitFont = new LwjglNuitFont(new Font("Monospace", Font.PLAIN, 24), true, new char[0], new HashMap<Character, BufferedImage>());
+        toolkit = new NuitToolkit(new LwjglNuitDisplay(), new LwjglNuitControls(), nuitTranslator, lwjglNuitFont, new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont), new NoopNuitAudio());
+        toolkit.setVirtualResolutionWidth(Game.DEFAULT_SCREEN_WIDTH);
+        toolkit.setVirtualResolutionHeight(Game.DEFAULT_SCREEN_HEIGHT);
+        optionsGui = new OptionsGUI(toolkit);
+        root = new Root(toolkit);
+        root.show(optionsGui);
     }
 
     @Override
     public void stop() {
-        gui.destroy();
+        root = null;
+        optionsGui = null;
+        toolkit = null;
     }
 
     @Override
@@ -128,111 +119,58 @@ public class OptionsSequence implements IOptionsSequence {
     }
 
     private void applyOptions() throws LWJGLException, RestartGameException {
-        view.setRotateViewWithGravity(optionsGui.rotateViewWithGravity.isActive());
-        view.setMustDrawFPS(optionsGui.mustDrawFPS.isActive());
-        view.setDisplayMode(optionsGui.fullscreen.isActive(),
-                getSelectedQuality(), getSelectedMode());
-        input.keyJump = findKeyIndex(optionsGui.keyJump);
-        input.keyLeft = findKeyIndex(optionsGui.keyLeft);
-        input.keyRight = findKeyIndex(optionsGui.keyRight);
-        input.keyRotate90Clockwise = findKeyIndex(optionsGui.keyRotate90Clockwise);
-        input.keyRotate90CounterClockwise = findKeyIndex(optionsGui.keyRotate90CounterClockwise);
-        input.keyRotateClockwise = findKeyIndex(optionsGui.keyRotateClockwise);
-        input.keyRotateCounterClockwise = findKeyIndex(optionsGui.keyRotateCounterClockwise);
-        input.keyReturn = findKeyIndex(optionsGui.keyReturn);
-        input.keyReturnToMenu = findKeyIndex(optionsGui.keyReturnToMenu);
-        if (optionsGui.joypad.getSelected() >= 0
-                && optionsGui.joypad.getSelected() < optionsGui.joypad
-                .getModel().getNumEntries()) {
-            ControllerItem controllerItem = optionsGui.joypad.getModel()
-                    .getEntry(optionsGui.joypad.getSelected());
-            input.joypad = null != controllerItem ? controllerItem
-                    .getController() : null;
-            if (null != input.joypad) {
-                input.joypadXAxis = findJoypadAxisIndex(input.joypad,
-                        optionsGui.joypadXAxis);
-                input.joypadYAxis = findJoypadAxisIndex(input.joypad,
-                        optionsGui.joypadYAxis);
-                input.joypadKeyJump = findJoypadButtonIndex(input.joypad,
-                        optionsGui.keyJump);
-                input.joypadKeyLeft = findJoypadButtonIndex(input.joypad,
-                        optionsGui.keyLeft);
-                input.joypadKeyRight = findJoypadButtonIndex(input.joypad,
-                        optionsGui.keyRight);
-                input.joypadKeyReturn = findJoypadButtonIndex(input.joypad,
-                        optionsGui.keyReturn);
-                input.joypadKeyReturnToMenu = findJoypadButtonIndex(
-                        input.joypad, optionsGui.keyReturnToMenu);
-                input.joypadKeyRotate90Clockwise = findJoypadButtonIndex(
-                        input.joypad, optionsGui.keyRotate90Clockwise);
-                input.joypadKeyRotate90CounterClockwise = findJoypadButtonIndex(
-                        input.joypad, optionsGui.keyRotate90CounterClockwise);
-                input.joypadKeyRotateClockwise = findJoypadButtonIndex(
-                        input.joypad, optionsGui.keyRotateClockwise);
-                input.joypadKeyRotateCounterClockwise = findJoypadButtonIndex(
-                        input.joypad, optionsGui.keyRotateCounterClockwise);
-                if (null == JoypadPreset.find(input.joypad)) {
-                    Logger.getLogger(JoypadPreset.class.getName()).log(Level.INFO, "This joypad has no preset. Please copy and send this message by mail to devnewton@bci.im to improve Newton Adventure joypad support:  name ''{0}'', xAxis={1}, yAxis={2}, keyJump={3}, keyLeft={4}, keyRight={5}, keyRotateClockwise={6}, keyRotateCounterClock={7}, keyRotate90Clockwise={8}, keyRotate90CounterClock={9}, keyReturn={10}, keyReturnToMenu={11}]", new Object[]{input.joypad.getName(), input.joypadXAxis, input.joypadYAxis, input.joypadKeyJump, input.joypadKeyLeft, input.joypadKeyRight, input.joypadKeyRotateClockwise, input.joypadKeyRotateCounterClockwise, input.joypadKeyRotate90Clockwise, input.joypadKeyRotate90CounterClockwise, input.joypadKeyReturn, input.joypadKeyReturnToMenu});
-                }
-            }
-        } else {
-            input.joypad = null;
-        }
-        soundCache.setSoundEnabled(optionsGui.soundEnabled.isActive());
-        soundCache.setMusicEnabled(optionsGui.musicEnabled.isActive());
-    }
-
-    private int findJoypadAxisIndex(Controller controller,
-            ComboBox<String> joypadAxis) {
-        if (joypadAxis.getSelected() >= 0
-                && joypadAxis.getSelected() < joypadAxis.getModel()
-                .getNumEntries()) {
-            String axisName = joypadAxis.getModel().getEntry(
-                    joypadAxis.getSelected());
-            return GameInput.findJoypadAxisByName(controller, axisName);
-        } else {
-            return -1;
-        }
-    }
-
-    private static int findKeyIndex(InputChoice c) {
-        return Keyboard.getKeyIndex(c.key.getModel().getEntry(
-                c.key.getSelected()));
-    }
-
-    private static int findJoypadButtonIndex(Controller controller,
-            InputChoice c) {
-        ComboBox<JoyButtonItem> joyButton = c.joyButton;
-        if (joyButton.getSelected() >= 0
-                && joyButton.getSelected() < joyButton.getModel()
-                .getNumEntries()) {
-            JoyButtonItem buttonItem = joyButton.getModel().getEntry(
-                    joyButton.getSelected());
-            return buttonItem.getButtonIndex();
-        } else {
-            return -1;
-        }
-    }
-
-    DisplayMode getSelectedMode() {
-        int selectedModeIndex = optionsGui.mode.getSelected();
-        if (selectedModeIndex >= 0
-                && selectedModeIndex < optionsGui.mode.getModel()
-                .getNumEntries()) {
-            return optionsGui.mode.getModel().getEntry(selectedModeIndex);
-        } else {
-            return Display.getDisplayMode();
-        }
-    }
-
-    GameViewQuality getSelectedQuality() {
-        int selected = optionsGui.quality.getSelected();
-        if (selected >= 0
-                && selected < optionsGui.quality.getModel().getNumEntries()) {
-            return optionsGui.quality.getModel().getEntry(selected).getQuality();
-        } else {
-            return view.getQuality();
-        }
+        /* view.setRotateViewWithGravity(optionsGui.rotateViewWithGravity.isActive());
+         view.setMustDrawFPS(optionsGui.mustDrawFPS.isActive());
+         view.setDisplayMode(optionsGui.fullscreen.isActive(),
+         getSelectedQuality(), getSelectedMode());
+         input.keyJump = findKeyIndex(optionsGui.keyJump);
+         input.keyLeft = findKeyIndex(optionsGui.keyLeft);
+         input.keyRight = findKeyIndex(optionsGui.keyRight);
+         input.keyRotate90Clockwise = findKeyIndex(optionsGui.keyRotate90Clockwise);
+         input.keyRotate90CounterClockwise = findKeyIndex(optionsGui.keyRotate90CounterClockwise);
+         input.keyRotateClockwise = findKeyIndex(optionsGui.keyRotateClockwise);
+         input.keyRotateCounterClockwise = findKeyIndex(optionsGui.keyRotateCounterClockwise);
+         input.keyReturn = findKeyIndex(optionsGui.keyReturn);
+         input.keyReturnToMenu = findKeyIndex(optionsGui.keyReturnToMenu);
+         if (optionsGui.joypad.getSelected() >= 0
+         && optionsGui.joypad.getSelected() < optionsGui.joypad
+         .getModel().getNumEntries()) {
+         ControllerItem controllerItem = optionsGui.joypad.getModel()
+         .getEntry(optionsGui.joypad.getSelected());
+         input.joypad = null != controllerItem ? controllerItem
+         .getController() : null;
+         if (null != input.joypad) {
+         input.joypadXAxis = findJoypadAxisIndex(input.joypad,
+         optionsGui.joypadXAxis);
+         input.joypadYAxis = findJoypadAxisIndex(input.joypad,
+         optionsGui.joypadYAxis);
+         input.joypadKeyJump = findJoypadButtonIndex(input.joypad,
+         optionsGui.keyJump);
+         input.joypadKeyLeft = findJoypadButtonIndex(input.joypad,
+         optionsGui.keyLeft);
+         input.joypadKeyRight = findJoypadButtonIndex(input.joypad,
+         optionsGui.keyRight);
+         input.joypadKeyReturn = findJoypadButtonIndex(input.joypad,
+         optionsGui.keyReturn);
+         input.joypadKeyReturnToMenu = findJoypadButtonIndex(
+         input.joypad, optionsGui.keyReturnToMenu);
+         input.joypadKeyRotate90Clockwise = findJoypadButtonIndex(
+         input.joypad, optionsGui.keyRotate90Clockwise);
+         input.joypadKeyRotate90CounterClockwise = findJoypadButtonIndex(
+         input.joypad, optionsGui.keyRotate90CounterClockwise);
+         input.joypadKeyRotateClockwise = findJoypadButtonIndex(
+         input.joypad, optionsGui.keyRotateClockwise);
+         input.joypadKeyRotateCounterClockwise = findJoypadButtonIndex(
+         input.joypad, optionsGui.keyRotateCounterClockwise);
+         if (null == JoypadPreset.find(input.joypad)) {
+         Logger.getLogger(JoypadPreset.class.getName()).log(Level.INFO, "This joypad has no preset. Please copy and send this message by mail to devnewton@bci.im to improve Newton Adventure joypad support:  name ''{0}'', xAxis={1}, yAxis={2}, keyJump={3}, keyLeft={4}, keyRight={5}, keyRotateClockwise={6}, keyRotateCounterClock={7}, keyRotate90Clockwise={8}, keyRotate90CounterClock={9}, keyReturn={10}, keyReturnToMenu={11}]", new Object[]{input.joypad.getName(), input.joypadXAxis, input.joypadYAxis, input.joypadKeyJump, input.joypadKeyLeft, input.joypadKeyRight, input.joypadKeyRotateClockwise, input.joypadKeyRotateCounterClockwise, input.joypadKeyRotate90Clockwise, input.joypadKeyRotate90CounterClockwise, input.joypadKeyReturn, input.joypadKeyReturnToMenu});
+         }
+         }
+         } else {
+         input.joypad = null;
+         }
+         soundCache.setSoundEnabled(optionsGui.soundEnabled.isActive());
+         soundCache.setMusicEnabled(optionsGui.musicEnabled.isActive());*/
     }
 
     @Override
@@ -294,7 +232,7 @@ public class OptionsSequence implements IOptionsSequence {
         }
         config.setProperty("sound.enabled", "" + soundCache.isSoundEnabled());
         config.setProperty("music.enabled", "" + soundCache.isMusicEnabled());
-        config.setProperty("newton_adventure.mod", optionsGui.getSelectedModName());
+        //config.setProperty("newton_adventure.mod", optionsGui.getSelectedModName());
     }
 
     private String getJoypadAxisName(int joypadXAxis) {
@@ -336,47 +274,38 @@ public class OptionsSequence implements IOptionsSequence {
 
     @Override
     public void tick() throws NormalTransitionException, ResumeTransitionException, RestartGameException {
+
         if (Display.isVisible() || Display.isDirty() || LwjglHelper.wasResized()) {
-            GL11.glViewport(0, 0, LwjglHelper.getWidth(), LwjglHelper.getHeight());
-        }
-        GL11.glPushMatrix();
-        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-        GL11.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        if(LwjglHelper.wasResized()) {
-        	if(gui.getRenderer() instanceof LWJGLRenderer) {
-        		((LWJGLRenderer)gui.getRenderer()).setViewport(0, 0, LwjglHelper.getWidth(), LwjglHelper.getHeight());
-        	}
-        }
-        gui.update();
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
+            toolkit.update(root);
+            toolkit.getRenderer().render(root);
 
-        // now tell the screen to update
-        Display.update(false);
-        Display.sync(Game.FPS);
-        Display.processMessages();
+            Display.update(false);
+            Display.sync(Game.FPS);
+            Display.processMessages();
 
-        // finally check if the user has requested that the display be
-        // shutdown
-        if (Display.isCloseRequested()) {
-            throw new GameCloseException();
-        }
-
-        if (optionsGui.okPressed) {
-            try {
-                applyOptions();
-            } catch (LWJGLException e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-                        "cannot apply options", e);
+            if (Display.isCloseRequested()) {
+                throw new GameCloseException();
             }
-            updateConfig();
-            platform.loadModIfNeeded(optionsGui.getSelectedModName());
-            platform.saveConfig();
-            throw new Sequence.ResumeTransitionException(nextSequence);
-        }
-        if (optionsGui.cancelPressed) {
-            throw new Sequence.ResumeTransitionException(nextSequence);
+            
+            if(optionsGui != root.getFocusedChild()) {
+                 throw new Sequence.ResumeTransitionException(nextSequence);
+            }
+
+            /* if (optionsGui.okPressed) {
+             try {
+             applyOptions();
+             } catch (LWJGLException e) {
+             Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+             "cannot apply options", e);
+             }
+             updateConfig();
+             platform.loadModIfNeeded(optionsGui.getSelectedModName());
+             platform.saveConfig();
+             throw new Sequence.ResumeTransitionException(nextSequence);
+             }
+             if (optionsGui.cancelPressed) {
+             throw new Sequence.ResumeTransitionException(nextSequence);
+             }*/
         }
     }
 }

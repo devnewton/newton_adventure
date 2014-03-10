@@ -26,7 +26,7 @@ SUCH DAMAGE. */ -->
     <parent>
         <groupId>im.bci.newtonadv</groupId>
         <artifactId>newton-adventure</artifactId>
-        <version>1.14</version>
+        <version>1.15-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>im.bci.newtonadv</groupId>
@@ -74,6 +74,10 @@ SUCH DAMAGE. */ -->
         <dependency>
             <groupId>im.bci</groupId>
             <artifactId>libtiled-jpurexml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>im.bci</groupId>
+            <artifactId>jnuit-core</artifactId>
         </dependency>
     </dependencies>
 </project>
