@@ -94,7 +94,7 @@ public class OptionsSequence implements IOptionsSequence {
         toolkit = new NuitToolkit(new LwjglNuitDisplay(), new LwjglNuitControls(), nuitTranslator, lwjglNuitFont, new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont), new NoopNuitAudio());
         toolkit.setVirtualResolutionWidth(Game.DEFAULT_SCREEN_WIDTH);
         toolkit.setVirtualResolutionHeight(Game.DEFAULT_SCREEN_HEIGHT);
-        optionsGui = new OptionsGUI(toolkit);
+        optionsGui = new OptionsGUI(toolkit, platform);
         root = new Root(toolkit);
         root.show(optionsGui);
     }
@@ -286,9 +286,10 @@ public class OptionsSequence implements IOptionsSequence {
             if (Display.isCloseRequested()) {
                 throw new GameCloseException();
             }
-            
-            if(optionsGui != root.getFocusedChild()) {
-                 throw new Sequence.ResumeTransitionException(nextSequence);
+
+            if (optionsGui != root.getFocusedChild()) {
+                platform.loadModIfNeeded(optionsGui.getSelectedModName());
+                throw new Sequence.ResumeTransitionException(nextSequence);
             }
 
             /* if (optionsGui.okPressed) {

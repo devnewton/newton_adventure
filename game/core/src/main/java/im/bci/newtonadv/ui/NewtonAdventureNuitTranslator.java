@@ -47,14 +47,21 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
 
     private void addEnglish() {
         this.addTranslation(NuitLocale.ENGLISH, "options.video", "VIDEO");
-        this.addTranslation(NuitLocale.ENGLISH, "options.audio²", "AUDIO");
+        this.addTranslation(NuitLocale.ENGLISH, "options.audio", "AUDIO");
+        this.addTranslation(NuitLocale.ENGLISH, "options.mods", "MODS");
         this.addTranslation(NuitLocale.ENGLISH, "options.back", "BACK");
+
+        this.addTranslation(NuitLocale.ENGLISH, "modchooser.back", "BACK");
+
     }
 
     private void addFrench() {
         this.addTranslation(NuitLocale.FRENCH, "options.video", "VIDEO");
         this.addTranslation(NuitLocale.FRENCH, "options.audio", "AUDIO");
-        this.addTranslation(NuitLocale.FRENCH, "options.back", "BACK");
+        this.addTranslation(NuitLocale.FRENCH, "options.mods", "MODS");
+        this.addTranslation(NuitLocale.FRENCH, "options.back", "RETOUR");
+
+        this.addTranslation(NuitLocale.FRENCH, "modchooser.back", "RETOUR");
     }
 
 }

@@ -32,76 +32,28 @@
 package im.bci.newtonadv.ui;
 
 import im.bci.jnuit.NuitToolkit;
-import im.bci.jnuit.background.ColoredBackground;
-import im.bci.jnuit.widgets.AudioConfigurator;
 import im.bci.jnuit.widgets.Button;
-import im.bci.jnuit.widgets.Stack;
+import im.bci.jnuit.widgets.Select;
 import im.bci.jnuit.widgets.Table;
-import im.bci.jnuit.widgets.VideoConfigurator;
 import im.bci.newtonadv.platform.interfaces.IMod;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import java.util.List;
 
-public class OptionsGUI extends Stack {
+public class ModChooser extends Table {
 
-    private final Table optionsMenu;
-    private final VideoConfigurator videoConfigurator;
-    private final AudioConfigurator audioConfigurator;
-    private ModChooser modChooser;
+    Select<IMod> mods;
 
-    public OptionsGUI(NuitToolkit toolkit, IPlatformSpecific platform) {
-        this.setBackground(new ColoredBackground(0, 0, 0, 1));
-        videoConfigurator = new VideoConfigurator(toolkit);
-        audioConfigurator = new AudioConfigurator(toolkit);
-        final List<IMod> mods = platform.listMods();
-        optionsMenu = new Table(toolkit);
-        optionsMenu.cell(new Button(toolkit, "options.video") {
+    public ModChooser(NuitToolkit toolkit, final List<IMod> possibleMods) {
+        super(toolkit);
+        mods = new Select<IMod>(toolkit, possibleMods);
+        cell(mods);
+        row();
+        cell(new Button(toolkit, "modchooser.back") {
 
             @Override
             public void onOK() {
-                OptionsGUI.this.show(videoConfigurator);
+                ModChooser.this.close();
             }
         });
-        optionsMenu.row();
-        optionsMenu.cell(new Button(toolkit, "options.audio") {
-
-            @Override
-            public void onOK() {
-                OptionsGUI.this.show(audioConfigurator);
-            }
-        });
-        optionsMenu.row();
-        if (!mods.isEmpty()) {
-            modChooser = new ModChooser(toolkit, mods);
-            optionsMenu.cell(new Button(toolkit, "options.mods") {
-
-                @Override
-                public void onOK() {
-                    OptionsGUI.this.show(modChooser);
-                }
-            });
-            optionsMenu.row();
-        }
-        optionsMenu.cell(new Button(toolkit, "options.back") {
-
-            @Override
-            public void onOK() {
-                OptionsGUI.this.close();
-            }
-        });
-
-        show(optionsMenu);
-
     }
-
-    public String getSelectedModName() {
-        if (null != modChooser) {
-            final IMod selected = modChooser.mods.getSelected();
-            if (null != selected) {
-                return selected.getName();
-            }
-        }
-        return null;
-    }
-
 }
