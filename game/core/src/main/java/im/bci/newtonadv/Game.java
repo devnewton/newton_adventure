@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv;
 
+import im.bci.jnuit.NuitToolkit;
 import im.bci.newtonadv.game.BonusSequence;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.MainMenuSequence;
@@ -45,7 +46,6 @@ import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
-import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.ui.OptionsSequence;
 import java.io.IOException;
@@ -67,7 +67,6 @@ public strictfp class Game {
     static public final int DEFAULT_SCREEN_WIDTH = 1280;
     static public final int DEFAULT_SCREEN_HEIGHT = 800;
     private final FrameTimeInfos frameTimeInfos = new FrameTimeInfos();
-    private ISoundCache soundCache = null;
     private MainMenuSequence mainMenuSequence;
     private final GameScore score;
     private Sequence currentSequence;
@@ -86,19 +85,18 @@ public strictfp class Game {
         return view;
     }
 
-    public final ISoundCache getSoundCache() {
-        return soundCache;
-    }
-
     public Game(IPlatformSpecific platform) throws Exception {
         this.data = platform.getGameData();
         this.score = platform.loadScore();
         this.progression = platform.loadProgression();
-        this.soundCache = platform.getSoundCache();
         this.view = platform.getGameView();
         this.input = platform.getGameInput();
         this.optionsSequence = new OptionsSequence(platform);
         this.platform = platform;
+    }
+
+    public NuitToolkit getNuitToolkit() {
+        return platform.getNuitToolkit();
     }
 
     public void tick() throws RestartGameException {
@@ -112,7 +110,6 @@ public strictfp class Game {
                 }
             }
             frameTimeInfos.update(nanoTime());
-            soundCache.update();
             view.draw(currentSequence);
             input.poll();
             processInputs();
@@ -153,13 +150,13 @@ public strictfp class Game {
     private void collectGarbage() {
         System.gc();
         getView().getTextureCache().clearUseless();
-        getSoundCache().clearUseless();
+        getNuitToolkit().getAudio().clearUseless();
     }
 
     void stopGame() {
         running = false;
         getView().getTextureCache().clearAll();
-        getSoundCache().stopMusic();
+        getNuitToolkit().getAudio().stopMusic();
     }
 
     Sequence setupSequences() {
@@ -184,8 +181,10 @@ public strictfp class Game {
     private boolean bShowMainMenu = false;
 
     private void processInputs() {
-        if (input.getReturnToMenu().isActivated()) {
-            bShowMainMenu = true;
+        if(currentSequence != optionsSequence) {
+            if (input.getReturnToMenu().isActivated()) {
+                bShowMainMenu = true;
+            }
         }
     }
 

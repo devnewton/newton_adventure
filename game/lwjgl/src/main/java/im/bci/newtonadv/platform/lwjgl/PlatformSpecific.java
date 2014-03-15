@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.jnuit.NuitAudio;
 import im.bci.jnuit.NuitControls;
 import im.bci.jnuit.NuitLocale;
 import im.bci.jnuit.NuitPreferences;
@@ -41,6 +42,7 @@ import im.bci.jnuit.lwjgl.LwjglNuitDisplay;
 import im.bci.jnuit.lwjgl.LwjglNuitFont;
 import im.bci.jnuit.lwjgl.LwjglNuitPreferences;
 import im.bci.jnuit.lwjgl.LwjglNuitRenderer;
+import im.bci.jnuit.lwjgl.audio.OpenALNuitAudio;
 import im.bci.jnuit.noop.NoopNuitAudio;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.GameProgression;
@@ -49,29 +51,21 @@ import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IMod;
-import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
-import im.bci.newtonadv.platform.interfaces.ISoundCache;
-import im.bci.newtonadv.platform.lwjgl.openal.OpenALSoundCache;
-import im.bci.newtonadv.ui.OptionsSequence;
 import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.ui.NewtonAdventureNuitTranslator;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +81,6 @@ public class PlatformSpecific implements IPlatformSpecific {
     private LwjglGameInput input;
     private final NuitPreferences config;
     private FileGameData data;
-    private ISoundCache soundCache;
     private NuitToolkit nuitToolkit;
     private final ResourceBundle messages;
     private final NuitControls controls;
@@ -99,21 +92,10 @@ public class PlatformSpecific implements IPlatformSpecific {
         config = new LwjglNuitPreferences(controls, "newton-adventure");
 
         createGameData();
-        createSoundCache();
         createGameView();
         createNuitToolkit();
         createGameInput();
 
-    }
-
-    private ISoundCache createSoundCache() {
-        if (null == data) {
-            throw new RuntimeException("create IGameData before  SoundCache");
-        }
-        if (null == soundCache) {
-            soundCache = new OpenALSoundCache(data);
-        }
-        return soundCache;
     }
 
     private GameView createGameView() {
@@ -187,11 +169,6 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     @Override
-    public ISoundCache getSoundCache() {
-        return soundCache;
-    }
-
-    @Override
     public IGameData getGameData() {
         return data;
     }
@@ -202,10 +179,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     public void close() {
-        if (null != soundCache) {
-            soundCache.stopMusic();
-            soundCache.close();
-        }
+        nuitToolkit.getAudio().stopMusic();
     }
 
     @Override
@@ -394,15 +368,13 @@ public class PlatformSpecific implements IPlatformSpecific {
     private void createNuitToolkit() {
         final NuitTranslator nuitTranslator = new NewtonAdventureNuitTranslator();
         final LwjglNuitFont lwjglNuitFont = new LwjglNuitFont(new Font("Monospace", Font.PLAIN, 24), true, new char[0], new HashMap<Character, BufferedImage>());
-        nuitToolkit = new NuitToolkit(new LwjglNuitDisplay(), controls, nuitTranslator, lwjglNuitFont, new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont), new NoopNuitAudio());
+        NuitAudio openALNuitAudio = new OpenALNuitAudio();
+        nuitToolkit = new NuitToolkit(new LwjglNuitDisplay(), controls, nuitTranslator, lwjglNuitFont, new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont), openALNuitAudio);
         nuitToolkit.setVirtualResolutionWidth(Game.DEFAULT_SCREEN_WIDTH);
         nuitToolkit.setVirtualResolutionHeight(Game.DEFAULT_SCREEN_HEIGHT);
-        String configuredLocale = config.getString("locale", "");
-        try {
-            nuitTranslator.setCurrentLocale(NuitLocale.valueOf(configuredLocale.trim()));
-        } catch(IllegalArgumentException e) {
-            nuitTranslator.setCurrentLocale(Locale.getDefault().getLanguage().equals(new Locale("fr").getLanguage()) ? NuitLocale.FRENCH : NuitLocale.ENGLISH);
-        }
+        openALNuitAudio.setMusicVolume(config.getFloat("music.volume", 1.0f));
+        openALNuitAudio.setEffectsVolume(config.getFloat("effects.volume", 1.0f));
+        nuitTranslator.setCurrentLocale(Locale.getDefault().getLanguage().equals(new Locale("fr").getLanguage()) ? NuitLocale.FRENCH : NuitLocale.ENGLISH);
     }
 
     @Override
@@ -413,5 +385,15 @@ public class PlatformSpecific implements IPlatformSpecific {
     @Override
     public NuitPreferences getConfig() {
         return config;
+    }
+
+    public void saveConfig() {
+        config.putFloat("music.volume", nuitToolkit.getAudio().getMusicVolume());
+        config.putFloat("effects.volume", nuitToolkit.getAudio().getEffectsVolume());
+        config.putInt("video.width", nuitToolkit.getResolution().getWidth());
+        config.putInt("video.height", nuitToolkit.getResolution().getHeight());
+        config.putBoolean("video.fullscreen", nuitToolkit.isFullscreen());
+        input.saveConfig();
+        config.saveConfig();
     }
 }

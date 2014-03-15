@@ -51,7 +51,7 @@ public class OptionsGUI extends Stack {
     private final VideoConfigurator videoConfigurator;
     private final AudioConfigurator audioConfigurator;
     private final ControlsConfigurator gameControlsConfigurator, menuControlsConfigurator;
-    private final LanguageConfigurator languageConfigurator;
+    //private final LanguageConfigurator languageConfigurator;
 
     private ModChooser modChooser;
 
@@ -62,7 +62,7 @@ public class OptionsGUI extends Stack {
         AbstractGameInput gameInput = platform.getGameInput();
         gameControlsConfigurator = new ControlsConfigurator(toolkit, gameInput.getGameActionList(), gameInput.getDefaultGameActionList());
         menuControlsConfigurator = new ControlsConfigurator(toolkit, toolkit.getMenuActionList(), toolkit.getDefaultMenuActionList());
-        languageConfigurator = new LanguageConfigurator(toolkit);
+       // languageConfigurator = new LanguageConfigurator(toolkit);
         final List<IMod> mods = platform.listMods();
         optionsMenu = new Table(toolkit);
         optionsMenu.cell(new Button(toolkit, "options.video") {
@@ -97,14 +97,15 @@ public class OptionsGUI extends Stack {
             }
         });
         optionsMenu.row();
-        optionsMenu.cell(new Button(toolkit, "options.language") {
+        //TODO uncomment when all gui code will use jnuit
+        /*optionsMenu.cell(new Button(toolkit, "options.language") {
 
             @Override
             public void onOK() {
                 OptionsGUI.this.show(languageConfigurator);
             }
         });
-        optionsMenu.row();
+        optionsMenu.row();*/
         if (!mods.isEmpty()) {
             modChooser = new ModChooser(toolkit, mods);
             optionsMenu.cell(new Button(toolkit, "options.mods") {

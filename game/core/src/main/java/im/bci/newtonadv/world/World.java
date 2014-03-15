@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.audio.Sound;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.anim.AnimationCollection;
@@ -45,7 +46,6 @@ import im.bci.newtonadv.game.Sequence.NormalTransitionException;
 import im.bci.newtonadv.game.Sequence.ResumableTransitionException;
 import im.bci.newtonadv.game.Updatable;
 import im.bci.newtonadv.platform.interfaces.IGameView;
-import im.bci.newtonadv.platform.interfaces.ISoundCache.Playable;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
 import im.bci.newtonadv.util.NewtonColor;
@@ -92,7 +92,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private ArrayList<PostUpdateAction> postUpdateActions = new ArrayList<PostUpdateAction>();
     private boolean isRotateGravityPossible = true;
     private EnumMap<NewtonColor, BodyList> coloredStaticBodies;
-    private Playable explodeSound;
+    private Sound explodeSound;
     public IStaticPlatformDrawer staticPlatformDrawer;
 
     public void setAppleIcon(AnimationCollection appleIcon) {
@@ -104,7 +104,7 @@ public strictfp class World extends net.phys2d.raw.World {
         remove(key);
     }
 
-    Playable getExplodeSound() {
+    Sound getExplodeSound() {
         return explodeSound;
     }
 
@@ -150,7 +150,7 @@ public strictfp class World extends net.phys2d.raw.World {
         for (NewtonColor color : NewtonColor.values()) {
             coloredStaticBodies.put(color, new BodyList());
         }
-        explodeSound = game.getSoundCache().getSound(game.getData().getFile("explode.wav"));
+        explodeSound = game.getNuitToolkit().getAudio().getSound(game.getData().getFile("explode.wav"));
         staticPlatformDrawer = game.getView().createStaticPlatformDrawer();
     }
 
@@ -347,7 +347,7 @@ public strictfp class World extends net.phys2d.raw.World {
         postUpdateActions.add(new PostUpdateAction() {
             @Override
             public void run() throws ResumableTransitionException {
-                game.getSoundCache().getSound(game.getData().getFile("go_to_bonus_world.wav")).play();
+                game.getNuitToolkit().getAudio().getSound(game.getData().getFile("go_to_bonus_world.wav")).play();
                 game.goToRandomBonusLevel(questName);
             }
         });
@@ -360,7 +360,7 @@ public strictfp class World extends net.phys2d.raw.World {
             for (int i = 0; i < bodies.size(); ++i) {
                 Body body = bodies.get(i);
                 if (body instanceof DoorToBonusWorld) {
-                    game.getSoundCache().getSound(game.getData().getFile("door_to_bonus_world_unlocked.wav")).play();
+                    game.getNuitToolkit().getAudio().getSound(game.getData().getFile("door_to_bonus_world_unlocked.wav")).play();
                     ((DoorToBonusWorld) body).open();
                 }
             }

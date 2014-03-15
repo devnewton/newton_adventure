@@ -242,15 +242,15 @@ public class SafeLauncher extends javax.swing.JDialog {
         if (jRadioButtonStandardVideoMode.isSelected()) {
             SafeLauncherDisplayMode item = (SafeLauncherDisplayMode) jComboBoxStandardVideoModeList.getSelectedItem();
             if (null != item) {
-                config.putInt("view.width", item.getDisplayMode().getWidth());
-                config.putInt("view.height", item.getDisplayMode().getHeight());
-                config.putBoolean("view.fullscreen", jCheckBoxStandardVideoModeFullscreen.isSelected());
+                config.putInt("video.width", item.getDisplayMode().getWidth());
+                config.putInt("video.height", item.getDisplayMode().getHeight());
+                config.putBoolean("video.fullscreen", jCheckBoxStandardVideoModeFullscreen.isSelected());
                 this.launchMe = true;
             }
         } else if (jRadioButtonCustomVideoMode.isSelected() && null != jSpinnerCustomVideoModeWidth.getValue() && null != jSpinnerCustomVideoModeHeight.getValue()) {
-            config.putInt("view.width",(Integer)jSpinnerCustomVideoModeWidth.getValue());
-            config.putInt("view.height", (Integer)jSpinnerCustomVideoModeHeight.getValue());
-            config.putBoolean("view.fullscreen", jCheckBoxStandardVideoModeFullscreen.isSelected());
+            config.putInt("video.width",(Integer)jSpinnerCustomVideoModeWidth.getValue());
+            config.putInt("video.height", (Integer)jSpinnerCustomVideoModeHeight.getValue());
+            config.putBoolean("video.fullscreen", jCheckBoxStandardVideoModeFullscreen.isSelected());
             this.launchMe = true;
         }
         if(launchMe) {

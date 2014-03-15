@@ -86,6 +86,15 @@ public abstract class AbstractGameInput {
             loadControlsForAction(action);
         }
     }
+    
+    public void saveConfig() {
+        for (Action action : getGameActionList()) {
+            saveControlsForAction(action);
+        }
+        for (Action action : toolkit.getMenuActionList()) {
+            saveControlsForAction(action);
+        }
+    }
 
     public ActionActivatedDetector getCheatActivateAll() {
         return cheatActivateAll;
@@ -153,6 +162,12 @@ public abstract class AbstractGameInput {
         String name = action.getName();
         action.setMainControl(config.getControl(name + ".main", action.getMainControl()));
         action.setAlternativeControl(config.getControl(name + ".alternative", action.getAlternativeControl()));
+    }
+    
+    protected void saveControlsForAction(Action action) {
+        String name = action.getName();
+        config.putControl(name + ".main", action.getMainControl());
+        config.putControl(name + ".alternative", action.getAlternativeControl());
     }
 
     public void poll() {

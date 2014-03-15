@@ -31,7 +31,6 @@
  */
 package im.bci.newtonadv.ui;
 
-import im.bci.newtonadv.ui.OptionsGUI;
 import im.bci.jnuit.NuitToolkit;
 import im.bci.jnuit.widgets.Root;
 import im.bci.newtonadv.Game;
@@ -65,8 +64,6 @@ public class OptionsSequence implements IOptionsSequence {
         root = null;
         optionsGui = null;
         toolkit = null;
-        platform.getConfig().putString("locale", platform.getNuitToolkit().getCurrentLocale().toString());
-        platform.getConfig().saveConfig();
     }
 
     @Override

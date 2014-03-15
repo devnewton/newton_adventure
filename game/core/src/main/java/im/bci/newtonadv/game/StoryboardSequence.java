@@ -64,7 +64,7 @@ public class StoryboardSequence extends MenuSequence {
     public void start() {
         super.start();
         if (music != null) {
-            game.getSoundCache().playMusicIfEnabled(music);
+            game.getNuitToolkit().getAudio().playMusic(music);
         }
     }
 

@@ -170,8 +170,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
             setCurrentButton(resumeButton);
         } else {
             setCurrentButton(playButton);
-            game.getSoundCache().playMusicIfEnabled(
-                    game.getData().getFile("lovelace_0.ogg"));
+            game.getNuitToolkit().getAudio().playMusic(game.getData().getFile("lovelace_0.ogg"));
         }
     }
 
@@ -182,7 +181,6 @@ public strictfp class MainMenuSequence extends MenuSequence {
         } else {
             resumeButton.onTextureName = game.getButtonFile("main_menu/bt-resume-impossible");
         }
-
 
     }
 

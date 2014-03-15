@@ -266,14 +266,14 @@ public strictfp class GameView implements IGameView {
     }
 
     private void initDisplay(NuitPreferences config) {
-        int targetWidth = config.getInt("view.width", 800);
-        int targetHeight = config.getInt("view.height", 600);
+        int targetWidth = config.getInt("video.width", 800);
+        int targetHeight = config.getInt("video.height", 600);
         int targetBpp = Display.getDesktopDisplayMode().getBitsPerPixel();
-        boolean startFullscreen = config.getBoolean("view.fullscreen", false);
+        boolean startFullscreen = config.getBoolean("video.fullscreen", false);
         rotateViewWithGravity = config.getBoolean(
-                "view.rotate", true);
-        mustDrawFPS = config.getBoolean("view.draw.fps", false);
-        GameViewQuality newQuality = GameViewQuality.valueOf(config.getString("view.quality", "DEFAULT"));
+                "video.rotate", true);
+        mustDrawFPS = config.getBoolean("video.draw.fps", false);
+        GameViewQuality newQuality = GameViewQuality.valueOf(config.getString("video.quality", "DEFAULT"));
 
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
                 targetBpp);

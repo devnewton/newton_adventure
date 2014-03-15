@@ -50,8 +50,6 @@ public interface IPlatformSpecific {
 
     IGameView getGameView();
 
-    ISoundCache getSoundCache();
-
     IGameData getGameData();
     
     NuitToolkit getNuitToolkit();
