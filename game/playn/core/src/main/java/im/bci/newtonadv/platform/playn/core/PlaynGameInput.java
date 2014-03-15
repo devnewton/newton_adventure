@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
-import im.bci.newtonadv.platform.interfaces.IGameInput;
+import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import java.util.EnumSet;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
@@ -44,7 +44,7 @@ import playn.core.Pointer;
  *
  * @author devnewton <devnewton@bci.im>
  */
-public class PlaynGameInput implements IGameInput {
+public class PlaynGameInput implements AbstractGameInput {
     
     private EnumSet<Key> keysDown = EnumSet.noneOf(Key.class);
     private ROVector2f mousePos;

@@ -48,20 +48,43 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
     private void addEnglish() {
         this.addTranslation(NuitLocale.ENGLISH, "options.video", "VIDEO");
         this.addTranslation(NuitLocale.ENGLISH, "options.audio", "AUDIO");
+        this.addTranslation(NuitLocale.ENGLISH, "options.game.controls", "GAME CONTROLS");
+        this.addTranslation(NuitLocale.ENGLISH, "options.menu.controls", "MENU CONTROLS");
+        this.addTranslation(NuitLocale.ENGLISH, "options.language", "LANGUAGE");
         this.addTranslation(NuitLocale.ENGLISH, "options.mods", "MODS");
         this.addTranslation(NuitLocale.ENGLISH, "options.back", "BACK");
 
         this.addTranslation(NuitLocale.ENGLISH, "modchooser.back", "BACK");
 
+        this.addTranslation(NuitLocale.ENGLISH, "action.jump", "Jump");
+        this.addTranslation(NuitLocale.ENGLISH, "action.left", "Left");
+        this.addTranslation(NuitLocale.ENGLISH, "action.right", "Right");
+        this.addTranslation(NuitLocale.ENGLISH, "action.rotate.clockwise", "Rotate clockwise");
+        this.addTranslation(NuitLocale.ENGLISH, "action.rotate.counterclockwise", "Rotate counterclockwise");
+        this.addTranslation(NuitLocale.ENGLISH, "action.rotate.clockwise.90", "Rotate clockwise 90");
+        this.addTranslation(NuitLocale.ENGLISH, "action.rotate.counterclockwise.90", "Rotate counterclockwise 90");
+        this.addTranslation(NuitLocale.ENGLISH, "action.returntomenu", "Menu");
     }
 
     private void addFrench() {
         this.addTranslation(NuitLocale.FRENCH, "options.video", "VIDEO");
         this.addTranslation(NuitLocale.FRENCH, "options.audio", "AUDIO");
+        this.addTranslation(NuitLocale.FRENCH, "options.game.controls", "CONTROLES DU JEU");
+        this.addTranslation(NuitLocale.FRENCH, "options.menu.controls", "CONTROLES DES MENUS");
+        this.addTranslation(NuitLocale.FRENCH, "options.language", "LANGUE");
         this.addTranslation(NuitLocale.FRENCH, "options.mods", "MODS");
         this.addTranslation(NuitLocale.FRENCH, "options.back", "RETOUR");
 
         this.addTranslation(NuitLocale.FRENCH, "modchooser.back", "RETOUR");
+
+        this.addTranslation(NuitLocale.FRENCH, "action.jump", "Sauter");
+        this.addTranslation(NuitLocale.FRENCH, "action.left", "Gauche");
+        this.addTranslation(NuitLocale.FRENCH, "action.right", "Droite");
+        this.addTranslation(NuitLocale.FRENCH, "action.rotate.clockwise", "Tourne (sens horaire)");
+        this.addTranslation(NuitLocale.FRENCH, "action.rotate.counterclockwise", "Tourne (sens antihoraire)");
+        this.addTranslation(NuitLocale.FRENCH, "action.rotate.clockwise.90", "Tourne (sens horaire 90)");
+        this.addTranslation(NuitLocale.FRENCH, "action.rotate.counterclockwise.90", "Tourne (sens antihoraire 90)");
+        this.addTranslation(NuitLocale.FRENCH, "action.returntomenu", "Menu");
     }
 
 }

@@ -137,8 +137,6 @@ public interface IGameView {
 
     ITextureCache getTextureCache();
 
-    void toggleFullscreen();
-
     AnimationCollection loadFromAnimation(String name) throws IOException;
     
     void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a);

@@ -34,7 +34,7 @@ package im.bci.newtonadv.platform.playn.core;
 import im.bci.newtonadv.GameProgression;
 import im.bci.newtonadv.game.RestartGameException;
 import im.bci.newtonadv.platform.interfaces.IGameData;
-import im.bci.newtonadv.platform.interfaces.IGameInput;
+import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IMod;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
@@ -64,7 +64,7 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
     }
 
     @Override
-    public IGameInput getGameInput() {
+    public AbstractGameInput getGameInput() {
         return gameInput;
     }
 

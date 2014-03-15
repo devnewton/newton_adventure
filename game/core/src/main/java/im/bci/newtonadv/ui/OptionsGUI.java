@@ -35,9 +35,12 @@ import im.bci.jnuit.NuitToolkit;
 import im.bci.jnuit.background.ColoredBackground;
 import im.bci.jnuit.widgets.AudioConfigurator;
 import im.bci.jnuit.widgets.Button;
+import im.bci.jnuit.widgets.ControlsConfigurator;
+import im.bci.jnuit.widgets.LanguageConfigurator;
 import im.bci.jnuit.widgets.Stack;
 import im.bci.jnuit.widgets.Table;
 import im.bci.jnuit.widgets.VideoConfigurator;
+import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import im.bci.newtonadv.platform.interfaces.IMod;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import java.util.List;
@@ -47,12 +50,19 @@ public class OptionsGUI extends Stack {
     private final Table optionsMenu;
     private final VideoConfigurator videoConfigurator;
     private final AudioConfigurator audioConfigurator;
+    private final ControlsConfigurator gameControlsConfigurator, menuControlsConfigurator;
+    private final LanguageConfigurator languageConfigurator;
+
     private ModChooser modChooser;
 
     public OptionsGUI(NuitToolkit toolkit, IPlatformSpecific platform) {
         this.setBackground(new ColoredBackground(0, 0, 0, 1));
         videoConfigurator = new VideoConfigurator(toolkit);
         audioConfigurator = new AudioConfigurator(toolkit);
+        AbstractGameInput gameInput = platform.getGameInput();
+        gameControlsConfigurator = new ControlsConfigurator(toolkit, gameInput.getGameActionList(), gameInput.getDefaultGameActionList());
+        menuControlsConfigurator = new ControlsConfigurator(toolkit, toolkit.getMenuActionList(), toolkit.getDefaultMenuActionList());
+        languageConfigurator = new LanguageConfigurator(toolkit);
         final List<IMod> mods = platform.listMods();
         optionsMenu = new Table(toolkit);
         optionsMenu.cell(new Button(toolkit, "options.video") {
@@ -68,6 +78,30 @@ public class OptionsGUI extends Stack {
             @Override
             public void onOK() {
                 OptionsGUI.this.show(audioConfigurator);
+            }
+        });
+        optionsMenu.row();
+        optionsMenu.cell(new Button(toolkit, "options.menu.controls") {
+
+            @Override
+            public void onOK() {
+                OptionsGUI.this.show(menuControlsConfigurator);
+            }
+        });
+        optionsMenu.row();
+        optionsMenu.cell(new Button(toolkit, "options.game.controls") {
+
+            @Override
+            public void onOK() {
+                OptionsGUI.this.show(gameControlsConfigurator);
+            }
+        });
+        optionsMenu.row();
+        optionsMenu.cell(new Button(toolkit, "options.language") {
+
+            @Override
+            public void onOK() {
+                OptionsGUI.this.show(languageConfigurator);
             }
         });
         optionsMenu.row();
@@ -89,7 +123,6 @@ public class OptionsGUI extends Stack {
                 OptionsGUI.this.close();
             }
         });
-
         show(optionsMenu);
 
     }

@@ -32,7 +32,6 @@
 package im.bci.newtonadv;
 
 import im.bci.newtonadv.game.BonusSequence;
-import im.bci.newtonadv.game.CustomTickSequence;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.PreloaderFadeSequence;
@@ -42,12 +41,13 @@ import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.Sequence.ResumableTransitionException;
 import im.bci.newtonadv.game.StoryboardSequence;
 import im.bci.newtonadv.platform.interfaces.IGameData;
-import im.bci.newtonadv.platform.interfaces.IGameInput;
+import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.GameScore;
+import im.bci.newtonadv.ui.OptionsSequence;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ import java.util.List;
 public strictfp class Game {
 
     private final IGameView view;
-    private final IGameInput input;
+    private final AbstractGameInput input;
     private final IGameData data;
     private boolean running = true;
     static public final int FPS = 60;
@@ -97,8 +97,7 @@ public strictfp class Game {
         this.soundCache = platform.getSoundCache();
         this.view = platform.getGameView();
         this.input = platform.getGameInput();
-        this.optionsSequence = platform.getOptionsSequence();
-
+        this.optionsSequence = new OptionsSequence(platform);
         this.platform = platform;
     }
 
@@ -114,19 +113,14 @@ public strictfp class Game {
             }
             frameTimeInfos.update(nanoTime());
             soundCache.update();
-            if (currentSequence instanceof CustomTickSequence) {
-                ((CustomTickSequence) currentSequence).tick();
-            } else {
-                view.draw(currentSequence);
-                for (input.beginPoll(); input.poll();) {
-                    processInputs();
-                    if (!frameTimeInfos.paused) {
-                        currentSequence.processInputs();
-                    }
-                }
-                if (!frameTimeInfos.paused) {
-                    currentSequence.update();
-                }
+            view.draw(currentSequence);
+            input.poll();
+            processInputs();
+            if (!frameTimeInfos.paused) {
+                currentSequence.processInputs();
+            }
+            if (!frameTimeInfos.paused) {
+                currentSequence.update();
             }
         } catch (Sequence.NormalTransitionException ex) {
             currentSequence.stop();
@@ -187,18 +181,11 @@ public strictfp class Game {
         currentSequence = setupSequences();
         currentSequence.start();
     }
-    private boolean bToggleFullscreen = false;
     private boolean bShowMainMenu = false;
 
     private void processInputs() {
-        if (input.isKeyReturnToMenuDown()) {
+        if (input.getReturnToMenu().isActivated()) {
             bShowMainMenu = true;
-        }
-        if (input.isKeyToggleFullscreenDown()) {
-            bToggleFullscreen = true;
-        } else if (bToggleFullscreen) {
-            bToggleFullscreen = false;
-            view.toggleFullscreen();
         }
     }
 
@@ -206,7 +193,7 @@ public strictfp class Game {
         return score;
     }
 
-    final public IGameInput getInput() {
+    final public AbstractGameInput getInput() {
         return input;
     }
 

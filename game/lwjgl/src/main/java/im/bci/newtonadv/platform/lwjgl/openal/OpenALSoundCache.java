@@ -80,10 +80,10 @@ public class OpenALSoundCache implements ISoundCache {
         protected abstract void doRun() throws Exception;
     }
 
-    public OpenALSoundCache(FileGameData gd, Properties config) {
+    public OpenALSoundCache(FileGameData gd) {
         this.gameData = gd;
-        this.soundEnabled = config.getProperty("sound.enabled").equals("true");
-        this.musicEnabled = config.getProperty("music.enabled").equals("true");
+        this.soundEnabled = true;
+        this.musicEnabled = true;
         executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
 
             @Override

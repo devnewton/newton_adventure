@@ -103,7 +103,7 @@ public class NormalLauncher {
                         game = new Game(platform);
                         game.start();
                         game.tick();
-                        platform.saveConfig();//only save config if everything seems ok
+                        platform.getConfig();//only save config if everything seems ok
                     }
                 }
             } catch (GameCloseException e) {

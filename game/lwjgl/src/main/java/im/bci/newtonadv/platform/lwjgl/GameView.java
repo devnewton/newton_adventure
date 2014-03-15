@@ -35,6 +35,7 @@ import im.bci.newtonadv.platform.lwjgl.launcher.NormalLauncher;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import im.bci.jnuit.NuitPreferences;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.Play;
@@ -94,8 +95,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.phys2d.math.ROVector2f;
@@ -128,7 +127,7 @@ public strictfp class GameView implements IGameView {
     private boolean mustDrawFPS = false;
     private final PlatformSpecific platformSpecific;
 
-    GameView(FileGameData data, Properties config, PlatformSpecific platformSpecific) {
+    GameView(FileGameData data, NuitPreferences config, PlatformSpecific platformSpecific) {
         this.data = data;
         this.platformSpecific = platformSpecific;
         initDisplay(config);
@@ -148,16 +147,6 @@ public strictfp class GameView implements IGameView {
 
     public void setMustDrawFPS(boolean mustDrawFPS) {
         this.mustDrawFPS = mustDrawFPS;
-    }
-
-    @Override
-    public void toggleFullscreen() {
-        try {
-            Display.setFullscreen(!Display.isFullscreen());
-        } catch (LWJGLException ex) {
-            Logger.getLogger(GameView.class.getName()).log(Level.SEVERE, null,
-                    ex);
-        }
     }
 
     private void doDrawMenuSequence(MenuSequence sequence) {
@@ -276,24 +265,20 @@ public strictfp class GameView implements IGameView {
         }
     }
 
-    private void initDisplay(Properties config) {
-        int targetWidth = Integer.parseInt(config.getProperty("view.width"));
-        int targetHeight = Integer.parseInt(config.getProperty("view.height"));
-        int targetBpp = Integer.parseInt(config.getProperty("view.bpp", ""
-                + Display.getDesktopDisplayMode().getBitsPerPixel()));
-        boolean startFullscreen = Boolean.parseBoolean(config.getProperty(
-                "view.fullscreen", "false"));
-        rotateViewWithGravity = Boolean.parseBoolean(config.getProperty(
-                "view.rotate", "true"));
-        mustDrawFPS = Boolean.parseBoolean(config.getProperty("view.draw.fps", "false"));
-        GameViewQuality newQuality = GameViewQuality.valueOf(config.getProperty("view.quality"));
+    private void initDisplay(NuitPreferences config) {
+        int targetWidth = config.getInt("view.width", 800);
+        int targetHeight = config.getInt("view.height", 600);
+        int targetBpp = Display.getDesktopDisplayMode().getBitsPerPixel();
+        boolean startFullscreen = config.getBoolean("view.fullscreen", false);
+        rotateViewWithGravity = config.getBoolean(
+                "view.rotate", true);
+        mustDrawFPS = config.getBoolean("view.draw.fps", false);
+        GameViewQuality newQuality = GameViewQuality.valueOf(config.getString("view.quality", "DEFAULT"));
 
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
                 targetBpp);
         if (chosenMode == null) {
-            throw new RuntimeException("Unable to find appropriate display mode. Try to edit"
-                    + PlatformSpecific.getUserOrDefaultConfigFilePath()
-                    + ".\n" + getDisplayModeInfos());
+            throw new RuntimeException("Unable to find appropriate display mode.\n" + getDisplayModeInfos());
         }
         setDisplayMode(startFullscreen, newQuality, chosenMode);
         IconLoader.setIcon();
@@ -323,8 +308,7 @@ public strictfp class GameView implements IGameView {
             }
             Display.setVSyncEnabled(true);
         } catch (LWJGLException e) {
-            throw new RuntimeException("Unable to create display. Try to edit "
-                    + PlatformSpecific.getUserOrDefaultConfigFilePath() + ".\n"
+            throw new RuntimeException("Unable to create display.\n"
                     + getDisplayModeInfos(), e);
         }
 

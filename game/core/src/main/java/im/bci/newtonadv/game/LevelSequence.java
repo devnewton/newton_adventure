@@ -39,8 +39,6 @@ import im.bci.newtonadv.world.Hero;
 import im.bci.newtonadv.world.TmxLoader;
 import im.bci.newtonadv.world.World;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -183,19 +181,19 @@ strictfp public class LevelSequence implements PreloadableSequence {
     }
 
     protected void processCheatInput() {
-        if (game.getInput().isKeyCheatActivateAllDown()) {
+        if (game.getInput().getCheatActivateAll().isActivated()) {
             world.cheatActivateAll();
         }
-        if (game.getInput().isKeyCheatGotoNextLevelDown()) {
+        if (game.getInput().getCheatGotoNextLevel().isActivated()) {
             cheatCodeGotoNextLevel = true;
         }
-        if (game.getInput().isKeyCheatGotoNextBonusLevelDown()) {
+        if (game.getInput().getCheatGotoNextBonusLevel().isActivated()) {
             cheatCodeGotoNextBonusLevel = true;
         }
-        if (game.getInput().isKeyCheatGetWorldMapDown()) {
+        if (game.getInput().getCheatGetWorldMap().isActivated()) {
             world.getHero().setHasMap(true);
         }
-        if (game.getInput().isKeyCheatGetCompassDown()) {
+        if (game.getInput().getCheatGetCompass().isActivated()) {
             world.getHero().setHasCompass(true);
         }
     }
@@ -203,16 +201,16 @@ strictfp public class LevelSequence implements PreloadableSequence {
     protected void processMovingInput() {
         final float stepRate = 1.0f;
         boolean heroIsMoving = false;
-        if (game.getInput().isKeyLeftDown()) {
+        if (game.getInput().getLeft().isPressed()) {
             world.getHero().moveLeft(stepRate);
             heroIsMoving = true;
         }
-        if (game.getInput().isKeyRightDown()) {
+        if (game.getInput().getRight().isPressed()) {
             world.getHero().moveRight(stepRate);
             heroIsMoving = true;
         }
 
-        if (game.getInput().isKeyJumpDown()) {
+        if (game.getInput().getJump().isPressed()) {
             world.getHero().jump(stepRate);
             heroIsMoving = true;
         }
@@ -223,16 +221,16 @@ strictfp public class LevelSequence implements PreloadableSequence {
 
     protected void processRotateInputs() {
         final float stepRate = 1.0f;
-        if (game.getInput().isKeyRotateClockwiseDown()) {
+        if (game.getInput().getRotateClockwise().isPressed()) {
             world.progressiveRotateGravity(0.05f * stepRate);
         }
-        if (game.getInput().isKeyRotateCounterClockwiseDown()) {
+        if (game.getInput().getRotateCounterClockwise().isPressed()) {
             world.progressiveRotateGravity(-0.05f * stepRate);
         }
-        if (game.getInput().isKeyRotate90ClockwiseDown()) {
+        if (game.getInput().getRotate90Clockwise().isPressed()) {
             world.rotateGravity((float) (Math.PI / 4.0));
         }
-        if (game.getInput().isKeyRotate90CounterClockwiseDown()) {
+        if (game.getInput().getRotate90CounterClockwise().isPressed()) {
             world.rotateGravity((float) (-Math.PI / 4.0));
         }
     }

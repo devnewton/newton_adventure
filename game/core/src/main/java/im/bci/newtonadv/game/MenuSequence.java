@@ -51,7 +51,7 @@ public abstract class MenuSequence implements Sequence {
     public static final float ortho2DLeft = 0;
     public static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
     public static final float ortho2DTop = 0;
-    private ArrayList<Button> buttons = new ArrayList<Button>();
+    private final ArrayList<Button> buttons = new ArrayList<Button>();
     private int currentButtonIndex;
     protected boolean redraw;
     private boolean horizontalSelectNextButton = false,
@@ -64,7 +64,7 @@ public abstract class MenuSequence implements Sequence {
     protected Game game;
     private String backgroundTexturePath;
     private ITexture backgroundTexture;
-    private Vector2f oldMousePos = new Vector2f();
+    private final Vector2f oldMousePos = new Vector2f();
     private boolean mouseActivateCurrentButton;
     private Button defaultButton;
 
@@ -98,7 +98,7 @@ public abstract class MenuSequence implements Sequence {
             ResumeTransitionException,
             ResumableTransitionException {
         int oldButtonIndex = currentButtonIndex;
-        if (game.getInput().isKeyRightDown()) {
+        if (game.getInput().getMenuRight().isPressed()) {
             horizontalSelectNextButton = true;
         } else if (horizontalSelectNextButton) {
             horizontalSelectNextButton = false;
@@ -110,7 +110,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (game.getInput().isKeyLeftDown()) {
+        if (game.getInput().getMenuLeft().isPressed()) {
             horizontalSelectPreviousButton = true;
         } else if (horizontalSelectPreviousButton) {
             horizontalSelectPreviousButton = false;
@@ -122,7 +122,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (game.getInput().isKeyDownDown()) {
+        if (game.getInput().getMenuDown().isPressed()) {
             verticalSelectNextButton = true;
         } else if (verticalSelectNextButton) {
             verticalSelectNextButton = false;
@@ -134,7 +134,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (game.getInput().isKeyUpDown()) {
+        if (game.getInput().getMenuUp().isPressed()) {
             verticalSelectPreviousButton = true;
         } else if (verticalSelectPreviousButton) {
             verticalSelectPreviousButton = false;
@@ -146,7 +146,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (game.getInput().isKeyReturnDown()) {
+        if (game.getInput().getMenuOk().isPressed()) {
             activateCurrentButton = true;
         } else if (activateCurrentButton) {
             activateCurrentButton = false;

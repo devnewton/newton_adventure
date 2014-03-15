@@ -31,6 +31,8 @@
  */
 package im.bci.newtonadv.platform.interfaces;
 
+import im.bci.jnuit.NuitPreferences;
+import im.bci.jnuit.NuitToolkit;
 import im.bci.newtonadv.GameProgression;
 import im.bci.newtonadv.game.RestartGameException;
 import im.bci.newtonadv.score.GameScore;
@@ -42,17 +44,17 @@ import java.util.List;
  */
 public interface IPlatformSpecific {
 
-    void saveConfig();
+    NuitPreferences getConfig();
 
-    IGameInput getGameInput();
+    AbstractGameInput getGameInput();
 
     IGameView getGameView();
 
     ISoundCache getSoundCache();
 
     IGameData getGameData();
-
-    IOptionsSequence getOptionsSequence();
+    
+    NuitToolkit getNuitToolkit();
 
     void openUrl(String string);
 
