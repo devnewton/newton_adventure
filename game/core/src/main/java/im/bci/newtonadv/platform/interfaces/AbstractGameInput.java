@@ -67,7 +67,7 @@ public abstract class AbstractGameInput {
     protected ActionActivatedDetector menuUp;
     protected NuitToolkit toolkit;
 
-    public AbstractGameInput(NuitToolkit toolkit, NuitPreferences config) throws Exception {
+    public AbstractGameInput(NuitToolkit toolkit, NuitPreferences config) {
         this.config = config;
         this.toolkit = toolkit;
     }

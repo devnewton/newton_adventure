@@ -31,12 +31,18 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.jnuit.NuitPreferences;
+import im.bci.jnuit.NuitToolkit;
+import im.bci.jnuit.controls.Action;
+import im.bci.jnuit.controls.ActionActivatedDetector;
+import im.bci.jnuit.playn.controls.KeyControl;
+import im.bci.jnuit.playn.controls.PlaynNuitControls;
 import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
-import java.util.EnumSet;
+import java.util.Arrays;
+import java.util.List;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import playn.core.Key;
-import playn.core.Keyboard;
 import playn.core.PlayN;
 import playn.core.Pointer;
 
@@ -44,9 +50,8 @@ import playn.core.Pointer;
  *
  * @author devnewton <devnewton@bci.im>
  */
-public class PlaynGameInput implements AbstractGameInput {
-    
-    private EnumSet<Key> keysDown = EnumSet.noneOf(Key.class);
+public class PlaynGameInput extends AbstractGameInput {
+
     private ROVector2f mousePos;
     private boolean mouseButtonDown;
     boolean virtualPadUpDown;
@@ -55,181 +60,89 @@ public class PlaynGameInput implements AbstractGameInput {
     boolean virtualPadLeftDown;
     boolean virtualPadRightDown;
     boolean backButtonDown;
-    
-    public PlaynGameInput() {
-        PlayN.keyboard().setListener(new Keyboard.Listener() {
-            
-            @Override
-            public void onKeyDown(Keyboard.Event event) {
-                keysDown.add(event.key());
-            }
-            
-            @Override
-            public void onKeyTyped(Keyboard.TypedEvent event) {
-            }
-            
-            @Override
-            public void onKeyUp(Keyboard.Event event) {
-                keysDown.remove(event.key());
-            }
-        });
-        
+    private final PlaynNuitControls controls;
+
+    public PlaynGameInput(NuitToolkit toolkit, NuitPreferences config, PlaynNuitControls controls) {
+        super(toolkit, config);
+        this.controls = controls;
+
         PlayN.pointer().setListener(new Pointer.Listener() {
-            
+
             @Override
             public void onPointerStart(Pointer.Event event) {
                 mousePos = eventToMousePos(event);
                 System.out.println("Mouse click at " + event.x() + "," + event.y());
                 mouseButtonDown = true;
             }
-            
+
             @Override
             public void onPointerDrag(Pointer.Event event) {
                 mousePos = eventToMousePos(event);
                 mouseButtonDown = true;
             }
-            
+
             @Override
             public void onPointerCancel(Pointer.Event event) {
                 mousePos = eventToMousePos(event);
                 mouseButtonDown = false;
             }
-            
+
             @Override
             public void onPointerEnd(Pointer.Event event) {
                 mousePos = eventToMousePos(event);
                 mouseButtonDown = false;
             }
-            
+
         });
     }
-    
+
     private Vector2f eventToMousePos(Pointer.Event event) {
         return new Vector2f(event.x(), PlayN.graphics().height() - event.y());
     }
-    
-    @Override
-    public boolean isKeyCheatActivateAllDown() {
-        return keysDown.contains(Key.F12);
-    }
-    
-    @Override
-    public boolean isKeyCheatGotoNextLevelDown() {
-        return keysDown.contains(Key.F12);
-    }
-    
-    @Override
-    public boolean isKeyDownDown() {
-        return keysDown.contains(Key.DOWN);
-    }
-    
-    @Override
-    public boolean isKeyJumpDown() {
-        return keysDown.contains(Key.UP) || virtualPadUpDown;
-    }
-    
-    @Override
-    public boolean isKeyLeftDown() {
-        return keysDown.contains(Key.LEFT) || virtualPadLeftDown;
-    }
-    
-    @Override
-    public boolean isKeyReturnDown() {
-        return keysDown.contains(Key.ENTER);
-    }
-    
-    @Override
-    public boolean isKeyReturnToMenuDown() {
-        return keysDown.contains(Key.ESCAPE) || backButtonDown;
-    }
-    
-    @Override
-    public boolean isKeyRightDown() {
-        return keysDown.contains(Key.RIGHT) || virtualPadRightDown;
-    }
-    
-    @Override
-    public boolean isKeyRotate90ClockwiseDown() {
-        return keysDown.contains(Key.S);
-    }
-    
-    @Override
-    public boolean isKeyRotate90CounterClockwiseDown() {
-        return keysDown.contains(Key.D);
-    }
-    
-    @Override
-    public boolean isKeyRotateClockwiseDown() {
-        return keysDown.contains(Key.C) || virtualPadRotateClockwiseDown;
-    }
-    
-    @Override
-    public boolean isKeyRotateCounterClockwiseDown() {
-        return keysDown.contains(Key.X) || virtualPadRotateCounterClockwiseDown;
-    }
-    
-    @Override
-    public boolean isKeyToggleFullscreenDown() {
-        return false;
-    }
-    
-    @Override
-    public boolean isKeyUpDown() {
-        return keysDown.contains(Key.UP);
-    }
-    
-    @Override
-    public boolean isKeyCheatGotoNextBonusLevelDown() {
-        return keysDown.contains(Key.F10);
-    }
-    
+
     @Override
     public ROVector2f getMousePos() {
         return mousePos;
     }
-    
+
     @Override
     public boolean isMouseButtonDown() {
         return mouseButtonDown;
     }
-    
-    @Override
-    public boolean isKeyCheatGetWorldMapDown() {
-        return keysDown.contains(Key.F9);
-    }
-    
-    @Override
-    public boolean isKeyCheatGetCompassDown() {
-        return keysDown.contains(Key.F8);
-    }
-    
-    private static final int NB_POLL_PER_TICK = 1;
-    private int pollCount;
-    
-    @Override
-    public void beginPoll() {
-        pollCount = NB_POLL_PER_TICK;
-    }
-    
-    @Override
-    public boolean poll() {
-        return pollCount-- > 0;
-    }
-    
-    @Override
-    public boolean isKeyCheatSetAllCompletedDown() {
-        return keysDown.contains(Key.F12);
-    }
-    
+
     void onBackPressed() {
         backButtonDown = true;
         PlayN.invokeLater(new Runnable() {
-            
+
             @Override
             public void run() {
                 backButtonDown = false;
             }
         });
     }
-    
+
+    @Override
+    protected void setupGameControls() {
+        jump = new ActionActivatedDetector(new Action("action.jump", new KeyControl(controls, Key.UP)));
+        left = new ActionActivatedDetector(new Action("action.left", new KeyControl(controls, Key.LEFT)));
+        right = new ActionActivatedDetector(new Action("action.right", new KeyControl(controls, Key.RIGHT)));
+        rotateClockwise = new ActionActivatedDetector(new Action("action.rotate.clockwise", new KeyControl(controls, Key.C)));
+        rotateCounterClockwise = new ActionActivatedDetector(new Action("action.rotate.counterclockwise", new KeyControl(controls, Key.X)));
+        rotate90Clockwise = new ActionActivatedDetector(new Action("action.rotate.clockwise.90", new KeyControl(controls, Key.S)));
+        rotate90CounterClockwise = new ActionActivatedDetector(new Action("action.rotate.counterclockwise.90", new KeyControl(controls, Key.D)));
+        returnToMenu = new ActionActivatedDetector(new Action("action.returntomenu", new KeyControl(controls, Key.ESCAPE)));
+
+        cheatActivateAll = new ActionActivatedDetector(new Action("cheat.activate.all", new KeyControl(controls, Key.F8)));
+        cheatGetWorldMap = new ActionActivatedDetector(new Action("cheat.get.world.map", new KeyControl(controls, Key.F9)));
+        cheatGetCompass = new ActionActivatedDetector(new Action("cheat.get.compass", new KeyControl(controls, Key.F10)));
+        cheatGotoNextBonusLevel = new ActionActivatedDetector(new Action("cheat.goto.next.bonus.level", new KeyControl(controls, Key.F11)));
+        cheatGotoNextLevel = new ActionActivatedDetector(new Action("cheat.goto.next.level", new KeyControl(controls, Key.F12)));
+        cheatSetAllCompleted = new ActionActivatedDetector(new Action("cheat.set.all.completed", new KeyControl(controls, Key.F12)));
+    }
+
+    @Override
+    public List<Action> getDefaultGameActionList() {
+        return Arrays.asList(new Action("action.jump", new KeyControl(controls, Key.UP)), new Action("action.left", new KeyControl(controls, Key.LEFT)), new Action("action.right", new KeyControl(controls, Key.RIGHT)), new Action("action.rotate.clockwise", new KeyControl(controls, Key.C)), new Action("action.rotate.counterclockwise", new KeyControl(controls, Key.X)), new Action("action.rotate.clockwise.90", new KeyControl(controls, Key.S)), new Action("action.rotate.counterclockwise.90", new KeyControl(controls, Key.D)), new Action("action.returntomenu", new KeyControl(controls, Key.ESCAPE)));
+    }
+
 }

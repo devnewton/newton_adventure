@@ -31,19 +31,29 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.jnuit.NuitControls;
+import im.bci.jnuit.NuitPreferences;
+import im.bci.jnuit.NuitToolkit;
+import im.bci.jnuit.playn.PlaynNuitAudio;
+import im.bci.jnuit.playn.PlaynNuitDisplay;
+import im.bci.jnuit.playn.PlaynNuitFont;
+import im.bci.jnuit.playn.PlaynNuitPreferences;
+import im.bci.jnuit.playn.PlaynNuitRenderer;
+import im.bci.jnuit.playn.controls.PlaynNuitControls;
 import im.bci.newtonadv.GameProgression;
 import im.bci.newtonadv.game.RestartGameException;
-import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
+import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IMod;
-import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
-import im.bci.newtonadv.platform.interfaces.ISoundCache;
 import im.bci.newtonadv.score.GameScore;
+import im.bci.newtonadv.ui.NewtonAdventureNuitTranslator;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.text.StyleConstants;
 import playn.core.CachingAssets;
+import playn.core.Font;
 import playn.core.PlayN;
 
 /**
@@ -53,19 +63,20 @@ import playn.core.PlayN;
 public class PlaynPlatformSpecific implements IPlatformSpecific {
 
     private final RealWatchedAssets assets = new RealWatchedAssets(new CachingAssets(PlayN.assets()));
-    private final PlaynGameInput gameInput = new PlaynGameInput();
     private final PlaynGameView gameView = new PlaynGameView(assets);
-    private final PlaynSoundCache soundCache = new PlaynSoundCache();
     private final PlaynGameData data = new PlaynGameData(assets);
-    private PlaynOptionsSequence options;
+    private final NuitToolkit toolkit;
+    private final NuitPreferences config;
+    private final AbstractGameInput input;
 
-    @Override
-    public void saveConfig() {
-    }
-
-    @Override
-    public AbstractGameInput getGameInput() {
-        return gameInput;
+    public PlaynPlatformSpecific() {
+        PlaynNuitControls controls = new PlaynNuitControls();
+        PlaynNuitFont font = new PlaynNuitFont("Arial", Font.Style.BOLD, 24f, true);
+        NewtonAdventureNuitTranslator translator = new NewtonAdventureNuitTranslator();
+        toolkit = new NuitToolkit(new PlaynNuitDisplay(), controls, translator, font, new PlaynNuitRenderer(translator, font), new PlaynNuitAudio());
+        config = new PlaynNuitPreferences(controls, "newtonadventure");
+        input = new PlaynGameInput(toolkit, config, controls);
+        input.setup();
     }
 
     @Override
@@ -74,21 +85,8 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
     }
 
     @Override
-    public ISoundCache getSoundCache() {
-        return soundCache;
-    }
-
-    @Override
     public IGameData getGameData() {
         return data;
-    }
-
-    @Override
-    public IOptionsSequence getOptionsSequence() {
-        if(null == options) {
-            options = new PlaynOptionsSequence(this);
-        }
-        return options;
     }
 
     @Override
@@ -151,6 +149,21 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
     @Override
     public long nanoTime() {
         return PlayN.tick() * 1000000L;
+    }
+
+    @Override
+    public NuitPreferences getConfig() {
+        return config;
+    }
+
+    @Override
+    public AbstractGameInput getGameInput() {
+        return input;
+    }
+
+    @Override
+    public NuitToolkit getNuitToolkit() {
+        return toolkit;
     }
 
 }

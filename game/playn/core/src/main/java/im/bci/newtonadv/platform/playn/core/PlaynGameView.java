@@ -590,11 +590,6 @@ public class PlaynGameView implements IGameView {
     }
 
     @Override
-    public void toggleFullscreen() {
-        //TODO
-    }
-
-    @Override
     public AnimationCollection loadFromAnimation(final String filename) throws IOException {
         if (filename.endsWith(".json")) {
             return loadNanim(filename);

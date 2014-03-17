@@ -90,7 +90,7 @@ public class PlaynNewtonAdventureGame extends Game.Default {
                                     game = new im.bci.newtonadv.Game(platform);
                                     game.start();
                                     game.tick();
-                                    platform.saveConfig();//only save config if everything seems ok
+                                    platform.getConfig().saveConfig();//only save config if everything seems ok
                                 }
                             }
                         }
