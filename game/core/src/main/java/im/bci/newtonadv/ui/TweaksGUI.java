@@ -31,27 +31,34 @@
  */
 package im.bci.newtonadv.ui;
 
+import im.bci.jnuit.NuitPreferences;
 import im.bci.jnuit.NuitToolkit;
 import im.bci.jnuit.widgets.Button;
-import im.bci.jnuit.widgets.Select;
+import im.bci.jnuit.widgets.Label;
 import im.bci.jnuit.widgets.Table;
-import im.bci.newtonadv.platform.interfaces.IMod;
-import java.util.List;
+import im.bci.jnuit.widgets.Toggle;
 
-public class ModChooser extends Table {
+public class TweaksGUI extends Table {
 
-    Select<IMod> mods;
-
-    public ModChooser(NuitToolkit toolkit, final List<IMod> possibleMods) {
+    public TweaksGUI(NuitToolkit toolkit, final NuitPreferences config) {
         super(toolkit);
-        mods = new Select<IMod>(toolkit, possibleMods);
-        cell(mods);
+        cell(new Label(toolkit, "tweaks.show.fps"));
+        final Toggle mustDrawFps = new Toggle(toolkit);
+        mustDrawFps.setEnabled(config.getBoolean("tweaks.show.fps", false));
+        cell(mustDrawFps);
         row();
-        cell(new Button(toolkit, "modchooser.back") {
+        cell(new Label(toolkit, "tweaks.rotate.view.with.gravity"));
+        final Toggle rotateViewWithGravity = new Toggle(toolkit);
+        rotateViewWithGravity.setEnabled(config.getBoolean("tweaks.rotate.view.with.gravity", true));
+        cell(rotateViewWithGravity);
+        row();
+        cell(new Button(toolkit, "tweaks.back") {
 
             @Override
             public void onOK() {
-                ModChooser.this.close();
+                config.putBoolean("tweaks.show.fps", mustDrawFps.isEnabled());
+                config.putBoolean("tweaks.rotate.view.with.gravity", rotateViewWithGravity.isEnabled());
+                TweaksGUI.this.close();
             }
         });
     }

@@ -55,7 +55,7 @@ public class OptionsGUI extends Stack {
 
     private ModChooser modChooser;
 
-    public OptionsGUI(NuitToolkit toolkit, IPlatformSpecific platform) {
+    public OptionsGUI(final NuitToolkit toolkit, final IPlatformSpecific platform) {
         this.setBackground(new ColoredBackground(0, 0, 0, 1));
         videoConfigurator = new VideoConfigurator(toolkit);
         audioConfigurator = new AudioConfigurator(toolkit);
@@ -117,6 +117,14 @@ public class OptionsGUI extends Stack {
             });
             optionsMenu.row();
         }
+        optionsMenu.cell(new Button(toolkit, "options.tweaks") {
+
+            @Override
+            public void onOK() {
+                OptionsGUI.this.show(new TweaksGUI(toolkit, platform.getConfig()));
+            }
+        });
+        optionsMenu.row();
         optionsMenu.cell(new Button(toolkit, "options.back") {
 
             @Override

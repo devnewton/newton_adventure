@@ -122,31 +122,13 @@ public strictfp class GameView implements IGameView {
     private TextureCache textureCache;
     private GameViewQuality quality = GameViewQuality.DEFAULT;
     private final FileGameData data;
-    private boolean rotateViewWithGravity = true;
     private TrueTypeFont font;
-    private boolean mustDrawFPS = false;
     private final PlatformSpecific platformSpecific;
 
     GameView(FileGameData data, NuitPreferences config, PlatformSpecific platformSpecific) {
         this.data = data;
         this.platformSpecific = platformSpecific;
         initDisplay(config);
-    }
-
-    public boolean isRotateViewWithGravity() {
-        return rotateViewWithGravity;
-    }
-
-    public void setRotateViewWithGravity(boolean rotateViewWithGravity) {
-        this.rotateViewWithGravity = rotateViewWithGravity;
-    }
-
-    public boolean getMustDrawFPS() {
-        return mustDrawFPS;
-    }
-
-    public void setMustDrawFPS(boolean mustDrawFPS) {
-        this.mustDrawFPS = mustDrawFPS;
     }
 
     private void doDrawMenuSequence(MenuSequence sequence) {
@@ -270,9 +252,6 @@ public strictfp class GameView implements IGameView {
         int targetHeight = config.getInt("video.height", 600);
         int targetBpp = Display.getDesktopDisplayMode().getBitsPerPixel();
         boolean startFullscreen = config.getBoolean("video.fullscreen", false);
-        rotateViewWithGravity = config.getBoolean(
-                "video.rotate", true);
-        mustDrawFPS = config.getBoolean("video.draw.fps", false);
         GameViewQuality newQuality = GameViewQuality.valueOf(config.getString("video.quality", "DEFAULT"));
 
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
@@ -364,7 +343,7 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawFPS(int nbFps) {
-        if (mustDrawFPS) {
+        if (platformSpecific.getConfig().getBoolean("tweaks.show.fps", false)) {
             String fps = nbFps + " FPS";
             GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_BLEND);
@@ -1189,7 +1168,7 @@ public strictfp class GameView implements IGameView {
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-        if (rotateViewWithGravity) {
+        if (platformSpecific.getConfig().getBoolean("tweaks.rotate.view.with.gravity", true)) {
             GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
                     1.0f);
         }
@@ -1412,7 +1391,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTranslatef(100 - minimapSize / 1.5f, minimapSize / 1.5f, 0);
 
         GL11.glPushMatrix();
-        if (rotateViewWithGravity) {
+        if (platformSpecific.getConfig().getBoolean("tweaks.rotate.view.with.gravity", true)) {
             GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
                     1.0f);
         }

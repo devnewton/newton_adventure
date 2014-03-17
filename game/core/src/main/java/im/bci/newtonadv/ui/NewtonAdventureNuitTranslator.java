@@ -51,11 +51,16 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
         this.addTranslation(NuitLocale.ENGLISH, "options.game.controls", "GAME CONTROLS");
         this.addTranslation(NuitLocale.ENGLISH, "options.menu.controls", "MENU CONTROLS");
         this.addTranslation(NuitLocale.ENGLISH, "options.language", "LANGUAGE");
+        this.addTranslation(NuitLocale.ENGLISH, "options.tweaks", "TWEAKS");
         this.addTranslation(NuitLocale.ENGLISH, "options.mods", "MODS");
         this.addTranslation(NuitLocale.ENGLISH, "options.back", "BACK");
 
         this.addTranslation(NuitLocale.ENGLISH, "modchooser.back", "BACK");
 
+        this.addTranslation(NuitLocale.ENGLISH, "tweaks.show.fps", "Show FPS");
+        this.addTranslation(NuitLocale.ENGLISH, "tweaks.rotate.view.with.gravity", "Rotate view with gravity");
+        this.addTranslation(NuitLocale.ENGLISH, "tweaks.back", "BACK");
+        
         this.addTranslation(NuitLocale.ENGLISH, "action.jump", "Jump");
         this.addTranslation(NuitLocale.ENGLISH, "action.left", "Left");
         this.addTranslation(NuitLocale.ENGLISH, "action.right", "Right");
@@ -71,11 +76,16 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
         this.addTranslation(NuitLocale.FRENCH, "options.audio", "AUDIO");
         this.addTranslation(NuitLocale.FRENCH, "options.game.controls", "CONTROLES DU JEU");
         this.addTranslation(NuitLocale.FRENCH, "options.menu.controls", "CONTROLES DES MENUS");
+        this.addTranslation(NuitLocale.FRENCH, "options.tweaks", "AUTRES REGLAGES");
         this.addTranslation(NuitLocale.FRENCH, "options.language", "LANGUE");
         this.addTranslation(NuitLocale.FRENCH, "options.mods", "MODS");
         this.addTranslation(NuitLocale.FRENCH, "options.back", "RETOUR");
 
         this.addTranslation(NuitLocale.FRENCH, "modchooser.back", "RETOUR");
+        
+        this.addTranslation(NuitLocale.FRENCH, "tweaks.show.fps", "Afficher les FPS");
+        this.addTranslation(NuitLocale.FRENCH, "tweaks.rotate.view.with.gravity", "Tourner la vue avec la gravité");
+        this.addTranslation(NuitLocale.FRENCH, "tweaks.back", "RETOUR");
 
         this.addTranslation(NuitLocale.FRENCH, "action.jump", "Sauter");
         this.addTranslation(NuitLocale.FRENCH, "action.left", "Gauche");
