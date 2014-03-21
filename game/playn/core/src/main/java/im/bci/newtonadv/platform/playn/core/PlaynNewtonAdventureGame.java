@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.jnuit.playn.PlaynNuitRenderer;
 import im.bci.newtonadv.game.RestartGameException;
 
 import playn.core.Game;
@@ -84,6 +85,7 @@ public class PlaynNewtonAdventureGame extends Game.Default {
                                     if (null != virtualPad) {
                                         virtualPad.update(game);
                                     }
+                                    ((PlaynNuitRenderer)platform.getNuitToolkit().getRenderer()).setSurface(surface);
                                     ((PlaynGameView) game.getView()).setCurrentSurface(surface);
                                     game.tick();
                                 } catch (RestartGameException e) {
