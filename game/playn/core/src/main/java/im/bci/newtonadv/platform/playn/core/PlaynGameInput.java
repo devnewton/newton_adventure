@@ -35,8 +35,10 @@ import im.bci.jnuit.NuitPreferences;
 import im.bci.jnuit.NuitToolkit;
 import im.bci.jnuit.controls.Action;
 import im.bci.jnuit.controls.ActionActivatedDetector;
+import im.bci.jnuit.controls.Pointer;
 import im.bci.jnuit.playn.controls.KeyControl;
 import im.bci.jnuit.playn.controls.PlaynNuitControls;
+import im.bci.newtonadv.Game;
 import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +46,6 @@ import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 import playn.core.Key;
 import playn.core.PlayN;
-import playn.core.Pointer;
 
 /**
  *
@@ -52,8 +53,6 @@ import playn.core.Pointer;
  */
 public class PlaynGameInput extends AbstractGameInput {
 
-    private ROVector2f mousePos;
-    private boolean mouseButtonDown;
     boolean virtualPadUpDown;
     boolean virtualPadRotateCounterClockwiseDown;
     boolean virtualPadRotateClockwiseDown;
@@ -61,53 +60,24 @@ public class PlaynGameInput extends AbstractGameInput {
     boolean virtualPadRightDown;
     boolean backButtonDown;
     private final PlaynNuitControls controls;
+    private final im.bci.jnuit.controls.Pointer pointer = new Pointer();
 
     public PlaynGameInput(NuitToolkit toolkit, NuitPreferences config, PlaynNuitControls controls) {
         super(toolkit, config);
         this.controls = controls;
-
-        PlayN.pointer().setListener(new Pointer.Listener() {
-
-            @Override
-            public void onPointerStart(Pointer.Event event) {
-                mousePos = eventToMousePos(event);
-                System.out.println("Mouse click at " + event.x() + "," + event.y());
-                mouseButtonDown = true;
-            }
-
-            @Override
-            public void onPointerDrag(Pointer.Event event) {
-                mousePos = eventToMousePos(event);
-                mouseButtonDown = true;
-            }
-
-            @Override
-            public void onPointerCancel(Pointer.Event event) {
-                mousePos = eventToMousePos(event);
-                mouseButtonDown = false;
-            }
-
-            @Override
-            public void onPointerEnd(Pointer.Event event) {
-                mousePos = eventToMousePos(event);
-                mouseButtonDown = false;
-            }
-
-        });
     }
-
-    private Vector2f eventToMousePos(Pointer.Event event) {
-        return new Vector2f(event.x(), PlayN.graphics().height() - event.y());
-    }
-
+    
     @Override
     public ROVector2f getMousePos() {
-        return mousePos;
+        controls.pollPointer(PlayN.graphics().width(), PlayN.graphics().height(), pointer);
+        pointer.setY(PlayN.graphics().height() - pointer.getY());
+        return new Vector2f(pointer.getX(), pointer.getY());
     }
 
     @Override
     public boolean isMouseButtonDown() {
-        return mouseButtonDown;
+        controls.pollPointer(PlayN.graphics().width(), PlayN.graphics().height(), pointer);
+        return pointer.isDown();
     }
 
     void onBackPressed() {
