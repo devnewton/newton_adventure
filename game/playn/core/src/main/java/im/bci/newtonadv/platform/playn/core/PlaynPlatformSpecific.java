@@ -63,7 +63,7 @@ import playn.core.PlayN;
 public class PlaynPlatformSpecific implements IPlatformSpecific {
 
     private final RealWatchedAssets assets = new RealWatchedAssets(new CachingAssets(PlayN.assets()));
-    private final PlaynGameView gameView = new PlaynGameView(assets);
+    private final PlaynGameView gameView;
     private final PlaynGameData data = new PlaynGameData(assets);
     private final NuitToolkit toolkit;
     private final NuitPreferences config;
@@ -75,6 +75,7 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
         NewtonAdventureNuitTranslator translator = new NewtonAdventureNuitTranslator();
         toolkit = new NuitToolkit(new PlaynNuitDisplay(), controls, translator, font, new PlaynNuitRenderer(translator, font), new PlaynNuitAudio());
         config = new PlaynNuitPreferences(controls, "newtonadventure");
+        gameView = new PlaynGameView(assets, config);
         input = new PlaynGameInput(toolkit, config, controls);
         input.setup();
     }

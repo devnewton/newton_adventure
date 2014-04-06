@@ -36,7 +36,6 @@ import im.bci.jnuit.background.ColoredBackground;
 import im.bci.jnuit.widgets.AudioConfigurator;
 import im.bci.jnuit.widgets.Button;
 import im.bci.jnuit.widgets.ControlsConfigurator;
-import im.bci.jnuit.widgets.LanguageConfigurator;
 import im.bci.jnuit.widgets.Stack;
 import im.bci.jnuit.widgets.Table;
 import im.bci.jnuit.widgets.VideoConfigurator;
@@ -62,17 +61,19 @@ public class OptionsGUI extends Stack {
         AbstractGameInput gameInput = platform.getGameInput();
         gameControlsConfigurator = new ControlsConfigurator(toolkit, gameInput.getGameActionList(), gameInput.getDefaultGameActionList());
         menuControlsConfigurator = new ControlsConfigurator(toolkit, toolkit.getMenuActionList(), toolkit.getDefaultMenuActionList());
-       // languageConfigurator = new LanguageConfigurator(toolkit);
+        // languageConfigurator = new LanguageConfigurator(toolkit);
         final List<IMod> mods = platform.listMods();
         optionsMenu = new Table(toolkit);
-        optionsMenu.cell(new Button(toolkit, "options.video") {
+        if (toolkit.canChangeResolution()) {
+            optionsMenu.cell(new Button(toolkit, "options.video") {
 
-            @Override
-            public void onOK() {
-                OptionsGUI.this.show(videoConfigurator);
-            }
-        });
-        optionsMenu.row();
+                @Override
+                public void onOK() {
+                    OptionsGUI.this.show(videoConfigurator);
+                }
+            });
+            optionsMenu.row();
+        }
         optionsMenu.cell(new Button(toolkit, "options.audio") {
 
             @Override
@@ -100,12 +101,12 @@ public class OptionsGUI extends Stack {
         //TODO uncomment when all gui code will use jnuit
         /*optionsMenu.cell(new Button(toolkit, "options.language") {
 
-            @Override
-            public void onOK() {
-                OptionsGUI.this.show(languageConfigurator);
-            }
-        });
-        optionsMenu.row();*/
+         @Override
+         public void onOK() {
+         OptionsGUI.this.show(languageConfigurator);
+         }
+         });
+         optionsMenu.row();*/
         if (!mods.isEmpty()) {
             modChooser = new ModChooser(toolkit, mods);
             optionsMenu.cell(new Button(toolkit, "options.mods") {
