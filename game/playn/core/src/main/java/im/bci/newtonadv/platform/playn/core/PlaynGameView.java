@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.jnuit.NuitPreferences;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
@@ -112,15 +113,17 @@ public class PlaynGameView implements IGameView {
     private Surface surface;
     private final TextFormat textFormat;
     private final Assets assets;
+    private final NuitPreferences config;
 
     public void setCurrentSurface(Surface currentSurface) {
         this.surface = currentSurface;
     }
 
-    PlaynGameView(Assets assets) {
+    PlaynGameView(Assets assets, NuitPreferences config) {
         this.assets = assets;
         textFormat = new TextFormat(PlayN.graphics().createFont("monospaced", Font.Style.BOLD, 24), true);
         textureCache = new PlaynTextureCache(assets);
+        this.config = config;
     }
 
     private void setOrtho2D(Surface surface, float left, float right, float bottom, float top) {
@@ -294,7 +297,9 @@ public class PlaynGameView implements IGameView {
 
     @Override
     public void drawFPS(int nbFps) {
-        //TODO
+        if (config.getBoolean("tweaks.show.fps", false)) {
+            drawRighAlignedText(nbFps + " FPS", surface.width()-1, 0);
+        }
     }
 
     @Override
@@ -551,7 +556,9 @@ public class PlaynGameView implements IGameView {
         surface.save();
         setOrtho2D(surface, World.ortho2DLeft, World.ortho2DRight, World.ortho2DBottom, World.ortho2DTop);
 
-        surface.rotate(-world.getGravityAngle());
+        if(config.getBoolean("tweaks.rotate.view.with.gravity", true)) {
+            surface.rotate(-world.getGravityAngle());
+        }
 
         drawWorldBackground(world, 1.0f);
         ROVector2f heroPos = world.getHero().getPosition();
@@ -587,11 +594,6 @@ public class PlaynGameView implements IGameView {
     @Override
     public ITextureCache getTextureCache() {
         return textureCache;
-    }
-
-    @Override
-    public void toggleFullscreen() {
-        //TODO
     }
 
     @Override

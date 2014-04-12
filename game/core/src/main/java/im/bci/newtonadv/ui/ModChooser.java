@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010 devnewton <devnewton@bci.im>
+ * Copyright (c) 2013 devnewton <devnewton@bci.im>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,47 +29,30 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package im.bci.newtonadv.game;
+package im.bci.newtonadv.ui;
 
-import im.bci.newtonadv.Game;
+import im.bci.jnuit.NuitToolkit;
+import im.bci.jnuit.widgets.Button;
+import im.bci.jnuit.widgets.Select;
+import im.bci.jnuit.widgets.Table;
+import im.bci.newtonadv.platform.interfaces.IMod;
+import java.util.List;
 
-public class StoryboardSequence extends MenuSequence {
+public class ModChooser extends Table {
 
-    private final String music;
-    protected final Button continueButton;
+    Select<IMod> mods;
 
-    public StoryboardSequence(Game game, String texture, String music, final AbstractTransitionException transition) {
-        super(game);
-        this.setBackgroundTexturePath(texture);
-        this.music = music;
-
-        continueButton = new Button() {
+    public ModChooser(NuitToolkit toolkit, final List<IMod> possibleMods) {
+        super(toolkit);
+        mods = new Select<IMod>(toolkit, possibleMods);
+        cell(mods);
+        row();
+        cell(new Button(toolkit, "modchooser.back") {
 
             @Override
-            void activate() throws NormalTransitionException,
-                    ResumeTransitionException, ResumableTransitionException {
-                transition.throwMe();
+            public void onOK() {
+                ModChooser.this.close();
             }
-        };
-        continueButton.offTextureName = game.getButtonFile("bt-continue-off");
-        continueButton.onTextureName = game.getButtonFile("bt-continue-on");
-        continueButton.x = 960;
-        continueButton.y = 700;
-        continueButton.w = 312;
-        continueButton.h = 90;
-        addButton(continueButton);
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        if (music != null) {
-            game.getNuitToolkit().getAudio().playMusic(music);
-        }
-    }
-
-    @Override
-    public void resume() {
-        //nothing
+        });
     }
 }

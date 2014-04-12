@@ -19,7 +19,7 @@ class HelpSequence extends StoryboardSequence {
     @Override
     public void processInputs() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
         super.processInputs();
-        if (game.getInput().isKeyCheatSetAllCompletedDown()) {
+        if (game.getInput().getCheatSetAllCompleted().isActivated()) {
             game.cheatSetAllCompleted();
         }
     }

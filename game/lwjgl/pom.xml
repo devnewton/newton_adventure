@@ -110,24 +110,16 @@ SUCH DAMAGE. */ -->
             <artifactId>newton-adventure-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>im.bci</groupId>
+            <artifactId>jnuit-lwjgl-utils</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl_util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jcraft</groupId>
-            <artifactId>jorbis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
         </dependency>
     </dependencies>
 </project>

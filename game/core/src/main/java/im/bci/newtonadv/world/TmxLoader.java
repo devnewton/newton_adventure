@@ -140,7 +140,7 @@ public class TmxLoader {
         if (null != backgroundTextureFile) {
             world.setBackgroundTexture(game.getView().getTextureCache().getTexture(backgroundTextureFile));
         }
-        game.getSoundCache().playMusicIfEnabled(
+        game.getNuitToolkit().getAudio().playMusic(
                 getFileFromMap(map, "newton_adventure.music"));
 
         world.setIsRotateGravityPossible("true".equals(getMapProperty(map,
@@ -319,11 +319,11 @@ public class TmxLoader {
                         game.getView().loadFromAnimation(
                                 getFileFromMap(map, "newton_adventure.hero")));
                 hero.setJumpSound(
-                        game.getSoundCache().getSound(
+                        game.getNuitToolkit().getAudio().getSound(
                                 game.getData().getFile("jump.wav")));
-                hero.setPickupSound(game.getSoundCache().getSound(
+                hero.setPickupSound(game.getNuitToolkit().getAudio().getSound(
                         game.getData().getFile("pickup.wav")));
-                hero.setHurtSound(game.getSoundCache().getSound(
+                hero.setHurtSound(game.getNuitToolkit().getAudio().getSound(
                         game.getData().getFile("hurt.wav")));
                 Long deadClock = getMapDeadClock(map);
                 if (null != deadClock) {

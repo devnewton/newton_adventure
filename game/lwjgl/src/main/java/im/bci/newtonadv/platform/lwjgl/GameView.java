@@ -35,6 +35,7 @@ import im.bci.newtonadv.platform.lwjgl.launcher.NormalLauncher;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import im.bci.jnuit.NuitPreferences;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.Play;
@@ -94,8 +95,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.phys2d.math.ROVector2f;
@@ -123,41 +122,13 @@ public strictfp class GameView implements IGameView {
     private TextureCache textureCache;
     private GameViewQuality quality = GameViewQuality.DEFAULT;
     private final FileGameData data;
-    private boolean rotateViewWithGravity = true;
     private TrueTypeFont font;
-    private boolean mustDrawFPS = false;
     private final PlatformSpecific platformSpecific;
 
-    GameView(FileGameData data, Properties config, PlatformSpecific platformSpecific) {
+    GameView(FileGameData data, NuitPreferences config, PlatformSpecific platformSpecific) {
         this.data = data;
         this.platformSpecific = platformSpecific;
         initDisplay(config);
-    }
-
-    public boolean isRotateViewWithGravity() {
-        return rotateViewWithGravity;
-    }
-
-    public void setRotateViewWithGravity(boolean rotateViewWithGravity) {
-        this.rotateViewWithGravity = rotateViewWithGravity;
-    }
-
-    public boolean getMustDrawFPS() {
-        return mustDrawFPS;
-    }
-
-    public void setMustDrawFPS(boolean mustDrawFPS) {
-        this.mustDrawFPS = mustDrawFPS;
-    }
-
-    @Override
-    public void toggleFullscreen() {
-        try {
-            Display.setFullscreen(!Display.isFullscreen());
-        } catch (LWJGLException ex) {
-            Logger.getLogger(GameView.class.getName()).log(Level.SEVERE, null,
-                    ex);
-        }
     }
 
     private void doDrawMenuSequence(MenuSequence sequence) {
@@ -276,24 +247,17 @@ public strictfp class GameView implements IGameView {
         }
     }
 
-    private void initDisplay(Properties config) {
-        int targetWidth = Integer.parseInt(config.getProperty("view.width"));
-        int targetHeight = Integer.parseInt(config.getProperty("view.height"));
-        int targetBpp = Integer.parseInt(config.getProperty("view.bpp", ""
-                + Display.getDesktopDisplayMode().getBitsPerPixel()));
-        boolean startFullscreen = Boolean.parseBoolean(config.getProperty(
-                "view.fullscreen", "false"));
-        rotateViewWithGravity = Boolean.parseBoolean(config.getProperty(
-                "view.rotate", "true"));
-        mustDrawFPS = Boolean.parseBoolean(config.getProperty("view.draw.fps", "false"));
-        GameViewQuality newQuality = GameViewQuality.valueOf(config.getProperty("view.quality"));
+    private void initDisplay(NuitPreferences config) {
+        int targetWidth = config.getInt("video.width", 800);
+        int targetHeight = config.getInt("video.height", 600);
+        int targetBpp = Display.getDesktopDisplayMode().getBitsPerPixel();
+        boolean startFullscreen = config.getBoolean("video.fullscreen", false);
+        GameViewQuality newQuality = GameViewQuality.valueOf(config.getString("video.quality", "DEFAULT"));
 
         DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
                 targetBpp);
         if (chosenMode == null) {
-            throw new RuntimeException("Unable to find appropriate display mode. Try to edit"
-                    + PlatformSpecific.getUserOrDefaultConfigFilePath()
-                    + ".\n" + getDisplayModeInfos());
+            throw new RuntimeException("Unable to find appropriate display mode.\n" + getDisplayModeInfos());
         }
         setDisplayMode(startFullscreen, newQuality, chosenMode);
         IconLoader.setIcon();
@@ -323,8 +287,7 @@ public strictfp class GameView implements IGameView {
             }
             Display.setVSyncEnabled(true);
         } catch (LWJGLException e) {
-            throw new RuntimeException("Unable to create display. Try to edit "
-                    + PlatformSpecific.getUserOrDefaultConfigFilePath() + ".\n"
+            throw new RuntimeException("Unable to create display.\n"
                     + getDisplayModeInfos(), e);
         }
 
@@ -380,7 +343,7 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawFPS(int nbFps) {
-        if (mustDrawFPS) {
+        if (platformSpecific.getConfig().getBoolean("tweaks.show.fps", false)) {
             String fps = nbFps + " FPS";
             GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_BLEND);
@@ -1205,7 +1168,7 @@ public strictfp class GameView implements IGameView {
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-        if (rotateViewWithGravity) {
+        if (platformSpecific.getConfig().getBoolean("tweaks.rotate.view.with.gravity", true)) {
             GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
                     1.0f);
         }
@@ -1428,7 +1391,7 @@ public strictfp class GameView implements IGameView {
         GL11.glTranslatef(100 - minimapSize / 1.5f, minimapSize / 1.5f, 0);
 
         GL11.glPushMatrix();
-        if (rotateViewWithGravity) {
+        if (platformSpecific.getConfig().getBoolean("tweaks.rotate.view.with.gravity", true)) {
             GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
                     1.0f);
         }

@@ -31,31 +31,41 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.jnuit.NuitAudio;
+import im.bci.jnuit.NuitControls;
+import im.bci.jnuit.NuitLocale;
+import im.bci.jnuit.NuitPreferences;
+import im.bci.jnuit.NuitToolkit;
+import im.bci.jnuit.NuitTranslator;
+import im.bci.jnuit.lwjgl.LwjglNuitControls;
+import im.bci.jnuit.lwjgl.LwjglNuitDisplay;
+import im.bci.jnuit.lwjgl.LwjglNuitFont;
+import im.bci.jnuit.lwjgl.LwjglNuitPreferences;
+import im.bci.jnuit.lwjgl.LwjglNuitRenderer;
+import im.bci.jnuit.lwjgl.audio.OpenALNuitAudio;
+import im.bci.jnuit.noop.NoopNuitAudio;
+import im.bci.newtonadv.Game;
 import im.bci.newtonadv.GameProgression;
 import im.bci.newtonadv.game.RestartGameException;
 import im.bci.newtonadv.platform.interfaces.IGameData;
-import im.bci.newtonadv.platform.interfaces.IGameInput;
+import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.newtonadv.platform.interfaces.IMod;
-import im.bci.newtonadv.platform.interfaces.IOptionsSequence;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
-import im.bci.newtonadv.platform.interfaces.ISoundCache;
-import im.bci.newtonadv.platform.lwjgl.openal.OpenALSoundCache;
-import im.bci.newtonadv.platform.lwjgl.twl.OptionsSequence;
 import im.bci.newtonadv.score.GameScore;
+import im.bci.newtonadv.ui.NewtonAdventureNuitTranslator;
+import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,35 +78,24 @@ import org.lwjgl.Sys;
 public class PlatformSpecific implements IPlatformSpecific {
 
     private GameView view;
-    private GameInput input;
-    private Properties config;
+    private LwjglGameInput input;
+    private final NuitPreferences config;
     private FileGameData data;
-    private ISoundCache soundCache;
-    private IOptionsSequence options;
+    private NuitToolkit nuitToolkit;
     private final ResourceBundle messages;
+    private final NuitControls controls;
 
     public PlatformSpecific() throws Exception {
         messages = ResourceBundle.getBundle("messages");
 
-        config = new Properties();
-        loadConfig(config);
+        controls = new LwjglNuitControls();
+        config = new LwjglNuitPreferences(controls, "newton-adventure");
 
         createGameData();
-        createSoundCache();
         createGameView();
+        createNuitToolkit();
         createGameInput();
-        createOptionsSequence();
 
-    }
-
-    private ISoundCache createSoundCache() {
-        if (null == data) {
-            throw new RuntimeException("create IGameData before  SoundCache");
-        }
-        if (null == soundCache) {
-            soundCache = new OpenALSoundCache(data, config);
-        }
-        return soundCache;
     }
 
     private GameView createGameView() {
@@ -109,27 +108,18 @@ public class PlatformSpecific implements IPlatformSpecific {
         return view;
     }
 
-    private GameInput createGameInput() throws Exception {
+    private LwjglGameInput createGameInput() throws Exception {
         if (null == input) {
-            input = new GameInput(config);
+            input = new LwjglGameInput(nuitToolkit, config);
+            input.setup();
         }
         return input;
-    }
-
-    public static void loadConfig(Properties conf) {
-        URL configFilePath = getUserOrDefaultConfigFilePath();
-        Logger.getLogger(PlatformSpecific.class.getName()).log(Level.INFO, "Load config from file {0}", configFilePath);
-        try (InputStream f = configFilePath.openStream()) {
-            conf.load(f);
-        } catch (IOException ex) {
-            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, "Cannot load config file " + configFilePath, ex);
-        }
     }
 
     private IGameData createGameData() {
         if (data == null) {
             List<File> dataDirs = new ArrayList<>();
-            IMod mod = findModByName(config.getProperty("newton_adventure.mod"));
+            IMod mod = findModByName(config.getString("newton_adventure.mod", ""));
             if (null != mod) {
                 dataDirs.add(new File(mod.getPath()));
             }
@@ -138,28 +128,6 @@ public class PlatformSpecific implements IPlatformSpecific {
             data.setDataDirs(dataDirs);
         }
         return data;
-    }
-
-    private IOptionsSequence createOptionsSequence() {
-        if (null == view) {
-            throw new RuntimeException(
-                    "create IGameView before IOptionsSequence");
-        }
-        if (null == input) {
-            throw new RuntimeException(
-                    "create IGameInput before IOptionsSequence");
-        }
-        if (null == config) {
-            throw new RuntimeException(
-                    "load config before creating IOptionsSequence");
-        }
-        options = new OptionsSequence(this, view, input, soundCache, config);
-        return options;
-    }
-
-    public static URL getDefaultConfigFilePath() {
-        return PlatformSpecific.class.getClassLoader().getResource(
-                "config.properties");
     }
 
     public static String getUserConfigDirPath() {
@@ -182,10 +150,6 @@ public class PlatformSpecific implements IPlatformSpecific {
         return getUserConfigDirPath();
     }
 
-    public static String getUserConfigFilePath() {
-        return getUserConfigDirPath() + File.separator + "config.properties";
-    }
-
     public static String getUserScoreFilePath() {
         return getUserScoreDirPath() + File.separator + "scores";
     }
@@ -194,51 +158,8 @@ public class PlatformSpecific implements IPlatformSpecific {
         return getUserScoreDirPath() + File.separator + "progression";
     }
 
-    public static URL getUserOrDefaultConfigFilePath() {
-        File f = new File(getUserConfigFilePath());
-        if (f.exists() && f.canRead()) {
-            try {
-                return f.toURI().toURL();
-            } catch (MalformedURLException e) {
-                throw new RuntimeException("Invalid user config file path" + f);
-            }
-        }
-        return getDefaultConfigFilePath();
-    }
-
-    private static void writeConfig(String path, Properties conf) throws FileNotFoundException,
-            IOException {
-        FileOutputStream os = new FileOutputStream(path);
-        try {
-            conf.store(os, "Newton adventure configuration, see "
-                    + PlatformSpecific.getDefaultConfigFilePath()
-                    + " for example and documentation");
-        } finally {
-            os.close();
-        }
-
-    }
-
     @Override
-    public void saveConfig() {
-        saveConfig(config);
-    }
-
-    public static void saveConfig(Properties conf) {
-        File userConfigFile = new File(getUserConfigFilePath());
-        
-        if (!userConfigFile.exists()) {
-            (new File(getUserConfigDirPath())).mkdirs();
-        }
-        try {
-            writeConfig(userConfigFile.getAbsolutePath(), conf);
-        } catch (Exception e) {
-            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.WARNING, "Cannot save config", e);
-        }
-    }
-
-    @Override
-    public IGameInput getGameInput() {
+    public AbstractGameInput getGameInput() {
         return input;
     }
 
@@ -248,18 +169,8 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     @Override
-    public ISoundCache getSoundCache() {
-        return soundCache;
-    }
-
-    @Override
     public IGameData getGameData() {
         return data;
-    }
-
-    @Override
-    public IOptionsSequence getOptionsSequence() {
-        return options;
     }
 
     @Override
@@ -268,10 +179,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     public void close() {
-        if (null != soundCache) {
-            soundCache.stopMusic();
-            soundCache.close();
-        }
+        nuitToolkit.getAudio().stopMusic();
     }
 
     @Override
@@ -455,5 +363,37 @@ public class PlatformSpecific implements IPlatformSpecific {
     @Override
     public long nanoTime() {
         return System.nanoTime();
+    }
+
+    private void createNuitToolkit() {
+        final NuitTranslator nuitTranslator = new NewtonAdventureNuitTranslator();
+        final LwjglNuitFont lwjglNuitFont = new LwjglNuitFont(new Font("Monospace", Font.PLAIN, 24), true, new char[0], new HashMap<Character, BufferedImage>());
+        NuitAudio openALNuitAudio = new OpenALNuitAudio();
+        nuitToolkit = new NuitToolkit(new LwjglNuitDisplay(), controls, nuitTranslator, lwjglNuitFont, new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont), openALNuitAudio);
+        nuitToolkit.setVirtualResolutionWidth(Game.DEFAULT_SCREEN_WIDTH);
+        nuitToolkit.setVirtualResolutionHeight(Game.DEFAULT_SCREEN_HEIGHT);
+        openALNuitAudio.setMusicVolume(config.getFloat("music.volume", 1.0f));
+        openALNuitAudio.setEffectsVolume(config.getFloat("effects.volume", 1.0f));
+        nuitTranslator.setCurrentLocale(Locale.getDefault().getLanguage().equals(new Locale("fr").getLanguage()) ? NuitLocale.FRENCH : NuitLocale.ENGLISH);
+    }
+
+    @Override
+    public NuitToolkit getNuitToolkit() {
+        return nuitToolkit;
+    }
+
+    @Override
+    public NuitPreferences getConfig() {
+        return config;
+    }
+
+    public void saveConfig() {
+        config.putFloat("music.volume", nuitToolkit.getAudio().getMusicVolume());
+        config.putFloat("effects.volume", nuitToolkit.getAudio().getEffectsVolume());
+        config.putInt("video.width", nuitToolkit.getResolution().getWidth());
+        config.putInt("video.height", nuitToolkit.getResolution().getHeight());
+        config.putBoolean("video.fullscreen", nuitToolkit.isFullscreen());
+        input.saveConfig();
+        config.saveConfig();
     }
 }

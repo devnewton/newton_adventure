@@ -24,6 +24,11 @@
             <artifactId>newton-adventure-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>im.bci</groupId>
+            <artifactId>jnuit-playn-utils</artifactId>
+            <version>${jnuit.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

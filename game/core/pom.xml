@@ -75,6 +75,10 @@ SUCH DAMAGE. */ -->
             <groupId>im.bci</groupId>
             <artifactId>libtiled-jpurexml</artifactId>
         </dependency>
+        <dependency>
+            <groupId>im.bci</groupId>
+            <artifactId>jnuit-core</artifactId>
+        </dependency>
     </dependencies>
 </project>
 

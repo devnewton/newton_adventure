@@ -55,6 +55,31 @@
     
         <dependency>
             <groupId>im.bci</groupId>
+            <artifactId>jnuit-core</artifactId>
+            <version>${jnuit.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+ 
+        <dependency>
+            <groupId>im.bci</groupId>
+            <artifactId>jnuit-playn</artifactId>
+            <version>${jnuit.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+       <dependency>
+            <groupId>im.bci</groupId>
+            <artifactId>jnuit-playn-utils</artifactId>
+            <version>${jnuit.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+       <dependency>
+            <groupId>im.bci</groupId>
+            <artifactId>tablelayout</artifactId>
+            <version>${jnuit.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>im.bci</groupId>
             <artifactId>libtiled-jpurexml</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>

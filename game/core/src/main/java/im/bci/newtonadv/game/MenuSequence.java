@@ -51,20 +51,15 @@ public abstract class MenuSequence implements Sequence {
     public static final float ortho2DLeft = 0;
     public static final float ortho2DRight = Game.DEFAULT_SCREEN_WIDTH;
     public static final float ortho2DTop = 0;
-    private ArrayList<Button> buttons = new ArrayList<Button>();
+    private final ArrayList<Button> buttons = new ArrayList<Button>();
     private int currentButtonIndex;
     protected boolean redraw;
-    private boolean horizontalSelectNextButton = false,
-            horizontalSelectPreviousButton = false;
-    private boolean verticalSelectNextButton = false,
-            verticalSelectPreviousButton = false;
-    private boolean activateCurrentButton = false;
     protected int horizontalIncrement = 1;
     protected int verticalIncrement = 1;
     protected Game game;
     private String backgroundTexturePath;
     private ITexture backgroundTexture;
-    private Vector2f oldMousePos = new Vector2f();
+    private final Vector2f oldMousePos = new Vector2f();
     private boolean mouseActivateCurrentButton;
     private Button defaultButton;
 
@@ -98,10 +93,7 @@ public abstract class MenuSequence implements Sequence {
             ResumeTransitionException,
             ResumableTransitionException {
         int oldButtonIndex = currentButtonIndex;
-        if (game.getInput().isKeyRightDown()) {
-            horizontalSelectNextButton = true;
-        } else if (horizontalSelectNextButton) {
-            horizontalSelectNextButton = false;
+        if (game.getInput().getMenuRight().isActivated()) {
             buttons.get(currentButtonIndex).setOff();
             currentButtonIndex += horizontalIncrement;
             if (currentButtonIndex >= buttons.size()) {
@@ -110,10 +102,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (game.getInput().isKeyLeftDown()) {
-            horizontalSelectPreviousButton = true;
-        } else if (horizontalSelectPreviousButton) {
-            horizontalSelectPreviousButton = false;
+        if (game.getInput().getMenuLeft().isActivated()) {
             buttons.get(currentButtonIndex).setOff();
             currentButtonIndex -= horizontalIncrement;
             if (currentButtonIndex < 0) {
@@ -122,10 +111,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (game.getInput().isKeyDownDown()) {
-            verticalSelectNextButton = true;
-        } else if (verticalSelectNextButton) {
-            verticalSelectNextButton = false;
+        if (game.getInput().getMenuDown().isActivated()) {
             buttons.get(currentButtonIndex).setOff();
             currentButtonIndex += verticalIncrement;
             if (currentButtonIndex >= buttons.size()) {
@@ -134,10 +120,7 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (game.getInput().isKeyUpDown()) {
-            verticalSelectPreviousButton = true;
-        } else if (verticalSelectPreviousButton) {
-            verticalSelectPreviousButton = false;
+        if (game.getInput().getMenuUp().isActivated()) {
             buttons.get(currentButtonIndex).setOff();
             currentButtonIndex -= verticalIncrement;
             if (currentButtonIndex < 0) {
@@ -146,11 +129,8 @@ public abstract class MenuSequence implements Sequence {
             buttons.get(currentButtonIndex).setOn();
             redraw = true;
         }
-        if (game.getInput().isKeyReturnDown()) {
-            activateCurrentButton = true;
-        } else if (activateCurrentButton) {
-            activateCurrentButton = false;
-            game.getSoundCache().getSound(game.getData().getFile("select.wav")).play();
+        if (game.getInput().getMenuOk().isActivated()) {
+            game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
             buttons.get(currentButtonIndex).activate();
         }
 
@@ -177,7 +157,7 @@ public abstract class MenuSequence implements Sequence {
                             mouseActivateCurrentButton = true;
                         } else if (mouseActivateCurrentButton) {
                             mouseActivateCurrentButton = false;
-                            game.getSoundCache().getSound(game.getData().getFile("select.wav")).play();
+                            game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
                             button.activate();
                         }
                         break;
@@ -188,7 +168,7 @@ public abstract class MenuSequence implements Sequence {
         }
 
         if (oldButtonIndex != currentButtonIndex) {
-            game.getSoundCache().getSound(game.getData().getFile("select.wav")).play();
+            game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
         }
     }
 
@@ -199,7 +179,6 @@ public abstract class MenuSequence implements Sequence {
             backgroundTexture = textureCache.getTexture(backgroundTexturePath);
         }
         currentButtonIndex = 0;
-        activateCurrentButton = false;
         mouseActivateCurrentButton = false;
         redraw = true;
         if (buttons.contains(defaultButton)) {

@@ -118,7 +118,7 @@ public interface Sequence {
 
     void stop();
 
-    void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
+    void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException, RestartGameException;
 
     void processInputs() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException;
 

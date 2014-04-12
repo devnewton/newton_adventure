@@ -59,7 +59,7 @@ public class NormalLauncher {
         }
 
         try {
-            File nativeDir = new File(RuntimeUtils.getApplicationDir(),"natives");
+            File nativeDir = new File(RuntimeUtils.getApplicationDir(), "natives");
             if (nativeDir.exists()) {
                 String nativePath = nativeDir.getCanonicalPath();
                 System.setProperty("org.lwjgl.librarypath", nativePath);
@@ -106,7 +106,9 @@ public class NormalLauncher {
                         platform.saveConfig();//only save config if everything seems ok
                     }
                 }
+                platform.saveConfig();//only save config if everything seems ok
             } catch (GameCloseException e) {
+                platform.saveConfig();//only save config if everything seems ok
             } catch (Throwable e) {
                 handleError(e, "Unexpected error during newton adventure execution.\n");
             }

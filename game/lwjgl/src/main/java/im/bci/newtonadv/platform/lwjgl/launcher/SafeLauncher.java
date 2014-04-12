@@ -23,6 +23,9 @@
  */
 package im.bci.newtonadv.platform.lwjgl.launcher;
 
+import im.bci.jnuit.NuitControls;
+import im.bci.jnuit.lwjgl.LwjglNuitControls;
+import im.bci.jnuit.lwjgl.LwjglNuitPreferences;
 import im.bci.newtonadv.platform.lwjgl.PlatformSpecific;
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
@@ -234,24 +237,24 @@ public class SafeLauncher extends javax.swing.JDialog {
 
     private void jButtonLaunchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLaunchActionPerformed
         setVisible(false);
-        Properties config = new Properties();
-        PlatformSpecific.loadConfig(config);
+        NuitControls controls = new LwjglNuitControls();
+        LwjglNuitPreferences config = new LwjglNuitPreferences(controls, "newton-adventure");
         if (jRadioButtonStandardVideoMode.isSelected()) {
             SafeLauncherDisplayMode item = (SafeLauncherDisplayMode) jComboBoxStandardVideoModeList.getSelectedItem();
             if (null != item) {
-                config.setProperty("view.width", String.valueOf(item.getDisplayMode().getWidth()));
-                config.setProperty("view.height", String.valueOf(item.getDisplayMode().getHeight()));
-                config.setProperty("view.fullscreen", String.valueOf(jCheckBoxStandardVideoModeFullscreen.isSelected()));
+                config.putInt("video.width", item.getDisplayMode().getWidth());
+                config.putInt("video.height", item.getDisplayMode().getHeight());
+                config.putBoolean("video.fullscreen", jCheckBoxStandardVideoModeFullscreen.isSelected());
                 this.launchMe = true;
             }
         } else if (jRadioButtonCustomVideoMode.isSelected() && null != jSpinnerCustomVideoModeWidth.getValue() && null != jSpinnerCustomVideoModeHeight.getValue()) {
-            config.setProperty("view.width", String.valueOf(jSpinnerCustomVideoModeWidth.getValue()));
-            config.setProperty("view.height", String.valueOf(jSpinnerCustomVideoModeHeight.getValue()));
-            config.setProperty("view.fullscreen", String.valueOf(jCheckBoxStandardVideoModeFullscreen.isSelected()));
+            config.putInt("video.width",(Integer)jSpinnerCustomVideoModeWidth.getValue());
+            config.putInt("video.height", (Integer)jSpinnerCustomVideoModeHeight.getValue());
+            config.putBoolean("video.fullscreen", jCheckBoxStandardVideoModeFullscreen.isSelected());
             this.launchMe = true;
         }
         if(launchMe) {
-            PlatformSpecific.saveConfig(config);
+           config.saveConfig();
         }
 
     }//GEN-LAST:event_jButtonLaunchActionPerformed
