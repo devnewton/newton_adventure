@@ -53,7 +53,9 @@
             </file>
             <file src="../../../../game/lwjgl/src/main/resources/icon.png" targetdir="$INSTALL_PATH" />
             <fileset dir="../../../../licenses" targetdir="$INSTALL_PATH/licenses" override="true"/>
-            <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/data" override="true" />
+            <fileset dir="../../../../game/data" targetdir="$INSTALL_PATH/data" override="true" >
+                <exclude name="**/*.mp3"/>
+            </fileset>
             <fileset dir="../../target/lib" targetdir="$INSTALL_PATH" override="true" />
             <fileset dir="../../target/natives" targetdir="$INSTALL_PATH/natives" override="true">
                 <include name="*.so"/>

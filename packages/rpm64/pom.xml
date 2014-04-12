@@ -26,7 +26,7 @@ THE SOFTWARE. -->
     <parent>
         <groupId>im.bci.newtonadv</groupId>
         <artifactId>newton-adventure</artifactId>
-        <version>1.14</version>
+        <version>1.15-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>newton-adventure-rpm64</artifactId>
@@ -141,6 +141,9 @@ THE SOFTWARE. -->
                                             <sources>
                                                 <source>
                                                     <location>${basedir}/../../game/data</location>
+                                                    <excludes>
+                                                        <exclude>**/*.mp3</exclude>
+                                                    </excludes>
                                                 </source>
                                             </sources>
                                         </mapping>
