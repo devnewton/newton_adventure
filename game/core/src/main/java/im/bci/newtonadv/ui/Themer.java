@@ -32,6 +32,7 @@
 package im.bci.newtonadv.ui;
 
 import im.bci.jnuit.background.ColoredBackground;
+import im.bci.jnuit.focus.ColoredRectangleFocusCursor;
 import im.bci.jnuit.visitors.WidgetVisitor;
 import im.bci.jnuit.widgets.AudioConfigurator;
 import im.bci.jnuit.widgets.Button;
@@ -52,9 +53,10 @@ import im.bci.jnuit.widgets.Widget;
  */
 public class Themer implements WidgetVisitor {
 
-    public static final ColoredBackground BUTTON_FOCUSED_BACKGROUND = new ColoredBackground(0.6f, 0f, 0f, 1f);
-    public static final ColoredBackground BUTTON_SUCKED_FOCUSED_BACKGROUND = new ColoredBackground(0.8f, 0f, 0f, 1f);
-    public static final ColoredBackground BUTTON_BACKGROUND = new ColoredBackground(0.3f, 0f, 0f, 1f);
+    private static final ColoredBackground BUTTON_FOCUSED_BACKGROUND = new ColoredBackground(0.6f, 0f, 0f, 1f);
+    private static final ColoredRectangleFocusCursor BUTTON_FOCUS_CURSOR = new ColoredRectangleFocusCursor(1, 0, 0, 1);
+    private static final ColoredRectangleFocusCursor SELECT_SUCKED_FOCUS_CURSOR = new ColoredRectangleFocusCursor(0.8f, 0, 0, 1);
+    private static final ColoredBackground BUTTON_BACKGROUND = new ColoredBackground(0.3f, 0f, 0f, 1f);
 
     public void theme(Widget w) {
         if (null != w) {
@@ -69,8 +71,8 @@ public class Themer implements WidgetVisitor {
     public void visit(Button widget) {
         widget.setBackground(BUTTON_BACKGROUND);
         widget.setFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
-        widget.setSuckedFocusedBackground(BUTTON_SUCKED_FOCUSED_BACKGROUND);
-        widget.setMustDrawFocus(false);
+        widget.setSuckedFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
+        widget.setFocusCursor(BUTTON_FOCUS_CURSOR);
     }
 
     @Override
@@ -105,8 +107,10 @@ public class Themer implements WidgetVisitor {
     public void visit(Select widget) {
         widget.setBackground(BUTTON_BACKGROUND);
         widget.setFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
-        widget.setFocusedBackground(BUTTON_SUCKED_FOCUSED_BACKGROUND);
-        widget.setMustDrawFocus(false);
+        widget.setSuckedFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
+        widget.setFocusCursor(BUTTON_FOCUS_CURSOR);
+        widget.setSuckedFocusCursor(SELECT_SUCKED_FOCUS_CURSOR);
+
     }
 
     @Override
@@ -117,8 +121,9 @@ public class Themer implements WidgetVisitor {
     public void visit(Toggle widget) {
         widget.setBackground(BUTTON_BACKGROUND);
         widget.setFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
-        widget.setFocusedBackground(BUTTON_SUCKED_FOCUSED_BACKGROUND);
-        widget.setMustDrawFocus(false);
+        widget.setSuckedFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
+        widget.setFocusCursor(BUTTON_FOCUS_CURSOR);
+
     }
 
     @Override
