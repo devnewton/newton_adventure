@@ -55,15 +55,21 @@ public class OptionsGUI extends Stack {
     private ModChooser modChooser;
 
     public OptionsGUI(final NuitToolkit toolkit, final IPlatformSpecific platform) {
+        final Themer themer = new Themer();
         this.setBackground(new ColoredBackground(0, 0, 0, 1));
         videoConfigurator = new VideoConfigurator(toolkit);
+        themer.theme(videoConfigurator);
         audioConfigurator = new AudioConfigurator(toolkit);
+        themer.theme(audioConfigurator);
         AbstractGameInput gameInput = platform.getGameInput();
         gameControlsConfigurator = new ControlsConfigurator(toolkit, gameInput.getGameActionList(), gameInput.getDefaultGameActionList());
+        themer.theme(gameControlsConfigurator);
         menuControlsConfigurator = new ControlsConfigurator(toolkit, toolkit.getMenuActionList(), toolkit.getDefaultMenuActionList());
-        // languageConfigurator = new LanguageConfigurator(toolkit);
+        themer.theme(menuControlsConfigurator);
+// languageConfigurator = new LanguageConfigurator(toolkit);
         final List<IMod> mods = platform.listMods();
         optionsMenu = new Table(toolkit);
+        optionsMenu.defaults().space(10.0f);
         if (toolkit.canChangeResolution()) {
             optionsMenu.cell(new Button(toolkit, "options.video") {
 
@@ -109,6 +115,7 @@ public class OptionsGUI extends Stack {
          optionsMenu.row();*/
         if (!mods.isEmpty()) {
             modChooser = new ModChooser(toolkit, mods);
+            themer.theme(modChooser);
             optionsMenu.cell(new Button(toolkit, "options.mods") {
 
                 @Override
@@ -122,7 +129,9 @@ public class OptionsGUI extends Stack {
 
             @Override
             public void onOK() {
-                OptionsGUI.this.show(new TweaksGUI(toolkit, platform.getConfig()));
+                final TweaksGUI tweaksGUI = new TweaksGUI(toolkit, platform.getConfig());
+                themer.theme(tweaksGUI);
+                OptionsGUI.this.show(tweaksGUI);
             }
         });
         optionsMenu.row();
@@ -134,7 +143,7 @@ public class OptionsGUI extends Stack {
             }
         });
         show(optionsMenu);
-
+        themer.theme(optionsMenu);
     }
 
     public String getSelectedModName() {
