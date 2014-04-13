@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.googlecode.playn</groupId>
     <artifactId>playn-project</artifactId>
-    <version>1.8</version>
+    <version>1.8.5</version>
   </parent>
 
   <groupId>im.bci.newtonadv</groupId>
@@ -14,7 +14,7 @@
   <name>newton-adventure-playn</name>
 
   <properties>
-    <playn.version>1.8</playn.version>
+    <playn.version>1.8.5</playn.version>
     <jnuit.version>0.9-SNAPSHOT</jnuit.version>
   </properties>
 

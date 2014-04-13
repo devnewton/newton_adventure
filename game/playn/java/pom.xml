@@ -34,12 +34,12 @@
             <groupId>com.googlecode.playn</groupId>
             <artifactId>playn-java</artifactId>
             <version>${playn.version}</version>
-            <exclusions>
+          <!--  <exclusions>
                 <exclusion>
                     <groupId>jlayer</groupId>
                     <artifactId>mp3spi</artifactId>        
                 </exclusion>
-            </exclusions>
+            </exclusions>-->
         </dependency>
     
     </dependencies>
