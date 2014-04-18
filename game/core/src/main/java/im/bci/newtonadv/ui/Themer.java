@@ -33,6 +33,7 @@ package im.bci.newtonadv.ui;
 
 import im.bci.jnuit.background.ColoredBackground;
 import im.bci.jnuit.focus.ColoredRectangleFocusCursor;
+import im.bci.jnuit.text.TextColor;
 import im.bci.jnuit.visitors.WidgetVisitor;
 import im.bci.jnuit.widgets.AudioConfigurator;
 import im.bci.jnuit.widgets.Button;
@@ -57,6 +58,7 @@ public class Themer implements WidgetVisitor {
     private static final ColoredRectangleFocusCursor BUTTON_FOCUS_CURSOR = new ColoredRectangleFocusCursor(1, 0, 0, 1);
     private static final ColoredRectangleFocusCursor SELECT_SUCKED_FOCUS_CURSOR = new ColoredRectangleFocusCursor(0.8f, 0, 0, 1);
     private static final ColoredBackground BUTTON_BACKGROUND = new ColoredBackground(0.3f, 0f, 0f, 1f);
+    private static final TextColor YELLOW = new TextColor(1f, 0.88f, 0.12f, 1f);
 
     public void theme(Widget w) {
         if (null != w) {
@@ -73,6 +75,7 @@ public class Themer implements WidgetVisitor {
         widget.setFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
         widget.setSuckedFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
         widget.setFocusCursor(BUTTON_FOCUS_CURSOR);
+        widget.setFocusedTextColor(YELLOW);
     }
 
     @Override
@@ -110,7 +113,7 @@ public class Themer implements WidgetVisitor {
         widget.setSuckedFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
         widget.setFocusCursor(BUTTON_FOCUS_CURSOR);
         widget.setSuckedFocusCursor(SELECT_SUCKED_FOCUS_CURSOR);
-
+        widget.setFocusedTextColor(YELLOW);
     }
 
     @Override
@@ -123,7 +126,7 @@ public class Themer implements WidgetVisitor {
         widget.setFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
         widget.setSuckedFocusedBackground(BUTTON_FOCUSED_BACKGROUND);
         widget.setFocusCursor(BUTTON_FOCUS_CURSOR);
-
+        widget.setFocusedTextColor(YELLOW);
     }
 
     @Override
