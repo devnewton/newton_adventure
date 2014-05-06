@@ -15,7 +15,7 @@
 
   <properties>
     <playn.version>1.8.5</playn.version>
-    <jnuit.version>0.9-SNAPSHOT</jnuit.version>
+    <jnuit.version>0.10</jnuit.version>
   </properties>
 
   <profiles>
