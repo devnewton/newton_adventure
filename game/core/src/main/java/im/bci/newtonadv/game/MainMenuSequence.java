@@ -54,7 +54,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
     }
 
     @Override
-    public void update() {
+    public void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
         super.update();
         specialOccasionLayer.update();
     }

@@ -32,6 +32,7 @@
 package im.bci.newtonadv;
 
 import im.bci.jnuit.NuitToolkit;
+import im.bci.newtonadv.anim.PlayMode;
 import im.bci.newtonadv.game.BonusSequence;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.MainMenuSequence;
@@ -173,6 +174,7 @@ public strictfp class Game {
         loadBonusSequences();
         StoryboardSequence introSequence = new StoryboardSequence(this,
                 data.getFile("intro/devnewton.json"), null, new Sequence.NormalTransitionException(mainMenuSequence), false);
+        introSequence.setBackgroundPlayMode(PlayMode.ONCE);
         introSequence.setBackgroundX1((StoryboardSequence.ortho2DRight + StoryboardSequence.ortho2DLeft) / 2f - 256f);
         introSequence.setBackgroundX2((StoryboardSequence.ortho2DRight + StoryboardSequence.ortho2DLeft) / 2f + 256f);
         introSequence.setBackgroundY1((StoryboardSequence.ortho2DBottom + StoryboardSequence.ortho2DTop) / 2f + 58f);

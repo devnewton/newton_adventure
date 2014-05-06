@@ -72,9 +72,14 @@ public abstract class MenuSequence implements Sequence {
     private final Vector2f oldMousePos = new Vector2f();
     private boolean mouseActivateCurrentButton;
     private Button defaultButton;
+    private PlayMode backgroundPlayMode = PlayMode.LOOP;
 
     public MenuSequence(Game game) {
         this.game = game;
+    }
+
+    public void setBackgroundPlayMode(PlayMode backgroundPlayMode) {
+        this.backgroundPlayMode = backgroundPlayMode;
     }
 
     public float getBackgroundX1() {
@@ -218,7 +223,7 @@ public abstract class MenuSequence implements Sequence {
     public void start() {
         if (null != backgroundTexturePath) {
             try {
-                backgroundTexture = game.getView().loadFromAnimation(backgroundTexturePath).getFirst().start(PlayMode.ONCE);
+                backgroundTexture = game.getView().loadFromAnimation(backgroundTexturePath).getFirst().start(backgroundPlayMode);
             } catch (IOException ex) {
                 Logger.getLogger(MenuSequence.class.getName()).log(Level.SEVERE, null, ex);
             }

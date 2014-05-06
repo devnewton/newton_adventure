@@ -87,7 +87,7 @@ public class ScoreSequence extends MenuSequence {
     }
 
     @Override
-	public void update() {
+	public void update() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
         super.update();
         timeInfos.update(game.nanoTime());
         long newScorePercentToShow = Math.min(100, timeInfos.currentTime * 100 / (10 * 1000000000));
