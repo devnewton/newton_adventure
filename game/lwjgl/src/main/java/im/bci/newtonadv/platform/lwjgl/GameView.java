@@ -132,18 +132,20 @@ public strictfp class GameView implements IGameView {
     }
 
     private void doDrawMenuSequence(MenuSequence sequence) {
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
         GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight,
                 MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
-
         ITexture background = sequence.getBackgroundImage();
         if (background != null) {
+            GL11.glEnable(GL11.GL_BLEND);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, background.getId());
-            final float x1 = MenuSequence.ortho2DLeft;
-            final float x2 = MenuSequence.ortho2DRight;
-            final float y1 = MenuSequence.ortho2DBottom;
-            final float y2 = MenuSequence.ortho2DTop;
+            final float x1 = sequence.getBackgroundX1();
+            final float x2 = sequence.getBackgroundX2();
+            final float y1 = sequence.getBackgroundY1();
+            final float y2 = sequence.getBackgroundY2();
+
             final float u1 = 0.0F;
             final float u2 = 1.0F;
             GL11.glBegin(GL11.GL_QUADS);
@@ -156,10 +158,8 @@ public strictfp class GameView implements IGameView {
             GL11.glTexCoord2f(u1, 1.0F);
             GL11.glVertex2f(x1, y1);
             GL11.glEnd();
-        } else {
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+            GL11.glDisable(GL11.GL_BLEND);
         }
-
         for (Button b : sequence.getButtons()) {
             b.draw();
         }

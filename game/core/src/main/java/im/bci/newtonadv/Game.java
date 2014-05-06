@@ -35,6 +35,7 @@ import im.bci.jnuit.NuitToolkit;
 import im.bci.newtonadv.game.BonusSequence;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.MainMenuSequence;
+import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.PreloaderFadeSequence;
 import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.RestartGameException;
@@ -170,7 +171,13 @@ public strictfp class Game {
             optionsSequence.setNextSequence(mainMenuSequence);
         }
         loadBonusSequences();
-        return mainMenuSequence;
+        StoryboardSequence introSequence = new StoryboardSequence(this,
+                data.getFile("intro/devnewton.json"), null, new Sequence.NormalTransitionException(mainMenuSequence), false);
+        introSequence.setBackgroundX1((StoryboardSequence.ortho2DRight + StoryboardSequence.ortho2DLeft) / 2f - 256f);
+        introSequence.setBackgroundX2((StoryboardSequence.ortho2DRight + StoryboardSequence.ortho2DLeft) / 2f + 256f);
+        introSequence.setBackgroundY1((StoryboardSequence.ortho2DBottom + StoryboardSequence.ortho2DTop) / 2f + 58f);
+        introSequence.setBackgroundY2((StoryboardSequence.ortho2DBottom + StoryboardSequence.ortho2DTop) / 2f - 58f);
+        return introSequence;
     }
 
     public void start() throws IOException {

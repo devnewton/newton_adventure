@@ -36,28 +36,35 @@ import im.bci.newtonadv.Game;
 public class StoryboardSequence extends MenuSequence {
 
     private final String music;
-    protected final Button continueButton;
+    protected Button continueButton;
+    private AbstractTransitionException transition;
 
-    public StoryboardSequence(Game game, String texture, String music, final AbstractTransitionException transition) {
+    public StoryboardSequence(Game game, String texture, String music, final AbstractTransitionException transition, boolean withContinueButton) {
         super(game);
         this.setBackgroundTexturePath(texture);
+        this.transition = transition;
         this.music = music;
+        if (withContinueButton) {
+            continueButton = new Button() {
 
-        continueButton = new Button() {
+                @Override
+                void activate() throws NormalTransitionException,
+                        ResumeTransitionException, ResumableTransitionException {
+                    transition.throwMe();
+                }
+            };
+            continueButton.offTextureName = game.getButtonFile("bt-continue-off");
+            continueButton.onTextureName = game.getButtonFile("bt-continue-on");
+            continueButton.x = 960;
+            continueButton.y = 700;
+            continueButton.w = 312;
+            continueButton.h = 90;
+            addButton(continueButton);
+        }
+    }
 
-            @Override
-            void activate() throws NormalTransitionException,
-                    ResumeTransitionException, ResumableTransitionException {
-                transition.throwMe();
-            }
-        };
-        continueButton.offTextureName = game.getButtonFile("bt-continue-off");
-        continueButton.onTextureName = game.getButtonFile("bt-continue-on");
-        continueButton.x = 960;
-        continueButton.y = 700;
-        continueButton.w = 312;
-        continueButton.h = 90;
-        addButton(continueButton);
+    public StoryboardSequence(Game game, String texture, String music, final AbstractTransitionException transition) {
+        this(game, texture, music, transition, true);
     }
 
     @Override
@@ -67,6 +74,16 @@ public class StoryboardSequence extends MenuSequence {
             game.getNuitToolkit().getAudio().playMusic(music);
         }
     }
+
+    @Override
+    public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
+        super.update();
+        if(null != backgroundTexture && backgroundTexture.isStopped()) {
+            transition.throwMe();
+        }
+    }
+    
+    
 
     @Override
     public void resume() {

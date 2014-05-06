@@ -235,7 +235,6 @@ public class TextureCache implements ITextureCache {
             format = PNGDecoder.Format.RGB;
             pixelFormat = GL11.GL_RGB;
         }
-
         int stride = bpp * texWidth;
         ByteBuffer buffer = ByteBuffer.allocateDirect(stride * texHeight);
         decoder.decode(buffer, stride, format);

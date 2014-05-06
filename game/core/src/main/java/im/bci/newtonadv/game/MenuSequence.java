@@ -33,10 +33,16 @@ package im.bci.newtonadv.game;
 
 import java.util.ArrayList;
 import im.bci.newtonadv.Game;
+import im.bci.newtonadv.anim.AnimationFrame;
+import im.bci.newtonadv.anim.Play;
+import im.bci.newtonadv.anim.PlayMode;
 import im.bci.newtonadv.platform.interfaces.ITexture;
 import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import java.io.IOException;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
@@ -58,13 +64,49 @@ public abstract class MenuSequence implements Sequence {
     protected int verticalIncrement = 1;
     protected Game game;
     private String backgroundTexturePath;
-    private ITexture backgroundTexture;
+    protected Play backgroundTexture;
+    private float backgroundX1 = MenuSequence.ortho2DLeft;
+    private float backgroundX2 = MenuSequence.ortho2DRight;
+    private float backgroundY1 = MenuSequence.ortho2DBottom;
+    private float backgroundY2 = MenuSequence.ortho2DTop;
     private final Vector2f oldMousePos = new Vector2f();
     private boolean mouseActivateCurrentButton;
     private Button defaultButton;
 
     public MenuSequence(Game game) {
         this.game = game;
+    }
+
+    public float getBackgroundX1() {
+        return backgroundX1;
+    }
+
+    public void setBackgroundX1(float backgroundX1) {
+        this.backgroundX1 = backgroundX1;
+    }
+
+    public float getBackgroundX2() {
+        return backgroundX2;
+    }
+
+    public void setBackgroundX2(float backgroundX2) {
+        this.backgroundX2 = backgroundX2;
+    }
+
+    public float getBackgroundY1() {
+        return backgroundY1;
+    }
+
+    public void setBackgroundY1(float backgroundY1) {
+        this.backgroundY1 = backgroundY1;
+    }
+
+    public float getBackgroundY2() {
+        return backgroundY2;
+    }
+
+    public void setBackgroundY2(float backgroundY2) {
+        this.backgroundY2 = backgroundY2;
     }
 
     protected void setDefaultButton(Button b) {
@@ -174,9 +216,12 @@ public abstract class MenuSequence implements Sequence {
 
     @Override
     public void start() {
-        final ITextureCache textureCache = game.getView().getTextureCache();
         if (null != backgroundTexturePath) {
-            backgroundTexture = textureCache.getTexture(backgroundTexturePath);
+            try {
+                backgroundTexture = game.getView().loadFromAnimation(backgroundTexturePath).getFirst().start(PlayMode.ONCE);
+            } catch (IOException ex) {
+                Logger.getLogger(MenuSequence.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         currentButtonIndex = 0;
         mouseActivateCurrentButton = false;
@@ -186,10 +231,11 @@ public abstract class MenuSequence implements Sequence {
         } else {
             setCurrentButton(buttons.isEmpty() ? null : buttons.get(0));
         }
+        final ITextureCache textureCache = game.getView().getTextureCache();
         for (Button button : buttons) {
             button.start();
             button.onTexture = textureCache.getTexture(button.onTextureName);
-            button.offTexture = textureCache.getTexture(button.offTextureName);
+            button.offTexture = game.getView().getTextureCache().getTexture(button.offTextureName);
         }
         final ROVector2f mousePos = game.getInput().getMousePos();
         if (null != mousePos) {
@@ -208,8 +254,10 @@ public abstract class MenuSequence implements Sequence {
     }
 
     @Override
-    public void update() {
-        // NOTHING
+    public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
+        if (null != backgroundTexture) {
+            backgroundTexture.update(game.getFrameTimeInfos().elapsedTime / 1000000);
+        }
     }
 
     protected void addButton(Button b) {
@@ -239,7 +287,13 @@ public abstract class MenuSequence implements Sequence {
     }
 
     public ITexture getBackgroundImage() {
-        return backgroundTexture;
+        if (null != backgroundTexture) {
+            AnimationFrame frame = backgroundTexture.getCurrentFrame();
+            if (null != frame) {
+                return frame.getImage();
+            }
+        }
+        return null;
     }
 
     public abstract class Button {

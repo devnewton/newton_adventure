@@ -11,8 +11,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <lwjgl.version>2.9.0</lwjgl.version>
-        <jnuit.version>0.9-SNAPSHOT</jnuit.version>
+        <lwjgl.version>2.9.1</lwjgl.version>
+        <jnuit.version>0.10</jnuit.version>
     </properties>
     <modules>
         <module>game/core</module>

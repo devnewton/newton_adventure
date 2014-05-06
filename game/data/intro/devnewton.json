@@ -1,0 +1,137 @@
+{
+  "animations": [
+    {
+      "name": "devnewton",
+      "frames": [
+        {
+          "duration": 100,
+          "image": "devnewton00.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton01.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton02.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton03.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton04.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton05.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton06.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton07.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton08.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton09.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton10.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton11.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton12.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton13.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 100,
+          "image": "devnewton14.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        },
+        {
+          "duration": 1000,
+          "image": "devnewton15.png",
+          "u1": 0.0,
+          "v1": 0.0,
+          "u2": 1.0,
+          "v2": 1.0
+        }
+      ]
+    }
+  ]
+}
