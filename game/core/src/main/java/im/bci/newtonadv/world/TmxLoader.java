@@ -141,7 +141,7 @@ public class TmxLoader {
             world.setBackgroundTexture(game.getView().getTextureCache().getTexture(backgroundTextureFile));
         }
         game.getNuitToolkit().getAudio().playMusic(
-                getFileFromMap(map, "newton_adventure.music"));
+                getFileFromMap(map, "newton_adventure.music"), true);
 
         world.setIsRotateGravityPossible("true".equals(getMapProperty(map,
                 "newton_adventure.rotate_gravity_possible")));

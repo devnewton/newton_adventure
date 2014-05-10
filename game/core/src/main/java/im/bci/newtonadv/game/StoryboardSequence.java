@@ -36,6 +36,7 @@ import im.bci.newtonadv.Game;
 public class StoryboardSequence extends MenuSequence {
 
     private final String music;
+    private boolean musicLoop = true;
     protected Button continueButton;
     private AbstractTransitionException transition;
 
@@ -71,22 +72,24 @@ public class StoryboardSequence extends MenuSequence {
     public void start() {
         super.start();
         if (music != null) {
-            game.getNuitToolkit().getAudio().playMusic(music);
+            game.getNuitToolkit().getAudio().playMusic(music, musicLoop);
         }
     }
 
     @Override
     public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
         super.update();
-        if(null != backgroundTexture && backgroundTexture.isStopped()) {
+        if (null != backgroundTexture && backgroundTexture.isStopped()) {
             transition.throwMe();
         }
     }
-    
-    
 
     @Override
     public void resume() {
         //nothing
+    }
+
+    public void setMusicLoop(boolean musicLoop) {
+        this.musicLoop = musicLoop;
     }
 }

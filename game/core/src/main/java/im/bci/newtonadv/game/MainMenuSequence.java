@@ -82,7 +82,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
             }
         };
         playButton.offTextureName = game.getButtonFile("main_menu/bt-play-off");
-        playButton.onTextureName = game.getButtonFile("main_menu/bt-play-on");;
+        playButton.onTextureName = game.getButtonFile("main_menu/bt-play-on");
         playButton.setOn();
         playButton.x = 480;
         playButton.y = 267;
@@ -170,7 +170,7 @@ public strictfp class MainMenuSequence extends MenuSequence {
             setCurrentButton(resumeButton);
         } else {
             setCurrentButton(playButton);
-            game.getNuitToolkit().getAudio().playMusic(game.getData().getFile("lovelace_0.ogg"));
+            game.getNuitToolkit().getAudio().playMusic(game.getData().getFile("lovelace_0.ogg"), true);
         }
     }
 
