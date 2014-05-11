@@ -812,7 +812,7 @@ public class PlaynGameView implements IGameView {
         surface.scale(scaleX, scaleY);
         PlaynTexture background = (PlaynTexture) sequence.getBackgroundImage();
         if (null != background) {
-            surface.drawImage(background.getImage(), 0, 0, gameW, gameH);
+            surface.drawImage(background.getImage(), sequence.getBackgroundX1(), gameH - sequence.getBackgroundY1(), sequence.getBackgroundX2() - sequence.getBackgroundX1(), sequence.getBackgroundY1() - sequence.getBackgroundY2());
         } else {
             surface.clear();
         }
