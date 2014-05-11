@@ -14,6 +14,11 @@ public class PlaynNewtonAdventureGameHtml extends HtmlGame {
     config.mode = HtmlPlatform.Mode.CANVAS;
     HtmlPlatform platform = HtmlPlatform.register(config);
     platform.assets().setPathPrefix("playn/");
-    PlayN.run(new PlaynNewtonAdventureGame());
+    PlayN.run(new PlaynNewtonAdventureGame() {
+
+        @Override
+        protected void finish() {
+        }
+    });
   }
 }

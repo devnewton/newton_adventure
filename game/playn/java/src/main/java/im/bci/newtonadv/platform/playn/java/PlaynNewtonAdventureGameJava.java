@@ -7,10 +7,16 @@ import im.bci.newtonadv.platform.playn.core.PlaynNewtonAdventureGame;
 
 public class PlaynNewtonAdventureGameJava {
 
-  public static void main(String[] args) {
-    JavaPlatform.Config config = new JavaPlatform.Config();
-    // use config to customize the Java platform, if needed
-    JavaPlatform.register(config);
-    PlayN.run(new PlaynNewtonAdventureGame().useVirtualPad(true));
-  }
+    public static void main(String[] args) {
+        JavaPlatform.Config config = new JavaPlatform.Config();
+        config.appName = "Newton Adventure";
+        JavaPlatform.register(config);
+        PlayN.run(new PlaynNewtonAdventureGame() {
+
+            @Override
+            protected void finish() {
+                System.exit(0);
+            }
+        });
+    }
 }

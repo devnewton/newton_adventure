@@ -39,7 +39,7 @@ import playn.core.ImmediateLayer;
 import playn.core.PlayN;
 import playn.core.Surface;
 
-public class PlaynNewtonAdventureGame extends Game.Default {
+public abstract class PlaynNewtonAdventureGame extends Game.Default {
 
     im.bci.newtonadv.Game game;
     private PlaynPlatformSpecific platform;
@@ -94,6 +94,8 @@ public class PlaynNewtonAdventureGame extends Game.Default {
                                     game.tick();
                                     platform.getConfig().saveConfig();//only save config if everything seems ok
                                 }
+                            } else {
+                                finish();
                             }
                         }
                     } catch (Exception ex) {
@@ -119,5 +121,7 @@ public class PlaynNewtonAdventureGame extends Game.Default {
     public void onBackPressed() {
         ((PlaynGameInput) platform.getGameInput()).onBackPressed();
     }
+    
+    protected abstract void finish();
 
 }
