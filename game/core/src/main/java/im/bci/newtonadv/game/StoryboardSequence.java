@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.game;
 
+import im.bci.jnuit.controls.ActionActivatedDetector;
 import im.bci.newtonadv.Game;
 
 public class StoryboardSequence extends MenuSequence {
@@ -39,6 +40,7 @@ public class StoryboardSequence extends MenuSequence {
     private boolean musicLoop = true;
     protected Button continueButton;
     private AbstractTransitionException transition;
+    private ActionActivatedDetector skipActionActivatedDetector;
 
     public StoryboardSequence(Game game, String texture, String music, final AbstractTransitionException transition, boolean withContinueButton) {
         super(game);
@@ -61,6 +63,8 @@ public class StoryboardSequence extends MenuSequence {
             continueButton.w = 312;
             continueButton.h = 90;
             addButton(continueButton);
+        } else {
+            skipActionActivatedDetector = new ActionActivatedDetector(game.getNuitToolkit().getPressAnyKeyAction());
         }
     }
 
@@ -71,8 +75,11 @@ public class StoryboardSequence extends MenuSequence {
     @Override
     public void start() {
         super.start();
-        if (music != null) {
+        if (null != music) {
             game.getNuitToolkit().getAudio().playMusic(music, musicLoop);
+        }
+        if (null != skipActionActivatedDetector) {
+            skipActionActivatedDetector.reset();
         }
     }
 
@@ -81,6 +88,17 @@ public class StoryboardSequence extends MenuSequence {
         super.update();
         if (null != backgroundTexture && backgroundTexture.isStopped()) {
             transition.throwMe();
+        }
+    }
+
+    @Override
+    public void processInputs() throws NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
+        super.processInputs();
+        if (null != skipActionActivatedDetector) {
+            skipActionActivatedDetector.poll();
+            if (skipActionActivatedDetector.isActivated()) {
+                transition.throwMe();
+            }
         }
     }
 
