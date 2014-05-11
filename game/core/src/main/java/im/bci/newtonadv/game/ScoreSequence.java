@@ -100,8 +100,4 @@ public class ScoreSequence extends MenuSequence {
     void setNextSequence(Sequence nextSequence) {
         this.nextSequence = nextSequence;
     }
-
-    @Override
-    public void resume() {
-    }
 }

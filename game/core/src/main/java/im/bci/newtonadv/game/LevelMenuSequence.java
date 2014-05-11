@@ -136,8 +136,4 @@ public class LevelMenuSequence extends MenuSequence {
         questButton.h = LEVEL_MINIATURE_HEIGHT;
         addButton(questButton);
     }
-
-    @Override
-    public void resume() {
-    }
 }

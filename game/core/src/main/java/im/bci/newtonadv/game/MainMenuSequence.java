@@ -183,8 +183,4 @@ public strictfp class MainMenuSequence extends MenuSequence {
         }
 
     }
-
-    @Override
-    public void resume() {
-    }
 }

@@ -102,11 +102,6 @@ public class StoryboardSequence extends MenuSequence {
         }
     }
 
-    @Override
-    public void resume() {
-        //nothing
-    }
-
     public void setMusicLoop(boolean musicLoop) {
         this.musicLoop = musicLoop;
     }

@@ -70,7 +70,7 @@ public abstract class MenuSequence implements Sequence {
     private float backgroundY1 = MenuSequence.ortho2DBottom;
     private float backgroundY2 = MenuSequence.ortho2DTop;
     private final Vector2f oldMousePos = new Vector2f();
-    private boolean mouseActivateCurrentButton;
+    private Boolean mouseActivateCurrentButton;
     private Button defaultButton;
     private PlayMode backgroundPlayMode = PlayMode.LOOP;
 
@@ -139,83 +139,91 @@ public abstract class MenuSequence implements Sequence {
     public void processInputs() throws Sequence.NormalTransitionException,
             ResumeTransitionException,
             ResumableTransitionException {
-        int oldButtonIndex = currentButtonIndex;
-        if (game.getInput().getMenuRight().isActivated()) {
-            buttons.get(currentButtonIndex).setOff();
-            currentButtonIndex += horizontalIncrement;
-            if (currentButtonIndex >= buttons.size()) {
-                currentButtonIndex = 0;
+        if (!buttons.isEmpty()) {
+            int oldButtonIndex = currentButtonIndex;
+            if (game.getInput().getMenuRight().isActivated()) {
+                buttons.get(currentButtonIndex).setOff();
+                currentButtonIndex += horizontalIncrement;
+                if (currentButtonIndex >= buttons.size()) {
+                    currentButtonIndex = 0;
+                }
+                buttons.get(currentButtonIndex).setOn();
+                redraw = true;
             }
-            buttons.get(currentButtonIndex).setOn();
-            redraw = true;
-        }
-        if (game.getInput().getMenuLeft().isActivated()) {
-            buttons.get(currentButtonIndex).setOff();
-            currentButtonIndex -= horizontalIncrement;
-            if (currentButtonIndex < 0) {
-                currentButtonIndex = buttons.size() - 1;
+            if (game.getInput().getMenuLeft().isActivated()) {
+                buttons.get(currentButtonIndex).setOff();
+                currentButtonIndex -= horizontalIncrement;
+                if (currentButtonIndex < 0) {
+                    currentButtonIndex = buttons.size() - 1;
+                }
+                buttons.get(currentButtonIndex).setOn();
+                redraw = true;
             }
-            buttons.get(currentButtonIndex).setOn();
-            redraw = true;
-        }
-        if (game.getInput().getMenuDown().isActivated()) {
-            buttons.get(currentButtonIndex).setOff();
-            currentButtonIndex += verticalIncrement;
-            if (currentButtonIndex >= buttons.size()) {
-                currentButtonIndex = 0;
+            if (game.getInput().getMenuDown().isActivated()) {
+                buttons.get(currentButtonIndex).setOff();
+                currentButtonIndex += verticalIncrement;
+                if (currentButtonIndex >= buttons.size()) {
+                    currentButtonIndex = 0;
+                }
+                buttons.get(currentButtonIndex).setOn();
+                redraw = true;
             }
-            buttons.get(currentButtonIndex).setOn();
-            redraw = true;
-        }
-        if (game.getInput().getMenuUp().isActivated()) {
-            buttons.get(currentButtonIndex).setOff();
-            currentButtonIndex -= verticalIncrement;
-            if (currentButtonIndex < 0) {
-                currentButtonIndex = buttons.size() - 1;
+            if (game.getInput().getMenuUp().isActivated()) {
+                buttons.get(currentButtonIndex).setOff();
+                currentButtonIndex -= verticalIncrement;
+                if (currentButtonIndex < 0) {
+                    currentButtonIndex = buttons.size() - 1;
+                }
+                buttons.get(currentButtonIndex).setOn();
+                redraw = true;
             }
-            buttons.get(currentButtonIndex).setOn();
-            redraw = true;
-        }
-        if (game.getInput().getMenuOk().isActivated()) {
-            game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
-            buttons.get(currentButtonIndex).activate();
-        }
+            if (game.getInput().getMenuOk().isActivated()) {
+                game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
+                buttons.get(currentButtonIndex).activate();
+            }
 
-        ROVector2f mousePos = game.getInput().getMousePos();
-        if (null != mousePos) {
-            float viewWidth = game.getView().getWidth();
-            float viewHeight = game.getView().getHeight();
-            if (viewWidth != 0.0f && viewHeight != 0.0f) {
-                float mouseX = mousePos.getX() * ortho2DRight / viewWidth;
-                float mouseY = ortho2DBottom
-                        - (mousePos.getY() * ortho2DBottom / viewHeight);
-                for (Button button : buttons) {
-                    if (mouseX > button.x && mouseX < (button.x + button.w)
-                            && mouseY > button.y
-                            && mouseY < (button.y + button.h)) {
-                        if ((oldMousePos.getX() != mousePos.getX() || oldMousePos
-                                .getY() != mousePos.getY())
-                                || game.getInput().isMouseButtonDown()) {
-                            buttons.get(currentButtonIndex).setOff();
-                            currentButtonIndex = buttons.indexOf(button);
-                            button.setOn();
+            ROVector2f mousePos = game.getInput().getMousePos();
+            if (null != mousePos) {
+                float viewWidth = game.getView().getWidth();
+                float viewHeight = game.getView().getHeight();
+                if (viewWidth != 0.0f && viewHeight != 0.0f) {
+                    float mouseX = mousePos.getX() * ortho2DRight / viewWidth;
+                    float mouseY = ortho2DBottom
+                            - (mousePos.getY() * ortho2DBottom / viewHeight);
+                    for (Button button : buttons) {
+                        if (mouseX > button.x && mouseX < (button.x + button.w)
+                                && mouseY > button.y
+                                && mouseY < (button.y + button.h)) {
+                            if ((oldMousePos.getX() != mousePos.getX() || oldMousePos
+                                    .getY() != mousePos.getY())
+                                    || game.getInput().isMouseButtonDown()) {
+                                buttons.get(currentButtonIndex).setOff();
+                                currentButtonIndex = buttons.indexOf(button);
+                                button.setOn();
+                            }
+                            if (null == mouseActivateCurrentButton) {
+                                if(!game.getInput().isMouseButtonDown()) {
+                                    mouseActivateCurrentButton = false;
+                                }
+                            } else {
+                                if (game.getInput().isMouseButtonDown()) {
+                                    mouseActivateCurrentButton = true;
+                                } else if (mouseActivateCurrentButton) {
+                                    mouseActivateCurrentButton = false;
+                                    game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
+                                    button.activate();
+                                }
+                            }
+                            break;
                         }
-                        if (game.getInput().isMouseButtonDown()) {
-                            mouseActivateCurrentButton = true;
-                        } else if (mouseActivateCurrentButton) {
-                            mouseActivateCurrentButton = false;
-                            game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
-                            button.activate();
-                        }
-                        break;
                     }
                 }
-            }
-            oldMousePos.set(mousePos);
-        }
+                oldMousePos.set(mousePos);
 
-        if (oldButtonIndex != currentButtonIndex) {
-            game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
+            }
+            if (oldButtonIndex != currentButtonIndex) {
+                game.getNuitToolkit().getAudio().getSound(game.getData().getFile("select.wav")).play();
+            }
         }
     }
 
@@ -229,7 +237,7 @@ public abstract class MenuSequence implements Sequence {
             }
         }
         currentButtonIndex = 0;
-        mouseActivateCurrentButton = false;
+        mouseActivateCurrentButton = null;
         redraw = true;
         if (buttons.contains(defaultButton)) {
             setCurrentButton(defaultButton);
@@ -256,6 +264,11 @@ public abstract class MenuSequence implements Sequence {
             button.onTexture = null;
             button.offTexture = null;
         }
+    }
+
+    @Override
+    public void resume() {
+        mouseActivateCurrentButton = null;
     }
 
     @Override

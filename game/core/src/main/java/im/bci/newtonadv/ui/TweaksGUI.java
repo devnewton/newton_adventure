@@ -42,6 +42,7 @@ public class TweaksGUI extends Table {
 
     public TweaksGUI(NuitToolkit toolkit, final NuitPreferences config) {
         super(toolkit);
+        this.defaults().expand();
         cell(new Label(toolkit, "tweaks.show.fps"));
         final Toggle mustDrawFps = new Toggle(toolkit);
         mustDrawFps.setEnabled(config.getBoolean("tweaks.show.fps", false));

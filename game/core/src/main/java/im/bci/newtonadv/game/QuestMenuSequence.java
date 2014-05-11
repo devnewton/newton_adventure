@@ -204,8 +204,4 @@ public class QuestMenuSequence extends MenuSequence {
         }
 
     }
-
-    @Override
-    public void resume() {
-    }
 }

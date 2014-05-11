@@ -37,7 +37,6 @@ import im.bci.newtonadv.game.BonusSequence;
 import im.bci.newtonadv.game.FadeSequence;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.MainMenuSequence;
-import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.PreloaderFadeSequence;
 import im.bci.newtonadv.game.QuestMenuSequence;
 import im.bci.newtonadv.game.RestartGameException;
@@ -156,7 +155,7 @@ public strictfp class Game {
         getNuitToolkit().getAudio().clearUseless();
     }
 
-    void stopGame() {
+    protected void stopGame() {
         running = false;
         getView().getTextureCache().clearAll();
         getNuitToolkit().getAudio().stopMusic();
