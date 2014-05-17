@@ -39,7 +39,7 @@ import playn.core.ImmediateLayer;
 import playn.core.PlayN;
 import playn.core.Surface;
 
-public abstract class PlaynNewtonAdventureGame extends Game.Default {
+public abstract class PlaynNewtonAdventureGame extends Game.Default implements PlayN.LifecycleListener {
 
     im.bci.newtonadv.Game game;
     private PlaynPlatformSpecific platform;
@@ -85,7 +85,7 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default {
                                     if (null != virtualPad) {
                                         virtualPad.update(game);
                                     }
-                                    ((PlaynNuitRenderer)platform.getNuitToolkit().getRenderer()).setSurface(surface);
+                                    ((PlaynNuitRenderer) platform.getNuitToolkit().getRenderer()).setSurface(surface);
                                     ((PlaynGameView) game.getView()).setCurrentSurface(surface);
                                     game.tick();
                                 } catch (RestartGameException e) {
@@ -104,6 +104,7 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default {
                 }
             });
             PlayN.graphics().rootLayer().add(immediateLayer);
+            PlayN.setLifecycleListener(this);
         } catch (Exception ex) {
             throw new RuntimeException("Error during init", ex);
         }
@@ -121,7 +122,20 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default {
     public void onBackPressed() {
         ((PlaynGameInput) platform.getGameInput()).onBackPressed();
     }
-    
+
     protected abstract void finish();
+
+    @Override
+    public void onExit() {
+        platform.getConfig().saveConfig();
+    }
+
+    @Override
+    public void onPause() {
+    }
+
+    @Override
+    public void onResume() {
+    }
 
 }
