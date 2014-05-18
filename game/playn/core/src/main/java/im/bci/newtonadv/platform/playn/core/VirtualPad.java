@@ -31,11 +31,13 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.jnuit.controls.Control;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.BonusSequence;
 import im.bci.newtonadv.game.LevelSequence;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import playn.core.GroupLayer;
 import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.Layer;
@@ -50,21 +52,72 @@ import playn.core.util.Callback;
 public class VirtualPad {
 
     private static final Logger LOGGER = Logger.getLogger(VirtualPad.class.getName());
-    private final PlaynPlatformSpecific platform;
+    private final RealWatchedAssets assets;
     private ImageLayer virtualPadUp;
     private Layer virtualPadRight;
-    private ImageLayer virtualPadLeft;
-    private ImageLayer virtualPadRotateClockwise;
-    private ImageLayer virtualPadRotateCounterClockwise;
+    private Layer virtualPadLeft;
+    private Layer virtualPadRotateClockwise;
+    private Layer virtualPadRotateCounterClockwise;
+    private final VirtualControl virtualControlRight = new VirtualControl("Virtual right");
+    private final VirtualControl virtualControlLeft = new VirtualControl("Virtual left");
+    private final VirtualControl virtualControlUp = new VirtualControl("Virtual up");
+    private final VirtualControl virtualControlRotateClockwise = new VirtualControl("Virtual rotate clockwise");
+    private final VirtualControl virtualControlRotateCounterClockwise = new VirtualControl("Virtual rotate counterclockwise");
 
-    public VirtualPad(PlaynPlatformSpecific platform) {
-        this.platform = platform;
+    private void deleteVirtualLayer() {
+        GroupLayer rootLayer = PlayN.graphics().rootLayer();
+        rootLayer.remove(virtualPadLeft);
+        rootLayer.remove(virtualPadRight);
+        rootLayer.remove(virtualPadRotateClockwise);
+        rootLayer.remove(virtualPadRotateCounterClockwise);
+        rootLayer.remove(virtualPadUp);
+    }
+
+    private static class VirtualControl implements Control {
+
+        private final String name;
+        float value;
+
+        public VirtualControl(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getControllerName() {
+            return "Virtual pad";
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public float getDeadZone() {
+            return 0.1f;
+        }
+
+        @Override
+        public float getValue() {
+            return value;
+        }
+
+    }
+
+    public VirtualPad(RealWatchedAssets assets) {
+        this.assets = assets;
         createVirtualPadLayer();
+    }
+    
+    public void show(boolean show) {
+        deleteVirtualLayer();
+        if(show) {
+            createVirtualPadLayer();
+        }
     }
 
     private void createVirtualPadLayer() {
-        final PlaynGameInput input = (PlaynGameInput) platform.getGameInput();
-        final Image upImage = platform.getAssets().getImage("images/virtualpad/up.png");
+        final Image upImage = assets.getImage("images/virtualpad/up.png");
         upImage.addCallback(new Callback<Image>() {
 
             @Override
@@ -78,12 +131,12 @@ public class VirtualPad {
 
                     @Override
                     public void onPointerStart(Pointer.Event event) {
-                        input.virtualPadUpDown = true;
+                        virtualControlUp.value = 1f;
                     }
 
                     @Override
                     public void onPointerEnd(Pointer.Event event) {
-                        input.virtualPadUpDown = false;
+                        virtualControlUp.value = 0f;
                     }
                 });
                 PlayN.graphics().rootLayer().add(virtualPadUp);
@@ -96,7 +149,7 @@ public class VirtualPad {
 
         });
 
-        final Image rotateCounterClockwiseImage = platform.getAssets().getImage("images/virtualpad/rotate_counter_clockwise.png");
+        final Image rotateCounterClockwiseImage = assets.getImage("images/virtualpad/rotate_counter_clockwise.png");
         rotateCounterClockwiseImage.addCallback(new Callback<Image>() {
 
             @Override
@@ -110,12 +163,12 @@ public class VirtualPad {
 
                     @Override
                     public void onPointerStart(Pointer.Event event) {
-                        input.virtualPadRotateCounterClockwiseDown = true;
+                        virtualControlRotateCounterClockwise.value = 1f;
                     }
 
                     @Override
                     public void onPointerEnd(Pointer.Event event) {
-                        input.virtualPadRotateCounterClockwiseDown = false;
+                        virtualControlRotateCounterClockwise.value = 0f;
                     }
                 });
                 PlayN.graphics().rootLayer().add(virtualPadRotateCounterClockwise);
@@ -128,7 +181,7 @@ public class VirtualPad {
 
         });
 
-        final Image leftImage = platform.getAssets().getImage("images/virtualpad/left.png");
+        final Image leftImage = assets.getImage("images/virtualpad/left.png");
         leftImage.addCallback(new Callback<Image>() {
 
             @Override
@@ -142,12 +195,12 @@ public class VirtualPad {
 
                     @Override
                     public void onPointerStart(Pointer.Event event) {
-                        input.virtualPadLeftDown = true;
+                        virtualControlLeft.value = 1f;
                     }
 
                     @Override
                     public void onPointerEnd(Pointer.Event event) {
-                        input.virtualPadLeftDown = false;
+                        virtualControlLeft.value = 0f;
                     }
                 });
                 PlayN.graphics().rootLayer().add(virtualPadLeft);
@@ -159,7 +212,7 @@ public class VirtualPad {
             }
         });
 
-        final Image rightImage = platform.getAssets().getImage("images/virtualpad/right.png");
+        final Image rightImage = assets.getImage("images/virtualpad/right.png");
         rightImage.addCallback(new Callback<Image>() {
 
             @Override
@@ -173,12 +226,12 @@ public class VirtualPad {
 
                     @Override
                     public void onPointerStart(Pointer.Event event) {
-                        input.virtualPadRightDown = true;
+                        virtualControlRight.value = 1f;
                     }
 
                     @Override
                     public void onPointerEnd(Pointer.Event event) {
-                        input.virtualPadRightDown = false;
+                        virtualControlRight.value = 0f;
                     }
                 });
                 PlayN.graphics().rootLayer().add(virtualPadRight);
@@ -190,7 +243,7 @@ public class VirtualPad {
             }
         });
 
-        final Image rotateClockwiseImage = platform.getAssets().getImage("images/virtualpad/rotate_clockwise.png");
+        final Image rotateClockwiseImage = assets.getImage("images/virtualpad/rotate_clockwise.png");
         rotateClockwiseImage.addCallback(new Callback<Image>() {
 
             @Override
@@ -204,12 +257,12 @@ public class VirtualPad {
 
                     @Override
                     public void onPointerStart(Pointer.Event event) {
-                        input.virtualPadRotateClockwiseDown = true;
+                        virtualControlRotateClockwise.value = 1f;
                     }
 
                     @Override
                     public void onPointerEnd(Pointer.Event event) {
-                        input.virtualPadRotateClockwiseDown = false;
+                        virtualControlRotateClockwise.value = 0f;
                     }
                 });
                 PlayN.graphics().rootLayer().add(virtualPadRotateClockwise);
@@ -220,6 +273,26 @@ public class VirtualPad {
                 LOGGER.log(Level.SEVERE, "Cannot load images/virtualpad/rotate_clockwise.png", cause);
             }
         });
+    }
+
+    public Control getVirtualControlRight() {
+        return virtualControlRight;
+    }
+
+    public Control getVirtualControlLeft() {
+        return virtualControlLeft;
+    }
+
+    public Control getVirtualControlUp() {
+        return virtualControlUp;
+    }
+
+    public Control getVirtualControlRotateClockwise() {
+        return virtualControlRotateClockwise;
+    }
+
+    public Control getVirtualControlRotateCounterClockwise() {
+        return virtualControlRotateCounterClockwise;
     }
 
     void update(Game game) {

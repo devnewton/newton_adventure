@@ -17,6 +17,6 @@ public class PlaynNewtonAdventureGameJava {
             protected void finish() {
                 System.exit(0);
             }
-        });
+        }.useVirtualPad(true));
     }
 }

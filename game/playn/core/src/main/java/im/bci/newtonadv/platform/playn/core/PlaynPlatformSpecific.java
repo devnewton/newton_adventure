@@ -66,6 +66,7 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
     private final NuitToolkit toolkit;
     private final NuitPreferences config;
     private final AbstractGameInput input;
+    private final VirtualPad virtualPad;
 
     public PlaynPlatformSpecific() {
         PlaynNuitControls controls = new PlaynNuitControls();
@@ -74,8 +75,13 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
         toolkit = new NuitToolkit(new PlaynNuitDisplay(), controls, translator, font, new PlaynNuitRenderer(translator, font), new PlaynNuitAudio());
         config = new PlaynNuitPreferences(controls, "newtonadventure");
         gameView = new PlaynGameView(assets, config);
-        input = new PlaynGameInput(toolkit, config, controls);
+        virtualPad = new VirtualPad(assets);
+        input = new PlaynGameInput(toolkit, config, controls, virtualPad);
         input.setup();
+    }
+
+    public VirtualPad getVirtualPad() {
+        return virtualPad;
     }
 
     @Override

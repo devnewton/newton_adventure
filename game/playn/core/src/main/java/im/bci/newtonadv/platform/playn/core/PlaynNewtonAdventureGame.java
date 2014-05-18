@@ -43,8 +43,7 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default implements P
 
     im.bci.newtonadv.Game game;
     private PlaynPlatformSpecific platform;
-    private VirtualPad virtualPad;
-
+    
     public PlaynNewtonAdventureGame() {
         super(1000 / 60);
     }
@@ -54,11 +53,7 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default implements P
 
             @Override
             public void run() {
-                if (useVirtualPad) {
-                    virtualPad = new VirtualPad(platform);
-                } else {
-                    virtualPad = null;
-                }
+                platform.getVirtualPad().show(useVirtualPad);
             }
         });
         return this;
@@ -82,9 +77,7 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default implements P
                                 }
                             } else if (game.isRunning()) {
                                 try {
-                                    if (null != virtualPad) {
-                                        virtualPad.update(game);
-                                    }
+                                    platform.getVirtualPad().update(game);
                                     ((PlaynNuitRenderer) platform.getNuitToolkit().getRenderer()).setSurface(surface);
                                     ((PlaynGameView) game.getView()).setCurrentSurface(surface);
                                     game.tick();
