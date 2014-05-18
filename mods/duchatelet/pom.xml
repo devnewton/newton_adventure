@@ -26,7 +26,7 @@ SUCH DAMAGE. */ -->
     <parent>
         <groupId>im.bci.newtonadv</groupId>
 	<artifactId>newton-adventure</artifactId>
-	<version>1.15-SNAPSHOT</version>
+	<version>1.15</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>newton-adventure-mod-duchatelet</artifactId>

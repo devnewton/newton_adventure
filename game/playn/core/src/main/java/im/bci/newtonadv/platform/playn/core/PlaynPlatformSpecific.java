@@ -31,7 +31,6 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
-import im.bci.jnuit.NuitControls;
 import im.bci.jnuit.NuitPreferences;
 import im.bci.jnuit.NuitToolkit;
 import im.bci.jnuit.playn.PlaynNuitAudio;
@@ -51,7 +50,6 @@ import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.ui.NewtonAdventureNuitTranslator;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.text.StyleConstants;
 import playn.core.CachingAssets;
 import playn.core.Font;
 import playn.core.PlayN;

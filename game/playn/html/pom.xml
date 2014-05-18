@@ -6,7 +6,7 @@
     <parent>
         <groupId>im.bci.newtonadv</groupId>
         <artifactId>playn</artifactId>
-        <version>1.15-SNAPSHOT</version>
+        <version>1.15</version>
     </parent>
 
     <artifactId>playn-html</artifactId>
@@ -81,13 +81,13 @@
         <dependency>
             <groupId>im.bci</groupId>
             <artifactId>libtiled-jpurexml</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.4</version>
         </dependency>
         <dependency>
             <groupId>im.bci</groupId>
             <artifactId>libtiled-jpurexml</artifactId>
             <classifier>sources</classifier>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.4</version>
         </dependency>
         <dependency>
             <groupId>com.github.asilvestre</groupId>
