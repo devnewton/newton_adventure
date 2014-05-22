@@ -44,18 +44,20 @@ import playn.core.gl.IndexedTrisShader;
  */
 public class DaltonShader extends IndexedTrisShader {
 
-    public enum BlindnessFilter {
+    public enum BlindnessType {
 
         PROTANOPIA,
         DEUTERANOPIA,
         TRITANOPIA
     }
 
-    private BlindnessFilter blindnessFilter = BlindnessFilter.TRITANOPIA;
+    private BlindnessType blindnessFilter = BlindnessType.TRITANOPIA;
+    private BlindnessType blindnessVision = BlindnessType.TRITANOPIA;
 
-    public DaltonShader(GLContext ctx, BlindnessFilter blindnessFilter) {
+    public DaltonShader(GLContext ctx, BlindnessType blindnessFilter, BlindnessType blindnessVision) {
         super(ctx);
         this.blindnessFilter = blindnessFilter;
+        this.blindnessVision = blindnessVision;
     }
 
     @Override
@@ -91,6 +93,33 @@ public class DaltonShader extends IndexedTrisShader {
             blindnessFilterData = "const mat3 RGBtoOpponentMat = mat3(0.2814, -0.0971, -0.0930, 0.6938, 0.1458,-0.2529, 0.0638, -0.0250, 0.4665);\n"
                     + "const mat3 OpponentToRGBMat = mat3(1.1677, 0.9014, 0.7214, -6.4315, 2.5970, 0.1257, -0.5044, 0.0159, 2.0517);\n";
         }
+        String blindnessVisionData = "";
+        String blindnessVisionCode = "";
+        if (blindnessVision != null) {
+            switch (blindnessVision) {
+                case PROTANOPIA: {
+                    blindnessVisionData = "const vec4 blindVisionR = vec4( 0.20,  0.99, -0.19, 0.0);\n"
+                            + "const vec4 blindVisionG = vec4( 0.16,  0.79,  0.04, 0.0);\n"
+                            + "const vec4 blindVisionB = vec4( 0.01, -0.01,  1.00, 0.0);\n";
+                    break;
+                }
+                case DEUTERANOPIA: {
+                    blindnessVisionData = "const vec4 blindVisionR = vec4( 0.43,  0.72, -0.15, 0.0 );\n"
+                            + "const vec4 blindVisionG = vec4( 0.34,  0.57,  0.09, 0.0 );\n"
+                            + "const vec4 blindVisionB = vec4(-0.02,  0.03,  1.00, 0.0 );\n";
+                    break;
+                }
+                case TRITANOPIA: {
+                    blindnessVisionData = "const vec4 blindVisionR = vec4( 0.97,  0.11, -0.08, 0.0 );\n"
+                            + "const vec4 blindVisionG = vec4( 0.02,  0.82,  0.16, 0.0 );\n"
+                            + "const vec4 blindVisionB = vec4(-0.06,  0.88,  0.18, 0.0 );\n";
+                    break;
+                }
+                default:
+                    throw new RuntimeException("Color vision not implemented for " + blindnessVision);
+            }
+            blindnessVisionCode = "fragColor = vec4(dot(fragColor, blindVisionR), dot(fragColor, blindVisionG), dot(fragColor, blindVisionB), fragColor.a);\n";
+        }
         String program
                 = "#ifdef GL_ES                                          \n"
                 + "precision mediump float;                              \n"
@@ -99,11 +128,13 @@ public class DaltonShader extends IndexedTrisShader {
                 + "varying vec4 v_Color;                                 \n"
                 + "uniform sampler2D u_Texture;                          \n"
                 + blindnessFilterData
+                + blindnessVisionData
                 + "void main()                                           \n"
                 + "{                                                     \n"
                 + "  vec4 fragColor = texture2D(u_Texture, v_TexCoord);  \n"
                 + "  fragColor *= v_Color;                               \n"
                 + blindnessFilterCode
+                + blindnessVisionCode
                 + "  gl_FragColor = fragColor;                           \n"
                 + "}                                                     \n";
 

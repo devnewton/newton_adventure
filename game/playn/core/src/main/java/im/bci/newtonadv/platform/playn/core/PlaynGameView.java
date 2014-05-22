@@ -134,8 +134,9 @@ public class PlaynGameView implements IGameView {
         shaders.put("NORMAL", null);
         final GLContext ctx = PlayN.graphics().ctx();
         shaders.put("256 SHADES OF GRAY", new GrayscaleShader(ctx));
-        for (DaltonShader.BlindnessFilter bf : DaltonShader.BlindnessFilter.values()) {
-            shaders.put(bf.toString(), new DaltonShader(ctx, bf));
+        for (DaltonShader.BlindnessType bf : DaltonShader.BlindnessType.values()) {
+            shaders.put(bf.toString() + " CORRECTION", new DaltonShader(ctx, bf, null));
+            shaders.put(bf.toString() + " SIMULATION", new DaltonShader(ctx, null, bf));
         }
     }
 
