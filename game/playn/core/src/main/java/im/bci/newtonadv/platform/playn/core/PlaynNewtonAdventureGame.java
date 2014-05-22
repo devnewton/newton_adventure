@@ -62,6 +62,7 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default implements P
     @Override
     public void init() {
         try {
+            PlayN.setPropagateEvents(true);
             platform = new PlaynPlatformSpecific();
 
             ImmediateLayer immediateLayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {

@@ -19,6 +19,6 @@ public class PlaynNewtonAdventureGameHtml extends HtmlGame {
         @Override
         protected void finish() {
         }
-    });
+    }.useVirtualPad(true)));
   }
 }

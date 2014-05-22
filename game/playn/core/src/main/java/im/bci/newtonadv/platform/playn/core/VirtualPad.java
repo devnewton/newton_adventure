@@ -32,6 +32,7 @@
 package im.bci.newtonadv.platform.playn.core;
 
 import im.bci.jnuit.controls.Control;
+import im.bci.jnuit.timed.OneShotTimedAction;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.BonusSequence;
 import im.bci.newtonadv.game.LevelSequence;
@@ -63,15 +64,9 @@ public class VirtualPad {
     private final VirtualControl virtualControlUp = new VirtualControl("Virtual up");
     private final VirtualControl virtualControlRotateClockwise = new VirtualControl("Virtual rotate clockwise");
     private final VirtualControl virtualControlRotateCounterClockwise = new VirtualControl("Virtual rotate counterclockwise");
-
-    private void deleteVirtualLayer() {
-        GroupLayer rootLayer = PlayN.graphics().rootLayer();
-        rootLayer.remove(virtualPadLeft);
-        rootLayer.remove(virtualPadRight);
-        rootLayer.remove(virtualPadRotateClockwise);
-        rootLayer.remove(virtualPadRotateCounterClockwise);
-        rootLayer.remove(virtualPadUp);
-    }
+    public static final float fadingDuration = 20f;
+    private static OneShotTimedAction fadingAction = new OneShotTimedAction(0f);
+    private GroupLayer virtualPadLayer;
 
     private static class VirtualControl implements Control {
 
@@ -108,16 +103,21 @@ public class VirtualPad {
         this.assets = assets;
         createVirtualPadLayer();
     }
-    
+
     public void show(boolean show) {
-        deleteVirtualLayer();
-        if(show) {
-            createVirtualPadLayer();
-        }
+        virtualPadLayer.setVisible(show);
     }
 
     private void createVirtualPadLayer() {
         final Image upImage = assets.getImage("images/virtualpad/up.png");
+        virtualPadLayer = PlayN.graphics().createGroupLayer();
+        PlayN.graphics().rootLayer().addListener(new Pointer.Adapter() {
+
+            @Override
+            public void onPointerStart(Pointer.Event event) {
+                fadingAction = new OneShotTimedAction(fadingDuration);
+            }
+        });
         upImage.addCallback(new Callback<Image>() {
 
             @Override
@@ -139,7 +139,7 @@ public class VirtualPad {
                         virtualControlUp.value = 0f;
                     }
                 });
-                PlayN.graphics().rootLayer().add(virtualPadUp);
+                virtualPadLayer.add(virtualPadUp);
             }
 
             @Override
@@ -171,7 +171,7 @@ public class VirtualPad {
                         virtualControlRotateCounterClockwise.value = 0f;
                     }
                 });
-                PlayN.graphics().rootLayer().add(virtualPadRotateCounterClockwise);
+                virtualPadLayer.add(virtualPadRotateCounterClockwise);
             }
 
             @Override
@@ -203,7 +203,7 @@ public class VirtualPad {
                         virtualControlLeft.value = 0f;
                     }
                 });
-                PlayN.graphics().rootLayer().add(virtualPadLeft);
+                virtualPadLayer.add(virtualPadLeft);
             }
 
             @Override
@@ -234,7 +234,7 @@ public class VirtualPad {
                         virtualControlRight.value = 0f;
                     }
                 });
-                PlayN.graphics().rootLayer().add(virtualPadRight);
+                virtualPadLayer.add(virtualPadRight);
             }
 
             @Override
@@ -265,7 +265,7 @@ public class VirtualPad {
                         virtualControlRotateClockwise.value = 0f;
                     }
                 });
-                PlayN.graphics().rootLayer().add(virtualPadRotateClockwise);
+                virtualPadLayer.add(virtualPadRotateClockwise);
             }
 
             @Override
@@ -273,6 +273,9 @@ public class VirtualPad {
                 LOGGER.log(Level.SEVERE, "Cannot load images/virtualpad/rotate_clockwise.png", cause);
             }
         });
+
+        virtualPadLayer.setDepth(777f);
+        PlayN.graphics().rootLayer().add(virtualPadLayer);
     }
 
     public Control getVirtualControlRight() {
@@ -313,5 +316,7 @@ public class VirtualPad {
         if (null != virtualPadRotateCounterClockwise) {
             virtualPadRotateCounterClockwise.setVisible(isLevel && !isBonusLevel);
         }
+        fadingAction.update(game.getFrameTimeInfos().elapsedTime / 1000000000f);
+        virtualPadLayer.setAlpha(1.0f - fadingAction.getProgress());
     }
 }
