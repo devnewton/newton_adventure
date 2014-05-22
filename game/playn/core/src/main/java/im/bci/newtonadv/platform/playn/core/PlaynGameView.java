@@ -81,6 +81,8 @@ import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,6 +102,8 @@ import playn.core.PlayN;
 import playn.core.Surface;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
+import playn.core.gl.GLContext;
+import playn.core.gl.GLShader;
 import playn.core.util.Callback;
 
 /**
@@ -114,9 +118,12 @@ public class PlaynGameView implements IGameView {
     private final TextFormat textFormat;
     private final Assets assets;
     private final NuitPreferences config;
+    private final Map<String, GLShader> shaders = new LinkedHashMap<String, GLShader>();
 
     public void setCurrentSurface(Surface currentSurface) {
         this.surface = currentSurface;
+        GLShader shader = shaders.get(config.getString("tweaks.shader", "NORMAL"));
+        surface.setShader(shader);
     }
 
     PlaynGameView(Assets assets, NuitPreferences config) {
@@ -124,6 +131,12 @@ public class PlaynGameView implements IGameView {
         textFormat = new TextFormat(PlayN.graphics().createFont("monospaced", Font.Style.BOLD, 24), true);
         textureCache = new PlaynTextureCache(assets);
         this.config = config;
+        shaders.put("NORMAL", null);
+        final GLContext ctx = PlayN.graphics().ctx();
+        shaders.put("256 SHADES OF GRAY", new GrayscaleShader(ctx));
+        for (DaltonShader.BlindnessFilter bf : DaltonShader.BlindnessFilter.values()) {
+            shaders.put(bf.toString(), new DaltonShader(ctx, bf));
+        }
     }
 
     private void setOrtho2D(Surface surface, float left, float right, float bottom, float top) {
@@ -298,7 +311,7 @@ public class PlaynGameView implements IGameView {
     @Override
     public void drawFPS(int nbFps) {
         if (config.getBoolean("tweaks.show.fps", false)) {
-            drawRighAlignedText(nbFps + " FPS", surface.width()-1, 0);
+            drawRighAlignedText(nbFps + " FPS", surface.width() - 1, 0);
         }
     }
 
@@ -556,7 +569,7 @@ public class PlaynGameView implements IGameView {
         surface.save();
         setOrtho2D(surface, World.ortho2DLeft, World.ortho2DRight, World.ortho2DBottom, World.ortho2DTop);
 
-        if(config.getBoolean("tweaks.rotate.view.with.gravity", true)) {
+        if (config.getBoolean("tweaks.rotate.view.with.gravity", true)) {
             surface.rotate(-world.getGravityAngle());
         }
 
@@ -871,6 +884,11 @@ public class PlaynGameView implements IGameView {
             surface.setTint(Color.rgb(255, 255, 255));
             surface.restore();
         }
+    }
+
+    @Override
+    public Collection<String> listShaders() {
+        return shaders.keySet();
     }
 
 }

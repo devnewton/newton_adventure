@@ -129,7 +129,7 @@ public class OptionsGUI extends Stack {
 
             @Override
             public void onOK() {
-                final TweaksGUI tweaksGUI = new TweaksGUI(toolkit, platform.getConfig());
+                final TweaksGUI tweaksGUI = new TweaksGUI(platform.getGameView(), toolkit, platform.getConfig());
                 themer.theme(tweaksGUI);
                 OptionsGUI.this.show(tweaksGUI);
             }

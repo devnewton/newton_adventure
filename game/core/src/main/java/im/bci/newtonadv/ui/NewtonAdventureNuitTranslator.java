@@ -59,6 +59,7 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
 
         this.addTranslation(NuitLocale.ENGLISH, "tweaks.show.fps", "Show FPS");
         this.addTranslation(NuitLocale.ENGLISH, "tweaks.rotate.view.with.gravity", "Rotate view with gravity");
+        this.addTranslation(NuitLocale.ENGLISH, "tweaks.shader", "Shader");
         this.addTranslation(NuitLocale.ENGLISH, "tweaks.back", "BACK");
         
         this.addTranslation(NuitLocale.ENGLISH, "action.jump", "Jump");
@@ -85,6 +86,7 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
         
         this.addTranslation(NuitLocale.FRENCH, "tweaks.show.fps", "Afficher les FPS");
         this.addTranslation(NuitLocale.FRENCH, "tweaks.rotate.view.with.gravity", "Tourner la vue avec la gravité");
+        this.addTranslation(NuitLocale.FRENCH, "tweaks.shader", "Shader");
         this.addTranslation(NuitLocale.FRENCH, "tweaks.back", "RETOUR");
 
         this.addTranslation(NuitLocale.FRENCH, "action.jump", "Sauter");

@@ -70,6 +70,8 @@ import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -159,5 +161,7 @@ public interface IGameView {
 
     void drawStaticPlatforms(IStaticPlatformDrawable staticPlatformDrawable);
 
-    public IStaticPlatformDrawer createStaticPlatformDrawer();
+    IStaticPlatformDrawer createStaticPlatformDrawer();
+    
+    Collection<String> listShaders();
 }

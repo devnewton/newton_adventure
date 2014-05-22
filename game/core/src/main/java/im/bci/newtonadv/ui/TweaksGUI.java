@@ -35,12 +35,17 @@ import im.bci.jnuit.NuitPreferences;
 import im.bci.jnuit.NuitToolkit;
 import im.bci.jnuit.widgets.Button;
 import im.bci.jnuit.widgets.Label;
+import im.bci.jnuit.widgets.Select;
 import im.bci.jnuit.widgets.Table;
 import im.bci.jnuit.widgets.Toggle;
+import im.bci.newtonadv.platform.interfaces.IGameView;
+import java.util.ArrayList;
 
 public class TweaksGUI extends Table {
+    
+    private Select<String> shaders;
 
-    public TweaksGUI(NuitToolkit toolkit, final NuitPreferences config) {
+    public TweaksGUI(IGameView view, NuitToolkit toolkit, final NuitPreferences config) {
         super(toolkit);
         this.defaults().expand();
         cell(new Label(toolkit, "tweaks.show.fps"));
@@ -53,12 +58,23 @@ public class TweaksGUI extends Table {
         rotateViewWithGravity.setEnabled(config.getBoolean("tweaks.rotate.view.with.gravity", true));
         cell(rotateViewWithGravity);
         row();
+        
+        if(!view.listShaders().isEmpty()) {
+            cell(new Label(toolkit, "tweaks.shader"));
+            shaders = new Select<String>(toolkit, new ArrayList<String>(view.listShaders()));
+            shaders.setSelected(config.getString("tweaks.shader", "NORMAL"));
+            cell(shaders);
+            row();
+        }
         cell(new Button(toolkit, "tweaks.back") {
 
             @Override
             public void onOK() {
                 config.putBoolean("tweaks.show.fps", mustDrawFps.isEnabled());
                 config.putBoolean("tweaks.rotate.view.with.gravity", rotateViewWithGravity.isEnabled());
+                if(null != shaders) {
+                    config.putString("tweaks.shader", shaders.getSelected());
+                }
                 TweaksGUI.this.close();
             }
         });

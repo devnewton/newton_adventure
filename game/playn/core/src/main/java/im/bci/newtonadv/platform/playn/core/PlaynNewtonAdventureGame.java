@@ -38,6 +38,8 @@ import playn.core.Game;
 import playn.core.ImmediateLayer;
 import playn.core.PlayN;
 import playn.core.Surface;
+import playn.core.gl.GLShader;
+import playn.core.gl.IndexedTrisShader;
 
 public abstract class PlaynNewtonAdventureGame extends Game.Default implements PlayN.LifecycleListener {
 
@@ -64,7 +66,7 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default implements P
         try {
             PlayN.setPropagateEvents(true);
             platform = new PlaynPlatformSpecific();
-
+            
             ImmediateLayer immediateLayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
 
                 @Override
