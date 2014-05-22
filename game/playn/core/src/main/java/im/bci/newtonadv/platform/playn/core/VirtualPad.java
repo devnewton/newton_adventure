@@ -45,6 +45,7 @@ import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Pointer;
 import playn.core.util.Callback;
+import pythagoras.f.Point;
 
 /**
  *
@@ -111,6 +112,18 @@ public class VirtualPad {
     private void createVirtualPadLayer() {
         final Image upImage = assets.getImage("images/virtualpad/up.png");
         virtualPadLayer = PlayN.graphics().createGroupLayer();
+        virtualPadLayer.setHitTester(new Layer.HitTester() {
+
+            @Override
+            public Layer hitTest(Layer layer, Point p) {
+                Layer defaultResult = layer.hitTestDefault(p);
+                if(null != defaultResult) {
+                    return defaultResult;
+                } else {
+                    return layer;
+                }
+            }
+        });
         PlayN.graphics().rootLayer().addListener(new Pointer.Adapter() {
 
             @Override
@@ -300,6 +313,7 @@ public class VirtualPad {
 
     void update(Game game) {
         final boolean isLevel = game.getCurrentSequence() instanceof LevelSequence;
+        virtualPadLayer.setInteractive(isLevel);
         if (null != virtualPadUp) {
             virtualPadUp.setVisible(isLevel);
         }
