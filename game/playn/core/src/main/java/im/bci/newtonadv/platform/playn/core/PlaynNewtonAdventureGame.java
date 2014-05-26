@@ -31,6 +31,10 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.jnuit.NuitDisplay;
+import im.bci.jnuit.NuitPreferences;
+import im.bci.jnuit.display.VideoResolution;
+import im.bci.jnuit.playn.PlaynNuitDisplay;
 import im.bci.jnuit.playn.PlaynNuitRenderer;
 import im.bci.newtonadv.game.RestartGameException;
 
@@ -38,14 +42,12 @@ import playn.core.Game;
 import playn.core.ImmediateLayer;
 import playn.core.PlayN;
 import playn.core.Surface;
-import playn.core.gl.GLShader;
-import playn.core.gl.IndexedTrisShader;
 
 public abstract class PlaynNewtonAdventureGame extends Game.Default implements PlayN.LifecycleListener {
 
     im.bci.newtonadv.Game game;
     private PlaynPlatformSpecific platform;
-    
+
     public PlaynNewtonAdventureGame() {
         super(1000 / 60);
     }
@@ -65,8 +67,17 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default implements P
     public void init() {
         try {
             PlayN.setPropagateEvents(true);
-            platform = new PlaynPlatformSpecific();
-            
+            PlayN.setLifecycleListener(this);
+            final NuitDisplay nuitDisplay = createNuitDisplay();
+            platform = new PlaynPlatformSpecific(nuitDisplay);
+            if (nuitDisplay.canChangeResolution()) {
+                NuitPreferences config = platform.getConfig();
+                int targetWidth = config.getInt("video.width", 800);
+                int targetHeight = config.getInt("video.height", 600);
+                boolean startFullscreen = config.getBoolean("video.fullscreen", false);
+                VideoResolution resolution = new VideoResolution(targetWidth, targetHeight);
+                nuitDisplay.changeResolution(resolution, startFullscreen);
+            }
             ImmediateLayer immediateLayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
 
                 @Override
@@ -106,6 +117,10 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default implements P
         }
     }
 
+    protected NuitDisplay createNuitDisplay() {
+        return new PlaynNuitDisplay();
+    }
+
     @Override
     public void update(int delta) {
     }
@@ -123,7 +138,7 @@ public abstract class PlaynNewtonAdventureGame extends Game.Default implements P
 
     @Override
     public void onExit() {
-        platform.getConfig().saveConfig();
+        platform.saveConfig();
     }
 
     @Override

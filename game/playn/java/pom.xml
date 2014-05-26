@@ -29,6 +29,12 @@
             <artifactId>playn-assets</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>im.bci</groupId>
+            <artifactId>jnuit-playn-java</artifactId>
+            <version>${jnuit.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.googlecode.playn</groupId>

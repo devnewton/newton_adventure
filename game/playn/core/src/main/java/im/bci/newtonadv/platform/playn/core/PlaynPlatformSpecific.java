@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.playn.core;
 
+import im.bci.jnuit.NuitDisplay;
 import im.bci.jnuit.NuitPreferences;
 import im.bci.jnuit.NuitToolkit;
 import im.bci.jnuit.playn.PlaynNuitAudio;
@@ -63,20 +64,20 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
     private final RealWatchedAssets assets = new RealWatchedAssets(new CachingAssets(PlayN.assets()));
     private final PlaynGameView gameView;
     private final PlaynGameData data = new PlaynGameData(assets);
-    private final NuitToolkit toolkit;
+    private final NuitToolkit nuitToolkit;
     private final NuitPreferences config;
     private final AbstractGameInput input;
     private final VirtualPad virtualPad;
 
-    public PlaynPlatformSpecific() {
+    public PlaynPlatformSpecific(NuitDisplay display) {
         PlaynNuitControls controls = new PlaynNuitControls();
         PlaynNuitFont font = new PlaynNuitFont("Arial", Font.Style.BOLD, 24f, true);
         NewtonAdventureNuitTranslator translator = new NewtonAdventureNuitTranslator();
-        toolkit = new NuitToolkit(new PlaynNuitDisplay(), controls, translator, font, new PlaynNuitRenderer(translator, font), new PlaynNuitAudio());
+        nuitToolkit = new NuitToolkit(display, controls, translator, font, new PlaynNuitRenderer(translator, font), new PlaynNuitAudio());
         config = new PlaynNuitPreferences(controls, "newtonadventure");
         gameView = new PlaynGameView(assets, config);
         virtualPad = new VirtualPad(assets);
-        input = new PlaynGameInput(toolkit, config, controls, virtualPad);
+        input = new PlaynGameInput(nuitToolkit, config, controls, virtualPad);
         input.setup();
     }
 
@@ -168,7 +169,17 @@ public class PlaynPlatformSpecific implements IPlatformSpecific {
 
     @Override
     public NuitToolkit getNuitToolkit() {
-        return toolkit;
+        return nuitToolkit;
+    }
+    
+    public void saveConfig() {
+        config.putFloat("music.volume", nuitToolkit.getAudio().getMusicVolume());
+        config.putFloat("effects.volume", nuitToolkit.getAudio().getEffectsVolume());
+        config.putInt("video.width", nuitToolkit.getResolution().getWidth());
+        config.putInt("video.height", nuitToolkit.getResolution().getHeight());
+        config.putBoolean("video.fullscreen", nuitToolkit.isFullscreen());
+        input.saveConfig();
+        config.saveConfig();
     }
 
 }
