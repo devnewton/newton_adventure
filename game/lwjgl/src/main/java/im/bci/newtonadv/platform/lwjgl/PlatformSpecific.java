@@ -367,7 +367,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     private void createNuitToolkit() {
         final NuitTranslator nuitTranslator = new NewtonAdventureNuitTranslator();
-        final LwjglNuitFont lwjglNuitFont = new LwjglNuitFont(new Font("Monospace", Font.PLAIN, 24), true, new char[0], new HashMap<Character, BufferedImage>());
+        final LwjglNuitFont lwjglNuitFont = new LwjglNuitFont(new Font("Monospaced", Font.PLAIN, 24), true, new char[0], new HashMap<Character, BufferedImage>());
         NuitAudio openALNuitAudio = new OpenALNuitAudio();
         nuitToolkit = new NuitToolkit(new LwjglNuitDisplay(), controls, nuitTranslator, lwjglNuitFont, new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont), openALNuitAudio);
         nuitToolkit.setVirtualResolutionWidth(Game.DEFAULT_SCREEN_WIDTH);
