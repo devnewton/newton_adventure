@@ -56,10 +56,10 @@ public class VirtualPad {
     private static final Logger LOGGER = Logger.getLogger(VirtualPad.class.getName());
     private final RealWatchedAssets assets;
     private ImageLayer virtualPadUp;
-    private Layer virtualPadRight;
-    private Layer virtualPadLeft;
-    private Layer virtualPadRotateClockwise;
-    private Layer virtualPadRotateCounterClockwise;
+    private ImageLayer virtualPadRight;
+    private ImageLayer virtualPadLeft;
+    private ImageLayer virtualPadRotateClockwise;
+    private ImageLayer virtualPadRotateCounterClockwise;
     private final VirtualControl virtualControlRight = new VirtualControl("Virtual right");
     private final VirtualControl virtualControlLeft = new VirtualControl("Virtual left");
     private final VirtualControl virtualControlUp = new VirtualControl("Virtual up");
@@ -117,7 +117,7 @@ public class VirtualPad {
             @Override
             public Layer hitTest(Layer layer, Point p) {
                 Layer defaultResult = layer.hitTestDefault(p);
-                if(null != defaultResult) {
+                if (null != defaultResult) {
                     return defaultResult;
                 } else {
                     return layer;
@@ -138,8 +138,6 @@ public class VirtualPad {
                 virtualPadUp = PlayN.graphics().createImageLayer(upImage);
                 virtualPadUp.setVisible(false);
                 virtualPadUp.setAlpha(0.4f);
-                virtualPadUp.setTranslation(0.0f, PlayN.graphics().height() * 1.5f / 4.0f);
-                virtualPadUp.setScale(PlayN.graphics().width() / 4.0f / upImage.width(), PlayN.graphics().height() / 4.0f / upImage.height());
                 virtualPadUp.addListener(new Pointer.Adapter() {
 
                     @Override
@@ -170,8 +168,6 @@ public class VirtualPad {
                 virtualPadRotateCounterClockwise = PlayN.graphics().createImageLayer(rotateCounterClockwiseImage);
                 virtualPadRotateCounterClockwise.setVisible(false);
                 virtualPadRotateCounterClockwise.setAlpha(0.4f);
-                virtualPadRotateCounterClockwise.setTranslation(0.0f, 0.0f);
-                virtualPadRotateCounterClockwise.setScale(PlayN.graphics().width() / 4.0f / rotateCounterClockwiseImage.width(), PlayN.graphics().height() / 4.0f / rotateCounterClockwiseImage.height());
                 virtualPadRotateCounterClockwise.addListener(new Pointer.Adapter() {
 
                     @Override
@@ -202,8 +198,6 @@ public class VirtualPad {
                 virtualPadLeft = PlayN.graphics().createImageLayer(leftImage);
                 virtualPadLeft.setVisible(false);
                 virtualPadLeft.setAlpha(0.4f);
-                virtualPadLeft.setTranslation(0.0f, PlayN.graphics().height() * 3.0f / 4.0f);
-                virtualPadLeft.setScale(PlayN.graphics().width() / 4.0f / leftImage.width(), PlayN.graphics().height() / 4.0f / leftImage.height());
                 virtualPadLeft.addListener(new Pointer.Adapter() {
 
                     @Override
@@ -233,8 +227,6 @@ public class VirtualPad {
                 virtualPadRight = PlayN.graphics().createImageLayer(rightImage);
                 virtualPadRight.setVisible(false);
                 virtualPadRight.setAlpha(0.4f);
-                virtualPadRight.setTranslation(PlayN.graphics().width() * 3.0f / 4.0f, PlayN.graphics().height() * 3.0f / 4.0f);
-                virtualPadRight.setScale(PlayN.graphics().width() / 4.0f / rightImage.width(), PlayN.graphics().height() / 4.0f / rightImage.height());
                 virtualPadRight.addListener(new Pointer.Adapter() {
 
                     @Override
@@ -264,8 +256,6 @@ public class VirtualPad {
                 virtualPadRotateClockwise = PlayN.graphics().createImageLayer(rotateClockwiseImage);
                 virtualPadRotateClockwise.setVisible(false);
                 virtualPadRotateClockwise.setAlpha(0.4f);
-                virtualPadRotateClockwise.setTranslation(PlayN.graphics().width() * 3.0f / 4.0f, 0.0f);
-                virtualPadRotateClockwise.setScale(PlayN.graphics().width() / 4.0f / rotateClockwiseImage.width(), PlayN.graphics().height() / 4.0f / rotateClockwiseImage.height());
                 virtualPadRotateClockwise.addListener(new Pointer.Adapter() {
 
                     @Override
@@ -315,20 +305,40 @@ public class VirtualPad {
         final boolean isLevel = game.getCurrentSequence() instanceof LevelSequence;
         virtualPadLayer.setInteractive(isLevel);
         if (null != virtualPadUp) {
-            virtualPadUp.setVisible(isLevel);
+            virtualPadUp.setTranslation(0.0f, PlayN.graphics().height() * 1.5f / 4.0f);
+            if (virtualPadUp.image().isReady()) {
+                virtualPadUp.setScale(PlayN.graphics().width() / 4.0f / virtualPadUp.image().width(), PlayN.graphics().height() / 4.0f / virtualPadUp.image().height());
+                virtualPadUp.setVisible(isLevel);
+            }
         }
         if (null != virtualPadLeft) {
             virtualPadLeft.setVisible(isLevel);
+            if (virtualPadLeft.image().isReady()) {
+                virtualPadLeft.setTranslation(0.0f, PlayN.graphics().height() * 3.0f / 4.0f);
+                virtualPadLeft.setScale(PlayN.graphics().width() / 4.0f / virtualPadLeft.image().width(), PlayN.graphics().height() / 4.0f / virtualPadLeft.image().height());
+            }
         }
         if (null != virtualPadRight) {
             virtualPadRight.setVisible(isLevel);
+            if (virtualPadRight.image().isReady()) {
+                virtualPadRight.setTranslation(PlayN.graphics().width() * 3.0f / 4.0f, PlayN.graphics().height() * 3.0f / 4.0f);
+                virtualPadRight.setScale(PlayN.graphics().width() / 4.0f / virtualPadRight.image().width(), PlayN.graphics().height() / 4.0f / virtualPadRight.image().height());
+            }
         }
         final boolean isBonusLevel = game.getCurrentSequence() instanceof BonusSequence;
         if (null != virtualPadRotateClockwise) {
             virtualPadRotateClockwise.setVisible(isLevel && !isBonusLevel);
+            if (virtualPadRotateClockwise.image().isReady()) {
+                virtualPadRotateClockwise.setTranslation(PlayN.graphics().width() * 3.0f / 4.0f, 0.0f);
+                virtualPadRotateClockwise.setScale(PlayN.graphics().width() / 4.0f / virtualPadRotateClockwise.image().width(), PlayN.graphics().height() / 4.0f / virtualPadRotateClockwise.image().height());
+            }
         }
         if (null != virtualPadRotateCounterClockwise) {
             virtualPadRotateCounterClockwise.setVisible(isLevel && !isBonusLevel);
+            if (virtualPadRotateCounterClockwise.image().isReady()) {
+                virtualPadRotateCounterClockwise.setTranslation(0.0f, 0.0f);
+                virtualPadRotateCounterClockwise.setScale(PlayN.graphics().width() / 4.0f / virtualPadRotateCounterClockwise.image().width(), PlayN.graphics().height() / 4.0f / virtualPadRotateCounterClockwise.image().height());
+            }
         }
         fadingAction.update(game.getFrameTimeInfos().elapsedTime / 1000000000f);
         virtualPadLayer.setAlpha(1.0f - fadingAction.getProgress());
