@@ -257,10 +257,12 @@ strictfp public class LevelSequence implements PreloadableSequence {
         StringBuilder b = new StringBuilder();
         final Hero hero = world.getHero();
         b.append(hero.getNbApple());
-        b.append("$ ");
+        b.append("$ Score: ");
+        b.append(world.getLevelScore().computeScore());        
         final OneShotTimedAction deadClock = hero.getDeadClock();
         if (null != deadClock) {
             long seconds = deadClock.getRemainingTime() / 1000000000L;
+            b.append(' ');
             b.append(seconds / 60);
             b.append(":");
             final long remainingSeconds = seconds % 60;
@@ -269,6 +271,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
             }
             b.append(remainingSeconds);
         }
+        
         game.getView().drawLevelIndicators(b.toString());
     }
 
