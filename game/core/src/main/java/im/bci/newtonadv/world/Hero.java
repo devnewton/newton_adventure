@@ -73,6 +73,15 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     private final LevelScore levelScore = new LevelScore();
     private Play play;
     private OneShotTimedAction deadClock, dyingTimedAction;
+    private boolean tryingToActivateThings;
+
+    public boolean isTryingToActivateThings() {
+        return tryingToActivateThings;
+    }
+
+    public void setTryingToActivateThings(boolean tryToActivateThings) {
+        this.tryingToActivateThings = tryToActivateThings;
+    }
 
     public OneShotTimedAction getDyingTimedAction() {
         return dyingTimedAction;

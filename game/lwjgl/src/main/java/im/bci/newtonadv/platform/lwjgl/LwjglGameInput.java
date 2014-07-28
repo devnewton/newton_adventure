@@ -57,6 +57,7 @@ public class LwjglGameInput extends AbstractGameInput {
 
     @Override
     protected void setupGameControls() {
+        activate = new ActionActivatedDetector(new Action("action.activate", new KeyControl(Keyboard.KEY_DOWN)));
         jump = new ActionActivatedDetector(new Action("action.jump", new KeyControl(Keyboard.KEY_UP)));
         left = new ActionActivatedDetector(new Action("action.left", new KeyControl(Keyboard.KEY_LEFT)));
         right = new ActionActivatedDetector(new Action("action.right", new KeyControl(Keyboard.KEY_RIGHT)));
@@ -76,7 +77,7 @@ public class LwjglGameInput extends AbstractGameInput {
 
     @Override
     public List<Action> getDefaultGameActionList() {
-        return Arrays.asList(new Action("action.jump", new KeyControl(Keyboard.KEY_UP)), new Action("action.left", new KeyControl(Keyboard.KEY_LEFT)), new Action("action.right", new KeyControl(Keyboard.KEY_RIGHT)), new Action("action.rotate.clockwise", new KeyControl(Keyboard.KEY_C)), new Action("action.rotate.counterclockwise", new KeyControl(Keyboard.KEY_X)), new Action("action.rotate.clockwise.90", new KeyControl(Keyboard.KEY_S)), new Action("action.rotate.counterclockwise.90", new KeyControl(Keyboard.KEY_D)), new Action("action.returntomenu", new KeyControl(Keyboard.KEY_ESCAPE)));
+        return Arrays.asList(new Action("action.jump", new KeyControl(Keyboard.KEY_UP)), new Action("action.left", new KeyControl(Keyboard.KEY_LEFT)), new Action("action.right", new KeyControl(Keyboard.KEY_RIGHT)), new Action("action.rotate.clockwise", new KeyControl(Keyboard.KEY_C)), new Action("action.rotate.counterclockwise", new KeyControl(Keyboard.KEY_X)), new Action("action.rotate.clockwise.90", new KeyControl(Keyboard.KEY_S)), new Action("action.rotate.counterclockwise.90", new KeyControl(Keyboard.KEY_D)), new Action("action.activate", new KeyControl(Keyboard.KEY_DOWN)), new Action("action.returntomenu", new KeyControl(Keyboard.KEY_ESCAPE)));
     }
 
     @Override

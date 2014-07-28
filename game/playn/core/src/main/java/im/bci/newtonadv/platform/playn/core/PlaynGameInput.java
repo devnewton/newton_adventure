@@ -91,7 +91,7 @@ public class PlaynGameInput extends AbstractGameInput {
     private class BackButtonControl implements Control {
 
         private float value;
-        
+
         @Override
         public String getControllerName() {
             return "Device";
@@ -99,20 +99,24 @@ public class PlaynGameInput extends AbstractGameInput {
 
         @Override
         public String getName() {
-        return "Back";
+            return "Back";
         }
 
         @Override
-        public float getDeadZone() {return 0.1f;}
+        public float getDeadZone() {
+            return 0.1f;
+        }
 
         @Override
         public float getValue() {
-           return value;}
+            return value;
+        }
 
     }
 
     @Override
     protected void setupGameControls() {
+        activate = new ActionActivatedDetector(new Action("action.activate", new KeyControl(controls, Key.DOWN)));
         jump = new ActionActivatedDetector(new Action("action.jump", new KeyControl(controls, Key.UP), virtualPad.getVirtualControlUp()));
         left = new ActionActivatedDetector(new Action("action.left", new KeyControl(controls, Key.LEFT), virtualPad.getVirtualControlLeft()));
         right = new ActionActivatedDetector(new Action("action.right", new KeyControl(controls, Key.RIGHT), virtualPad.getVirtualControlRight()));
@@ -132,7 +136,7 @@ public class PlaynGameInput extends AbstractGameInput {
 
     @Override
     public List<Action> getDefaultGameActionList() {
-        return Arrays.asList(new Action("action.jump", new KeyControl(controls, Key.UP)), new Action("action.left", new KeyControl(controls, Key.LEFT)), new Action("action.right", new KeyControl(controls, Key.RIGHT)), new Action("action.rotate.clockwise", new KeyControl(controls, Key.C)), new Action("action.rotate.counterclockwise", new KeyControl(controls, Key.X)), new Action("action.rotate.clockwise.90", new KeyControl(controls, Key.S)), new Action("action.rotate.counterclockwise.90", new KeyControl(controls, Key.D)), new Action("action.returntomenu", new KeyControl(controls, Key.ESCAPE)));
+        return Arrays.asList(new Action("action.jump", new KeyControl(controls, Key.UP)), new Action("action.left", new KeyControl(controls, Key.LEFT)), new Action("action.right", new KeyControl(controls, Key.RIGHT)), new Action("action.rotate.clockwise", new KeyControl(controls, Key.C)), new Action("action.rotate.counterclockwise", new KeyControl(controls, Key.X)), new Action("action.rotate.clockwise.90", new KeyControl(controls, Key.S)), new Action("action.rotate.counterclockwise.90", new KeyControl(controls, Key.D)), new Action("action.activate", new KeyControl(controls, Key.DOWN)), new Action("action.returntomenu", new KeyControl(controls, Key.ESCAPE)));
     }
 
 }

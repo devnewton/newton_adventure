@@ -62,6 +62,7 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
         this.addTranslation(NuitLocale.ENGLISH, "tweaks.shader", "Shader");
         this.addTranslation(NuitLocale.ENGLISH, "tweaks.back", "BACK");
         
+        this.addTranslation(NuitLocale.ENGLISH, "action.activate", "Activate");
         this.addTranslation(NuitLocale.ENGLISH, "action.jump", "Jump");
         this.addTranslation(NuitLocale.ENGLISH, "action.left", "Left");
         this.addTranslation(NuitLocale.ENGLISH, "action.right", "Right");
@@ -89,6 +90,7 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
         this.addTranslation(NuitLocale.FRENCH, "tweaks.shader", "Shader");
         this.addTranslation(NuitLocale.FRENCH, "tweaks.back", "RETOUR");
 
+        this.addTranslation(NuitLocale.FRENCH, "action.activate", "Activer");
         this.addTranslation(NuitLocale.FRENCH, "action.jump", "Sauter");
         this.addTranslation(NuitLocale.FRENCH, "action.left", "Gauche");
         this.addTranslation(NuitLocale.FRENCH, "action.right", "Droite");

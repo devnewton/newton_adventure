@@ -44,8 +44,6 @@ public strictfp class HelpSign extends AnimatedPlatform implements CollisionDete
 
     private String color;
     private boolean collideHero = false;
-    private static final long durationBeforeShowHelp = 2000000000L;
-    private long showHelpTime = -1;
 
     HelpSign(World world, float w, float h) {
         super(world, w, h);
@@ -73,15 +71,8 @@ public strictfp class HelpSign extends AnimatedPlatform implements CollisionDete
 
     @Override
     public void update(FrameTimeInfos frameTimeInfos) {
-        if (collideHero) {
-            if (showHelpTime < 0) {
-                showHelpTime = frameTimeInfos.currentTime + durationBeforeShowHelp;
-            } else if (frameTimeInfos.currentTime > showHelpTime) {
-                showHelpTime = -1;
-                world.showHelp();
-            }
-        } else {
-            showHelpTime = -1;
+        if (collideHero && world.getHero().isTryingToActivateThings()) {
+            world.showHelp();
         }
         collideHero = false;
     }

@@ -39,7 +39,6 @@ import im.bci.newtonadv.world.Hero;
 import im.bci.newtonadv.world.TmxLoader;
 import im.bci.newtonadv.world.World;
 
-
 /**
  *
  * @author devnewton
@@ -209,7 +208,6 @@ strictfp public class LevelSequence implements PreloadableSequence {
             world.getHero().moveRight(stepRate);
             heroIsMoving = true;
         }
-
         if (game.getInput().getJump().isPressed()) {
             world.getHero().jump(stepRate);
             heroIsMoving = true;
@@ -217,6 +215,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
         if (!heroIsMoving) {
             world.getHero().dontMove();
         }
+        world.getHero().setTryingToActivateThings(game.getInput().getActivate().isPressed());
     }
 
     protected void processRotateInputs() {
@@ -258,7 +257,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
         final Hero hero = world.getHero();
         b.append(hero.getNbApple());
         b.append("$ Score: ");
-        b.append(world.getLevelScore().computeScore());        
+        b.append(world.getLevelScore().computeScore());
         final OneShotTimedAction deadClock = hero.getDeadClock();
         if (null != deadClock) {
             long seconds = deadClock.getRemainingTime() / 1000000000L;
@@ -271,7 +270,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
             }
             b.append(remainingSeconds);
         }
-        
+
         game.getView().drawLevelIndicators(b.toString());
     }
 

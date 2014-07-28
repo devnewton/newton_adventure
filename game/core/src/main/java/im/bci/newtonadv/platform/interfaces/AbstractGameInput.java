@@ -52,6 +52,7 @@ public abstract class AbstractGameInput {
     protected ActionActivatedDetector cheatGotoNextLevel;
     protected ActionActivatedDetector cheatSetAllCompleted;
     protected NuitPreferences config;
+    protected ActionActivatedDetector activate;
     protected ActionActivatedDetector jump;
     protected ActionActivatedDetector left;
     protected ActionActivatedDetector returnToMenu;
@@ -86,7 +87,7 @@ public abstract class AbstractGameInput {
             loadControlsForAction(action);
         }
     }
-    
+
     public void saveConfig() {
         for (Action action : getGameActionList()) {
             saveControlsForAction(action);
@@ -119,11 +120,15 @@ public abstract class AbstractGameInput {
     public abstract List<Action> getDefaultGameActionList();
 
     public List<Action> getGameActionList() {
-        return Arrays.asList(getLeft().getAction(), getRight().getAction(), getJump().getAction(), getRotateClockwise().getAction(), getRotateCounterClockwise().getAction(), getRotate90Clockwise().getAction(), getRotate90CounterClockwise().getAction(), getReturnToMenu().getAction());
+        return Arrays.asList(getJump().getAction(), getActivate().getAction(), getLeft().getAction(), getRight().getAction(), getRotateClockwise().getAction(), getRotateCounterClockwise().getAction(), getRotate90Clockwise().getAction(), getRotate90CounterClockwise().getAction(), getReturnToMenu().getAction());
     }
 
     public ActionActivatedDetector getJump() {
         return jump;
+    }
+
+    public ActionActivatedDetector getActivate() {
+        return activate;
     }
 
     public ActionActivatedDetector getLeft() {
@@ -163,7 +168,7 @@ public abstract class AbstractGameInput {
         action.setMainControl(config.getControl(name + ".main", action.getMainControl()));
         action.setAlternativeControl(config.getControl(name + ".alternative", action.getAlternativeControl()));
     }
-    
+
     protected void saveControlsForAction(Action action) {
         String name = action.getName();
         config.putControl(name + ".main", action.getMainControl());
@@ -176,8 +181,10 @@ public abstract class AbstractGameInput {
         menuDown.poll();
         menuLeft.poll();
         menuRight.poll();
-        jump.poll();
+        left.poll();
         right.poll();
+        jump.poll();
+        activate.poll();
         rotateClockwise.poll();
         rotateCounterClockwise.poll();
         rotate90Clockwise.poll();
@@ -210,6 +217,5 @@ public abstract class AbstractGameInput {
     public ActionActivatedDetector getMenuUp() {
         return menuUp;
     }
-    
-    
+
 }
