@@ -5,6 +5,7 @@
 /packages/generic/target/
 /packages/win/target/
 /packages/deb/target/
+/packages/rpm/target/
 /packages/rpm32/target/
 /packages/rpm64/target/
 /mods/duchatelet/target/

@@ -29,9 +29,9 @@ THE SOFTWARE. -->
         <version>1.16-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>newton-adventure-rpm64</artifactId>
+    <artifactId>newton-adventure-rpm</artifactId>
     <packaging>pom</packaging>
-    <name>newton-adventure-rpm64</name>
+    <name>newton-adventure-rpm</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -119,11 +119,24 @@ THE SOFTWARE. -->
                                     <group>Application/Games</group>
                                     <name>newton-adventure</name>
                                     <packager>devnewton</packager>
-                                    <needarch>x86_64</needarch>
+                                    <needarch>noarch</needarch>
                                     <requires>
                                         <require>java &gt; 1-1.7.0 </require>
                                     </requires>
+                                    <defineStatements>
+                                        <defineStatement>_binaries_in_noarch_packages_terminate_build 0</defineStatement>
+                                    </defineStatements>
                                     <mappings>
+                                        <mapping>
+                                            <directory>/opt/newton-adventure</directory>
+                                            <username>root</username>
+                                            <groupname>root</groupname>
+                                            <sources>
+                                                <source>
+                                                    <location>${basedir}/../../game/lwjgl/src/main/resources/icon.png</location>
+                                                </source>
+                                            </sources>
+                                        </mapping>
                                         <mapping>
                                             <directory>/opt/newton-adventure</directory>
                                             <username>root</username>
@@ -164,9 +177,9 @@ THE SOFTWARE. -->
                                             <sources>
                                                 <source>
                                                     <location>${basedir}/target/natives</location>
-                                                    <targetArchitecture>x86_64</targetArchitecture>
+                                                    <targetArchitecture>noarch</targetArchitecture>
                                                     <includes>
-                                                        <include>*64.so*</include>
+                                                        <include>*.so</include>
                                                     </includes>
                                                 </source>
                                             </sources>

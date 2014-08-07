@@ -20,8 +20,7 @@
         <module>editor</module>
         <module>packages/deb</module>
         <module>packages/generic</module>
-        <module>packages/rpm32</module>
-        <module>packages/rpm64</module>
+        <module>packages/rpm</module>
         <module>packages/win</module>
         <module>mods/bald</module>
         <module>mods/duchatelet</module>
@@ -71,6 +70,25 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    <profiles>
+        <profile>
+            <id>java</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>play</id>
+        </profile>
+        <profile>
+            <id>android</id>
+        </profile>
+        <profile>
+            <id>ios</id>
+        </profile>
+        <profile>
+            <id>html</id>
+        </profile>        
+    </profiles>
 </project>
 

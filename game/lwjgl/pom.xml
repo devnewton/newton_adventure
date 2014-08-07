@@ -122,6 +122,36 @@ SUCH DAMAGE. */ -->
             <artifactId>lwjgl_util</artifactId>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>play</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.1.1</version>
+                        <executions>
+                            <execution>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-cp</argument>
+                                <argument>${project.build.directory}/lib/*:${project.build.directory}/${project.build.finalName}.jar</argument>
+                                <argument>im.bci.newtonadv.platform.lwjgl.Main</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 
 
