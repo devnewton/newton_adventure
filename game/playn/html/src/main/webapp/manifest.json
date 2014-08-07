@@ -1,0 +1,13 @@
+{
+	"name": "Newton Adventure",
+	"description": "Newton Adventure is a 2D platformer with a twist: the player can rotate gravity at 360°. Each level contains a key that must be brought to the exit door using Newton body to push it or the gravity power to make it fall. Gravity must also be used to avoid trap, kill enemy or solve puzzle.",
+	"version": "1.16",
+	"app": {
+		"launch": {
+			"local_path": "embedded.html"
+		}
+	},
+	"icons": {
+		"128": "icon_128.png"
+	}
+}
