@@ -16,84 +16,70 @@
     <properties>
         <gwt.module>im.bci.newtonadv.platform.playn.PlaynNewtonAdventureGame</gwt.module>
         <gwt.name>playn</gwt.name>
-        <!-- Desired Google App Engine SDK version -->
-        <!--<gae.version>1.6.1</gae.version>-->
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>im.bci.newtonadv</groupId>
             <artifactId>playn-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>im.bci.newtonadv</groupId>
             <artifactId>playn-core</artifactId>
-            <version>${project.version}</version>
             <classifier>sources</classifier>
         </dependency>
     
         <dependency>
             <groupId>im.bci.newtonadv</groupId>
             <artifactId>playn-assets</artifactId>
-            <version>${project.version}</version>
         </dependency>
     
         <dependency>
             <groupId>im.bci.newtonadv</groupId>
             <artifactId>newton-adventure-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
     
         <dependency>
             <groupId>im.bci.newtonadv</groupId>
             <artifactId>newton-adventure-core</artifactId>
-            <version>${project.version}</version>
             <classifier>sources</classifier>
         </dependency>
     
         <dependency>
             <groupId>im.bci</groupId>
             <artifactId>jnuit-core</artifactId>
-            <version>${jnuit.version}</version>
             <classifier>sources</classifier>
         </dependency>
  
         <dependency>
             <groupId>im.bci</groupId>
             <artifactId>jnuit-playn</artifactId>
-            <version>${jnuit.version}</version>
             <classifier>sources</classifier>
         </dependency>
        <dependency>
             <groupId>im.bci</groupId>
             <artifactId>jnuit-playn-utils</artifactId>
-            <version>${jnuit.version}</version>
             <classifier>sources</classifier>
         </dependency>
        <dependency>
             <groupId>im.bci</groupId>
             <artifactId>tablelayout</artifactId>
-            <version>${jnuit.version}</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>im.bci</groupId>
             <artifactId>libtiled-jpurexml</artifactId>
-            <version>0.4</version>
         </dependency>
         <dependency>
             <groupId>im.bci</groupId>
             <artifactId>libtiled-jpurexml</artifactId>
             <classifier>sources</classifier>
-            <version>0.4</version>
         </dependency>
         <dependency>
             <groupId>com.github.asilvestre</groupId>
             <artifactId>jpurexml</artifactId>
             <classifier>sources</classifier>
-            <version>0.12</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.playn</groupId>
@@ -103,7 +89,6 @@
         <dependency>
             <groupId>com.googlecode.playn</groupId>
             <artifactId>playn-html</artifactId>
-            <version>${playn.version}</version>
             <classifier>sources</classifier>
         </dependency>
     </dependencies>
@@ -111,11 +96,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -131,40 +111,22 @@
             </plugin>
             <!-- allows testing of HTML backend via: mvn integration-test -Phtml -->
             <plugin>
-              <groupId>org.mortbay.jetty</groupId>
-              <artifactId>jetty-maven-plugin</artifactId>
-              <version>8.0.0.v20110901</version>
-              <configuration>
-                <webApp>
-                  ${project.basedir}/target/${project.artifactId}-${project.version}
-                </webApp>
-              </configuration>
-              <executions>
-                <execution>
-                  <id>test-html</id>
-                  <phase>integration-test</phase>
-                  <goals>
-                    <goal>run-exploded</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.8</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>false</downloadJavadocs>
-                    <wtpversion>2.0</wtpversion>
-                    <additionalBuildcommands>
-                        <buildCommand>
-                            <name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
-                        </buildCommand>
-                    </additionalBuildcommands>
-                    <additionalProjectnatures>
-                        <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
-                    </additionalProjectnatures>
+                    <port>9090</port>
+                    <path>/</path>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>test-html</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>run-war</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

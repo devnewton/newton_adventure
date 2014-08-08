@@ -100,7 +100,7 @@ public class FileGameData implements IGameData {
     }
 
     private List<String> listSubDirectories(String path, List<String> order) {
-        TreeSet<String> subdirs = new TreeSet<>();
+        TreeSet<String> subdirs = new TreeSet<String>();
         for (File dataDir : dataDirs) {
             File dir = new File(dataDir, path);
             if (dir.exists()) {
@@ -112,16 +112,22 @@ public class FileGameData implements IGameData {
             }
         }
         subdirs.retainAll(order);
-        ArrayList<String> result = new ArrayList<>(subdirs);
+        ArrayList<String> result = new ArrayList<String>(subdirs);
         reorderList(result, order);
         return result;
     }
 
     @Override
     public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
-        try (InputStream is = new FileInputStream(getVirtualFile("quests/" + questName + "/quest.json")); InputStreamReader reader = new InputStreamReader(is)) {
-            QuestConfig conf = new Gson().fromJson(reader, QuestConfig.class);
-            return conf.getLockedBy();
+        try {
+            InputStream is = new FileInputStream(getVirtualFile("quests/" + questName + "/quest.json"));
+            try {
+                InputStreamReader reader = new InputStreamReader(is);
+                QuestConfig conf = new Gson().fromJson(reader, QuestConfig.class);
+                return conf.getLockedBy();
+            } finally {
+                is.close();
+            }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -160,8 +166,14 @@ public class FileGameData implements IGameData {
     }
 
     public String loadText(File f) {
-        try (InputStream is = new FileInputStream(f); Scanner s = new Scanner(is, "UTF-8").useDelimiter("\\Z")) {
-            return s.next();
+        try {
+            InputStream is = new FileInputStream(f);
+            try {
+                Scanner s = new Scanner(is, "UTF-8").useDelimiter("\\Z");
+                return s.next();
+            } finally {
+                is.close();
+            }
         } catch (FileNotFoundException ex) {
             throw new RuntimeException("Cannot find text file: " + f, ex);
         } catch (IOException ex) {
@@ -202,9 +214,15 @@ public class FileGameData implements IGameData {
 
     private List<String> getConfiguredQuests() {
         final File file = getVirtualFile("quests/quests.json");
-        try (InputStream is = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(is)) {
-            QuestsConfig quests = new Gson().fromJson(reader, QuestsConfig.class);
-            return quests.getQuests();
+        try {
+            InputStream is = new FileInputStream(file);
+            try {
+                InputStreamReader reader = new InputStreamReader(is);
+                QuestsConfig quests = new Gson().fromJson(reader, QuestsConfig.class);
+                return quests.getQuests();
+            } finally {
+                is.close();
+            }
         } catch (Exception ex) {
             throw new RuntimeException("Cannot load " + file, ex);
         }
@@ -235,17 +253,26 @@ public class FileGameData implements IGameData {
 
     private List<String> getConfiguredLevels(String questName) {
         final File file = getVirtualFile("quests/" + questName + "/quest.json");
-        try (InputStream is = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(is)) {
-            QuestConfig levels = new Gson().fromJson(reader, QuestConfig.class);
-            return levels.getLevels();
+        try {
+            InputStream is = new FileInputStream(file);
+            try {
+                InputStreamReader reader = new InputStreamReader(is);
+                QuestConfig levels = new Gson().fromJson(reader, QuestConfig.class);
+                return levels.getLevels();
+            } finally {
+                is.close();
+            }
         } catch (Exception ex) {
             throw new RuntimeException("Cannot load " + file, ex);
         }
     }
 
     public BufferedImage openImage(String file) throws IOException {
-        try (InputStream is = openFile(getFile(file))) {
+        InputStream is = openFile(getFile(file));
+        try {
             return ImageIO.read(is);
+        } finally {
+            is.close();
         }
     }
 

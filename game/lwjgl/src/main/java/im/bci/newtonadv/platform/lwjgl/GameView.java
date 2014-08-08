@@ -1186,7 +1186,7 @@ public strictfp class GameView implements IGameView {
                 - cameraSize, heroPos.getY() - cameraSize, heroPos.getX()
                 + cameraSize, heroPos.getY() + cameraSize);
 
-        ArrayList<Drawable> drawableBodies = new ArrayList<>();
+        ArrayList<Drawable> drawableBodies = new ArrayList<Drawable>();
         world.staticPlatformDrawer.resetVisibles();
         for (int i = 0; i < visibleBodies.size(); i++) {
             Body body = visibleBodies.get(i);
@@ -1278,7 +1278,9 @@ public strictfp class GameView implements IGameView {
 
     private AnimationCollection loadNanim(String filename) throws IOException {
         AnimationCollection nanim = new AnimationCollection();
-        try (InputStream is = data.openFile(filename); InputStreamReader reader = new InputStreamReader(is)) {
+        InputStream is = data.openFile(filename);
+        try {
+            InputStreamReader reader = new InputStreamReader(is);
             JsonObject json = new Gson().fromJson(reader, JsonObject.class);
             for (JsonElement jsonAnimationElement : json.getAsJsonArray("animations")) {
                 JsonObject jsonAnimation = jsonAnimationElement.getAsJsonObject();
@@ -1291,6 +1293,8 @@ public strictfp class GameView implements IGameView {
                 }
                 nanim.addAnimation(animation);
             }
+        } finally {
+            is.close();
         }
         nanim.setReady(true);
         return nanim;
@@ -1536,7 +1540,7 @@ public strictfp class GameView implements IGameView {
     }
 
     private TrueTypeFont initFont() {
-        HashMap<Character, BufferedImage> fontSpecialCharacters = new HashMap<>();
+        HashMap<Character, BufferedImage> fontSpecialCharacters = new HashMap<Character, BufferedImage>();
         try {
             fontSpecialCharacters.put('$', data.openImage("default_level_data/apple.png"));
         } catch (IOException e) {

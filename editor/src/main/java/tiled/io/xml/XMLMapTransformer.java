@@ -625,7 +625,8 @@ public class XMLMapTransformer implements MapReader {
                     if (cdata == null) {
                         logger.warn("layer <data> tag enclosed no data. (empty data tag)");
                     } else {
-                        try (Scanner scanner = new Scanner(cdata.getNodeValue().trim())) {
+                        Scanner scanner = new Scanner(cdata.getNodeValue().trim());
+                        try {
                             scanner.useDelimiter("[\\s]*,[\\s]*");
                             for (int y = 0; y < ml.getHeight(); ++y) {
                                 for (int x = 0; x < ml.getWidth(); ++x) {
@@ -640,6 +641,8 @@ public class XMLMapTransformer implements MapReader {
                                     }
                                 }
                             }
+                        } finally {
+                            scanner.close();
                         }
                     }
                 } else {

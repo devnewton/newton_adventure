@@ -73,8 +73,8 @@ import org.lwjgl.opengl.GLContext;
 public class TextureCache implements ITextureCache {
 
     private static final Logger logger = Logger.getLogger(TextureCache.class.getName());
-    private final HashMap<String/* name */, TextureWeakReference> textures = new HashMap<>();
-    private final ReferenceQueue<Texture> referenceQueue = new ReferenceQueue<>();
+    private final HashMap<String/* name */, TextureWeakReference> textures = new HashMap<String/* name */, TextureWeakReference>();
+    private final ReferenceQueue<Texture> referenceQueue = new ReferenceQueue<Texture>();
     private final FileGameData data;
     /**
      * The colour model including alpha for the GL image

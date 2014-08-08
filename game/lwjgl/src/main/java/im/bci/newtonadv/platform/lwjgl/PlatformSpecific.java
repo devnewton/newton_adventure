@@ -118,7 +118,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     private IGameData createGameData() {
         if (data == null) {
-            List<File> dataDirs = new ArrayList<>();
+            List<File> dataDirs = new ArrayList<File>();
             IMod mod = findModByName(config.getString("newton_adventure.mod", ""));
             if (null != mod) {
                 dataDirs.add(new File(mod.getPath()));
@@ -309,7 +309,7 @@ public class PlatformSpecific implements IPlatformSpecific {
         File modDir = null != mod ? new File(mod.getPath()) : getDefaultDataDir();
         File currentModDir = null != currentMod ? new File(currentMod.getPath()) : getDefaultDataDir();
         if (!modDir.equals(currentModDir)) {
-            List<File> dataDirs = new ArrayList<>();
+            List<File> dataDirs = new ArrayList<File>();
             dataDirs.add(modDir);
             dataDirs.add(getDefaultDataDir());
             data.setDataDirs(dataDirs);
@@ -333,7 +333,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     private List<IMod> listModsInDirs(File... dirs) {
-        List<IMod> mods = new ArrayList<>();
+        List<IMod> mods = new ArrayList<IMod>();
         for (File dir : dirs) {
             if (dir.exists()) {
                 for (File f : dir.listFiles()) {

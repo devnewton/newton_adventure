@@ -38,7 +38,7 @@ public class StaticPlatformDrawable implements IStaticPlatformDrawable {
     };
 
     static List<StaticPlatformDrawable> create(IGameView view, List<StaticPlatform> platforms) {
-        List<StaticPlatformDrawable> result = new ArrayList<>();
+        List<StaticPlatformDrawable> result = new ArrayList<StaticPlatformDrawable>();
         java.util.Collections.sort(platforms, COMPARATOR);
         for (List<StaticPlatform> partitionedPlatforms : partition(platforms)) {
             if (!partitionedPlatforms.isEmpty()) {
@@ -55,12 +55,12 @@ public class StaticPlatformDrawable implements IStaticPlatformDrawable {
     }
 
     private static List<List<StaticPlatform>> partition(List<StaticPlatform> platforms) {
-        List<List<StaticPlatform>> result = new ArrayList<>();
+        List<List<StaticPlatform>> result = new ArrayList<List<StaticPlatform>>();
         StaticPlatform previousPlatform = null;
         List<StaticPlatform> currentPlatforms = null;
         for (StaticPlatform platform : platforms) {
             if (null == currentPlatforms || 0 != COMPARATOR.compare(previousPlatform, platform)) {
-                currentPlatforms = new ArrayList<>();
+                currentPlatforms = new ArrayList<StaticPlatform>();
                 result.add(currentPlatforms);
             }
             currentPlatforms.add(platform);

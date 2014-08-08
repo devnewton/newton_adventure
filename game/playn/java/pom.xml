@@ -12,44 +12,27 @@
     <artifactId>playn-java</artifactId>
     <packaging>jar</packaging>
     <name>newton-adventure-playn-java</name>
-
     <properties>
         <mainClass>im.bci.newtonadv.platform.playn.java.PlaynNewtonAdventureGameJava</mainClass>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>im.bci.newtonadv</groupId>
             <artifactId>playn-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>im.bci.newtonadv</groupId>
             <artifactId>playn-assets</artifactId>
-            <version>${project.version}</version>
         </dependency>
-        
         <dependency>
             <groupId>im.bci</groupId>
             <artifactId>jnuit-playn-java</artifactId>
-            <version>${jnuit.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.googlecode.playn</groupId>
             <artifactId>playn-java</artifactId>
-            <version>${playn.version}</version>
-          <!--  <exclusions>
-                <exclusion>
-                    <groupId>jlayer</groupId>
-                    <artifactId>mp3spi</artifactId>        
-                </exclusion>
-            </exclusions>-->
         </dependency>
-    
     </dependencies>
-
     <build>
         <plugins>
             <!-- builds a standalone jar file during 'mvn package' -->

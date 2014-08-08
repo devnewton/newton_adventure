@@ -11,7 +11,7 @@ import java.util.List;
 public class StaticPlatformDrawer implements IStaticPlatformDrawer {
 
     private List<StaticPlatformDrawable> drawables;
-    private final List<StaticPlatform> platforms = new ArrayList<>();
+    private final List<StaticPlatform> platforms = new ArrayList<StaticPlatform>();
 
     @Override
     public void add(StaticPlatform platform) {

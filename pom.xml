@@ -13,10 +13,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <lwjgl.version>2.9.1</lwjgl.version>
         <jnuit.version>0.12</jnuit.version>
+        <playn.version>1.8.5</playn.version>
     </properties>
     <modules>
         <module>game/core</module>
         <module>game/lwjgl</module>
+        <module>game/playn</module>
         <module>editor</module>
         <module>packages/deb</module>
         <module>packages/generic</module>
@@ -31,6 +33,11 @@
             <dependency>
                 <groupId>im.bci.newtonadv</groupId>
                 <artifactId>newton-adventure-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>im.bci.newtonadv</groupId>
+                <artifactId>playn-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -60,6 +67,12 @@
             </dependency>
             <dependency>
                 <groupId>im.bci</groupId>
+                <artifactId>libtiled-jpurexml</artifactId>
+                <classifier>sources</classifier>
+                <version>0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>im.bci</groupId>
                 <artifactId>jnuit-core</artifactId>
                 <version>${jnuit.version}</version>
             </dependency>
@@ -68,8 +81,118 @@
                 <artifactId>jnuit-lwjgl-utils</artifactId>
                 <version>${jnuit.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.googlecode.playn</groupId>
+                <artifactId>playn-core</artifactId>
+                <version>${playn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>im.bci.newtonadv</groupId>
+                <artifactId>playn-core</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+    
+            <dependency>
+                <groupId>im.bci.newtonadv</groupId>
+                <artifactId>playn-assets</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+    
+            <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>jnuit-core</artifactId>
+                <version>${jnuit.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+ 
+            <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>jnuit-playn</artifactId>
+                <version>${jnuit.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>jnuit-playn-utils</artifactId>
+                <version>${jnuit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>jnuit-playn-utils</artifactId>
+                <version>${jnuit.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>tablelayout</artifactId>
+                <version>${jnuit.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>com.github.asilvestre</groupId>
+                <artifactId>jpurexml</artifactId>
+                <classifier>sources</classifier>
+                <version>0.12</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.playn</groupId>
+                <artifactId>playn-html</artifactId>
+                <version>${playn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.playn</groupId>
+                <artifactId>playn-html</artifactId>
+                <version>${playn.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>jnuit-playn-java</artifactId>
+                <version>${jnuit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.playn</groupId>
+                <artifactId>playn-java</artifactId>
+                <version>${playn.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jlayer</groupId>
+                        <artifactId>mp3spi</artifactId>        
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.3</version>
+                    <!-- build a -sources.jar always, rather than only on deploy -->
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
     <profiles>
         <profile>
             <id>java</id>
@@ -88,7 +211,7 @@
         </profile>
         <profile>
             <id>html</id>
-        </profile>        
+        </profile>   
     </profiles>
 </project>
 
