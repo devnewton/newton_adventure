@@ -2,30 +2,38 @@ Requirements
 ============
 
 Java JDK, [openjdk](http://openjdk.java.net/) or [Oracle](http://java.com): 1.7+
-[Maven](http://www.maven.org) 3+
+[Maven](http://www.maven.org) 3+,
+[bash](https://www.gnu.org/software/bash/) 4+
 
-Manual procedure
-================
+Build
+=====
 
-Compile
--------
+Go to the source folder and run the build.sh script using bash:
 
-Go to the source folder and run maven with the following command:
-
-	mvn package
-
-This will generate an executable jar installer in packages/generic/target subfolder named newton-adventure-installer-${project.version}.jar
+	bash build.sh
 
 Install
--------
+=======
 
-Go to the source folder and launch the generic installer:
+The build.sh script generate installers for various OS in the target/release subfolder. Use them to install the game.
 
-    java -jar packages/generic/target/newton-adventure-installer-${project.version}.jar
+Run without install 
+===================
 
-Create other packages and installers
-------------------------------------
+Go to the source folder and run the play.sh script using bash:
 
-Using maven 3 plugins, rpm, deb and exe package/installer can be generated:
+        bash play.sh
 
-	mvn clean package -Pdeb,rpm,win
+Develop, debug
+==============
+
+Newton Adventure is maven based project, open it with Netbeans or Eclipse.
+
+Contribute
+==========
+
+Please contact me:
+
+- by mail: devnewton at bci.im
+- using IRC: #GGP on freenode.net.
+
