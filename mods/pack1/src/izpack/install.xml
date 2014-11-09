@@ -41,11 +41,9 @@
  
     <packs>
         <pack name="pack1" required="yes">
-            <description>pack1</description>
-            <singlefile src="../../../../licenses/data.txt" target="$INSTALL_PATH/deluxe/licenses.txt" override="true"/>
-            <fileset dir="../../deluxe" targetdir="$INSTALL_PATH/deluxe" override="true"/>
+            <description>retro</description>
             <singlefile src="../../../../licenses/data.txt" target="$INSTALL_PATH/retro/licenses.txt" override="true"/>
-            <fileset dir="../../retro" targetdir="$INSTALL_PATH/retro" override="true"/>
+            <fileset dir="../../data" targetdir="$INSTALL_PATH/retro" override="true"/>
         </pack>
     </packs> 
     

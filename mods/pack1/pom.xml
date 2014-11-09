@@ -29,9 +29,9 @@ SUCH DAMAGE. */ -->
 	<version>1.16-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>newton-adventure-mod-pack1</artifactId>
+    <artifactId>newton-adventure-mod-retro</artifactId>
     <packaging>jar</packaging>
-    <name>newton-adventure-mod-pack1</name>
+    <name>newton-adventure-mod-retro</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
