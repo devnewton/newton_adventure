@@ -53,7 +53,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 	protected final World world;
 	private AnimationCollection texture;
 	private Play play;
-	private NewtonColor color;
+	private NewtonColor color = NewtonColor.white;
 	protected boolean isClose = true;
 
 	Door(World world, float w, float h) {
@@ -93,7 +93,7 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 	}
 
 	public boolean isOpenableWithKey(Key key) {
-		return null == color || color == key.getColor();
+		return NewtonColor.white == color || color == key.getColor();
 	}
 
 	@Override

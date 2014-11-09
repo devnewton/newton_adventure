@@ -362,7 +362,7 @@ public class PlaynGameView implements IGameView {
                     surface.scale(-1.0f, 1.0f);
                 }
                 NewtonColor color = hero.getColor();
-                surface.setTint(Color.rgb((int) (color.r * 255), (int) (color.g * 255), (int) (color.r * 255)));
+                surface.setTint(Color.rgb((int) (color.r * 255), (int) (color.g * 255), (int) (color.b * 255)));
                 surface.drawImage(image, x1, y1, bounds.getWidth(), bounds.getHeight(),
                         texture.getU1()
                         * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(),
@@ -385,7 +385,7 @@ public class PlaynGameView implements IGameView {
             surface.rotate(world.getGravityAngle());
             surface.scale(1, -1);
             NewtonColor color = key.getColor();
-            surface.setTint(Color.rgb((int) (color.r * 255), (int) (color.g * 255), (int) (color.r * 255)));
+            surface.setTint(Color.rgb((int) (color.r * 255), (int) (color.g * 255), (int) (color.b * 255)));
             surface.drawImage(image, -w / 2.0f, -h / 2.0f, w, h, texture.getU1() * image.width(), texture.getV1() * image.height(), (texture.getU2() - texture.getU1()) * image.width(), (texture.getV2() - texture.getV1()) * image.height());
             surface.setTint(Color.rgb(255, 255, 255));
             surface.restore();

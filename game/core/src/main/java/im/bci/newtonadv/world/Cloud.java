@@ -42,48 +42,48 @@ public strictfp class Cloud extends AnimatedPlatform implements Updatable {
     private boolean touched = false;
     private long disappearEndTime = -1;
     private float alpha = 1.0f;
-	private NewtonColor color;
+    private NewtonColor color = NewtonColor.white;
     private static final long disappearDuration = 1000000000L;
 
     public Cloud(World world, float w, float h) {
         super(world, w, h);
     }
-    
-    public Cloud(World world, Shape shape) {
-    	super(world, shape);
-	}
 
-	@Override
+    public Cloud(World world, Shape shape) {
+        super(world, shape);
+    }
+
+    @Override
     public void collided(Body body) {
-        if( body instanceof Hero && checkColor((Hero)body) ) {
+        if (body instanceof Hero && checkColor((Hero) body)) {
             touched = true;
         }
     }
 
     private boolean checkColor(Hero hero) {
-		return null == color || hero.getColor() == color;
-	}
+        return NewtonColor.white == color || hero.getColor() == color;
+    }
 
-	@Override
+    @Override
     public void draw() {
-        world.getView().drawCloud(this,alpha);       
+        world.getView().drawCloud(this, alpha);
     }
 
     @Override
     public void update(FrameTimeInfos frameTimeInfos) {
-       if( touched) {
-           if( disappearEndTime < 0 )
-               disappearEndTime = frameTimeInfos.currentTime + disappearDuration;
-           else if( frameTimeInfos.currentTime  < disappearEndTime ) {
-               alpha =  (disappearEndTime -  frameTimeInfos.currentTime) / (float)disappearDuration;
-           } else {
-               world.remove(this);
-           }
-       }
+        if (touched) {
+            if (disappearEndTime < 0) {
+                disappearEndTime = frameTimeInfos.currentTime + disappearDuration;
+            } else if (frameTimeInfos.currentTime < disappearEndTime) {
+                alpha = (disappearEndTime - frameTimeInfos.currentTime) / (float) disappearDuration;
+            } else {
+                world.remove(this);
+            }
+        }
     }
-    
-	public void setColor(NewtonColor color) {
-		this.color  = color;
-	}
-    
+
+    public void setColor(NewtonColor color) {
+        this.color = color;
+    }
+
 }

@@ -19,7 +19,9 @@
         <!-- you can pass these on the command line as -Dkeystore.password=foo etc. -->
         <keystore.password></keystore.password>
         <key.password></key.password>
-        <android.sdk.path>${env.HOME}/dev/adt-bundle-linux-x86-20131030/sdk</android.sdk.path>
+        <android.sdk.path>${env.HOME}/Documents/NetBeansProjects/adt-bundle-windows-x86_64-20140702/sdk</android.sdk.path>
+        <android.version>4.1.1.4</android.version>
+        <android.maven.version>4.0.0-rc.2</android.maven.version>
     </properties>
 
     <dependencies>
@@ -33,14 +35,6 @@
             <groupId>com.googlecode.playn</groupId>
             <artifactId>playn-android</artifactId>
             <version>${playn.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.googlecode.playn</groupId>
-            <artifactId>playn-android-nativelib</artifactId>
-            <version>1.0</version>
-            <scope>runtime</scope>
-            <type>so</type>
         </dependency>
 
         <dependency>

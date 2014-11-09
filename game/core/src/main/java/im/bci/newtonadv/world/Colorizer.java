@@ -41,7 +41,7 @@ import net.phys2d.raw.Body;
  */
 public strictfp class Colorizer extends AnimatedPlatform implements CollisionDetectionOnly, Updatable {
 
-    private NewtonColor color;
+    private NewtonColor color = NewtonColor.white;
 
     Colorizer(World world, float w, float h) {
     	super(world, w, h);

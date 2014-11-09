@@ -8,7 +8,7 @@ import net.phys2d.raw.CollisionEvent;
 
 public strictfp class DangerousMovingPlatform extends MovingPlatform {
 	
-	private NewtonColor color = null;
+	private NewtonColor color = NewtonColor.white;
 
 	public DangerousMovingPlatform(World world,
 			AnimationCollection texture, Vector2f[] destinations, float w,
@@ -20,7 +20,7 @@ public strictfp class DangerousMovingPlatform extends MovingPlatform {
 	public void collided(Body other) {
 		if (other instanceof Hero) {
 			Hero hero = (Hero) other;
-			if (hero.isInvincible() || color == hero.getColor()) {
+			if (hero.isInvincible() || (NewtonColor.white != color && color == hero.getColor())) {
 				return;
 			}
 			CollisionEvent[] events = world.getContacts(this);
