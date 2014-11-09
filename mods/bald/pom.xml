@@ -25,17 +25,13 @@ SUCH DAMAGE. */ -->
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>im.bci.newtonadv</groupId>
-	<artifactId>newton-adventure</artifactId>
-	<version>1.16-SNAPSHOT</version>
+        <artifactId>newton-adventure</artifactId>
+        <version>1.16-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>newton-adventure-mod-bald</artifactId>
     <packaging>jar</packaging>
     <name>newton_adventure-mod-bald</name>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
     <build>
         <plugins>
             <plugin>
@@ -49,7 +45,8 @@ SUCH DAMAGE. */ -->
                             <goal>izpack</goal>
                         </goals>
                         <configuration>
-							<attach>true</attach>
+                            <descriptorEncoding>UTF-8</descriptorEncoding>
+                            <attach>true</attach>
                             <installerFile>${project.build.directory}/${project.build.finalName}-installer.jar</installerFile>
                         </configuration>
                     </execution>

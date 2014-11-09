@@ -32,7 +32,7 @@
                         </manifest>
                         <manifestEntries>
                             <mode>development</mode>
-                            <url>${pom.url}</url>
+                            <url>${project.url}</url>
                             <Class-Path></Class-Path>
                         </manifestEntries>
                     </archive>

@@ -32,10 +32,6 @@ SUCH DAMAGE. */ -->
     <artifactId>newton-adventure-mod-retro</artifactId>
     <packaging>jar</packaging>
     <name>newton-adventure-mod-retro</name>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
     <build>
         <plugins>
             <plugin>
@@ -49,6 +45,7 @@ SUCH DAMAGE. */ -->
                             <goal>izpack</goal>
                         </goals>
                         <configuration>
+                            <descriptorEncoding>UTF-8</descriptorEncoding>
                             <installerFile>${project.build.directory}/${project.build.finalName}-installer.jar</installerFile>
                         </configuration>
                     </execution>

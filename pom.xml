@@ -11,6 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
         <lwjgl.version>2.9.1</lwjgl.version>
         <jnuit.version>0.12</jnuit.version>
         <playn.version>1.8.5</playn.version>
@@ -26,7 +27,7 @@
         <module>packages/win</module>
         <module>mods/bald</module>
         <module>mods/duchatelet</module>
-        <module>mods/pack1</module>
+        <module>mods/retro</module>
     </modules>
     <dependencyManagement>
         <dependencies>

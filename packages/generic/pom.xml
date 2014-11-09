@@ -41,10 +41,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <artifactId>newton-adventure-installer</artifactId>
     <packaging>jar</packaging>
     <name>newton-adventure-installer</name>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
     <build>
         <plugins>
             <plugin>
@@ -120,6 +116,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             <goal>izpack</goal>
                         </goals>
                         <configuration>
+                            <descriptorEncoding>UTF-8</descriptorEncoding>
                             <attach>true</attach>
                             <installerFile>${project.build.directory}/newton-adventure-installer-${project.version}.jar</installerFile>
                         </configuration>
