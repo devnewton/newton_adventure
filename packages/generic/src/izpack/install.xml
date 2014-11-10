@@ -20,6 +20,7 @@
     <variables>
         <variable name="newton_adventure_build_final_name" value="newton-adventure-lwjgl-@{project.version}.jar"/>
         <variable name="ShowCreateDirectoryMessage" value="false"/>
+        <variable name="TargetPanel.dir.unix" value="~/opt/games/newtonadventure"/>
         <variable name="TargetPanel.dir" value="${SYSTEM_user_dir}/opt/games/newtonadventure"/>
     </variables>
 
