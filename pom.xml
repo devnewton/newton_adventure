@@ -5,7 +5,7 @@
 
     <groupId>im.bci.newtonadv</groupId>
     <artifactId>newton-adventure</artifactId>
-    <version>1.16-SNAPSHOT</version>
+    <version>1.16</version>
     <name>newton-adventure</name>
     <packaging>pom</packaging>
     <properties>
