@@ -87,6 +87,14 @@
                 <artifactId>playn-core</artifactId>
                 <version>${playn.version}</version>
             </dependency>
+            
+            <dependency>
+                <groupId>im.bci.newtonadv</groupId>
+                <artifactId>newton-adventure-core</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            
             <dependency>
                 <groupId>im.bci.newtonadv</groupId>
                 <artifactId>playn-core</artifactId>
