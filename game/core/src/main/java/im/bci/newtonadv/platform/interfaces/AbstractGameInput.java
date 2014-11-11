@@ -176,6 +176,12 @@ public abstract class AbstractGameInput {
     }
 
     public void poll() {
+        cheatActivateAll.poll();
+        cheatGetCompass.poll();
+        cheatGetWorldMap.poll();
+        cheatGotoNextBonusLevel.poll();
+        cheatGotoNextLevel.poll();
+        cheatSetAllCompleted.poll();
         menuOk.poll();
         menuUp.poll();
         menuDown.poll();
