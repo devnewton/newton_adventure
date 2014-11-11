@@ -12,6 +12,18 @@ Go to the source folder and run the build.sh script using bash:
 
 	bash build.sh
 
+Build android apk
+-----------------
+
+1. Edit the following properties in game/playn/android/pom.xml:
+
+- android.sdk.path
+- android.version
+
+2. Run maven build with android profile
+
+    mvn package -Pandroid
+
 Install
 =======
 
