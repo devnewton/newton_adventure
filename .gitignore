@@ -21,3 +21,19 @@
 /mods/bald/target/
 /target/
 /mods/retro/target/
+
+# Eclipse specific files/directories #
+######################################
+.classpath
+.project
+.settings
+
+
+# IntelliJ specific files/directories #
+#######################################
+out
+.idea
+*.ipr
+*.iws
+*.iml
+atlassian-ide-plugin.xml
