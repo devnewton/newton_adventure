@@ -86,7 +86,6 @@ import im.bci.newtonadv.world.World;
 
 import java.awt.Font;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -1161,6 +1160,13 @@ public strictfp class GameView implements IGameView {
 
     private AnimationCollection loadNanim(String filename) throws IOException {
         AnimationCollection nanim = new AnimationCollection();
+        String path;
+        final int lastIndexOfSlash = filename.lastIndexOf("/");
+        if (lastIndexOfSlash < 0) {
+            path = "";
+        } else {
+            path = filename.substring(0, lastIndexOfSlash + 1);
+        }
         InputStream is = data.openFile(filename);
         try {
             InputStreamReader reader = new InputStreamReader(is);
@@ -1172,7 +1178,7 @@ public strictfp class GameView implements IGameView {
                     JsonObject jsonFrame = jsonFrameElement.getAsJsonObject();
                     final String imageFilename = jsonFrame.get("image").getAsString();
                     ITexture texture = textureCache
-                            .getTexture(new File(new File(filename).getParent(), imageFilename).getCanonicalPath());
+                            .getTexture(path + imageFilename);
                     animation.addFrame(texture, jsonFrame.get("duration").getAsInt(), jsonFrame.get("u1").getAsFloat(),
                             jsonFrame.get("v1").getAsFloat(), jsonFrame.get("u2").getAsFloat(),
                             jsonFrame.get("v2").getAsFloat());

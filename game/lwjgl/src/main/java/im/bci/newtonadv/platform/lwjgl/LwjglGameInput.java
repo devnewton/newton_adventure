@@ -101,7 +101,10 @@ public class LwjglGameInput extends AbstractGameInput {
         double[] x = new double[1];
         double[] y = new double[1];
         GLFW.glfwGetCursorPos(window, x, y);
-        return new Vector2f((float)x[0], (float)y[0]);
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(this.window, width, height);
+        return new Vector2f((float)x[0], (float)(height[0] - y[0]));
     }
 
     @Override

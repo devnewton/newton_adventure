@@ -61,7 +61,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
@@ -86,10 +85,12 @@ public class PlatformSpecific implements IPlatformSpecific {
     private NuitToolkit nuitToolkit;
     private final ResourceBundle messages;
     private NuitControls controls;
+    private VirtualFileSystem vfs;
+
 
     public PlatformSpecific() throws Exception {
+        vfs = new VirtualFileSystem("data");
         messages = ResourceBundle.getBundle("messages");
-
         config = new LwjglNuitPreferences("newton-adventure");
 
         createGameData();
@@ -132,14 +133,7 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     private IGameData createGameData() {
         if (data == null) {
-            List<File> dataDirs = new ArrayList<File>();
-            IMod mod = findModByName(config.getString("newton_adventure.mod", ""));
-            if (null != mod) {
-                dataDirs.add(new File(mod.getPath()));
-            }
-            dataDirs.add(getDefaultDataDir());
-            data = new FileGameData();
-            data.setDataDirs(dataDirs);
+            data = new FileGameData(vfs);
         }
         return data;
     }
@@ -291,84 +285,23 @@ public class PlatformSpecific implements IPlatformSpecific {
         }
     }
 
-    private File getDefaultDataDir() {
-        File dir = RuntimeUtils.getApplicationDir();
-        do {
-            File dataDir = new File(dir, "data");
-            if (dataDir.exists() && dataDir.isDirectory()) {
-                return dataDir;
-            }
-            dir = dir.getParentFile();
-        } while (null != dir);
-        return null;
-    }
-
     @Override
     public List<IMod> listMods() {
-        String modsDir = getUserConfigDirPath() + File.separator + "mods";
-        return listModsInDirs(new File(modsDir));
-    }
-
-    private IMod findModByName(String modName) {
-        if (null != modName) {
-            List<IMod> mods = listMods();
-            for (IMod mod : mods) {
-                if (modName.equals(mod.getName())) {
-                    return mod;
-                }
-            }
-        }
-        return null;
+        return new ArrayList<IMod>();
     }
 
     @Override
     public void loadModIfNeeded(String modName) throws RestartGameException {
-        IMod mod = findModByName(modName);
-        IMod currentMod = getCurrentMod();
-        File modDir = null != mod ? new File(mod.getPath()) : getDefaultDataDir();
-        File currentModDir = null != currentMod ? new File(currentMod.getPath()) : getDefaultDataDir();
-        if (!modDir.equals(currentModDir)) {
-            List<File> dataDirs = new ArrayList<File>();
-            dataDirs.add(modDir);
-            dataDirs.add(getDefaultDataDir());
-            data.setDataDirs(dataDirs);
-            throw new RestartGameException();
-        }
+        //TODO rewrite mod system
     }
 
     @Override
     public IMod getCurrentMod() {
-        return findModByPath(data.getDataDirs().get(0));
+      //TODO rewrite mod system
+       return null;
     }
 
-    private IMod findModByPath(File path) {
-        List<IMod> mods = listMods();
-        for (IMod mod : mods) {
-            if (path.equals(new File(mod.getPath()))) {
-                return mod;
-            }
-        }
-        return null;
-    }
-
-    private List<IMod> listModsInDirs(File... dirs) {
-        List<IMod> mods = new ArrayList<IMod>();
-        for (File dir : dirs) {
-            if (dir.exists()) {
-                for (File f : dir.listFiles()) {
-                    if (f.isDirectory()) {
-                        try {
-                            mods.add(new Mod().withName(f.getName()).withPath(f.getCanonicalPath()));
-                        } catch (IOException ex) {
-                            Logger.getLogger(PlatformSpecific.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }
-        }
-        return mods;
-    }
-
+    
     @Override
     public String getMessage(String msg) {
         return messages.getString(msg);
@@ -391,7 +324,6 @@ public class PlatformSpecific implements IPlatformSpecific {
         final NuitTranslator nuitTranslator = new NewtonAdventureNuitTranslator();
         final LwjglNuitFont lwjglNuitFont = new LwjglNuitFont(new Font("Monospaced", Font.PLAIN, 24), true, new char[0],
                 new HashMap<Character, BufferedImage>());
-        VirtualFileSystem vfs = new VirtualFileSystem();
         NuitAudio openALNuitAudio = new OpenALNuitAudio(vfs);
         nuitToolkit = new NuitToolkit(new LwjglNuitDisplay(view.getWindow()), controls, nuitTranslator, lwjglNuitFont,
                 new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont, view.getWindow()), openALNuitAudio);
