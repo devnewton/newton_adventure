@@ -29,7 +29,7 @@
                                     <goal>copy-dependencies</goal>
                                 </goals>
                                 <configuration>
-                                    <includes>newton-adventure-installer*</includes>
+                                    <includes>newton-adventure-lwjgl-${project.version}.jar</includes>
                                     <excludeTransitive>true</excludeTransitive>
                                     <outputDirectory>${project.build.directory}</outputDirectory>
                                 </configuration>
@@ -39,7 +39,7 @@
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j</groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
-                        <version>1.5.2</version>
+                        <version>1.7.25</version>
                         <executions>
                             <execution>
                                 <id>l4j-installer</id>
@@ -50,11 +50,11 @@
                                 <configuration>
                                     <headerType>gui</headerType>
                                     <dontWrapJar>false</dontWrapJar>
-                                    <outfile>${project.build.directory}/newton-adventure-installer-${project.version}.exe</outfile>
-                                    <jar>${project.build.directory}/newton-adventure-installer-${project.version}.jar</jar>
-                                    <errTitle>Newton Adventure installer</errTitle>
+                                    <outfile>${project.build.directory}/newton-adventure-${project.version}.exe</outfile>
+                                    <jar>${project.build.directory}/newton-adventure-lwjgl-${project.version}.jar</jar>
+                                    <errTitle>Newton Adventure</errTitle>
                                     <jre>
-                                        <minVersion>1.7.0</minVersion>
+                                        <minVersion>11</minVersion>
                                     </jre>
                                     <versionInfo>
                                         <fileVersion>1.0.0.0</fileVersion>
@@ -63,9 +63,9 @@
                                         <copyright>BSD, CC-BY-SA</copyright>
                                         <productVersion>1.0.0.0</productVersion>
                                         <txtProductVersion>${project.version}</txtProductVersion>
-                                        <productName>Newton Adventure installer</productName>
-                                        <internalName>newton-adventure-installer</internalName>
-                                        <originalFilename>newton-adventure-installer-${project.version}.exe</originalFilename>
+                                        <productName>Newton Adventure</productName>
+                                        <internalName>newton-adventure</internalName>
+                                        <originalFilename>newton-adventure-${project.version}.exe</originalFilename>
                                     </versionInfo>
                                 </configuration>
                             </execution>
@@ -76,7 +76,7 @@
             <dependencies>
                 <dependency>
                     <groupId>im.bci.newtonadv</groupId>
-                    <artifactId>newton-adventure-installer</artifactId>
+                    <artifactId>newton-adventure-lwjgl</artifactId>
                 </dependency>
             </dependencies>
         </profile>
