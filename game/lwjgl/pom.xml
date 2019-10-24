@@ -45,6 +45,10 @@
                 <filtering>false</filtering>
                 <targetPath>data</targetPath>
             </resource>
+            <resource>
+                <directory>../../mods</directory>
+                <filtering>false</filtering>
+            </resource>
         </resources>
         <plugins>
             <plugin>

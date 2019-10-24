@@ -25,9 +25,6 @@
         <module>packages/generic</module>
         <module>packages/rpm</module>
         <module>packages/win</module>
-        <module>mods/bald</module>
-        <module>mods/duchatelet</module>
-        <module>mods/retro</module>
     </modules>
     <dependencyManagement>
         <dependencies>

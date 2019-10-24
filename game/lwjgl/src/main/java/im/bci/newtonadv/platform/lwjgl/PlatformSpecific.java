@@ -65,9 +65,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +89,6 @@ public class PlatformSpecific implements IPlatformSpecific {
     private NuitControls controls;
     private VirtualFileSystem vfs;
 
-
     public PlatformSpecific() throws Exception {
         vfs = new VirtualFileSystem("data");
         messages = ResourceBundle.getBundle("messages");
@@ -98,7 +99,6 @@ public class PlatformSpecific implements IPlatformSpecific {
         createControls();
         createNuitToolkit();
         createGameInput();
-
     }
 
     private GameView createGameView() {
@@ -110,9 +110,9 @@ public class PlatformSpecific implements IPlatformSpecific {
         }
         return view;
     }
-    
+
     private void createControls() {
-        if(null == view) {
+        if (null == view) {
             throw new RuntimeException("create IGameView before controls");
         }
         controls = new LwjglNuitControls(view.getWindow());
@@ -121,7 +121,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     private LwjglGameInput createGameInput() throws Exception {
-        if(null == view) {
+        if (null == view) {
             throw new RuntimeException("create IGameView before controls");
         }
         if (null == input) {
@@ -287,21 +287,40 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     @Override
     public List<IMod> listMods() {
-        return new ArrayList<IMod>();
+        ArrayList<IMod> mods = new ArrayList<IMod>();
+        mods.add(new Mod().withName("Newton").withPath("data"));
+        mods.add(new Mod().withName("Bald").withPath("bald"));
+        mods.add(new Mod().withName("Du Châtelet").withPath("duchatelet"));
+        mods.add(new Mod().withName("Retro").withPath("retro"));
+        return mods;
     }
 
     @Override
     public void loadModIfNeeded(String modName) throws RestartGameException {
-        //TODO rewrite mod system
+        IMod newMod = findModByName(modName);
+        if (!Objects.equals(currentMod, newMod)) {
+            currentMod = newMod;
+            this.vfs.setResourcePaths(currentMod.getPath(), "data");
+            throw new RestartGameException();
+        }
     }
+
+    private IMod findModByName(String modName) {
+        for (IMod mod : listMods()) {
+            if (mod.getName().equals(modName)) {
+                return mod;
+            }
+        }
+        return null;
+    }
+
+    private IMod currentMod;
 
     @Override
     public IMod getCurrentMod() {
-      //TODO rewrite mod system
-       return null;
+        return currentMod;
     }
 
-    
     @Override
     public String getMessage(String msg) {
         return messages.getString(msg);
@@ -318,7 +337,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     private void createNuitToolkit() {
-        if(null == view) {
+        if (null == view) {
             throw new RuntimeException("create IGameView before NuitToolkit");
         }
         final NuitTranslator nuitTranslator = new NewtonAdventureNuitTranslator();

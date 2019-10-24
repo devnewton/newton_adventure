@@ -115,6 +115,7 @@ public class OptionsGUI extends Stack {
          optionsMenu.row();*/
         if (!mods.isEmpty()) {
             modChooser = new ModChooser(toolkit, mods);
+            modChooser.mods.setSelected(platform.getCurrentMod());
             themer.theme(modChooser);
             optionsMenu.cell(new Button(toolkit, "options.mods") {
 
