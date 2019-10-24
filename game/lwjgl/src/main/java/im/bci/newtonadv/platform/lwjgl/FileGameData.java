@@ -169,8 +169,11 @@ public class FileGameData implements IGameData {
         try {
             InputStream is = new FileInputStream(f);
             try {
-                Scanner s = new Scanner(is, "UTF-8").useDelimiter("\\Z");
-                return s.next();
+                Scanner s = new Scanner(is, "UTF-8");
+                s.useDelimiter("\\Z");
+                String str = s.next();
+                s.close();
+                return str;
             } finally {
                 is.close();
             }

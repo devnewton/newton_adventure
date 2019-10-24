@@ -42,8 +42,8 @@ import im.bci.jnuit.lwjgl.LwjglNuitDisplay;
 import im.bci.jnuit.lwjgl.LwjglNuitFont;
 import im.bci.jnuit.lwjgl.LwjglNuitPreferences;
 import im.bci.jnuit.lwjgl.LwjglNuitRenderer;
+import im.bci.jnuit.lwjgl.assets.VirtualFileSystem;
 import im.bci.jnuit.lwjgl.audio.OpenALNuitAudio;
-import im.bci.jnuit.noop.NoopNuitAudio;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.GameProgression;
 import im.bci.newtonadv.game.RestartGameException;
@@ -54,6 +54,8 @@ import im.bci.newtonadv.platform.interfaces.IMod;
 import im.bci.newtonadv.platform.interfaces.IPlatformSpecific;
 import im.bci.newtonadv.score.GameScore;
 import im.bci.newtonadv.ui.NewtonAdventureNuitTranslator;
+
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -62,6 +64,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +72,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.lwjgl.Sys;
 
 /**
  *
@@ -79,20 +81,20 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     private GameView view;
     private LwjglGameInput input;
-    private final NuitPreferences config;
+    private final LwjglNuitPreferences config;
     private FileGameData data;
     private NuitToolkit nuitToolkit;
     private final ResourceBundle messages;
-    private final NuitControls controls;
+    private NuitControls controls;
 
     public PlatformSpecific() throws Exception {
         messages = ResourceBundle.getBundle("messages");
 
-        controls = new LwjglNuitControls();
-        config = new LwjglNuitPreferences(controls, "newton-adventure");
+        config = new LwjglNuitPreferences("newton-adventure");
 
         createGameData();
         createGameView();
+        createControls();
         createNuitToolkit();
         createGameInput();
 
@@ -107,10 +109,22 @@ public class PlatformSpecific implements IPlatformSpecific {
         }
         return view;
     }
+    
+    private void createControls() {
+        if(null == view) {
+            throw new RuntimeException("create IGameView before controls");
+        }
+        controls = new LwjglNuitControls(view.getWindow());
+        config.setControls(controls);
+
+    }
 
     private LwjglGameInput createGameInput() throws Exception {
+        if(null == view) {
+            throw new RuntimeException("create IGameView before controls");
+        }
         if (null == input) {
-            input = new LwjglGameInput(nuitToolkit, config);
+            input = new LwjglGameInput(nuitToolkit, config, view.getWindow());
             input.setup();
         }
         return input;
@@ -136,8 +150,7 @@ public class PlatformSpecific implements IPlatformSpecific {
             configDirPath = System.getenv("APPDATA");
         }
         if (null == configDirPath) {
-            configDirPath = System.getProperty("user.home") + File.separator
-                    + ".config";
+            configDirPath = System.getProperty("user.home") + File.separator + ".config";
         }
         return configDirPath + File.separator + "newton_adventure";
     }
@@ -175,7 +188,13 @@ public class PlatformSpecific implements IPlatformSpecific {
 
     @Override
     public void openUrl(String url) {
-        Sys.openURL(url);
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(url));
+            }
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot open url " + url, e);
+        }
     }
 
     public void close() {
@@ -366,15 +385,23 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     private void createNuitToolkit() {
+        if(null == view) {
+            throw new RuntimeException("create IGameView before NuitToolkit");
+        }
         final NuitTranslator nuitTranslator = new NewtonAdventureNuitTranslator();
-        final LwjglNuitFont lwjglNuitFont = new LwjglNuitFont(new Font("Monospaced", Font.PLAIN, 24), true, new char[0], new HashMap<Character, BufferedImage>());
-        NuitAudio openALNuitAudio = new OpenALNuitAudio();
-        nuitToolkit = new NuitToolkit(new LwjglNuitDisplay(), controls, nuitTranslator, lwjglNuitFont, new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont), openALNuitAudio);
+        final LwjglNuitFont lwjglNuitFont = new LwjglNuitFont(new Font("Monospaced", Font.PLAIN, 24), true, new char[0],
+                new HashMap<Character, BufferedImage>());
+        VirtualFileSystem vfs = new VirtualFileSystem();
+        NuitAudio openALNuitAudio = new OpenALNuitAudio(vfs);
+        nuitToolkit = new NuitToolkit(new LwjglNuitDisplay(view.getWindow()), controls, nuitTranslator, lwjglNuitFont,
+                new LwjglNuitRenderer(nuitTranslator, lwjglNuitFont, view.getWindow()), openALNuitAudio);
         nuitToolkit.setVirtualResolutionWidth(Game.DEFAULT_SCREEN_WIDTH);
         nuitToolkit.setVirtualResolutionHeight(Game.DEFAULT_SCREEN_HEIGHT);
         openALNuitAudio.setMusicVolume(config.getFloat("music.volume", 1.0f));
         openALNuitAudio.setEffectsVolume(config.getFloat("effects.volume", 1.0f));
-        nuitTranslator.setCurrentLocale(Locale.getDefault().getLanguage().equals(new Locale("fr").getLanguage()) ? NuitLocale.FRENCH : NuitLocale.ENGLISH);
+        nuitTranslator.setCurrentLocale(
+                Locale.getDefault().getLanguage().equals(new Locale("fr").getLanguage()) ? NuitLocale.FRENCH
+                        : NuitLocale.ENGLISH);
     }
 
     @Override

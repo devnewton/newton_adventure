@@ -12,8 +12,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
-        <lwjgl.version>2.9.1</lwjgl.version>
-        <jnuit.version>0.12</jnuit.version>
+        <lwjgl.version>3.2.3</lwjgl.version>
+        <jnuit.version>0.14-SNAPSHOT</jnuit.version>
         <playn.version>1.8.5</playn.version>
     </properties>
     <modules>
@@ -52,14 +52,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.lwjgl.lwjgl</groupId>
-                <artifactId>lwjgl</artifactId>
+                <groupId>org.lwjgl</groupId>
+                <artifactId>lwjgl-bom</artifactId>
                 <version>${lwjgl.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.lwjgl.lwjgl</groupId>
-                <artifactId>lwjgl_util</artifactId>
-                <version>${lwjgl.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>im.bci</groupId>

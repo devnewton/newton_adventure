@@ -35,6 +35,8 @@ import im.bci.jnuit.NuitPreferences;
 import im.bci.jnuit.controls.Action;
 import im.bci.jnuit.controls.ActionActivatedDetector;
 import im.bci.jnuit.NuitToolkit;
+import im.bci.jnuit.lwjgl.controls.GamepadAxisControl;
+import im.bci.jnuit.lwjgl.controls.GamepadButtonControl;
 import im.bci.jnuit.lwjgl.controls.KeyControl;
 import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import java.util.Arrays;
@@ -42,8 +44,7 @@ import java.util.List;
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import org.lwjgl.glfw.GLFW;
 
 /**
  *
@@ -51,42 +52,60 @@ import org.lwjgl.input.Mouse;
  */
 public class LwjglGameInput extends AbstractGameInput {
 
-    public LwjglGameInput(NuitToolkit toolkit, NuitPreferences config) throws Exception {
+    private final long window;
+    
+    public LwjglGameInput(NuitToolkit toolkit, NuitPreferences config, long window) throws Exception {
         super(toolkit, config);
+        this.window  = window;
     }
 
     @Override
     protected void setupGameControls() {
-        activate = new ActionActivatedDetector(new Action("action.activate", new KeyControl(Keyboard.KEY_DOWN)));
-        jump = new ActionActivatedDetector(new Action("action.jump", new KeyControl(Keyboard.KEY_UP)));
-        left = new ActionActivatedDetector(new Action("action.left", new KeyControl(Keyboard.KEY_LEFT)));
-        right = new ActionActivatedDetector(new Action("action.right", new KeyControl(Keyboard.KEY_RIGHT)));
-        rotateClockwise = new ActionActivatedDetector(new Action("action.rotate.clockwise", new KeyControl(Keyboard.KEY_C)));
-        rotateCounterClockwise = new ActionActivatedDetector(new Action("action.rotate.counterclockwise", new KeyControl(Keyboard.KEY_X)));
-        rotate90Clockwise = new ActionActivatedDetector(new Action("action.rotate.clockwise.90", new KeyControl(Keyboard.KEY_S)));
-        rotate90CounterClockwise = new ActionActivatedDetector(new Action("action.rotate.counterclockwise.90", new KeyControl(Keyboard.KEY_D)));
-        returnToMenu = new ActionActivatedDetector(new Action("action.returntomenu", new KeyControl(Keyboard.KEY_ESCAPE)));
+        activate = new ActionActivatedDetector(new Action("action.activate", new KeyControl(window, GLFW.GLFW_KEY_DOWN, "DOWN")));
+        jump = new ActionActivatedDetector(new Action("action.jump", new KeyControl(window, GLFW.GLFW_KEY_UP, "UP")));
+        left = new ActionActivatedDetector(new Action("action.left", new KeyControl(window, GLFW.GLFW_KEY_LEFT, "LEFT")));
+        right = new ActionActivatedDetector(new Action("action.right", new KeyControl(window, GLFW.GLFW_KEY_RIGHT, "RIGHT")));
+        rotateClockwise = new ActionActivatedDetector(new Action("action.rotate.clockwise", new KeyControl(window, GLFW.GLFW_KEY_C, "C")));
+        rotateCounterClockwise = new ActionActivatedDetector(new Action("action.rotate.counterclockwise", new KeyControl(window, GLFW.GLFW_KEY_X, "X")));
+        rotate90Clockwise = new ActionActivatedDetector(new Action("action.rotate.clockwise.90", new KeyControl(window, GLFW.GLFW_KEY_S, "S")));
+        rotate90CounterClockwise = new ActionActivatedDetector(new Action("action.rotate.counterclockwise.90", new KeyControl(window, GLFW.GLFW_KEY_D, "D")));
+        returnToMenu = new ActionActivatedDetector(new Action("action.returntomenu", new KeyControl(window, GLFW.GLFW_KEY_ESCAPE, "ESCAPE")));
 
-        cheatActivateAll = new ActionActivatedDetector(new Action("cheat.activate.all", new KeyControl(Keyboard.KEY_F8)));
-        cheatGetWorldMap = new ActionActivatedDetector(new Action("cheat.get.world.map", new KeyControl(Keyboard.KEY_F9)));
-        cheatGetCompass = new ActionActivatedDetector(new Action("cheat.get.compass", new KeyControl(Keyboard.KEY_F10)));
-        cheatGotoNextBonusLevel = new ActionActivatedDetector(new Action("cheat.goto.next.bonus.level", new KeyControl(Keyboard.KEY_F11)));
-        cheatGotoNextLevel = new ActionActivatedDetector(new Action("cheat.goto.next.level", new KeyControl(Keyboard.KEY_F12)));
-        cheatSetAllCompleted = new ActionActivatedDetector(new Action("cheat.set.all.completed", new KeyControl(Keyboard.KEY_F12)));
+        cheatActivateAll = new ActionActivatedDetector(new Action("cheat.activate.all", new KeyControl(window, GLFW.GLFW_KEY_F8, "F8")));
+        cheatGetWorldMap = new ActionActivatedDetector(new Action("cheat.get.world.map", new KeyControl(window, GLFW.GLFW_KEY_F9, "F9")));
+        cheatGetCompass = new ActionActivatedDetector(new Action("cheat.get.compass", new KeyControl(window, GLFW.GLFW_KEY_F10, "F10")));
+        cheatGotoNextBonusLevel = new ActionActivatedDetector(new Action("cheat.goto.next.bonus.level", new KeyControl(window, GLFW.GLFW_KEY_F11, "F11")));
+        cheatGotoNextLevel = new ActionActivatedDetector(new Action("cheat.goto.next.level", new KeyControl(window, GLFW.GLFW_KEY_F12, "F12")));
+        cheatSetAllCompleted = new ActionActivatedDetector(new Action("cheat.set.all.completed", new KeyControl(window, GLFW.GLFW_KEY_F12, "F12")));
+        
+        if (GLFW.glfwJoystickIsGamepad(GLFW.GLFW_JOYSTICK_1))        {
+            activate.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_B, "B"));
+            jump.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_A, "A"));
+            left.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_X, "Left stick ◀", false));
+            right.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_X, "Left stick ▶", true));
+            rotateClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, "Left trigger", false));
+            rotateCounterClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, "Right trigger", true));
+            rotate90Clockwise.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, "Left bumper"));
+            rotate90CounterClockwise.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, "Right bumper"));
+            returnToMenu.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_START, "Start"));
+        }
     }
 
     @Override
     public List<Action> getDefaultGameActionList() {
-        return Arrays.asList(new Action("action.jump", new KeyControl(Keyboard.KEY_UP)), new Action("action.left", new KeyControl(Keyboard.KEY_LEFT)), new Action("action.right", new KeyControl(Keyboard.KEY_RIGHT)), new Action("action.rotate.clockwise", new KeyControl(Keyboard.KEY_C)), new Action("action.rotate.counterclockwise", new KeyControl(Keyboard.KEY_X)), new Action("action.rotate.clockwise.90", new KeyControl(Keyboard.KEY_S)), new Action("action.rotate.counterclockwise.90", new KeyControl(Keyboard.KEY_D)), new Action("action.activate", new KeyControl(Keyboard.KEY_DOWN)), new Action("action.returntomenu", new KeyControl(Keyboard.KEY_ESCAPE)));
+        return Arrays.asList(new Action("action.jump", new KeyControl(window, GLFW.GLFW_KEY_UP, "UP")), new Action("action.left", new KeyControl(window, GLFW.GLFW_KEY_LEFT, "LEFT")), new Action("action.right", new KeyControl(window, GLFW.GLFW_KEY_RIGHT, "RIGHT")), new Action("action.rotate.clockwise", new KeyControl(window, GLFW.GLFW_KEY_C, "C")), new Action("action.rotate.counterclockwise", new KeyControl(window, GLFW.GLFW_KEY_X, "X")), new Action("action.rotate.clockwise.90", new KeyControl(window, GLFW.GLFW_KEY_S, "S")), new Action("action.rotate.counterclockwise.90", new KeyControl(window, GLFW.GLFW_KEY_D, "D")), new Action("action.activate", new KeyControl(window, GLFW.GLFW_KEY_DOWN, "DOWN")), new Action("action.returntomenu", new KeyControl(window, GLFW.GLFW_KEY_ESCAPE, "ESCAPE")));
     }
 
     @Override
     public ROVector2f getMousePos() {
-        return new Vector2f(Mouse.getX(), Mouse.getY());
+        double[] x = new double[1];
+        double[] y = new double[1];
+        GLFW.glfwGetCursorPos(window, x, y);
+        return new Vector2f((float)x[0], (float)y[0]);
     }
 
     @Override
     public boolean isMouseButtonDown() {
-        return Mouse.isButtonDown(0);
+        return GLFW.GLFW_PRESS == GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT);
     }
 }

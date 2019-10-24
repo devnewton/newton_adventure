@@ -32,8 +32,11 @@
 
 package im.bci.newtonadv.platform.lwjgl;
 
-import im.bci.newtonadv.platform.lwjgl.launcher.NormalLauncher;
-import im.bci.newtonadv.platform.lwjgl.launcher.SafeLauncher;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import im.bci.newtonadv.Game;
+import im.bci.newtonadv.game.RestartGameException;
 
 /**
  *
@@ -42,18 +45,47 @@ import im.bci.newtonadv.platform.lwjgl.launcher.SafeLauncher;
 public class Main {
     
     public static void main(String args[]) throws Exception {
-        boolean safeLauncher = false;
-        for(String arg : args) {
-            if("--safe".equals(arg)) {
-                safeLauncher = true;
-                break;
+        Game game;
+        PlatformSpecific platform = null;
+        try {
+            try {
+                platform = new PlatformSpecific();
+                game = new Game(platform);
+                game.start();
+                game.tick();
+            } catch (GameCloseException e) {
+                return;
+            } catch (Throwable e) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE,
+                        "Unexpected error during newton adventure startup. Check your java version and your opengl driver.", e);
+                return;
             }
+
+            try {
+                while (game.isRunning()) {
+                    try {
+                        game.tick();
+                    } catch (RestartGameException e) {
+                        game = new Game(platform);
+                        game.start();
+                        game.tick();
+                        platform.saveConfig();//only save config if everything seems ok
+                    }
+                }
+                platform.saveConfig();//only save config if everything seems ok
+            } catch (GameCloseException e) {
+                platform.saveConfig();//only save config if everything seems ok
+            } catch (Throwable e) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE,
+                        "Unexpected error during newton adventure execution.", e);
+            }
+        } finally {
+            if (null != platform) {
+                platform.close();
+            }
+            System.exit(0);
         }
-        if(safeLauncher) {
-            SafeLauncher.launch(args);
-        } else {
-            NormalLauncher.launch(args);
-        }
+
     }
     
 }

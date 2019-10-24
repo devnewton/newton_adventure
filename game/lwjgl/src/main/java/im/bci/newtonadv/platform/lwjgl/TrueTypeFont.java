@@ -49,7 +49,6 @@ import java.awt.GraphicsEnvironment;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 
 /**
  * A TrueType font implementation originally for Slick, edited for Bobjob's
@@ -93,7 +92,6 @@ public class TrueTypeFont {
      * ITexture used to cache the font 0-255 characters
      */
     private int fontTextureID;
-    private boolean deleteTextureOnClose = true;
     /**
      * Default font texture width
      */
@@ -274,7 +272,7 @@ public class TrueTypeFont {
             if (i < 256) { // standard characters
                 charArray[i] = newIntObject;
             } else { // custom characters
-                customChars.put(new Character(ch), newIntObject);
+                customChars.put(Character.valueOf(ch), newIntObject);
             }
 
             fontImage = null;
@@ -312,7 +310,7 @@ public class TrueTypeFont {
             if (currentChar < 256) {
                 intObject = charArray[currentChar];
             } else {
-                intObject = customChars.get(new Character((char) currentChar));
+                intObject = customChars.get(Character.valueOf((char) currentChar));
             }
 
             if (intObject != null) {
@@ -373,7 +371,7 @@ public class TrueTypeFont {
                     if (charCurrent < 256) {
                         intObject = charArray[charCurrent];
                     } else {
-                        intObject = customChars.get(new Character((char) charCurrent));
+                        intObject = customChars.get(Character.valueOf((char) charCurrent));
                     }
                     totalwidth += intObject.width - correctL;
                 }
@@ -395,7 +393,7 @@ public class TrueTypeFont {
             if (charCurrent < 256) {
                 intObject = charArray[charCurrent];
             } else {
-                intObject = customChars.get(new Character((char) charCurrent));
+                intObject = customChars.get(Character.valueOf((char) charCurrent));
             }
 
             if (intObject != null) {
@@ -414,7 +412,7 @@ public class TrueTypeFont {
                             if (charCurrent < 256) {
                                 intObject = charArray[charCurrent];
                             } else {
-                                intObject = customChars.get(new Character((char) charCurrent));
+                                intObject = customChars.get(Character.valueOf((char) charCurrent));
                             }
                             totalwidth += intObject.width - correctL;
                         }
@@ -474,7 +472,9 @@ public class TrueTypeFont {
 
         GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-        GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, internalFormat, width, height, format, GL11.GL_UNSIGNED_BYTE, byteBuffer);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format,
+                GL11.GL_UNSIGNED_BYTE, byteBuffer);
+        //TODO how to generate mipmaps without GLU ? GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, internalFormat, width, height, format, GL11.GL_UNSIGNED_BYTE, byteBuffer);
         return textureId.get(0);
     }
 

@@ -31,11 +31,11 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
-import im.bci.newtonadv.platform.lwjgl.launcher.NormalLauncher;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import im.bci.jnuit.NuitPreferences;
+import im.bci.jnuit.lwjgl.IconLoader;
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.Animation;
 import im.bci.newtonadv.anim.Play;
@@ -85,7 +85,6 @@ import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -94,7 +93,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -106,14 +104,10 @@ import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.AABox;
 import net.phys2d.raw.shapes.Box;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Controllers;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 
 /**
  *
@@ -126,19 +120,24 @@ public strictfp class GameView implements IGameView {
     private final FileGameData data;
     private TrueTypeFont font;
     private final PlatformSpecific platformSpecific;
+    private long window;
 
     GameView(FileGameData data, NuitPreferences config, PlatformSpecific platformSpecific) {
         this.data = data;
         this.platformSpecific = platformSpecific;
         initDisplay(config);
     }
+    
+    public long getWindow() {
+        return window;
+    }
 
     private void doDrawMenuSequence(MenuSequence sequence) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
-        GLU.gluOrtho2D(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight,
-                MenuSequence.ortho2DBottom, MenuSequence.ortho2DTop);
+        GL11.glOrtho(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight, MenuSequence.ortho2DBottom,
+                MenuSequence.ortho2DTop, -1f, 1f);
         ITexture background = sequence.getBackgroundImage();
         if (background != null) {
             GL11.glEnable(GL11.GL_BLEND);
@@ -168,131 +167,39 @@ public strictfp class GameView implements IGameView {
         GL11.glPopMatrix();
     }
 
-    private DisplayMode findGoodDisplayMode(final int targetHeight,
-            final int targetWidth, final int targetBpp) {
-        try {
-            DisplayMode[] modes = Display.getAvailableDisplayModes();
-            java.util.Arrays.sort(modes, new Comparator<DisplayMode>() {
-                @Override
-                public int compare(DisplayMode a, DisplayMode b) {
-
-                    // test bpp
-                    if (a.getBitsPerPixel() >= targetBpp
-                            && b.getBitsPerPixel() < targetBpp) {
-                        return -1;
-                    }
-                    if (a.getBitsPerPixel() < targetBpp
-                            && b.getBitsPerPixel() >= targetBpp) {
-                        return 1;
-                    }
-
-                    // test resolution
-                    if (a.getWidth() == targetWidth
-                            && a.getHeight() == targetHeight) {
-                        return -1;
-                    } else if (b.getWidth() == targetWidth
-                            && b.getHeight() == targetHeight) {
-                        return 1;
-                    } else {
-                        Point pA = new Point(a.getWidth(), b.getHeight());
-                        Point pB = new Point(b.getWidth(), b.getHeight());
-                        Point pTarget = new Point(targetWidth, targetHeight);
-                        if (pA.distance(pTarget) < pB.distance(pTarget)) {
-                            return -1;
-                        } else if (pA.distance(pTarget) > pB.distance(pTarget)) {
-                            return 1;
-                        }
-                    }
-
-                    // test fullscreen capacity
-                    if (a.isFullscreenCapable() && !b.isFullscreenCapable()) {
-                        return -1;
-                    } else if (!a.isFullscreenCapable()
-                            && b.isFullscreenCapable()) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-
-                }
-            });
-
-            if (modes.length > 0) {
-                return modes[0];
-            } else {
-                return Display.getDesktopDisplayMode();
-            }
-        } catch (LWJGLException e) {
-            NormalLauncher.handleError(e, "Unable to determine display modes.");
-        }
-        return Display.getDesktopDisplayMode();
-    }
-
-    String getDisplayModeInfos() {
-        try {
-            StringBuilder b = new StringBuilder();
-            b.append("Adapter : ");
-            b.append(Display.getAdapter());
-            b.append('\n');
-            b.append("Version : ");
-            b.append(Display.getVersion());
-            b.append('\n');
-            b.append("Available display modes:");
-            for (DisplayMode m : Display.getAvailableDisplayModes()) {
-                b.append(m);
-                b.append('\n');
-            }
-            return b.toString();
-        } catch (LWJGLException ex) {
-            return "Error cannot determine available display modes (" + ex
-                    + ")";
-        }
-    }
-
     private void initDisplay(NuitPreferences config) {
-        int targetWidth = config.getInt("video.width", 800);
-        int targetHeight = config.getInt("video.height", 600);
-        int targetBpp = Display.getDesktopDisplayMode().getBitsPerPixel();
-        boolean startFullscreen = config.getBoolean("video.fullscreen", false);
-        GameViewQuality newQuality = GameViewQuality.valueOf(config.getString("video.quality", "DEFAULT"));
-
-        DisplayMode chosenMode = findGoodDisplayMode(targetHeight, targetWidth,
-                targetBpp);
-        if (chosenMode == null) {
-            throw new RuntimeException("Unable to find appropriate display mode.\n" + getDisplayModeInfos());
+        int width = config.getInt("video.width", 800);
+        int height = config.getInt("video.height", 600);
+        boolean fullscreen = config.getBoolean("video.fullscreen", false);
+        GameViewQuality quality = GameViewQuality.valueOf(config.getString("video.quality", "DEFAULT"));
+        GLFWErrorCallback.createPrint(System.err).set();
+        if (!GLFW.glfwInit()) {
+            throw new IllegalStateException("Unable to initialize glfw");
         }
-        setDisplayMode(startFullscreen, newQuality, chosenMode);
-        IconLoader.setIcon();
+        setDisplayMode(width, height, fullscreen, quality);
     }
 
-    public void setDisplayMode(boolean startFullscreen,
-            GameViewQuality newQuality, DisplayMode chosenMode) {
-
-        if (Display.isFullscreen() == startFullscreen
-                && this.quality.equals(newQuality)
-                && Display.getDisplayMode().equals(chosenMode)
-                && Display.isCreated()) {
-            return;
-        }
-
-        try {
-            if (startFullscreen) {
-                Display.setDisplayModeAndFullscreen(chosenMode);
-            } else {
-                Display.setFullscreen(false);
-                Display.setDisplayMode(chosenMode);
+    public void setDisplayMode(int width, int height, boolean fullscreen, GameViewQuality quality) {
+        if (0 == this.window) {
+            GLFW.glfwDefaultWindowHints();
+            GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+            GLFW.glfwWindowHint(GLFW.GLFW_SCALE_TO_MONITOR, GLFW.GLFW_TRUE);
+            GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
+            GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
+            this.window = GLFW.glfwCreateWindow(width, height, "Newton Adventure",
+                    fullscreen ? GLFW.glfwGetPrimaryMonitor() : 0, 0);
+            if (0 == window) {
+                throw new RuntimeException("Failed to create the GLFW window");
             }
-            LwjglHelper.setResizable(true);
-            Display.setTitle("Newton adventure");
-            if (!Display.isCreated()) {
-                Display.create();
-            }
-            Display.setVSyncEnabled(true);
-        } catch (LWJGLException e) {
-            throw new RuntimeException("Unable to create display.\n"
-                    + getDisplayModeInfos(), e);
+            GLFW.glfwMakeContextCurrent(window);
+            GLFW.glfwSwapInterval(1);// enable vsync
+            GLFW.glfwShowWindow(window);
+            GL.createCapabilities();
+            setIcon();
+        } else {
+            GLFW.glfwSetWindowMonitor(this.window, fullscreen ? GLFW.glfwGetPrimaryMonitor() : 0, 0, 0, width, height,
+                    GLFW.GLFW_DONT_CARE);
         }
-
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_DITHER);
@@ -304,41 +211,49 @@ public strictfp class GameView implements IGameView {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
-        GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, newQuality.toGL());
+        GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, quality.toGL());
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
         GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
         GL11.glColor4f(1, 1, 1, 1);
-
         if (null == textureCache) {
             textureCache = new TextureCache(this.data);
         } else {
             textureCache.clearUseless();
         }
-        this.quality = newQuality;
-        textureCache.setQuality(newQuality);
+        this.quality = quality;
+        textureCache.setQuality(quality);
+        if(null != font) {
+            font.deleteFontTexture();
+        }
         font = initFont();
+    }
+
+    private void setIcon() {
+        try {
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("icon.png");
+            IconLoader.setIcon(window, is);
+            is.close();
+        } catch (Exception e) {
+            Logger.getLogger(GameView.class.getName()).warning("Cannot set window icon");
+        }
     }
 
     @Override
     public void draw(Sequence sequence) {
-        if (Display.isVisible() || Display.isDirty() || LwjglHelper.wasResized()) {
-            GL11.glViewport(0, 0, LwjglHelper.getWidth(), LwjglHelper.getHeight());
-        }
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(window, width, height);
+        GL11.glViewport(0, 0, width[0], height[0]);
         sequence.draw();
 
-        // now tell the screen to update
-        Display.update(false);
-        Display.sync(Game.FPS);
-        Display.processMessages();
-        Mouse.poll();
-        Keyboard.poll();
-        Controllers.poll();
+        GLFW.glfwSwapBuffers(window);
+        GLFW.glfwPollEvents();
 
         // finally check if the user has requested that the display be
         // shutdown
-        if (Display.isCloseRequested()) {
+        if (GLFW.glfwWindowShouldClose(window)) {
             throw new GameCloseException();
         }
     }
@@ -352,9 +267,11 @@ public strictfp class GameView implements IGameView {
 
             GL11.glPushMatrix();
             GL11.glLoadIdentity();
-            GL11.glOrtho(0, LwjglHelper.getWidth(), 0, LwjglHelper.getHeight(), -1, 1);
-            GL11.glTranslatef(LwjglHelper.getWidth() - font.getWidth(fps),
-                    LwjglHelper.getHeight() - 64, 0);
+            int[] width = new int[1];
+            int[] height = new int[1];
+            GLFW.glfwGetFramebufferSize(this.window, width, height);
+            GL11.glOrtho(0, width[0], 0, height[0], -1, 1);
+            GL11.glTranslatef(width[0] - font.getWidth(fps), height[0] - 64, 0);
             font.drawString(fps);
             GL11.glPopMatrix();
             GL11.glPopAttrib();
@@ -362,8 +279,12 @@ public strictfp class GameView implements IGameView {
     }
 
     public void close() {
+        if(null != font) {
+            font.deleteFontTexture();
+        }
         textureCache.clearAll();
-        Display.destroy();
+        GLFW.glfwDestroyWindow(window);
+        GLFW.glfwTerminate();
     }
 
     @Override
@@ -372,14 +293,12 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawPickableObject(PickableObject pickableObject,
-            AnimationFrame texture, World world) {
+    public void drawPickableObject(PickableObject pickableObject, AnimationFrame texture, World world) {
         AABox bounds = pickableObject.getShape().getBounds();
 
         GL11.glPushMatrix();
         GL11.glTranslatef(pickableObject.getPosition().getX(), pickableObject.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         final float x1 = -bounds.getWidth() / 2.0f;
         final float x2 = bounds.getWidth() / 2.0f;
         final float y1 = -bounds.getHeight() / 2.0f;
@@ -427,8 +346,7 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawAxeAnchor(AxeAnchor axeAnchor, float radius,
-            AnimationFrame frame) {
+    public void drawAxeAnchor(AxeAnchor axeAnchor, float radius, AnimationFrame frame) {
         ITexture texture = frame.getImage();
         GL11.glPushMatrix();
         GL11.glTranslatef(axeAnchor.getPosition().getX(), axeAnchor.getPosition().getY(), 0.0f);
@@ -466,10 +384,8 @@ public strictfp class GameView implements IGameView {
         AABox bounds = bat.getShape().getBounds();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(bat.getPosition().getX(), bat.getPosition().getY(),
-                0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glTranslatef(bat.getPosition().getX(), bat.getPosition().getY(), 0.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         GL11.glScalef(scale, scale, 1);
         float x1 = -bounds.getWidth() / 2.0f;
         float x2 = bounds.getWidth() / 2.0f;
@@ -513,8 +429,8 @@ public strictfp class GameView implements IGameView {
             GL11.glEnable(GL11.GL_BLEND);
         }
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, platform.frame.getImage().getId());
-        GL11.glTexCoordPointer(2, 0, platform.texCoords);
-        GL11.glVertexPointer(2, 0, platform.vertices);
+        GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 0, platform.texCoords);
+        GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, platform.vertices);
         int nbVertices = platform.vertices.limit() / 2;
         GL11.glDrawArrays((nbVertices % 4) == 0 ? GL11.GL_QUADS : GL11.GL_TRIANGLES, 0, nbVertices);
         if (hasAlpha) {
@@ -523,16 +439,15 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawStaticPlatforms(
-            IStaticPlatformDrawable iplatforms) {
+    public void drawStaticPlatforms(IStaticPlatformDrawable iplatforms) {
         StaticPlatformDrawable platforms = (StaticPlatformDrawable) iplatforms;
         final boolean hasAlpha = platforms.texture.hasAlpha();
         if (hasAlpha) {
             GL11.glEnable(GL11.GL_BLEND);
         }
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, platforms.texture.getId());
-        GL11.glTexCoordPointer(2, 0, platforms.texCoords);
-        GL11.glVertexPointer(2, 0, platforms.vertices);
+        GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 0, platforms.texCoords);
+        GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, platforms.vertices);
         int nbVertices = platforms.vertices.limit() / 2;
         GL11.glDrawElements((nbVertices % 4) == 0 ? GL11.GL_QUADS : GL11.GL_TRIANGLES, platforms.indices);
         if (hasAlpha) {
@@ -543,8 +458,7 @@ public strictfp class GameView implements IGameView {
     @Override
     public void drawMovingPlatform(MovingPlatform platform, AnimationFrame texture) {
         Box box = (Box) platform.getShape();
-        Vector2f[] pts = box.getPoints(platform.getPosition(),
-                platform.getRotation());
+        Vector2f[] pts = box.getPoints(platform.getPosition(), platform.getRotation());
 
         if (texture.getImage().hasAlpha()) {
             GL11.glEnable(GL11.GL_BLEND);
@@ -596,12 +510,10 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawExplosion(Explosion explosion, AnimationFrame frame,
-            World world) {
+    public void drawExplosion(Explosion explosion, AnimationFrame frame, World world) {
         GL11.glPushMatrix();
         GL11.glTranslatef(explosion.getPosition().getX(), explosion.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         final float x1 = -explosion.getSize() / 2.0f;
         final float x2 = explosion.getSize() / 2.0f;
         final float y1 = -explosion.getSize() / 2.0f;
@@ -626,13 +538,11 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawFireBall(FireBall fireball, AnimationFrame texture,
-            World world) {
+    public void drawFireBall(FireBall fireball, AnimationFrame texture, World world) {
         GL11.glPushMatrix();
         ROVector2f pos = fireball.getPosition();
         GL11.glTranslatef(pos.getX(), pos.getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         final float x1 = -fireball.getSize() / 2.0f;
         final float x2 = fireball.getSize() / 2.0f;
         final float y1 = -fireball.getSize() / 2.0f;
@@ -680,8 +590,7 @@ public strictfp class GameView implements IGameView {
             }
         }
         GL11.glPushMatrix();
-        GL11.glTranslatef(hero.getPosition().getX(), hero.getPosition().getY(),
-                0.0f);
+        GL11.glTranslatef(hero.getPosition().getX(), hero.getPosition().getY(), 0.0f);
         GL11.glRotatef(r, 0, 0, 1.0f);
         GL11.glScalef(scale, scale, 1);
         float x1 = -bounds.getWidth() / 2.0f;
@@ -724,10 +633,8 @@ public strictfp class GameView implements IGameView {
         AABox bounds = key.getShape().getBounds();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(),
-                0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(), 0.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         final float x1 = -bounds.getWidth() / 2.0f;
         final float x2 = bounds.getWidth() / 2.0f;
         final float y1 = -bounds.getHeight() / 2.0f;
@@ -740,8 +647,7 @@ public strictfp class GameView implements IGameView {
         GL11.glColor3f(color.r, color.g, color.b);
 
         if (color != NewtonColor.white) {
-            GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
-                    GL11.GL_BLEND);
+            GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
         }
 
         final float u1 = texture.getU1(), u2 = texture.getU2();
@@ -761,18 +667,15 @@ public strictfp class GameView implements IGameView {
         GL11.glColor3f(1f, 1f, 1f);
 
         if (color != NewtonColor.white) {
-            GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE,
-                    GL11.GL_MODULATE);
+            GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
         }
     }
 
     @Override
-    public void drawLosedApple(LosedApple apple, World world,
-            AnimationFrame texture, float alpha) {
+    public void drawLosedApple(LosedApple apple, World world, AnimationFrame texture, float alpha) {
         GL11.glPushMatrix();
         GL11.glTranslatef(apple.getPosition().getX(), apple.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         final float x1 = -apple.getSize() / 2.0f;
         final float x2 = apple.getSize() / 2.0f;
         final float y1 = -apple.getSize() / 2.0f;
@@ -853,14 +756,12 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawMummy(Mummy mummy, World world, AnimationFrame frame,
-            float scale) {
+    public void drawMummy(Mummy mummy, World world, AnimationFrame frame, float scale) {
         AABox bounds = mummy.getShape().getBounds();
 
         GL11.glPushMatrix();
         GL11.glTranslatef(mummy.getPosition().getX(), mummy.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         GL11.glScalef(scale, scale, 1);
         float x1 = -bounds.getWidth() / 2.0f;
         float x2 = bounds.getWidth() / 2.0f;
@@ -895,12 +796,10 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawPickedUpObject(PickedUpObject pickedUpObject, World world,
-            AnimationFrame texture) {
+    public void drawPickedUpObject(PickedUpObject pickedUpObject, World world, AnimationFrame texture) {
         GL11.glPushMatrix();
         GL11.glTranslatef(pickedUpObject.getPosition().getX(), pickedUpObject.getPosition().getY(), 0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         final float x1 = -pickedUpObject.getSize() / 2.0f;
         final float x2 = pickedUpObject.getSize() / 2.0f;
         final float y1 = -pickedUpObject.getSize() / 2.0f;
@@ -928,10 +827,8 @@ public strictfp class GameView implements IGameView {
     @Override
     public void drawUsedKey(UsedKey key, AnimationFrame texture, World world) {
         GL11.glPushMatrix();
-        GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(),
-                0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(), 0.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         float x1 = -key.getSize() / 2.0f;
         final float x2 = key.getSize() / 2.0f;
         final float y1 = -key.getSize() / 2.0f;
@@ -961,8 +858,7 @@ public strictfp class GameView implements IGameView {
         AABox bounds = boss.getShape().getBounds();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(boss.getPosition().getX(), boss.getPosition().getY(),
-                0.0f);
+        GL11.glTranslatef(boss.getPosition().getX(), boss.getPosition().getY(), 0.0f);
         float x1 = -bounds.getWidth() / 2.0f;
         float x2 = bounds.getWidth() / 2.0f;
         float y1 = -bounds.getHeight() / 2.0f;
@@ -994,8 +890,7 @@ public strictfp class GameView implements IGameView {
         AABox bounds = hand.getShape().getBounds();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(hand.getPosition().getX(), hand.getPosition().getY(),
-                0.0f);
+        GL11.glTranslatef(hand.getPosition().getX(), hand.getPosition().getY(), 0.0f);
         float x1 = -bounds.getWidth() / 2.0f;
         float x2 = bounds.getWidth() / 2.0f;
         float y1 = -bounds.getHeight() / 2.0f;
@@ -1022,54 +917,47 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawScoreSequence(ScoreSequence sequence,
-            QuestScore questScore, long scorePerCentToShow) {
-        if (Display.isVisible() || Display.isDirty() || LwjglHelper.wasResized()
-                || sequence.isDirty()) {
-            sequence.setDirty(false);
-            doDrawMenuSequence(sequence);
-            GL11.glPushMatrix();
-            GLU.gluOrtho2D(ScoreSequence.ortho2DLeft,
-                    ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom,
-                    ScoreSequence.ortho2DTop);
-            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
-            GL11.glEnable(GL11.GL_BLEND);
+    public void drawScoreSequence(ScoreSequence sequence, QuestScore questScore, long scorePerCentToShow) {
+        // TODO if (Display.isVisible() || Display.isDirty() || LwjglHelper.wasResized()
+        // || sequence.isDirty()) {
+        sequence.setDirty(false);
+        doDrawMenuSequence(sequence);
+        GL11.glPushMatrix();
+        GL11.glLoadIdentity();
+        GL11.glOrtho(ScoreSequence.ortho2DLeft, ScoreSequence.ortho2DRight, ScoreSequence.ortho2DBottom,
+                ScoreSequence.ortho2DTop, -1f, 1f);
+        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
+        GL11.glEnable(GL11.GL_BLEND);
 
-            int i = 1;
-            font.drawString(
-                    (ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
-                    i++ * font.getHeight(), platformSpecific.getMessage("score.sequence.title"), 1, -1,
-                    TrueTypeFont.Align.CENTER);
-            font.drawString(0, i++ * font.getHeight(),
-                    questScore.getQuestName(), 1, -1, TrueTypeFont.Align.LEFT);
-            for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
-                String levelScoreStr = levelEntry.getKey()
-                        + ": "
-                        + (scorePerCentToShow
-                        * levelEntry.getValue().computeScore() / 100);
-                font.drawString(
-                        (ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f,
-                        i++ * font.getHeight(), levelScoreStr, 1, -1,
-                        TrueTypeFont.Align.CENTER);
-            }
-            String questScoreStr = platformSpecific.getMessage("score.sequence.quest.total") + ": "
-                    + (scorePerCentToShow * questScore.computeScore() / 100);
-            font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1,
-                    TrueTypeFont.Align.LEFT);
-            GL11.glPopMatrix();
-            GL11.glPopAttrib();
+        int i = 1;
+        font.drawString((ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f, i++ * font.getHeight(),
+                platformSpecific.getMessage("score.sequence.title"), 1, -1, TrueTypeFont.Align.CENTER);
+        font.drawString(0, i++ * font.getHeight(), questScore.getQuestName(), 1, -1, TrueTypeFont.Align.LEFT);
+        for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
+            String levelScoreStr = levelEntry.getKey() + ": "
+                    + (scorePerCentToShow * levelEntry.getValue().computeScore() / 100);
+            font.drawString((ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f, i++ * font.getHeight(),
+                    levelScoreStr, 1, -1, TrueTypeFont.Align.CENTER);
         }
+        String questScoreStr = platformSpecific.getMessage("score.sequence.quest.total") + ": "
+                + (scorePerCentToShow * questScore.computeScore() / 100);
+        font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1, TrueTypeFont.Align.LEFT);
+        GL11.glPopMatrix();
+        GL11.glPopAttrib();
+        // TODO }
     }
 
     @Override
     public void drawSnowLayer(SnowLayer layer) {
         GL11.glPushMatrix();
 
-        float aspectRatio = (float) LwjglHelper.getWidth()
-                / (float) LwjglHelper.getHeight();
-        GLU.gluOrtho2D(SnowLayer.ortho2DLeft * aspectRatio,
-                SnowLayer.ortho2DRight * aspectRatio, SnowLayer.ortho2DBottom,
-                SnowLayer.ortho2DTop);
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(this.window, width, height);
+        float aspectRatio = (float) width[0] / (float) height[0];
+        GL11.glLoadIdentity();
+        GL11.glOrtho(SnowLayer.ortho2DLeft * aspectRatio, SnowLayer.ortho2DRight * aspectRatio, SnowLayer.ortho2DBottom,
+                SnowLayer.ortho2DTop, -1f, 1f);
         layer.setAspectRatio(aspectRatio);
 
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -1092,9 +980,11 @@ public strictfp class GameView implements IGameView {
 
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, LwjglHelper.getWidth(), 0, LwjglHelper.getHeight(), -1, 1);
-        GL11.glTranslatef(0, LwjglHelper.getHeight() - font.getHeight(),
-                0);
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(this.window, width, height);
+        GL11.glOrtho(0, width[0], 0, height[0], -1, 1);
+        GL11.glTranslatef(0, height[0] - font.getHeight(), 0);
         font.drawString(indicators);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
@@ -1102,11 +992,11 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public void drawMenuSequence(MenuSequence sequence) {
-        if (Display.isVisible() || Display.isDirty() || LwjglHelper.wasResized()
-                || sequence.isDirty()) {
-            sequence.setDirty(false);
-            doDrawMenuSequence(sequence);
-        }
+        // TODO if (Display.isVisible() || Display.isDirty() || LwjglHelper.wasResized()
+        // || sequence.isDirty()) {
+        sequence.setDirty(false);
+        doDrawMenuSequence(sequence);
+        // TODO }
     }
 
     @Override
@@ -1116,10 +1006,8 @@ public strictfp class GameView implements IGameView {
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
             final float x1 = button.x;
-            final float x2 = button.x
-                    + (button.w > 0 ? button.w : texture.getWidth());
-            final float y1 = button.y
-                    + (button.h > 0 ? button.h : texture.getHeight());
+            final float x2 = button.x + (button.w > 0 ? button.w : texture.getWidth());
+            final float y1 = button.y + (button.h > 0 ? button.h : texture.getHeight());
             final float y2 = button.y;
             final float u1 = 0.0f, u2 = 1.0f;
             GL11.glBegin(GL11.GL_QUADS);
@@ -1141,9 +1029,7 @@ public strictfp class GameView implements IGameView {
         drawButton(button);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glPushMatrix();
-        GL11.glTranslatef(button.x,
-                button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
-                + font.getHeight(), 0);
+        GL11.glTranslatef(button.x, button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT + font.getHeight(), 0);
         GL11.glScalef(1, -1, 1);
         font.drawString(leftLabel, TrueTypeFont.Align.LEFT);
 
@@ -1151,8 +1037,7 @@ public strictfp class GameView implements IGameView {
 
         GL11.glPushMatrix();
         GL11.glTranslatef(button.x + QuestMenuSequence.QUEST_MINIATURE_WIDTH,
-                button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT
-                + font.getHeight(), 0);
+                button.y + QuestMenuSequence.QUEST_MINIATURE_HEIGHT + font.getHeight(), 0);
         GL11.glScalef(1, -1, 1);
         font.drawString(rightLabel, TrueTypeFont.Align.RIGHT);
         GL11.glPopMatrix();
@@ -1163,16 +1048,18 @@ public strictfp class GameView implements IGameView {
     public void drawWorld(World world) {
         GL11.glPushMatrix();
 
-        float aspectRatio = (float) LwjglHelper.getWidth()
-                / (float) LwjglHelper.getHeight();
-        GLU.gluOrtho2D(World.ortho2DLeft * aspectRatio, World.ortho2DRight
-                * aspectRatio, World.ortho2DBottom, World.ortho2DTop);
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(this.window, width, height);
+        float aspectRatio = (float) width[0] / (float) height[0];
+        GL11.glLoadIdentity();
+        GL11.glOrtho(World.ortho2DLeft * aspectRatio, World.ortho2DRight * aspectRatio, World.ortho2DBottom,
+                World.ortho2DTop, -1f, 1f);
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         if (platformSpecific.getConfig().getBoolean("tweaks.rotate.view.with.gravity", true)) {
-            GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
-                    1.0f);
+            GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0, 1.0f);
         }
         drawWorldBackground(world, aspectRatio);
 
@@ -1182,9 +1069,8 @@ public strictfp class GameView implements IGameView {
         float cameraW = (World.ortho2DRight - World.ortho2DLeft) * aspectRatio;
         float cameraH = World.ortho2DTop - World.ortho2DBottom;
         final float cameraSize = (float) Math.sqrt(cameraW * cameraW + cameraH * cameraH);
-        final BodyList visibleBodies = world.getVisibleBodies(heroPos.getX()
-                - cameraSize, heroPos.getY() - cameraSize, heroPos.getX()
-                + cameraSize, heroPos.getY() + cameraSize);
+        final BodyList visibleBodies = world.getVisibleBodies(heroPos.getX() - cameraSize, heroPos.getY() - cameraSize,
+                heroPos.getX() + cameraSize, heroPos.getY() + cameraSize);
 
         ArrayList<Drawable> drawableBodies = new ArrayList<Drawable>();
         world.staticPlatformDrawer.resetVisibles();
@@ -1230,10 +1116,8 @@ public strictfp class GameView implements IGameView {
             staticBounds.x2 = World.ortho2DRight * aspectRatio * 2.0f;
             staticBounds.y1 = World.ortho2DBottom * aspectRatio * 2.0f;
             staticBounds.y2 = World.ortho2DTop * aspectRatio * 2.0f;
-            float xt = -heroPos.getX()
-                    * (staticBounds.getWidth() / worldStaticBounds.getWidth());
-            float yt = -heroPos.getY()
-                    * (staticBounds.getHeight() / worldStaticBounds.getHeight());
+            float xt = -heroPos.getX() * (staticBounds.getWidth() / worldStaticBounds.getWidth());
+            float yt = -heroPos.getY() * (staticBounds.getHeight() / worldStaticBounds.getHeight());
 
             xt *= 0.1f;
             yt *= 0.1f;
@@ -1267,8 +1151,7 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public AnimationCollection loadFromAnimation(String filename)
-            throws IOException {
+    public AnimationCollection loadFromAnimation(String filename) throws IOException {
         if (filename.endsWith("json")) {
             return loadNanim(filename);
         } else {
@@ -1288,8 +1171,11 @@ public strictfp class GameView implements IGameView {
                 for (JsonElement jsonFrameElement : jsonAnimation.getAsJsonArray("frames")) {
                     JsonObject jsonFrame = jsonFrameElement.getAsJsonObject();
                     final String imageFilename = jsonFrame.get("image").getAsString();
-                    ITexture texture = textureCache.getTexture(new File(new File(filename).getParent(), imageFilename).getCanonicalPath());
-                    animation.addFrame(texture, jsonFrame.get("duration").getAsInt(), jsonFrame.get("u1").getAsFloat(), jsonFrame.get("v1").getAsFloat(), jsonFrame.get("u2").getAsFloat(), jsonFrame.get("v2").getAsFloat());
+                    ITexture texture = textureCache
+                            .getTexture(new File(new File(filename).getParent(), imageFilename).getCanonicalPath());
+                    animation.addFrame(texture, jsonFrame.get("duration").getAsInt(), jsonFrame.get("u1").getAsFloat(),
+                            jsonFrame.get("v1").getAsFloat(), jsonFrame.get("u2").getAsFloat(),
+                            jsonFrame.get("v2").getAsFloat());
                 }
                 nanim.addAnimation(animation);
             }
@@ -1304,11 +1190,13 @@ public strictfp class GameView implements IGameView {
     public void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glPushMatrix();
-        final float aspectRatio = (float) LwjglHelper.getWidth()
-                / (float) LwjglHelper.getHeight();
-        final float screenWidth = Game.DEFAULT_SCREEN_WIDTH
-                * aspectRatio;
-        GLU.gluOrtho2D(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0);
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(this.window, width, height);
+        final float aspectRatio = (float) width[0] / (float) height[0];
+        final float screenWidth = Game.DEFAULT_SCREEN_WIDTH * aspectRatio;
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0, -1f, 1f);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, backgroundTexture.getId());
         drawFadeBackground(screenWidth);
 
@@ -1375,13 +1263,20 @@ public strictfp class GameView implements IGameView {
 
     @Override
     public float getWidth() {
-        return LwjglHelper.getWidth();
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(this.window, width, height);
+        return width[0];
     }
 
     @Override
     public float getHeight() {
-        return LwjglHelper.getHeight();
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(this.window, width, height);
+        return height[0];
     }
+
     static final float minimapSize = 32;
 
     @Override
@@ -1398,8 +1293,7 @@ public strictfp class GameView implements IGameView {
 
         GL11.glPushMatrix();
         if (platformSpecific.getConfig().getBoolean("tweaks.rotate.view.with.gravity", true)) {
-            GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
-                    1.0f);
+            GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0, 1.0f);
         }
         if (world.getHero().hasMap()) {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -1436,8 +1330,7 @@ public strictfp class GameView implements IGameView {
         GL11.glPopAttrib();
     }
 
-    public void drawMinimapIcon(World world, ROVector2f worldPos,
-            AnimationFrame texture) {
+    public void drawMinimapIcon(World world, ROVector2f worldPos, AnimationFrame texture) {
         float iconW = World.distanceUnit * 8.0f;
         float iconH = World.distanceUnit * 8.0f;
 
@@ -1448,16 +1341,14 @@ public strictfp class GameView implements IGameView {
         float icon_u1 = texture.getU1(), icon_u2 = texture.getU2();
         float icon_v1 = texture.getV1(), icon_v2 = texture.getV2();
         GL11.glPushMatrix();
-        GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0, 1.0f);
         final float miniMapPlatformSize = minimapSize * 4.0f / 256.0f;// harcoded,
         // that's
         // bad!
         GL11.glScalef(miniMapPlatformSize / (World.distanceUnit * 2.0f),
                 miniMapPlatformSize / (World.distanceUnit * 2.0f), 1);
         GL11.glTranslatef(worldPos.getX(), worldPos.getY(), 0);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(icon_u1, icon_v1);
@@ -1482,21 +1373,17 @@ public strictfp class GameView implements IGameView {
     }
 
     @Override
-    public void drawScoreVisualIndicator(World world,
-            ScoreVisualIndicator scoreVisualIndicator) {
+    public void drawScoreVisualIndicator(World world, ScoreVisualIndicator scoreVisualIndicator) {
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_BLEND);
 
         String value = scoreVisualIndicator.getValue();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(scoreVisualIndicator.getPosition().getX(), scoreVisualIndicator.getPosition().getY(),
-                0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
+        GL11.glTranslatef(scoreVisualIndicator.getPosition().getX(), scoreVisualIndicator.getPosition().getY(), 0.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
         GL11.glScalef(scoreVisualIndicator.getSize() * 0.1f, scoreVisualIndicator.getSize() * 0.1f, 1.0f);
-        GL11.glTranslatef(-font.getWidth(value) / 2.0f, -font.getHeight(value) / 2.0f,
-                0.0f);
+        GL11.glTranslatef(-font.getWidth(value) / 2.0f, -font.getHeight(value) / 2.0f, 0.0f);
         font.drawString(value);
         GL11.glPopAttrib();
         GL11.glPopMatrix();
@@ -1508,12 +1395,9 @@ public strictfp class GameView implements IGameView {
         AABox bounds = bomb.getShape().getBounds();
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(bomb.getPosition().getX(), bomb.getPosition().getY(),
-                0.0f);
-        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0,
-                1.0f);
-        GL11.glRotatef((float) Math.toDegrees(bomb.getRotation()), 0, 0,
-                1.0f);
+        GL11.glTranslatef(bomb.getPosition().getX(), bomb.getPosition().getY(), 0.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
+        GL11.glRotatef((float) Math.toDegrees(bomb.getRotation()), 0, 0, 1.0f);
         final float x1 = -bounds.getWidth() / 2.0f;
         final float x2 = bounds.getWidth() / 2.0f;
         final float y1 = -bounds.getHeight() / 2.0f;
