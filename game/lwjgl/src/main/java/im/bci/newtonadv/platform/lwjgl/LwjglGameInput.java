@@ -81,10 +81,10 @@ public class LwjglGameInput extends AbstractGameInput {
         if (GLFW.glfwJoystickIsGamepad(GLFW.GLFW_JOYSTICK_1))        {
             activate.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_B, "B"));
             jump.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_A, "A"));
-            left.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_X, "Left stick ◀", false));
-            right.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_X, "Left stick ▶", true));
-            rotateClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, "Left trigger", false));
-            rotateCounterClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, "Right trigger", true));
+            left.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_X, "Left stick ◀", GamepadAxisControl.SCALE_LEFT));
+            right.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_X, "Left stick ▶", GamepadAxisControl.SCALE_RIGHT));
+            rotateClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, "Left trigger", GamepadAxisControl.SCALE_OTHER));
+            rotateCounterClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, "Right trigger", GamepadAxisControl.SCALE_OTHER));
             rotate90Clockwise.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, "Left bumper"));
             rotate90CounterClockwise.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, "Right bumper"));
             returnToMenu.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_START, "Start"));
