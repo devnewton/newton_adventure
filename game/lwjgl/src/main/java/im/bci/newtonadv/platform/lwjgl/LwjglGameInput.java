@@ -37,6 +37,8 @@ import im.bci.jnuit.controls.ActionActivatedDetector;
 import im.bci.jnuit.NuitToolkit;
 import im.bci.jnuit.lwjgl.controls.GamepadAxisControl;
 import im.bci.jnuit.lwjgl.controls.GamepadButtonControl;
+import im.bci.jnuit.lwjgl.controls.JoystickAxisControl;
+import im.bci.jnuit.lwjgl.controls.JoystickButtonControl;
 import im.bci.jnuit.lwjgl.controls.KeyControl;
 import im.bci.newtonadv.platform.interfaces.AbstractGameInput;
 import java.util.Arrays;
@@ -88,6 +90,16 @@ public class LwjglGameInput extends AbstractGameInput {
             rotate90Clockwise.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, "Left bumper"));
             rotate90CounterClockwise.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, "Right bumper"));
             returnToMenu.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_START, "Start"));
+        } else if(GLFW.glfwJoystickPresent(GLFW.GLFW_JOYSTICK_1)) {
+            jump.getAction().setAlternativeControl(new JoystickButtonControl(GLFW.GLFW_JOYSTICK_1, 0));
+            activate.getAction().setAlternativeControl(new JoystickButtonControl(GLFW.GLFW_JOYSTICK_1, 1));
+            left.getAction().setAlternativeControl(new JoystickAxisControl(GLFW.GLFW_JOYSTICK_1, 0, JoystickAxisControl.SCALE_LEFT));
+            right.getAction().setAlternativeControl(new JoystickAxisControl(GLFW.GLFW_JOYSTICK_1, 0, JoystickAxisControl.SCALE_RIGHT));            
+            rotateClockwise.getAction().setAlternativeControl(new JoystickButtonControl(GLFW.GLFW_JOYSTICK_1, 2));
+            rotateCounterClockwise.getAction().setAlternativeControl(new JoystickButtonControl(GLFW.GLFW_JOYSTICK_1, 3));
+            rotate90Clockwise.getAction().setAlternativeControl(new JoystickButtonControl(GLFW.GLFW_JOYSTICK_1, 4));
+            rotate90CounterClockwise.getAction().setAlternativeControl(new JoystickButtonControl(GLFW.GLFW_JOYSTICK_1, 5));
+            returnToMenu.getAction().setAlternativeControl(new JoystickButtonControl(GLFW.GLFW_JOYSTICK_1, 6));
         }
     }
 
