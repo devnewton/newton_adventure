@@ -91,7 +91,7 @@ public class PlatformSpecific implements IPlatformSpecific {
     public PlatformSpecific() throws Exception {
         vfs = new VirtualFileSystem("data");
         messages = ResourceBundle.getBundle("messages");
-        config = new LwjglNuitPreferences("newton-adventure");
+        config = new LwjglNuitPreferences("newton_adventure");
 
         createGameData();
         createGameView();
@@ -211,7 +211,7 @@ public class PlatformSpecific implements IPlatformSpecific {
                     fs.close();
                 }
             } catch (Exception e) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot save config", e);
+                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot load score", e);
             }
 
         }
