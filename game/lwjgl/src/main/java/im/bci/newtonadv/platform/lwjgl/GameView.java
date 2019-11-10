@@ -31,6 +31,7 @@
  */
 package im.bci.newtonadv.platform.lwjgl;
 
+import im.bci.jnuit.lwjgl.Sync;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -120,6 +121,8 @@ public strictfp class GameView implements IGameView {
     private TrueTypeFont font;
     private final PlatformSpecific platformSpecific;
     private long window;
+    private Sync sync = new Sync();
+
 
     GameView(FileGameData data, NuitPreferences config, PlatformSpecific platformSpecific) {
         this.data = data;
@@ -247,7 +250,7 @@ public strictfp class GameView implements IGameView {
         GLFW.glfwGetFramebufferSize(window, width, height);
         GL11.glViewport(0, 0, width[0], height[0]);
         sequence.draw();
-
+        sync.sync(Game.FPS);
         GLFW.glfwSwapBuffers(window);
         GLFW.glfwPollEvents();
 
