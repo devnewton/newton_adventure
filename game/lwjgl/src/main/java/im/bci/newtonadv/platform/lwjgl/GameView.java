@@ -198,6 +198,7 @@ public strictfp class GameView implements IGameView {
         } else {
             GLFW.glfwSetWindowMonitor(this.window, fullscreen ? GLFW.glfwGetPrimaryMonitor() : 0, 0, 0, width, height,
                     GLFW.GLFW_DONT_CARE);
+            GLFW.glfwSwapInterval(1);// enable vsync
         }
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
