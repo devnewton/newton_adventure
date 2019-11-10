@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn package -Pwin
+mvn package
