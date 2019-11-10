@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Newton Adventure Web Edition Beta</title>
+        <title>Newton Adventure Web Edition</title>
         <style>
             #playn-root {
-                width: 640px ;
-                height: 480px ;
-                margin-left: auto ;
-                margin-right: auto ;
+                margin: 0;
+                padding: 0;
+                display:block;
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
             }
-            #footer {
-                color: white;
-            }
-            body {
+            html,body {
+                margin: 0;
+                padding: 0;
                 background-color: black;
+            }
+            canvas {
+                display: block;
             }
         </style>
     </head>
     <body>
         <script src="playn/playn.nocache.js"></script>
         <div id="playn-root"></div>
-        <p id="footer">This game is an experimental HTML5 port of <a href="//devnewton.bci.im/games/newton_adventure">Newton Adventure</a>.</p>
     </body>
 </html>
