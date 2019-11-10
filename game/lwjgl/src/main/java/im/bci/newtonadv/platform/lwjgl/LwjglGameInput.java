@@ -87,9 +87,9 @@ public class LwjglGameInput extends AbstractGameInput {
 			defaultRotateCounterClockwise = new ActionActivatedDetector(
 					new Action("action.rotate.counterclockwise", new KeyControl(window, GLFW.GLFW_KEY_X, "X")));
 			defaultRotate90Clockwise = new ActionActivatedDetector(
-					new Action("action.rotate.clockwise.90", new KeyControl(window, GLFW.GLFW_KEY_S, "S")));
+					new Action("action.rotate.clockwise.90", new KeyControl(window, GLFW.GLFW_KEY_D, "D")));
 			defaultRotate90CounterClockwise = new ActionActivatedDetector(
-					new Action("action.rotate.counterclockwise.90", new KeyControl(window, GLFW.GLFW_KEY_D, "D")));
+					new Action("action.rotate.counterclockwise.90", new KeyControl(window, GLFW.GLFW_KEY_S, "S")));
 			defaultReturnToMenu = new ActionActivatedDetector(
 					new Action("action.returntomenu", new KeyControl(window, GLFW.GLFW_KEY_ESCAPE, "ESCAPE")));
 
@@ -102,13 +102,13 @@ public class LwjglGameInput extends AbstractGameInput {
 						GLFW.GLFW_GAMEPAD_AXIS_LEFT_X, "L-STICK left", GamepadAxisControl.SCALE_LEFT));
 				defaultRight.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1,
 						GLFW.GLFW_GAMEPAD_AXIS_LEFT_X, "L-STICK right", GamepadAxisControl.SCALE_RIGHT));
-				defaultRotateClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1,
-						GLFW.GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, "Left trigger", GamepadAxisControl.SCALE_OTHER));
 				defaultRotateCounterClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1,
+						GLFW.GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, "Left trigger", GamepadAxisControl.SCALE_OTHER));
+				defaultRotateClockwise.getAction().setAlternativeControl(new GamepadAxisControl(GLFW.GLFW_JOYSTICK_1,
 						GLFW.GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, "Right trigger", GamepadAxisControl.SCALE_OTHER));
-				defaultRotate90Clockwise.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1,
+				defaultRotate90CounterClockwise.getAction().setAlternativeControl(new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1,
 						GLFW.GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, "Left bumper"));
-				defaultRotate90CounterClockwise.getAction().setAlternativeControl(new GamepadButtonControl(
+				defaultRotate90Clockwise.getAction().setAlternativeControl(new GamepadButtonControl(
 						GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, "Right bumper"));
 				defaultReturnToMenu.getAction().setAlternativeControl(
 						new GamepadButtonControl(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_START, "Start"));
