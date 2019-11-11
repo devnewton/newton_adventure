@@ -89,10 +89,10 @@ public class PlatformSpecific implements IPlatformSpecific {
     private VirtualFileSystem vfs;
 
     public PlatformSpecific() throws Exception {
-        vfs = new VirtualFileSystem("data");
         messages = ResourceBundle.getBundle("messages");
         config = new LwjglNuitPreferences("newton_adventure");
 
+        createVfs();
         createGameData();
         createGameView();
         createControls();
@@ -100,7 +100,16 @@ public class PlatformSpecific implements IPlatformSpecific {
         createGameInput();
     }
 
-    private GameView createGameView() {
+    private void createVfs() {
+    	String modName = config.getString("mod", "Newton");
+        currentMod = findModByName(modName);
+        if(null == currentMod) {
+        	currentMod = listMods().get(0);
+        }      
+    	vfs = new VirtualFileSystem(currentMod.getPath(), "data");
+	}
+
+	private GameView createGameView() {
         if (null == data) {
             throw new RuntimeException("create IGameData before IGameView");
         }
@@ -300,6 +309,7 @@ public class PlatformSpecific implements IPlatformSpecific {
         if (!Objects.equals(currentMod, newMod)) {
             currentMod = newMod;
             this.vfs.setResourcePaths(currentMod.getPath(), "data");
+            config.putString("mod", currentMod.getName());
             throw new RestartGameException();
         }
     }
