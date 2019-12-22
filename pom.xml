@@ -13,11 +13,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
         <lwjgl.version>3.2.3</lwjgl.version>
-        <jnuit.version>0.14-SNAPSHOT</jnuit.version>
+        <jnuit.version>1.0-SNAPSHOT</jnuit.version>
     </properties>
     <modules>
         <module>game/core</module>
         <module>game/lwjgl</module>
+        <module>game/teavm</module>
         <module>editor</module>
     </modules>
     <dependencyManagement>
@@ -86,6 +87,17 @@
                 <classifier>sources</classifier>
             </dependency>
             <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>jnuit-teavm-utils</artifactId>
+                <version>${jnuit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>im.bci</groupId>
+                <artifactId>jnuit-teavm-utils</artifactId>
+                <version>${jnuit.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
                 <groupId>com.github.asilvestre</groupId>
                 <artifactId>jpurexml</artifactId>
                 <classifier>sources</classifier>
@@ -115,32 +127,12 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.1</version>
                     <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
+                        <source>1.8</source>
+                        <target>1.8</target>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
-    <profiles>
-        <profile>
-            <id>java</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>play</id>
-        </profile>
-        <profile>
-            <id>android</id>
-        </profile>
-        <profile>
-            <id>ios</id>
-        </profile>
-        <profile>
-            <id>html</id>
-        </profile>   
-    </profiles>
 </project>
 

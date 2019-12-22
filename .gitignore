@@ -31,3 +31,4 @@ out
 *.iws
 *.iml
 atlassian-ide-plugin.xml
+/game/teavm/target/
