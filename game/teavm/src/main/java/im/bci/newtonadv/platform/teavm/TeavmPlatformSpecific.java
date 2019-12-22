@@ -32,7 +32,6 @@
 package im.bci.newtonadv.platform.teavm;
 
 import im.bci.jnuit.NuitAudio;
-import im.bci.jnuit.NuitControls;
 import im.bci.jnuit.NuitLocale;
 import im.bci.jnuit.NuitPreferences;
 import im.bci.jnuit.NuitToolkit;
@@ -81,7 +80,7 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
     private TeavmGameData data;
     private NuitToolkit nuitToolkit;
     private final ResourceBundle messages;
-    private NuitControls controls;
+    private TeavmNuitControls controls;
     private TeavmVirtualFileSystem vfs;
     private TeavmAssets assets;
 
@@ -135,7 +134,7 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
             throw new RuntimeException("create IGameView before controls");
         }
         if (null == input) {
-            input = new TeavmGameInput(nuitToolkit, config);
+            input = new TeavmGameInput(nuitToolkit, controls, config);
             input.setup();
         }
         return input;
