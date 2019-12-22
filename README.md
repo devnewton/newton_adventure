@@ -7,6 +7,6 @@ It runs on Linux, Windows, Mac OS X or any OS with Java and OpenGL support.
 
 Code is available under BSD licence, data under CC-BY-SA or more permissive licences.
 
-[Official website](http://newtonadventure.bci.im)
+[Official website](https://play.devnewton.fr/)
 
 ![screenshots](wiki/screenshots/montage_800_600.jpg)

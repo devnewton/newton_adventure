@@ -14,12 +14,10 @@
         <project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
         <lwjgl.version>3.2.3</lwjgl.version>
         <jnuit.version>0.14-SNAPSHOT</jnuit.version>
-        <playn.version>1.8.5</playn.version>
     </properties>
     <modules>
         <module>game/core</module>
         <module>game/lwjgl</module>
-        <module>game/playn</module>
         <module>editor</module>
     </modules>
     <dependencyManagement>
@@ -27,11 +25,6 @@
             <dependency>
                 <groupId>im.bci.newtonadv</groupId>
                 <artifactId>newton-adventure-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>im.bci.newtonadv</groupId>
-                <artifactId>playn-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -73,29 +66,10 @@
                 <version>${jnuit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.googlecode.playn</groupId>
-                <artifactId>playn-core</artifactId>
-                <version>${playn.version}</version>
-            </dependency>
-            
-            <dependency>
                 <groupId>im.bci.newtonadv</groupId>
                 <artifactId>newton-adventure-core</artifactId>
                 <version>${project.version}</version>
                 <classifier>sources</classifier>
-            </dependency>
-            
-            <dependency>
-                <groupId>im.bci.newtonadv</groupId>
-                <artifactId>playn-core</artifactId>
-                <version>${project.version}</version>
-                <classifier>sources</classifier>
-            </dependency>
-    
-            <dependency>
-                <groupId>im.bci.newtonadv</groupId>
-                <artifactId>playn-assets</artifactId>
-                <version>${project.version}</version>
             </dependency>
     
             <dependency>
@@ -104,24 +78,7 @@
                 <version>${jnuit.version}</version>
                 <classifier>sources</classifier>
             </dependency>
- 
-            <dependency>
-                <groupId>im.bci</groupId>
-                <artifactId>jnuit-playn</artifactId>
-                <version>${jnuit.version}</version>
-                <classifier>sources</classifier>
-            </dependency>
-            <dependency>
-                <groupId>im.bci</groupId>
-                <artifactId>jnuit-playn-utils</artifactId>
-                <version>${jnuit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>im.bci</groupId>
-                <artifactId>jnuit-playn-utils</artifactId>
-                <version>${jnuit.version}</version>
-                <classifier>sources</classifier>
-            </dependency>
+
             <dependency>
                 <groupId>im.bci</groupId>
                 <artifactId>tablelayout</artifactId>
@@ -133,33 +90,6 @@
                 <artifactId>jpurexml</artifactId>
                 <classifier>sources</classifier>
                 <version>0.12</version>
-            </dependency>
-            <dependency>
-                <groupId>com.googlecode.playn</groupId>
-                <artifactId>playn-html</artifactId>
-                <version>${playn.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.googlecode.playn</groupId>
-                <artifactId>playn-html</artifactId>
-                <version>${playn.version}</version>
-                <classifier>sources</classifier>
-            </dependency>
-            <dependency>
-                <groupId>im.bci</groupId>
-                <artifactId>jnuit-playn-java</artifactId>
-                <version>${jnuit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.googlecode.playn</groupId>
-                <artifactId>playn-java</artifactId>
-                <version>${playn.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>jlayer</groupId>
-                        <artifactId>mp3spi</artifactId>        
-                    </exclusion>
-                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

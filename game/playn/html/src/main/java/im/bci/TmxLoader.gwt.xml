@@ -1,4 +1,0 @@
-<module>
-    <inherits name='com.github.asilvestre.JPurexml'/>
-    <source path='tmxloader'/>
-</module>

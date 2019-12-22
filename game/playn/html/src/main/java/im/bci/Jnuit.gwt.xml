@@ -1,4 +1,0 @@
-<module>
-    <inherits name='com.esotericsoftware.Tablelayout'/>
-    <source path='jnuit'/>
-</module>
