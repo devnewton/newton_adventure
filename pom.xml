@@ -14,6 +14,7 @@
         <project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
         <lwjgl.version>3.2.3</lwjgl.version>
         <jnuit.version>1.0-SNAPSHOT</jnuit.version>
+        <teavm.version>0.6.1</teavm.version>
     </properties>
     <modules>
         <module>game/core</module>
@@ -130,6 +131,11 @@
                         <source>1.8</source>
                         <target>1.8</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.teavm</groupId>
+                    <artifactId>teavm-maven-plugin</artifactId>
+                    <version>${teavm.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
