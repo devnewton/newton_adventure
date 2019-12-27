@@ -31,10 +31,17 @@
  */
 package im.bci.newtonadv.platform.teavm;
 
-import im.bci.jnuit.teavm.assets.TeavmVirtualFileSystem;
+import im.bci.jnuit.teavm.JsonArray;
+import im.bci.jnuit.teavm.JsonMap;
+import im.bci.jnuit.teavm.assets.TeavmAssets;
 import im.bci.newtonadv.platform.interfaces.IGameData;
+import im.bci.tmxloader.TmxLoader;
 import im.bci.tmxloader.TmxMap;
+import im.bci.tmxloader.TmxTile;
+import im.bci.tmxloader.TmxTileset;
+import java.util.ArrayList;
 import java.util.List;
+import org.teavm.jso.json.JSON;
 
 /**
  *
@@ -42,48 +49,95 @@ import java.util.List;
  */
 class TeavmGameData implements IGameData {
 
-    TeavmGameData(TeavmVirtualFileSystem vfs) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private final TeavmAssets assets;
+
+    TeavmGameData(TeavmAssets assets) {
+        this.assets = assets;
     }
 
     @Override
     public List<String> listQuests() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final JsonMap json = JSON.parse(assets.getText("quests/quests.json")).cast();
+        final JsonArray jsonQuests = json.get("quests").cast();
+        ArrayList<String> results = new ArrayList<>();
+        for (int q = 0, nq = jsonQuests.getLength(); q < nq; ++q) {
+            String quest = jsonQuests.get(q).cast();
+            results.add(quest);
+        }
+        return results;
     }
 
     @Override
-    public String getFile(String file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getFile(String name) {
+        return name;
     }
 
     @Override
     public String getQuestFile(String questName, String file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "quests/" + questName + "/" + file;
     }
 
     @Override
     public List<String> listQuestLevels(String questName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final JsonMap json = JSON.parse(assets.getText("quests/" + questName + "/quest.json")).cast();
+        final JsonArray jsonLevels = json.get("levels").cast();
+        ArrayList<String> results = new ArrayList<>();
+        for (int l = 0, nl = jsonLevels.getLength(); l < nl; ++l) {
+            String level = jsonLevels.get(l).cast();
+            results.add(level);
+        }
+        return results;
     }
 
     @Override
     public TmxMap openLevelTmx(String questName, String levelName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            final String tmxDir = "quests/" + questName + "/levels/" + levelName;
+            final String tsxDir = "quests/" + questName;
+            final String tmxFile = tmxDir + "/" + levelName + ".tmx";
+            TmxLoader loader = new TmxLoader();
+            TmxMap map = new TmxMap();
+            loader.parseTmx(map, assets.getText(tmxFile));
+            for (TmxTileset tileset : map.getTilesets()) {
+                if (null != tileset.getSource()) {
+                    //TODO real path resolve...
+                    final String tsxFile = tsxDir + "/" + tileset.getSource().replaceAll("../", "");
+                    loader.parseTsx(map, tileset, assets.getText(tsxFile));
+                    for (TmxTile tile : tileset.getTiles()) {
+                        tile.getFrame().getImage().setSource(tsxDir + "/" + tile.getFrame().getImage().getSource());
+                    }
+                }
+            }
+            loader.decode(map);
+            return map;
+        } catch (Exception ex) {
+            throw new RuntimeException("Cannot load level " + questName + "/" + levelName, ex);
+        }
     }
 
     @Override
     public String getLevelFilePath(String questName, String levelName, String filename) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String file = "quests/" + questName + "/levels/" + levelName + "/" + filename;
+        if (fileExists(file)) {
+            return file;
+        }
+        file = "quests/" + questName + "/" + filename;
+        if (fileExists(file)) {
+            return file;
+        }
+        return "default_level_data/" + filename;
     }
 
     @Override
     public boolean fileExists(String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return assets.getVfs().exists(path);
     }
 
     @Override
     public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<String> results = new ArrayList<>();
+        //TODO
+        return results;
     }
-    
+
 }

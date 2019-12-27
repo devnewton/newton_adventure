@@ -141,8 +141,8 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
     }
 
     private TeavmGameData createGameData() {
-        if (data == null) {
-            data = new TeavmGameData(vfs);
+        if (null == data) {
+            data = new TeavmGameData(assets);
         }
         return data;
     }
