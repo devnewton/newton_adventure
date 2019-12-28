@@ -23,6 +23,8 @@
  */
 package im.bci.newtonadv.platform.teavm;
 
+import im.bci.jnuit.teavm.TeavmSync;
+import im.bci.newtonadv.Game;
 import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.anim.Play;
@@ -64,21 +66,63 @@ import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
+import net.phys2d.raw.shapes.AABox;
+import org.teavm.jso.canvas.CanvasRenderingContext2D;
+import org.teavm.jso.dom.html.HTMLCanvasElement;
 
 /**
  *
  * @author devnewton
  */
-class TeavmGameView implements IGameView{
+class TeavmGameView implements IGameView {
 
-    @Override
-    public void draw(Sequence sequence) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private TeavmSync sync = new TeavmSync();
+    private CanvasRenderingContext2D ctx;
+    private HTMLCanvasElement canvas;
+
+    public TeavmGameView(HTMLCanvasElement canvas, CanvasRenderingContext2D ctx) {
+        this.canvas = canvas;
+        this.ctx = ctx;
     }
 
     @Override
-    public void drawPickableObject(PickableObject pickable, AnimationFrame texture, World world) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void draw(Sequence sequence) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        sequence.draw();
+        sync.sync(Game.FPS);
+    }
+
+    @Override
+    public void drawPickableObject(PickableObject pickableObject, AnimationFrame texture, World world) {
+        //TODO
+        /*AABox bounds = pickableObject.getShape().getBounds();
+
+        GL11.glPushMatrix();
+        GL11.glTranslatef(pickableObject.getPosition().getX(), pickableObject.getPosition().getY(), 0.0f);
+        GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
+        final float x1 = -bounds.getWidth() / 2.0f;
+        final float x2 = bounds.getWidth() / 2.0f;
+        final float y1 = -bounds.getHeight() / 2.0f;
+        final float y2 = bounds.getHeight() / 2.0f;
+
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getImage().getId());
+
+        final float u1 = texture.getU1(), u2 = texture.getU2();
+        final float v1 = texture.getV1(), v2 = texture.getV2();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(u1, v1);
+        GL11.glVertex2f(x1, y2);
+        GL11.glTexCoord2f(u2, v1);
+        GL11.glVertex2f(x2, y2);
+        GL11.glTexCoord2f(u2, v2);
+        GL11.glVertex2f(x2, y1);
+        GL11.glTexCoord2f(u1, v2);
+        GL11.glVertex2f(x1, y1);
+        GL11.glEnd();
+        GL11.glPopMatrix();
+        GL11.glDisable(GL11.GL_BLEND);*/
     }
 
     @Override
@@ -283,7 +327,7 @@ class TeavmGameView implements IGameView{
 
     @Override
     public Collection<String> listShaders() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Collections.emptyList();
     }
-    
+
 }

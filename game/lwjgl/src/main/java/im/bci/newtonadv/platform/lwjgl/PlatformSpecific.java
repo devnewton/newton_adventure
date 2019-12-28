@@ -79,7 +79,7 @@ import java.util.logging.Logger;
  */
 public class PlatformSpecific implements IPlatformSpecific {
 
-    private GameView view;
+    private LwjglGameView view;
     private LwjglGameInput input;
     private final LwjglNuitPreferences config;
     private FileGameData data;
@@ -109,12 +109,12 @@ public class PlatformSpecific implements IPlatformSpecific {
     	vfs = new VirtualFileSystem(currentMod.getPath(), "data");
 	}
 
-	private GameView createGameView() {
+	private LwjglGameView createGameView() {
         if (null == data) {
             throw new RuntimeException("create IGameData before IGameView");
         }
         if (view == null) {
-            view = new GameView(data, config, this);
+            view = new LwjglGameView(data, config, this);
         }
         return view;
     }

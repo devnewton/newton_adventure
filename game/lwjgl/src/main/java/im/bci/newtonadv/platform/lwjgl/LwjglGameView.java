@@ -113,7 +113,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @author devnewton
  */
-public strictfp class GameView implements IGameView {
+public strictfp class LwjglGameView implements IGameView {
 
     private TextureCache textureCache;
     private GameViewQuality quality = GameViewQuality.DEFAULT;
@@ -124,7 +124,7 @@ public strictfp class GameView implements IGameView {
     private Sync sync = new Sync();
 
 
-    GameView(FileGameData data, NuitPreferences config, PlatformSpecific platformSpecific) {
+    LwjglGameView(FileGameData data, NuitPreferences config, PlatformSpecific platformSpecific) {
         this.data = data;
         this.platformSpecific = platformSpecific;
         initDisplay(config);
@@ -239,7 +239,7 @@ public strictfp class GameView implements IGameView {
             IconLoader.setIcon(window, is);
             is.close();
         } catch (Exception e) {
-            Logger.getLogger(GameView.class.getName()).warning("Cannot set window icon");
+            Logger.getLogger(LwjglGameView.class.getName()).warning("Cannot set window icon");
         }
     }
 
@@ -1438,7 +1438,7 @@ public strictfp class GameView implements IGameView {
         try {
             fontSpecialCharacters.put('$', data.openImage("default_level_data/apple.png"));
         } catch (IOException e) {
-            Logger.getLogger(GameView.class.getName()).warning("Cannot load default_level_data/apple.png");
+            Logger.getLogger(LwjglGameView.class.getName()).warning("Cannot load default_level_data/apple.png");
         }
         return new TrueTypeFont(new Font("monospaced", Font.BOLD, 24), true, new char[0], fontSpecialCharacters);
     }

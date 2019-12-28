@@ -91,7 +91,7 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
         createVfs();
         createAssets();
         createGameData();
-        createGameView();
+        createGameView(canvas,ctx);
         createControls();
         createNuitToolkit(canvas,ctx);
         createGameInput();
@@ -110,12 +110,12 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
         assets = new TeavmAssets(vfs);
     }
 
-    private TeavmGameView createGameView() {
+    private TeavmGameView createGameView(HTMLCanvasElement canvas, CanvasRenderingContext2D ctx) {
         if (null == data) {
             throw new RuntimeException("create IGameData before IGameView");
         }
         if (view == null) {
-            view = new TeavmGameView();
+            view = new TeavmGameView(canvas, ctx);
         }
         return view;
     }
