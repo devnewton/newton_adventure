@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.jnuit.animation.IAnimationCollection;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -44,25 +44,25 @@ import im.bci.newtonadv.game.Updatable;
 public strictfp class BombHole extends AnimatedPlatform implements Updatable {
     
     private boolean canThrowBomb = true;
-    private AnimationCollection bombTexture;
-        private AnimationCollection fireBallTexture;
-    private AnimationCollection explosionTexture;
+    private IAnimationCollection bombTexture;
+        private IAnimationCollection fireBallTexture;
+    private IAnimationCollection explosionTexture;
     
     public BombHole(World world, float w, float h) {
         super(world, w, h);
         setEnabled(false);
     }
     
-    public void setBombTexture(AnimationCollection bombTexture) {
+    public void setBombTexture(IAnimationCollection bombTexture) {
         this.bombTexture = bombTexture;
     }
     
     
-    public void setFireBallTexture(AnimationCollection fireBallTexture) {
+    public void setFireBallTexture(IAnimationCollection fireBallTexture) {
         this.fireBallTexture = fireBallTexture;
     }
 
-    public void setExplosionTexture(AnimationCollection explositionTexture) {
+    public void setExplosionTexture(IAnimationCollection explositionTexture) {
         this.explosionTexture = explositionTexture;
     }
     

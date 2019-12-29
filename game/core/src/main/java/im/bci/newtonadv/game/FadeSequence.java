@@ -31,10 +31,10 @@
  */
 package im.bci.newtonadv.game;
 
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.ITexture;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.anim.Play;
-import im.bci.newtonadv.platform.interfaces.ITexture;
-import java.io.IOException;
 
 /**
  *
@@ -48,7 +48,7 @@ public class FadeSequence implements Sequence {
     private final long duration;
     private long endTime = -1;
     protected AbstractTransitionException transition;
-    private Play loadingPlay;
+    private IPlay loadingPlay;
     private ITexture backgroundTexture;
 
     public FadeSequence(Game game, AbstractTransitionException transition, float r, float g, float b, long duration) {
@@ -62,12 +62,8 @@ public class FadeSequence implements Sequence {
 
     @Override
     public void start() {
-        try {
-            backgroundTexture = game.getView().getTextureCache().grabScreenToTexture();
-            loadingPlay = game.getView().loadFromAnimation(game.getData().getFile("loading.json")).getFirst().start();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        backgroundTexture = game.getData().grabScreenToTexture();
+        loadingPlay = game.getData().loadFromAnimation(game.getData().getFile("loading.json")).getFirst().start(PlayMode.LOOP);
     }
 
     @Override
@@ -84,7 +80,7 @@ public class FadeSequence implements Sequence {
     @Override
     public void update() throws Sequence.NormalTransitionException, ResumeTransitionException, ResumableTransitionException {
         final FrameTimeInfos frameTimeInfos = game.getFrameTimeInfos();
-        if(endTime < 0) {
+        if (endTime < 0) {
             endTime = game.getFrameTimeInfos().currentTime + duration;
         }
         loadingPlay.update(frameTimeInfos.elapsedTime / 1000000);

@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.jnuit.animation.IAnimationCollection;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 import net.phys2d.raw.shapes.Shape;
@@ -39,9 +39,9 @@ import net.phys2d.raw.shapes.Shape;
 class Activator extends AnimatedPlatform {
     private final int activableId;
     private boolean activated;
-    private final AnimationCollection onTexture;
+    private final IAnimationCollection onTexture;
 
-    Activator(World world, int activableId, AnimationCollection onTexture, AnimationCollection offTexture, float w, float h) {
+    Activator(World world, int activableId, IAnimationCollection onTexture, IAnimationCollection offTexture, float w, float h) {
         super(world, w, h);
         this.activableId = activableId;
         this.setTexture(offTexture);
@@ -49,8 +49,8 @@ class Activator extends AnimatedPlatform {
     }
 
     public Activator(World world, int activableId,
-			AnimationCollection onTexture,
-			AnimationCollection offTexture, Shape shape) {
+			IAnimationCollection onTexture,
+			IAnimationCollection offTexture, Shape shape) {
         super(world, shape);
         this.activableId = activableId;
         this.setTexture(offTexture);

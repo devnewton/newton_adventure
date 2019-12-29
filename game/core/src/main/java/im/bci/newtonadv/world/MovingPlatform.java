@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -51,23 +52,23 @@ public strictfp class MovingPlatform extends AbstractDrawableBody implements
 	private int currentDestination = 0;
 	private static final float weight = 10000.0f;
 	final World world;
-	final Play play;
+	final IPlay play;
 	final Vector2f f = new Vector2f();
 
-	public MovingPlatform(World world, AnimationCollection texture,
+	public MovingPlatform(World world, IAnimationCollection texture,
 			Vector2f[] destinations, float w, float h) {
 		this(world, texture, destinations, new Box(w, h));
 	}
 
-	public MovingPlatform(World world, AnimationCollection texture,
+	public MovingPlatform(World world, IAnimationCollection texture,
 			Vector2f[] destinations, Shape shape) {
 		super(shape, weight);
 		this.world = world;
-		play = texture.getFirst().start();
+		play = texture.getFirst().start(PlayMode.LOOP);
 		this.destinations = destinations;
 		this.setGravityEffected(false);
 		this.setRotatable(false);
-		texture.getFirst().start();
+		texture.getFirst().start(PlayMode.LOOP);
 	}
 
 	@Override

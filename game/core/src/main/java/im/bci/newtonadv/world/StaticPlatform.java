@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.platform.interfaces.ITexture;
+import im.bci.jnuit.animation.ITexture;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.shapes.Box;
 

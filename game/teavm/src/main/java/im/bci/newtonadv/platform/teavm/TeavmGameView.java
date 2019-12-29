@@ -23,19 +23,17 @@
  */
 package im.bci.newtonadv.platform.teavm;
 
+import im.bci.jnuit.animation.IAnimationFrame;
+import im.bci.jnuit.animation.IPlay;
 import im.bci.jnuit.teavm.TeavmSync;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.AnimationFrame;
-import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.ScoreSequence;
 import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.platform.interfaces.IGameView;
-import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.platform.interfaces.ITextureCache;
+import im.bci.jnuit.animation.ITexture;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.Axe;
@@ -64,10 +62,8 @@ import im.bci.newtonadv.world.PickedUpObject;
 import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import net.phys2d.raw.shapes.AABox;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 
@@ -94,7 +90,7 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public void drawPickableObject(PickableObject pickableObject, AnimationFrame texture, World world) {
+    public void drawPickableObject(PickableObject pickableObject, IAnimationFrame texture, World world) {
         //TODO
         /*AABox bounds = pickableObject.getShape().getBounds();
 
@@ -126,17 +122,17 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public void drawAxe(Axe axe, AnimationFrame texture) {
+    public void drawAxe(Axe axe, IAnimationFrame texture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawAxeAnchor(AxeAnchor axeAnchor, float radius, AnimationFrame texture) {
+    public void drawAxeAnchor(AxeAnchor axeAnchor, float radius, IAnimationFrame texture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawBat(Bat bat, float scale, AnimationFrame frame, World world) {
+    public void drawBat(Bat bat, float scale, IAnimationFrame frame, World world) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -156,22 +152,22 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public void drawDoor(Door door, AnimationFrame texture) {
+    public void drawDoor(Door door, IAnimationFrame texture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawBoss(Boss boss, AnimationFrame bodyTexture) {
+    public void drawBoss(Boss boss, IAnimationFrame bodyTexture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawBossHand(BossHand hand, AnimationFrame texture) {
+    public void drawBossHand(BossHand hand, IAnimationFrame texture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawExplosion(Explosion explosion, AnimationFrame texture, World world) {
+    public void drawExplosion(Explosion explosion, IAnimationFrame texture, World world) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -181,17 +177,17 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public void drawFireBall(FireBall fireball, AnimationFrame texture, World world) {
+    public void drawFireBall(FireBall fireball, IAnimationFrame texture, World world) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawHero(Hero hero, AnimationFrame texture, World world) {
+    public void drawHero(Hero hero, IAnimationFrame texture, World world) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawKey(Key key, AnimationFrame texture, World world) {
+    public void drawKey(Key key, IAnimationFrame texture, World world) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -201,7 +197,7 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public void drawLosedApple(LosedApple apple, World world, AnimationFrame texture, float alpha) {
+    public void drawLosedApple(LosedApple apple, World world, IAnimationFrame texture, float alpha) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -211,22 +207,22 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public void drawMobilePikeAnchor(MobilePikeAnchor anchor, AnimationFrame texture) {
+    public void drawMobilePikeAnchor(MobilePikeAnchor anchor, IAnimationFrame texture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawMobilePikes(MobilePikes pikes, AnimationFrame texture) {
+    public void drawMobilePikes(MobilePikes pikes, IAnimationFrame texture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawMummy(Mummy mummy, World world, AnimationFrame texture, float scale) {
+    public void drawMummy(Mummy mummy, World world, IAnimationFrame texture, float scale) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drawPickedUpObject(PickedUpObject apple, World world, AnimationFrame texture) {
+    public void drawPickedUpObject(PickedUpObject apple, World world, IAnimationFrame texture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -251,7 +247,7 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public void drawUsedKey(UsedKey key, AnimationFrame texture, World world) {
+    public void drawUsedKey(UsedKey key, IAnimationFrame texture, World world) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -261,22 +257,12 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public ITextureCache getTextureCache() {
+    public void drawFadeSequence(ITexture backgroundTexture, IPlay loadingPlay, float r, float g, float b, float a) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public AnimationCollection loadFromAnimation(String name) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture) {
+    public void drawMovingPlatform(MovingPlatform aThis, IAnimationFrame texture) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -311,7 +297,7 @@ class TeavmGameView implements IGameView {
     }
 
     @Override
-    public void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world) {
+    public void drawBomb(Bomb bomb, IAnimationFrame currentFrame, World world) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

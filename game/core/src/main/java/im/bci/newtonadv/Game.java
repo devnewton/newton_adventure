@@ -32,7 +32,7 @@
 package im.bci.newtonadv;
 
 import im.bci.jnuit.NuitToolkit;
-import im.bci.newtonadv.anim.PlayMode;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.newtonadv.game.BonusSequence;
 import im.bci.newtonadv.game.FadeSequence;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -151,13 +151,13 @@ public strictfp class Game {
 
     private void collectGarbage() {
         System.gc();
-        getView().getTextureCache().clearUseless();
+        getData().clearUseless();
         getNuitToolkit().getAudio().clearUseless();
     }
 
     protected void stopGame() {
         running = false;
-        getView().getTextureCache().clearAll();
+        getData().clearAll();
         getNuitToolkit().getAudio().stopMusic();
     }
 

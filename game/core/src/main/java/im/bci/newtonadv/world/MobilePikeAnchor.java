@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -46,7 +47,7 @@ import net.phys2d.raw.shapes.Shape;
 public class MobilePikeAnchor extends AbstractDrawableStaticBody implements Updatable {
 
     private static final float radius = World.distanceUnit;
-    private Play play;
+    private IPlay play;
     private final World world;
 
     MobilePikeAnchor(World world) {
@@ -58,10 +59,10 @@ public class MobilePikeAnchor extends AbstractDrawableStaticBody implements Upda
         setFriction(10.0f);
         addBit(World.STATIC_BODY_COLLIDE_BIT);
         this.world = world;
-	}
+    }
 
-	public void setTexture(AnimationCollection texture) {
-        this.play = texture.getFirst().start();
+    public void setTexture(IAnimationCollection texture) {
+        this.play = texture.getFirst().start(PlayMode.LOOP);
     }
 
     @Override

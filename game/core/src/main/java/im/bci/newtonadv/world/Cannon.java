@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.jnuit.animation.IAnimationCollection;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -46,8 +46,8 @@ public strictfp class Cannon extends AnimatedPlatform implements Updatable {
     private static final long durationBetweenFireballGeneration = 2000000000;
     private long nextFireballTime = 0;
     private static final float shotForce = 10000.0f;
-    private AnimationCollection fireBallTexture;
-    private AnimationCollection explosionTexture;
+    private IAnimationCollection fireBallTexture;
+    private IAnimationCollection explosionTexture;
     
     public enum Orientation {
         
@@ -70,11 +70,11 @@ public strictfp class Cannon extends AnimatedPlatform implements Updatable {
         setEnabled(false);
     }
     
-    public void setFireBallTexture(AnimationCollection texture) {
+    public void setFireBallTexture(IAnimationCollection texture) {
         this.fireBallTexture = texture;
     }
     
-    public void setExplosionTexture(AnimationCollection texture) {
+    public void setExplosionTexture(IAnimationCollection texture) {
         this.explosionTexture = texture;
     }
     

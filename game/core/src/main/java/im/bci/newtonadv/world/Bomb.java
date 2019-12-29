@@ -31,11 +31,12 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -50,15 +51,15 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
 
     static final float size = 1.95f * World.distanceUnit;
     private World world;
-    private AnimationCollection texture;
-    private Play play;
+    private IAnimationCollection texture;
+    private IPlay play;
     private boolean triggered;
     private long explodeTime = -1;
     private static final float explosionForce = 10000.0f;
     private static final long triggerDuration = 2000000000L;
     private BombHole parentHole;
-    private AnimationCollection fireBallTexture;
-    private AnimationCollection explositionTexture;
+    private IAnimationCollection fireBallTexture;
+    private IAnimationCollection explositionTexture;
 
     Bomb(World world) {
         super(new Circle(size / 2.0f), 1.0f);
@@ -71,11 +72,11 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
         setRotatable(false);
     }
 
-    public void setFireBallTexture(AnimationCollection fireBallTexture) {
+    public void setFireBallTexture(IAnimationCollection fireBallTexture) {
         this.fireBallTexture = fireBallTexture;
     }
 
-    public void setExplosionTexture(AnimationCollection explositionTexture) {
+    public void setExplosionTexture(IAnimationCollection explositionTexture) {
         this.explositionTexture = explositionTexture;
     }
 
@@ -84,22 +85,22 @@ public strictfp class Bomb extends AbstractDrawableBody implements Updatable {
         world.getView().drawBomb(this, play.getCurrentFrame(), world);
     }
 
-    void setTexture(AnimationCollection texture) {
+    void setTexture(IAnimationCollection texture) {
         this.texture = texture;
-        this.play = texture.getAnimationByName("bomb_inactive").start();
+        this.play = texture.getAnimationByName("bomb_inactive").start(PlayMode.LOOP);
     }
 
     @Override
     public strictfp void collided(Body body) {
         if (body instanceof Hero || body instanceof FireBall) {
             if (!triggered) {
-                play = texture.getAnimationByName("bomb_about_to_explode").start();
+                play = texture.getAnimationByName("bomb_about_to_explode").start(PlayMode.LOOP);
                 triggered = true;
             }
         }
     }
 
-    public AnimationCollection getTexture() {
+    public IAnimationCollection getTexture() {
         return texture;
     }
 

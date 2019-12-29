@@ -11,7 +11,7 @@ import java.util.List;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.platform.interfaces.IGameView;
-import im.bci.newtonadv.platform.interfaces.ITexture;
+import im.bci.jnuit.animation.ITexture;
 import im.bci.newtonadv.util.ShapeUtils;
 import im.bci.newtonadv.world.IStaticPlatformDrawable;
 import im.bci.newtonadv.world.StaticPlatform;

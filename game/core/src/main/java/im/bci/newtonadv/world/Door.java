@@ -31,11 +31,11 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import net.phys2d.raw.Body;
 
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
-import im.bci.newtonadv.anim.PlayMode;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -51,8 +51,8 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 		CollisionDetectionOnly, Updatable {
 
 	protected final World world;
-	private AnimationCollection texture;
-	private Play play;
+	private IAnimationCollection texture;
+	private IPlay play;
 	private NewtonColor color = NewtonColor.white;
 	protected boolean isClose = true;
 
@@ -75,9 +75,9 @@ public strictfp class Door extends AbstractDrawableStaticBody implements
 				play.getCurrentFrame());
 	}
 
-	void setTexture(AnimationCollection texture) {
+	void setTexture(IAnimationCollection texture) {
 		this.texture = texture;
-		play = texture.getAnimationByName("closed").start();
+		play = texture.getAnimationByName("closed").start(PlayMode.LOOP);
 	}
 
 	@Override

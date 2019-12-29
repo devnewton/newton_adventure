@@ -31,11 +31,12 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.BodyList;
 
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -51,7 +52,7 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
 
     static final float size = 2.0f * World.distanceUnit;
     private World world;
-    private Play play;
+    private IPlay play;
     private NewtonColor color = NewtonColor.white;
 
     Key(World world) {
@@ -71,8 +72,8 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
         world.getView().drawKey(this, play.getCurrentFrame(), world);
     }
 
-    void setTexture(AnimationCollection texture) {
-        play = texture.getFirst().start();
+    void setTexture(IAnimationCollection texture) {
+        play = texture.getFirst().start(PlayMode.LOOP);
     }
 
     @Override
@@ -97,7 +98,7 @@ public strictfp class Key extends AbstractDrawableBody implements Updatable {
 		world.addTopLevelEntities(new UsedKey(world, play.getCurrentFrame(), getPosition()));
 	}
 
-	public Play getAnimation() {
+	public IPlay getAnimation() {
 		return play;
 	}
 

@@ -33,7 +33,7 @@ package im.bci.newtonadv.game;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.time.OneShotTimedAction;
-import im.bci.newtonadv.platform.interfaces.ITexture;
+import im.bci.jnuit.animation.ITexture;
 import im.bci.newtonadv.world.GameOverException;
 import im.bci.newtonadv.world.Hero;
 import im.bci.newtonadv.world.TmxLoader;
@@ -110,7 +110,7 @@ strictfp public class LevelSequence implements PreloadableSequence {
         worldLoader = null;
         String minimapPath = game.getData().getLevelFilePath(questName, levelName, "minimap.png");
         if (game.getData().fileExists(minimapPath)) {
-            minimapTexture = game.getView().getTextureCache().getTexture(minimapPath);
+            minimapTexture = game.getData().getTexture(minimapPath);
         } else {
             minimapTexture = null;
         }

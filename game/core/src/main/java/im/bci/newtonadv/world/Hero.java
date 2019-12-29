@@ -31,9 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.jnuit.audio.Sound;
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -58,7 +59,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     private Sound jumpSound;
     private Sound pickupSound;
     private Sound hurtSound;
-    private AnimationCollection animations;
+    private IAnimationCollection animations;
     private int nbApple = 10;
     private static final float jumpForce = 180.0f;
     private static final float weight = 1.0f;
@@ -71,7 +72,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     private boolean isHurtBlinkState = false;
     private static final long dyingAnimationDuration = 2000000000L;
     private final LevelScore levelScore = new LevelScore();
-    private Play play;
+    private IPlay play;
     private OneShotTimedAction deadClock, dyingTimedAction;
     private boolean tryingToActivateThings;
 
@@ -156,11 +157,11 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
     private void setCurrentMovement(Movement currentMovement) {
         if (isFalling()) {
             if (!"falling".equals(play.getName())) {
-                play = animations.getAnimationByName("falling").start();
+                play = animations.getAnimationByName("falling").start(PlayMode.LOOP);
             }
         } else {
             if (!"walk".equals(play.getName())) {
-                play = animations.getAnimationByName("walk").start();
+                play = animations.getAnimationByName("walk").start(PlayMode.LOOP);
                 if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
                     play.stop();
                 }
@@ -172,7 +173,7 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
             if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
                 play.stop();
             } else {
-                play.start();
+                play.start(PlayMode.LOOP);
             }
         }
     }
@@ -285,13 +286,13 @@ public strictfp class Hero extends AbstractDrawableBody implements Updatable {
         }
     }
 
-    public Play getAnimation() {
+    public IPlay getAnimation() {
         return play;
     }
 
-    public void setAnimation(AnimationCollection heroAnimation) {
+    public void setAnimation(IAnimationCollection heroAnimation) {
         this.animations = heroAnimation;
-        play = animations.getAnimationByName("walk").start();
+        play = animations.getAnimationByName("walk").start(PlayMode.LOOP);
         play.stop();
     }
 

@@ -31,9 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import net.phys2d.math.Matrix2f;
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -49,7 +50,7 @@ import im.bci.newtonadv.util.Vector;
  */
 public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 
-	private Play play;
+	private IPlay play;
 	private static final float weight = 0.1f;
 	private static final float speed = 4.0f;
 	private static final long maxMoveStraightDuration = 1000000000L;
@@ -61,13 +62,13 @@ public strictfp class Bat extends AbstractDrawableBody implements Updatable {
 	private World world;
 	private Vector2f directionVelocity;
 
-	public Bat(World world, Shape shape, AnimationCollection animation) {
+	public Bat(World world, Shape shape, IAnimationCollection animation) {
 		super(shape,
 				weight);
 		this.world = world;
 		setRotatable(false);
 		setGravityEffected(false);
-		play = animation.getFirst().start();
+		play = animation.getFirst().start(PlayMode.LOOP);
 	}
 
 	public boolean isDead() {

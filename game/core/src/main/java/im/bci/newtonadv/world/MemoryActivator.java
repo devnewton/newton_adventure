@@ -31,7 +31,7 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.jnuit.animation.IAnimationCollection;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 import net.phys2d.raw.Body;
@@ -40,7 +40,7 @@ import net.phys2d.raw.shapes.Shape;
 
 class MemoryActivator extends AnimatedPlatform implements Updatable {
 	private final int activableId;
-	private final AnimationCollection onTexture, offTexture, hiddenTexture;
+	private final IAnimationCollection onTexture, offTexture, hiddenTexture;
 	private State state = State.HIDDEN;
 	private long showEndTime = -1;
 	private static final long showDuration = 5000000000L;
@@ -49,8 +49,8 @@ class MemoryActivator extends AnimatedPlatform implements Updatable {
 		HIDDEN, SHOW, ACTIVATED
 	}
 
-	MemoryActivator(World world, int activableId, AnimationCollection onTexture,
-			AnimationCollection offTexture, AnimationCollection hiddenTexture, float w, float h) {
+	MemoryActivator(World world, int activableId, IAnimationCollection onTexture,
+			IAnimationCollection offTexture, IAnimationCollection hiddenTexture, float w, float h) {
 		super(world, w, h);
 		this.activableId = activableId;
 		this.offTexture = offTexture;
@@ -60,9 +60,9 @@ class MemoryActivator extends AnimatedPlatform implements Updatable {
 	}
 
 	public MemoryActivator(World world, int activableId,
-			AnimationCollection onTexture,
-			AnimationCollection offTexture,
-			AnimationCollection hiddenTexture, Shape shape) {
+			IAnimationCollection onTexture,
+			IAnimationCollection offTexture,
+			IAnimationCollection hiddenTexture, Shape shape) {
 		super(world, shape);
 		this.activableId = activableId;
 		this.offTexture = offTexture;

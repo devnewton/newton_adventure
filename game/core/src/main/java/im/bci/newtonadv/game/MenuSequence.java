@@ -31,18 +31,15 @@
  */
 package im.bci.newtonadv.game;
 
+import im.bci.jnuit.animation.IAnimationFrame;
+import im.bci.jnuit.animation.IAnimationImage;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import java.util.ArrayList;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.anim.AnimationFrame;
-import im.bci.newtonadv.anim.Play;
-import im.bci.newtonadv.anim.PlayMode;
-import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.platform.interfaces.ITextureCache;
-import java.io.IOException;
+import im.bci.jnuit.animation.ITexture;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.phys2d.math.ROVector2f;
 import net.phys2d.math.Vector2f;
@@ -64,7 +61,7 @@ public abstract class MenuSequence implements Sequence {
     protected int verticalIncrement = 1;
     protected Game game;
     private String backgroundTexturePath;
-    protected Play backgroundTexture;
+    protected IPlay backgroundTexture;
     private float backgroundX1 = MenuSequence.ortho2DLeft;
     private float backgroundX2 = MenuSequence.ortho2DRight;
     private float backgroundY1 = MenuSequence.ortho2DBottom;
@@ -202,7 +199,7 @@ public abstract class MenuSequence implements Sequence {
                                 button.setOn();
                             }
                             if (null == mouseActivateCurrentButton) {
-                                if(!game.getInput().isMouseButtonDown()) {
+                                if (!game.getInput().isMouseButtonDown()) {
                                     mouseActivateCurrentButton = false;
                                 }
                             } else {
@@ -230,11 +227,7 @@ public abstract class MenuSequence implements Sequence {
     @Override
     public void start() {
         if (null != backgroundTexturePath) {
-            try {
-                backgroundTexture = game.getView().loadFromAnimation(backgroundTexturePath).getFirst().start(backgroundPlayMode);
-            } catch (IOException ex) {
-                Logger.getLogger(MenuSequence.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            backgroundTexture = game.getData().loadFromAnimation(backgroundTexturePath).getFirst().start(backgroundPlayMode);
         }
         currentButtonIndex = 0;
         mouseActivateCurrentButton = null;
@@ -244,11 +237,10 @@ public abstract class MenuSequence implements Sequence {
         } else {
             setCurrentButton(buttons.isEmpty() ? null : buttons.get(0));
         }
-        final ITextureCache textureCache = game.getView().getTextureCache();
         for (Button button : buttons) {
             button.start();
-            button.onTexture = textureCache.getTexture(button.onTextureName);
-            button.offTexture = game.getView().getTextureCache().getTexture(button.offTextureName);
+            button.onTexture = game.getData().getTexture(button.onTextureName);
+            button.offTexture = game.getData().getTexture(button.offTextureName);
         }
         final ROVector2f mousePos = game.getInput().getMousePos();
         if (null != mousePos) {
@@ -304,9 +296,9 @@ public abstract class MenuSequence implements Sequence {
         redraw = b;
     }
 
-    public ITexture getBackgroundImage() {
+    public IAnimationImage getBackgroundImage() {
         if (null != backgroundTexture) {
-            AnimationFrame frame = backgroundTexture.getCurrentFrame();
+            IAnimationFrame frame = backgroundTexture.getCurrentFrame();
             if (null != frame) {
                 return frame.getImage();
             }

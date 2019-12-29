@@ -31,9 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.PlayMode;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Shape;
-import im.bci.newtonadv.anim.PlayMode;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
 

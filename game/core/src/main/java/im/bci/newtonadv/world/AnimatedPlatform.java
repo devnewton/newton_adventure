@@ -31,10 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.PlayMode;
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.AnimationFrame;
-import im.bci.newtonadv.anim.Play;
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IAnimationFrame;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -53,8 +53,8 @@ import net.phys2d.raw.shapes.Shape;
 public strictfp class AnimatedPlatform extends AbstractDrawableStaticBody implements
 		Updatable {
 
-	private AnimationCollection texture;
-	protected Play play;
+	private IAnimationCollection texture;
+	protected IPlay play;
 	protected final World world;
 	protected float w;
 	protected float h;
@@ -64,7 +64,7 @@ public strictfp class AnimatedPlatform extends AbstractDrawableStaticBody implem
 	public FloatBuffer texCoords = ByteBuffer
 			.allocateDirect(2 * 4 * Float.SIZE / 8)
 			.order(ByteOrder.nativeOrder()).asFloatBuffer();
-	public AnimationFrame frame;
+	public IAnimationFrame frame;
 
 	AnimatedPlatform(World world, float w, float h) {
 		super(new Box(w, h));
@@ -99,9 +99,9 @@ public strictfp class AnimatedPlatform extends AbstractDrawableStaticBody implem
 		vertices.flip();
 	}
 
-	public void setTexture(AnimationCollection texture) {
+	public void setTexture(IAnimationCollection texture) {
 		this.texture = texture;
-		this.play = texture.getFirst().start();
+		this.play = texture.getFirst().start(PlayMode.LOOP);
 		setAnimationFrame(play.getCurrentFrame());
 	}
 	
@@ -113,7 +113,7 @@ public strictfp class AnimatedPlatform extends AbstractDrawableStaticBody implem
 		}
 	}
 
-	private void setAnimationFrame(AnimationFrame currentFrame) {
+	private void setAnimationFrame(IAnimationFrame currentFrame) {
 		if (this.frame != currentFrame) {
 			this.frame = currentFrame;
 			texCoords.put(frame.getU1());

@@ -31,9 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import net.phys2d.raw.BodyList;
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -52,7 +53,7 @@ import im.bci.newtonadv.util.Vector;
 public strictfp class Boss extends AbstractDrawableBody implements
         Updatable {
 
-    private AnimationCollection explosionTexture;
+    private IAnimationCollection explosionTexture;
 
     public BossHand getLeftHand() {
         return leftHand;
@@ -61,7 +62,7 @@ public strictfp class Boss extends AbstractDrawableBody implements
     public BossHand getRightHand() {
         return rightHand;
     }
-    private Play play;
+    private IPlay play;
     private static final float weight = 10.0f;
     static final float normalSpeed = 1.0f;
     float speed = normalSpeed;
@@ -79,7 +80,7 @@ public strictfp class Boss extends AbstractDrawableBody implements
     private BossHand leftHand, rightHand;
     private int lifePoints = 3;
     private long nextExplosionTime;
-    private AnimationCollection texture;
+    private IAnimationCollection texture;
     private static final long timeBetweenExplosion = 300000000L;
 
     public Boss(World world, float x, float y) {
@@ -108,14 +109,14 @@ public strictfp class Boss extends AbstractDrawableBody implements
         return pos;
     }
 
-    public void setTexture(AnimationCollection texture) {
-        this.play = texture.getAnimationByName("boss_body").start();
+    public void setTexture(IAnimationCollection texture) {
+        this.play = texture.getAnimationByName("boss_body").start(PlayMode.LOOP);
         this.texture = texture;
         leftHand.setTexture(texture);
         rightHand.setTexture(texture);
     }
 
-    public void setExplosionTexture(AnimationCollection explosionTexture) {
+    public void setExplosionTexture(IAnimationCollection explosionTexture) {
         this.explosionTexture = explosionTexture;
     }
 
@@ -227,12 +228,12 @@ public strictfp class Boss extends AbstractDrawableBody implements
 
         if (isHurt) {
             if (endOfInvincibilityDuration < 0) {
-                play = texture.getAnimationByName("angry_boss_body").start();
+                play = texture.getAnimationByName("angry_boss_body").start(PlayMode.LOOP);
                 speed = normalSpeed * 2.0f;
                 endOfInvincibilityDuration = frameTimeInfos.currentTime
                         + invincibleAfterHurtDuration;
             } else if (frameTimeInfos.currentTime > endOfInvincibilityDuration) {
-                play = texture.getAnimationByName("boss_body").start();
+                play = texture.getAnimationByName("boss_body").start(PlayMode.LOOP);
                 isHurt = false;
                 speed = 1.0f;
             }

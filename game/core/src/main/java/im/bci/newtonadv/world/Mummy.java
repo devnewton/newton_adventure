@@ -31,9 +31,10 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import net.phys2d.math.Matrix2f;
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -49,7 +50,7 @@ import im.bci.newtonadv.util.Vector;
  */
 public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 
-	private Play play;
+	private IPlay play;
 	private static final float weight = 1.0f;
 	private static final float horizontalSpeed = 4.0f;
 	private static final long moveStraightDuration = 4000000000L;
@@ -74,7 +75,7 @@ public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 			if (this.currentMovement == Movement.NOT_GOING_ANYWHERE) {
 				play.stop();
 			} else {
-				play.start();
+				play.start(PlayMode.LOOP);
 			}
 		}
 	}
@@ -88,10 +89,10 @@ public strictfp class Mummy extends AbstractDrawableBody implements Updatable {
 	Movement previousMovement = Movement.NOT_GOING_ANYWHERE;
 	private World world;
 
-	public Mummy(World world, Shape shape, AnimationCollection animation) {
+	public Mummy(World world, Shape shape, IAnimationCollection animation) {
 		super(shape, weight);
 		this.world = world;
-		this.play = animation.getFirst().start();
+		this.play = animation.getFirst().start(PlayMode.LOOP);
 		setRotatable(false);
 	}
 

@@ -31,6 +31,8 @@
  */
 package im.bci.newtonadv.platform.teavm;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.ITexture;
 import im.bci.jnuit.teavm.JsonArray;
 import im.bci.jnuit.teavm.JsonMap;
 import im.bci.jnuit.teavm.assets.TeavmAssets;
@@ -138,6 +140,36 @@ class TeavmGameData implements IGameData {
         ArrayList<String> results = new ArrayList<>();
         //TODO
         return results;
+    }
+
+    @Override
+    public ITexture getTexture(String minimapPath) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void clearUseless() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void clearAll() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ITexture grabScreenToTexture() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public IAnimationCollection loadFromAnimation(String file) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public IAnimationCollection loadFromSubTexture(String source, float u1, float v1, float u2, float v2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

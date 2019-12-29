@@ -1,6 +1,6 @@
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
+import im.bci.jnuit.animation.IAnimationCollection;
 import im.bci.newtonadv.util.NewtonColor;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
@@ -11,7 +11,7 @@ public strictfp class DangerousMovingPlatform extends MovingPlatform {
 	private NewtonColor color = NewtonColor.white;
 
 	public DangerousMovingPlatform(World world,
-			AnimationCollection texture, Vector2f[] destinations, float w,
+			IAnimationCollection texture, Vector2f[] destinations, float w,
 			float h) {
 		super(world, texture, destinations, w, h);
 	}

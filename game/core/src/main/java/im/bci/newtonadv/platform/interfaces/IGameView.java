@@ -31,9 +31,9 @@
  */
 package im.bci.newtonadv.platform.interfaces;
 
-import im.bci.newtonadv.anim.Play;
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.AnimationFrame;
+import im.bci.jnuit.animation.IAnimationFrame;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.ITexture;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.MenuSequence.Button;
@@ -69,9 +69,7 @@ import im.bci.newtonadv.world.ScoreVisualIndicator;
 import im.bci.newtonadv.world.UsedKey;
 import im.bci.newtonadv.world.World;
 
-import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 /**
  *
@@ -81,13 +79,13 @@ public interface IGameView {
 
     void draw(Sequence sequence);
 
-    void drawPickableObject(PickableObject pickable, AnimationFrame texture, World world);
+    void drawPickableObject(PickableObject pickable, IAnimationFrame texture, World world);
 
-    void drawAxe(Axe axe, AnimationFrame texture);
+    void drawAxe(Axe axe, IAnimationFrame texture);
 
-    void drawAxeAnchor(AxeAnchor axeAnchor, float radius, AnimationFrame texture);
+    void drawAxeAnchor(AxeAnchor axeAnchor, float radius, IAnimationFrame texture);
 
-    void drawBat(Bat bat, float scale, AnimationFrame frame, World world);
+    void drawBat(Bat bat, float scale, IAnimationFrame frame, World world);
 
     void drawBlocker(Blocker blocker, float alpha);
 
@@ -95,35 +93,35 @@ public interface IGameView {
 
     void drawCloud(Cloud cloud, float alpha);
 
-    void drawDoor(Door door, AnimationFrame texture);
+    void drawDoor(Door door, IAnimationFrame texture);
 
-    void drawBoss(Boss boss, AnimationFrame bodyTexture);
+    void drawBoss(Boss boss, IAnimationFrame bodyTexture);
 
-    void drawBossHand(BossHand hand, AnimationFrame texture);
+    void drawBossHand(BossHand hand, IAnimationFrame texture);
 
-    void drawExplosion(Explosion explosion, AnimationFrame texture, World world);
+    void drawExplosion(Explosion explosion, IAnimationFrame texture, World world);
 
     void drawFPS(int nbFps);
 
-    void drawFireBall(FireBall fireball, AnimationFrame texture, World world);
+    void drawFireBall(FireBall fireball, IAnimationFrame texture, World world);
 
-    void drawHero(Hero hero, AnimationFrame texture, World world);
+    void drawHero(Hero hero, IAnimationFrame texture, World world);
 
-    void drawKey(Key key, AnimationFrame texture, World world);
+    void drawKey(Key key, IAnimationFrame texture, World world);
 
     void drawLevelIndicators(String indicators);
 
-    void drawLosedApple(LosedApple apple, World world, AnimationFrame texture, float alpha);
+    void drawLosedApple(LosedApple apple, World world, IAnimationFrame texture, float alpha);
 
     void drawMenuSequence(MenuSequence sequence);
 
-    void drawMobilePikeAnchor(MobilePikeAnchor anchor, AnimationFrame texture);
+    void drawMobilePikeAnchor(MobilePikeAnchor anchor, IAnimationFrame texture);
 
-    void drawMobilePikes(MobilePikes pikes, AnimationFrame texture);
+    void drawMobilePikes(MobilePikes pikes, IAnimationFrame texture);
 
-    void drawMummy(Mummy mummy, World world, AnimationFrame texture, float scale);
+    void drawMummy(Mummy mummy, World world, IAnimationFrame texture, float scale);
 
-    void drawPickedUpObject(PickedUpObject apple, World world, AnimationFrame texture);
+    void drawPickedUpObject(PickedUpObject apple, World world, IAnimationFrame texture);
 
     void drawPlatform(AnimatedPlatform platform);
 
@@ -132,18 +130,14 @@ public interface IGameView {
     void drawScoreSequence(ScoreSequence sequence, QuestScore questScore, long scorePerCentToShow);
 
     void drawSnowLayer(SnowLayer layer);
-    
-    void drawUsedKey(UsedKey key, AnimationFrame texture, World world);
+
+    void drawUsedKey(UsedKey key, IAnimationFrame texture, World world);
 
     void drawWorld(World world);
 
-    ITextureCache getTextureCache();
+    void drawFadeSequence(ITexture backgroundTexture, IPlay loadingPlay, float r, float g, float b, float a);
 
-    AnimationCollection loadFromAnimation(String name) throws IOException;
-    
-    void drawFadeSequence(ITexture backgroundTexture, Play loadingPlay, float r, float g, float b, float a);
-
-    void drawMovingPlatform(MovingPlatform aThis, AnimationFrame texture);
+    void drawMovingPlatform(MovingPlatform aThis, IAnimationFrame texture);
 
     void drawMainMenuSequence(MainMenuSequence mainMenuSequence);
 
@@ -157,11 +151,12 @@ public interface IGameView {
 
     void drawScoreVisualIndicator(World world, ScoreVisualIndicator scoreVisualIndicator);
 
-    void drawBomb(Bomb bomb, AnimationFrame currentFrame, World world);
+    void drawBomb(Bomb bomb, IAnimationFrame currentFrame, World world);
 
     void drawStaticPlatforms(IStaticPlatformDrawable staticPlatformDrawable);
 
     IStaticPlatformDrawer createStaticPlatformDrawer();
-    
+
     Collection<String> listShaders();
+
 }

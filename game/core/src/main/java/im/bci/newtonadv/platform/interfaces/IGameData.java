@@ -31,6 +31,8 @@
  */
 package im.bci.newtonadv.platform.interfaces;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.ITexture;
 import im.bci.tmxloader.TmxMap;
 import java.util.List;
 
@@ -51,4 +53,16 @@ public interface IGameData {
     boolean fileExists(String path);
     
     List<String> listQuestsToCompleteToUnlockQuest(String questName);
+
+    public ITexture getTexture(String minimapPath);
+
+    public void clearUseless();
+
+    public void clearAll();
+
+    public ITexture grabScreenToTexture();
+
+    public IAnimationCollection loadFromAnimation(String file);
+
+    public IAnimationCollection loadFromSubTexture(String source, float u1, float v1, float u2, float v2);
 }

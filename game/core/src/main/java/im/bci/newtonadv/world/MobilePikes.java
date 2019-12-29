@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -51,7 +52,7 @@ public strictfp class MobilePikes extends AbstractDrawableBody implements
 	private static final float weight = 10.0f;
 	static final float width = World.distanceUnit;
 	static final float height = 3.9f * World.distanceUnit;
-	private Play play;
+	private IPlay play;
 	private World world;
 
 	MobilePikes(World world) {
@@ -60,8 +61,8 @@ public strictfp class MobilePikes extends AbstractDrawableBody implements
 		setDamping(0.02f);
 	}
 
-	public void setTexture(AnimationCollection texture) {
-		play = texture.getFirst().start();
+	public void setTexture(IAnimationCollection texture) {
+		play = texture.getFirst().start(PlayMode.LOOP);
 	}
 
 	@Override

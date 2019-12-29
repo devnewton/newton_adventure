@@ -31,9 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationFrame;
 import net.phys2d.math.Matrix2f;
 
-import im.bci.newtonadv.anim.AnimationFrame;
 import im.bci.newtonadv.game.AbstractEntity;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import net.phys2d.math.ROVector2f;
@@ -47,7 +47,7 @@ public strictfp class LosedApple extends AbstractEntity {
 
     private final float size;
     private World world;
-    private AnimationFrame texture;
+    private IAnimationFrame texture;
     private Vector2f position;
     private Vector2f direction;
     private boolean isDead = false;

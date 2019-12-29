@@ -32,6 +32,11 @@
 package im.bci.newtonadv.platform.lwjgl;
 
 import com.google.gson.Gson;
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.ITexture;
+import im.bci.jnuit.lwjgl.assets.AssetsLoader;
+import im.bci.jnuit.lwjgl.assets.GarbageCollectedAssets;
+import im.bci.jnuit.lwjgl.assets.LwjglTextureQuality;
 
 import im.bci.jnuit.lwjgl.assets.VirtualFileSystem;
 import im.bci.newtonadv.platform.interfaces.IGameData;
@@ -56,24 +61,21 @@ import javax.imageio.ImageIO;
  */
 public class FileGameData implements IGameData {
 
-    private VirtualFileSystem vfs;
+    private final VirtualFileSystem vfs;
+    private final GarbageCollectedAssets assets;
 
     FileGameData(VirtualFileSystem vfs) {
         this.vfs = vfs;
+        this.assets = new GarbageCollectedAssets(vfs);
     }
 
     @Override
     public List<String> listQuests() {
         String file = "quests/quests.json";
-        try {
-            InputStream is = vfs.open(file);
-            try {
-                InputStreamReader reader = new InputStreamReader(is);
-                QuestsConfig quests = new Gson().fromJson(reader, QuestsConfig.class);
-                return quests.getQuests();
-            } finally {
-                is.close();
-            }
+        try ( InputStream is = vfs.open(file)) {
+            InputStreamReader reader = new InputStreamReader(is);
+            QuestsConfig quests = new Gson().fromJson(reader, QuestsConfig.class);
+            return quests.getQuests();
         } catch (Exception ex) {
             throw new RuntimeException("Cannot load " + file, ex);
         }
@@ -82,15 +84,10 @@ public class FileGameData implements IGameData {
     @Override
     public List<String> listQuestLevels(String questName) {
         final String file = "quests/" + questName + "/quest.json";
-        try {
-            InputStream is = vfs.open(file);
-            try {
-                InputStreamReader reader = new InputStreamReader(is);
-                QuestConfig levels = new Gson().fromJson(reader, QuestConfig.class);
-                return levels.getLevels();
-            } finally {
-                is.close();
-            }
+        try ( InputStream is = vfs.open(file)) {
+            InputStreamReader reader = new InputStreamReader(is);
+            QuestConfig levels = new Gson().fromJson(reader, QuestConfig.class);
+            return levels.getLevels();
         } catch (Exception ex) {
             throw new RuntimeException("Cannot load " + file, ex);
         }
@@ -102,15 +99,10 @@ public class FileGameData implements IGameData {
 
     @Override
     public List<String> listQuestsToCompleteToUnlockQuest(String questName) {
-        try {
-            InputStream is = vfs.open("quests/" + questName + "/quest.json");
-            try {
-                InputStreamReader reader = new InputStreamReader(is);
-                QuestConfig conf = new Gson().fromJson(reader, QuestConfig.class);
-                return conf.getLockedBy();
-            } finally {
-                is.close();
-            }
+        try ( InputStream is = vfs.open("quests/" + questName + "/quest.json")) {
+            InputStreamReader reader = new InputStreamReader(is);
+            QuestConfig conf = new Gson().fromJson(reader, QuestConfig.class);
+            return conf.getLockedBy();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -130,7 +122,7 @@ public class FileGameData implements IGameData {
                     //TODO real path resolve...
                     final String tsxFile = tsxDir + "/" + tileset.getSource().replaceAll("../", "");
                     loader.parseTsx(map, tileset, loadText(tsxFile));
-                    for(TmxTile tile : tileset.getTiles()) {
+                    for (TmxTile tile : tileset.getTiles()) {
                         tile.getFrame().getImage().setSource(tsxDir + "/" + tile.getFrame().getImage().getSource());
                     }
                 }
@@ -143,22 +135,49 @@ public class FileGameData implements IGameData {
     }
 
     public String loadText(String f) {
-        try {
-            InputStream is = vfs.open(f);
-            try {
-                Scanner s = new Scanner(is, "UTF-8");
-                s.useDelimiter("\\Z");
-                String str = s.next();
-                s.close();
-                return str;
-            } finally {
-                is.close();
-            }
+        try ( InputStream is = vfs.open(f);  Scanner s = new Scanner(is, "UTF-8")) {
+            s.useDelimiter("\\Z");
+            String str = s.next();
+            return str;
         } catch (FileNotFoundException ex) {
             throw new RuntimeException("Cannot find text file: " + f, ex);
         } catch (IOException ex) {
             throw new RuntimeException("Cannot load text file: " + f, ex);
         }
+    }
+
+    @Override
+    public ITexture getTexture(String name) {
+        return assets.getTexture(name);
+    }
+
+    @Override
+    public void clearUseless() {
+        assets.clearUseless();
+    }
+
+    @Override
+    public void clearAll() {
+        assets.clearAll();
+    }
+
+    @Override
+    public ITexture grabScreenToTexture() {
+        return assets.grabScreenToTexture();
+    }
+
+    @Override
+    public IAnimationCollection loadFromAnimation(String file) {
+        return assets.getAnimations(file);
+    }
+
+    void setQuality(LwjglTextureQuality quality) {
+        this.assets.setQuality(quality);
+    }
+
+    @Override
+    public IAnimationCollection loadFromSubTexture(String source, float u1, float v1, float u2, float v2) {
+        return assets.getAnimationFromSubTexture(source, u1, v1, u2, v2);
     }
 
     public static class QuestsConfig {
@@ -199,11 +218,8 @@ public class FileGameData implements IGameData {
     }
 
     public BufferedImage openImage(String file) throws IOException {
-        InputStream is = openFile(getFile(file));
-        try {
+        try ( InputStream is = openFile(getFile(file))) {
             return ImageIO.read(is);
-        } finally {
-            is.close();
         }
     }
 

@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.newtonadv.game.AbstractDrawableStaticBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -46,7 +47,7 @@ import net.phys2d.raw.shapes.Shape;
 public class AxeAnchor extends AbstractDrawableStaticBody implements Updatable {
 
 	static final float radius = World.distanceUnit;
-	private Play play;
+	private IPlay play;
 	private final World world;
 
 	AxeAnchor(World world) {
@@ -60,8 +61,8 @@ public class AxeAnchor extends AbstractDrawableStaticBody implements Updatable {
 		this.world = world;
 	}
 
-	public void setTexture(AnimationCollection texture) {
-		play = texture.getFirst().start();
+	public void setTexture(IAnimationCollection texture) {
+		play = texture.getFirst().start(PlayMode.LOOP);
 	}
 
 	@Override

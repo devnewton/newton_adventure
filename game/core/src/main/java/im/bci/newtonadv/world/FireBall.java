@@ -31,11 +31,12 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Circle;
 
-import im.bci.newtonadv.anim.Play;
-import im.bci.newtonadv.anim.AnimationCollection;
 import im.bci.newtonadv.game.AbstractDrawableBody;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -45,8 +46,8 @@ public strictfp class FireBall extends AbstractDrawableBody implements
 
     final float size;
     World world;
-    private Play play;
-    private AnimationCollection explosionTexture;
+    private IPlay play;
+    private IAnimationCollection explosionTexture;
 
     FireBall(World world, float size) {
         super(new Circle(size / 2.0f), 40.0f);
@@ -54,11 +55,11 @@ public strictfp class FireBall extends AbstractDrawableBody implements
         this.world = world;
     }
 
-    void setTexture(AnimationCollection texture) {
-        play = texture.getFirst().start();
+    void setTexture(IAnimationCollection texture) {
+        play = texture.getFirst().start(PlayMode.LOOP);
     }
 
-    void setExplosionTexture(AnimationCollection texture) {
+    void setExplosionTexture(IAnimationCollection texture) {
         explosionTexture = texture;
     }
 

@@ -31,8 +31,9 @@
  */
 package im.bci.newtonadv.world;
 
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.Play;
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.newtonadv.game.Drawable;
 import im.bci.newtonadv.game.FrameTimeInfos;
 import im.bci.newtonadv.game.Updatable;
@@ -47,7 +48,7 @@ import net.phys2d.raw.shapes.Shape;
 public abstract strictfp class PickableObject extends StaticBody implements
 		Drawable, CollisionDetectionOnly, Updatable {
 
-	protected Play play;
+	protected IPlay play;
 	protected World world;
 	private int zOrder = 0;
 
@@ -71,8 +72,8 @@ public abstract strictfp class PickableObject extends StaticBody implements
 		world.remove(this);
 	}
 
-	public void setTexture(AnimationCollection texture) {
-		this.play = texture.getFirst().start();
+	public void setTexture(IAnimationCollection texture) {
+		this.play = texture.getFirst().start(PlayMode.LOOP);
 	}
 
 	@Override

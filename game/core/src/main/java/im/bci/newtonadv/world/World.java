@@ -31,12 +31,13 @@
  */
 package im.bci.newtonadv.world;
 
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.IAnimationFrame;
+import im.bci.jnuit.animation.IPlay;
+import im.bci.jnuit.animation.PlayMode;
 import im.bci.jnuit.audio.Sound;
 import im.bci.newtonadv.Game;
-import im.bci.newtonadv.platform.interfaces.ITexture;
-import im.bci.newtonadv.anim.AnimationCollection;
-import im.bci.newtonadv.anim.AnimationFrame;
-import im.bci.newtonadv.anim.Play;
+import im.bci.jnuit.animation.ITexture;
 import im.bci.newtonadv.game.Entity;
 import im.bci.newtonadv.game.EntityList;
 import im.bci.newtonadv.game.FrameTimeInfos;
@@ -81,7 +82,7 @@ public strictfp class World extends net.phys2d.raw.World {
     private ITexture backgroundTexture;
     private List<Updatable> updatableBodies = new LinkedList<Updatable>();
     protected EntityList topLevelEntities = new EntityList();
-    private Play appleIconPlay;
+    private IPlay appleIconPlay;
     private boolean objectivesCompleted = false;
     private float nonProgressiveGravityRotationStep;
     private final String questName;
@@ -95,8 +96,8 @@ public strictfp class World extends net.phys2d.raw.World {
     private Sound explodeSound;
     public IStaticPlatformDrawer staticPlatformDrawer;
 
-    public void setAppleIcon(AnimationCollection appleIcon) {
-        this.appleIconPlay = appleIcon.getFirst().start();
+    public void setAppleIcon(IAnimationCollection appleIcon) {
+        this.appleIconPlay = appleIcon.getFirst().start(PlayMode.LOOP);
     }
 
     void removeKey(Key key) {
@@ -132,7 +133,7 @@ public strictfp class World extends net.phys2d.raw.World {
         this.objectivesCompleted = objectivesCompleted;
     }
 
-    public AnimationFrame getAppleIconTexture() {
+    public IAnimationFrame getAppleIconTexture() {
         return appleIconPlay.getCurrentFrame();
     }
 
