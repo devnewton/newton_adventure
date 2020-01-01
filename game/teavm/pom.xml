@@ -32,25 +32,6 @@ DEALINGS IN THE SOFTWARE. -->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <directory>../data</directory>
-                <filtering>false</filtering>
-                <targetPath>data</targetPath>
-            </resource>
-            <resource>
-                <directory>../../mods</directory>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -65,6 +46,15 @@ DEALINGS IN THE SOFTWARE. -->
                     <webResources>
                         <resource>
                             <directory>${project.build.directory}/generated/js</directory>
+                        </resource>
+                        <resource>
+                            <directory>../data</directory>
+                            <filtering>false</filtering>
+                            <targetPath>data</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>../../mods</directory>
+                            <filtering>false</filtering>
                         </resource>
                     </webResources>
                 </configuration>
@@ -81,7 +71,7 @@ DEALINGS IN THE SOFTWARE. -->
                         </goals>
                         <configuration>
                             <targetDirectory>${project.build.directory}/generated/js/teavm</targetDirectory>
-                            <mainClass>im.bci.newtonadv.platform.teavm.Main</mainClass>
+                            <mainClass>im.bci.newtonadv.platform.teavm.TeavmMain</mainClass>
                             <minifying>false</minifying>
                             <debugInformationGenerated>true</debugInformationGenerated>
                             <sourceMapsGenerated>true</sourceMapsGenerated>

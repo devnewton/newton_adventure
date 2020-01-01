@@ -43,6 +43,7 @@ import im.bci.tmxloader.TmxTile;
 import im.bci.tmxloader.TmxTileset;
 import java.util.ArrayList;
 import java.util.List;
+import org.teavm.jso.core.JSString;
 import org.teavm.jso.json.JSON;
 
 /**
@@ -63,8 +64,8 @@ class TeavmGameData implements IGameData {
         final JsonArray jsonQuests = json.get("quests").cast();
         ArrayList<String> results = new ArrayList<>();
         for (int q = 0, nq = jsonQuests.getLength(); q < nq; ++q) {
-            String quest = jsonQuests.get(q).cast();
-            results.add(quest);
+            JSString quest = jsonQuests.get(q).cast();
+            results.add(quest.stringValue());
         }
         return results;
     }
@@ -85,8 +86,8 @@ class TeavmGameData implements IGameData {
         final JsonArray jsonLevels = json.get("levels").cast();
         ArrayList<String> results = new ArrayList<>();
         for (int l = 0, nl = jsonLevels.getLength(); l < nl; ++l) {
-            String level = jsonLevels.get(l).cast();
-            results.add(level);
+            JSString level = jsonLevels.get(l).cast();
+            results.add(level.stringValue());
         }
         return results;
     }
@@ -132,7 +133,7 @@ class TeavmGameData implements IGameData {
 
     @Override
     public boolean fileExists(String path) {
-        return assets.getVfs().exists(path);
+        return null != assets.getVfs().getRealResourcePath(path);
     }
 
     @Override

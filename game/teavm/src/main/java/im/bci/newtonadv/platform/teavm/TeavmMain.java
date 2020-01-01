@@ -25,9 +25,6 @@ package im.bci.newtonadv.platform.teavm;
 
 import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.RestartGameException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
@@ -36,7 +33,7 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
  *
  * @author devnewton
  */
-public class Main {
+public class TeavmMain {
 
     private CanvasRenderingContext2D ctx;
     private HTMLCanvasElement canvas;
@@ -48,6 +45,7 @@ public class Main {
         this.ctx = canvas.getContext("2d").cast();
         this.platform = new TeavmPlatformSpecific(canvas, ctx);
         this.game = new Game(this.platform);
+        this.game.start();
         Window.requestAnimationFrame(this::frame);
     }
 
@@ -69,7 +67,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
-        Main sample = new Main();
+        TeavmMain sample = new TeavmMain();
         sample.launch(args);
     }
 
