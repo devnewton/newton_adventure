@@ -319,7 +319,14 @@ public strictfp class Game {
     }
 
     public String getButtonFile(String baseName) {
-        String localeSuffix = platform.getLocaleSuffix();
+        String localeSuffix;
+        switch(platform.getNuitToolkit().getCurrentLocale()) {
+            case FRENCH:
+                localeSuffix = "fr_FR";
+                break;
+            default:
+                localeSuffix = "";
+        }
         String localizedButton = baseName + localeSuffix + ".png";
         String localizedFile = data.getFile(localizedButton);
         if (data.fileExists(localizedFile)) {

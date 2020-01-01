@@ -57,7 +57,6 @@ import im.bci.newtonadv.ui.NewtonAdventureNuitTranslator;
 
 import java.awt.Desktop;
 import java.awt.Font;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -69,7 +68,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,12 +82,10 @@ public class PlatformSpecific implements IPlatformSpecific {
     private final LwjglNuitPreferences config;
     private FileGameData data;
     private NuitToolkit nuitToolkit;
-    private final ResourceBundle messages;
     private NuitControls controls;
     private VirtualFileSystem vfs;
 
     public PlatformSpecific() throws Exception {
-        messages = ResourceBundle.getBundle("messages");
         config = new LwjglNuitPreferences("newton_adventure");
 
         createVfs();
@@ -101,15 +97,15 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     private void createVfs() {
-    	String modName = config.getString("mod", "Newton");
+        String modName = config.getString("mod", "Newton");
         currentMod = findModByName(modName);
-        if(null == currentMod) {
-        	currentMod = listMods().get(0);
-        }      
-    	vfs = new VirtualFileSystem(currentMod.getPath(), "data");
-	}
+        if (null == currentMod) {
+            currentMod = listMods().get(0);
+        }
+        vfs = new VirtualFileSystem(currentMod.getPath(), "data");
+    }
 
-	private LwjglGameView createGameView() {
+    private LwjglGameView createGameView() {
         if (null == data) {
             throw new RuntimeException("create IGameData before IGameView");
         }
@@ -331,16 +327,6 @@ public class PlatformSpecific implements IPlatformSpecific {
     }
 
     @Override
-    public String getMessage(String msg) {
-        return messages.getString(msg);
-    }
-
-    @Override
-    public String getLocaleSuffix() {
-        return "_" + messages.getLocale().getLanguage() + "_" + messages.getLocale().getCountry();
-    }
-
-    @Override
     public long nanoTime() {
         return System.nanoTime();
     }
@@ -361,7 +347,7 @@ public class PlatformSpecific implements IPlatformSpecific {
         openALNuitAudio.setEffectsVolume(config.getFloat("effects.volume", 1.0f));
         nuitTranslator.setCurrentLocale(
                 Locale.getDefault().getLanguage().equals(new Locale("fr").getLanguage()) ? NuitLocale.FRENCH
-                        : NuitLocale.ENGLISH);
+                : NuitLocale.ENGLISH);
     }
 
     @Override

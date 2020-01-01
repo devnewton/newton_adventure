@@ -79,13 +79,11 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
     private final TeavmNuitPreferences config;
     private TeavmGameData data;
     private NuitToolkit nuitToolkit;
-    private final ResourceBundle messages;
     private TeavmNuitControls controls;
     private TeavmVirtualFileSystem vfs;
     private TeavmAssets assets;
 
     public TeavmPlatformSpecific(HTMLCanvasElement canvas, CanvasRenderingContext2D ctx) throws Exception {
-        messages = ResourceBundle.getBundle("messages");
         config = new TeavmNuitPreferences("newton_adventure");
 
         createVfs();
@@ -261,16 +259,6 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
     @Override
     public IMod getCurrentMod() {
         return currentMod;
-    }
-
-    @Override
-    public String getMessage(String msg) {
-        return messages.getString(msg);
-    }
-
-    @Override
-    public String getLocaleSuffix() {
-        return "_" + messages.getLocale().getLanguage() + "_" + messages.getLocale().getCountry();
     }
 
     @Override

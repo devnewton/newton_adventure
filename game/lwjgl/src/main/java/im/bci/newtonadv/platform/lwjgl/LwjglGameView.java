@@ -916,7 +916,7 @@ public strictfp class LwjglGameView implements IGameView {
 
         int i = 1;
         font.drawString((ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f, i++ * font.getHeight(),
-                platformSpecific.getMessage("score.sequence.title"), 1, -1, TrueTypeFont.Align.CENTER);
+                platformSpecific.getNuitToolkit().getMessage("score.sequence.title"), 1, -1, TrueTypeFont.Align.CENTER);
         font.drawString(0, i++ * font.getHeight(), questScore.getQuestName(), 1, -1, TrueTypeFont.Align.LEFT);
         for (Entry<String, LevelScore> levelEntry : questScore.entrySet()) {
             String levelScoreStr = levelEntry.getKey() + ": "
@@ -924,7 +924,7 @@ public strictfp class LwjglGameView implements IGameView {
             font.drawString((ScoreSequence.ortho2DLeft + ScoreSequence.ortho2DRight) / 2.0f, i++ * font.getHeight(),
                     levelScoreStr, 1, -1, TrueTypeFont.Align.CENTER);
         }
-        String questScoreStr = platformSpecific.getMessage("score.sequence.quest.total") + ": "
+        String questScoreStr = platformSpecific.getNuitToolkit().getMessage("score.sequence.quest.total") + ": "
                 + (scorePerCentToShow * questScore.computeScore() / 100);
         font.drawString(0, i++ * font.getHeight(), questScoreStr, 1, -1, TrueTypeFont.Align.LEFT);
         GL11.glPopMatrix();

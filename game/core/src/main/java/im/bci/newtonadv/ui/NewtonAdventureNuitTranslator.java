@@ -41,11 +41,11 @@ import im.bci.jnuit.NuitTranslator;
 public class NewtonAdventureNuitTranslator extends NuitTranslator {
 
     public NewtonAdventureNuitTranslator() {
-        addEnglish();
-        addFrench();
+        addNewtonAdventureEnglish();
+        addNewtonAdventureFrench();
     }
 
-    private void addEnglish() {
+    private void addNewtonAdventureEnglish() {
         this.addTranslation(NuitLocale.ENGLISH, "options.video", "VIDEO");
         this.addTranslation(NuitLocale.ENGLISH, "options.audio", "AUDIO");
         this.addTranslation(NuitLocale.ENGLISH, "options.game.controls", "GAME CONTROLS");
@@ -71,9 +71,12 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
         this.addTranslation(NuitLocale.ENGLISH, "action.rotate.clockwise.90", "Rotate clockwise 90");
         this.addTranslation(NuitLocale.ENGLISH, "action.rotate.counterclockwise.90", "Rotate counterclockwise 90");
         this.addTranslation(NuitLocale.ENGLISH, "action.returntomenu", "Menu");
+        
+        this.addTranslation(NuitLocale.ENGLISH, "score.sequence.title", "SCORES");
+        this.addTranslation(NuitLocale.ENGLISH, "score.sequence.quest.total", "Quest total");
     }
 
-    private void addFrench() {
+    private void addNewtonAdventureFrench() {
         this.addTranslation(NuitLocale.FRENCH, "options.video", "VIDEO");
         this.addTranslation(NuitLocale.FRENCH, "options.audio", "AUDIO");
         this.addTranslation(NuitLocale.FRENCH, "options.game.controls", "CONTROLES DU JEU");
@@ -99,6 +102,9 @@ public class NewtonAdventureNuitTranslator extends NuitTranslator {
         this.addTranslation(NuitLocale.FRENCH, "action.rotate.clockwise.90", "Tourne (sens horaire 90)");
         this.addTranslation(NuitLocale.FRENCH, "action.rotate.counterclockwise.90", "Tourne (sens antihoraire 90)");
         this.addTranslation(NuitLocale.FRENCH, "action.returntomenu", "Menu");
+        
+        this.addTranslation(NuitLocale.FRENCH, "score.sequence.title", "SCORES");
+        this.addTranslation(NuitLocale.FRENCH, "score.sequence.quest.total", "Total pour la quête");  
     }
 
 }

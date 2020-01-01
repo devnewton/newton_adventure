@@ -32,3 +32,4 @@ out
 *.iml
 atlassian-ide-plugin.xml
 /game/teavm/target/
+/game/teavm/nb-configuration.xml

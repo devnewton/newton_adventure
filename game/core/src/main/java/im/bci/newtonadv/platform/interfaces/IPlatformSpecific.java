@@ -69,10 +69,6 @@ public interface IPlatformSpecific {
     void loadModIfNeeded(String selectedModName) throws RestartGameException;
 
     IMod getCurrentMod();
-    
-    String getMessage(String msg);
-
-    String getLocaleSuffix();
 
     public long nanoTime();
 }
