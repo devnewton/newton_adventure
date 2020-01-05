@@ -35,7 +35,6 @@ import im.bci.jnuit.lwjgl.assets.LwjglTextureQuality;
 import im.bci.jnuit.lwjgl.Sync;
 import im.bci.jnuit.NuitPreferences;
 import im.bci.jnuit.animation.IAnimationFrame;
-import im.bci.jnuit.animation.IAnimationImage;
 import im.bci.jnuit.animation.IPlay;
 import im.bci.jnuit.lwjgl.IconLoader;
 import im.bci.newtonadv.Game;
@@ -49,6 +48,9 @@ import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.jnuit.animation.ITexture;
+import im.bci.jnuit.lwjgl.animation.LwjglAnimationFrame;
+import im.bci.jnuit.lwjgl.animation.LwjglAnimationImage;
+import im.bci.jnuit.lwjgl.LwjglTexture;
 import im.bci.newtonadv.score.LevelScore;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.util.AbsoluteAABox;
@@ -133,7 +135,7 @@ public strictfp class LwjglGameView implements IGameView {
         GL11.glLoadIdentity();
         GL11.glOrtho(MenuSequence.ortho2DLeft, MenuSequence.ortho2DRight, MenuSequence.ortho2DBottom,
                 MenuSequence.ortho2DTop, -1f, 1f);
-        IAnimationImage background = sequence.getBackgroundImage();
+        LwjglAnimationImage background = (LwjglAnimationImage) sequence.getBackgroundImage();
         if (background != null) {
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) background.getId());
@@ -166,12 +168,12 @@ public strictfp class LwjglGameView implements IGameView {
         int width = config.getInt("video.width", 800);
         int height = config.getInt("video.height", 600);
         boolean fullscreen = config.getBoolean("video.fullscreen", false);
-        LwjglTextureQuality quality = LwjglTextureQuality.valueOf(config.getString("video.quality", "DEFAULT"));
+        LwjglTextureQuality configuredQuality = LwjglTextureQuality.valueOf(config.getString("video.quality", "DEFAULT"));
         GLFWErrorCallback.createPrint(System.err).set();
         if (!GLFW.glfwInit()) {
             throw new IllegalStateException("Unable to initialize glfw");
         }
-        setDisplayMode(width, height, fullscreen, quality);
+        setDisplayMode(width, height, fullscreen, configuredQuality);
     }
 
     public void setDisplayMode(int width, int height, boolean fullscreen, LwjglTextureQuality quality) {
@@ -278,7 +280,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawPickableObject(PickableObject pickableObject, IAnimationFrame texture, World world) {
+    public void drawPickableObject(PickableObject pickableObject, IAnimationFrame frame, World world) {
         AABox bounds = pickableObject.getShape().getBounds();
 
         GL11.glPushMatrix();
@@ -290,10 +292,10 @@ public strictfp class LwjglGameView implements IGameView {
         final float y2 = bounds.getHeight() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame) frame).getTextureId());
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -309,21 +311,21 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawAxe(Axe axe, IAnimationFrame texture) {
+    public void drawAxe(Axe axe, IAnimationFrame frame) {
         Box box = (Box) axe.getShape();
         Vector2f[] pts = box.getPoints(axe.getPosition(), axe.getRotation());
 
         GL11.glEnable(GL11.GL_BLEND);
 
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame) frame).getTextureId());
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV2());
+        GL11.glTexCoord2f(frame.getU1(), frame.getV2());
         GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV2());
+        GL11.glTexCoord2f(frame.getU2(), frame.getV2());
         GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV1());
+        GL11.glTexCoord2f(frame.getU2(), frame.getV1());
         GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV1());
+        GL11.glTexCoord2f(frame.getU1(), frame.getV1());
         GL11.glVertex2f(pts[3].x, pts[3].y);
         GL11.glEnd();
         GL11.glDisable(GL11.GL_BLEND);
@@ -332,7 +334,7 @@ public strictfp class LwjglGameView implements IGameView {
 
     @Override
     public void drawAxeAnchor(AxeAnchor axeAnchor, float radius, IAnimationFrame frame) {
-        IAnimationImage texture = frame.getImage();
+        LwjglAnimationImage image = (LwjglAnimationImage)frame.getImage();
         GL11.glPushMatrix();
         GL11.glTranslatef(axeAnchor.getPosition().getX(), axeAnchor.getPosition().getY(), 0.0f);
         final float x1 = -radius;
@@ -340,10 +342,10 @@ public strictfp class LwjglGameView implements IGameView {
         final float y1 = -radius;
         final float y2 = radius;
 
-        if (texture.hasAlpha()) {
+        if (image.hasAlpha()) {
             GL11.glEnable(GL11.GL_BLEND);
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) image.getId());
 
         final float u1 = 0.18f, u2 = 0.8f;
         final float v1 = 0.2f, v2 = 0.8f;
@@ -359,7 +361,7 @@ public strictfp class LwjglGameView implements IGameView {
         GL11.glEnd();
         GL11.glPopMatrix();
 
-        if (texture.hasAlpha()) {
+        if (image.hasAlpha()) {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
@@ -378,7 +380,7 @@ public strictfp class LwjglGameView implements IGameView {
         float y2 = bounds.getHeight() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) frame.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame) frame).getTextureId());
 
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(frame.getU2(), frame.getV1());
@@ -409,11 +411,12 @@ public strictfp class LwjglGameView implements IGameView {
 
     @Override
     public void drawPlatform(AnimatedPlatform platform) {
-        final boolean hasAlpha = platform.frame.getImage().hasAlpha();
+        LwjglAnimationImage image = (LwjglAnimationImage) platform.frame.getImage();
+        final boolean hasAlpha = image.hasAlpha();
         if (hasAlpha) {
             GL11.glEnable(GL11.GL_BLEND);
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) platform.frame.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, image.getId());
         GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 0, platform.texCoords);
         GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, platform.vertices);
         int nbVertices = platform.vertices.limit() / 2;
@@ -426,11 +429,12 @@ public strictfp class LwjglGameView implements IGameView {
     @Override
     public void drawStaticPlatforms(IStaticPlatformDrawable iplatforms) {
         StaticPlatformDrawable platforms = (StaticPlatformDrawable) iplatforms;
-        final boolean hasAlpha = platforms.texture.hasAlpha();
+        LwjglTexture texture = (LwjglTexture)platforms.texture;
+        final boolean hasAlpha = texture.hasAlpha();
         if (hasAlpha) {
             GL11.glEnable(GL11.GL_BLEND);
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, platforms.texture.getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
         GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 0, platforms.texCoords);
         GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, platforms.vertices);
         int nbVertices = platforms.vertices.limit() / 2;
@@ -441,25 +445,27 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawMovingPlatform(MovingPlatform platform, IAnimationFrame texture) {
+    public void drawMovingPlatform(MovingPlatform platform, IAnimationFrame frame) {
         Box box = (Box) platform.getShape();
         Vector2f[] pts = box.getPoints(platform.getPosition(), platform.getRotation());
+        
+        LwjglAnimationImage image = (LwjglAnimationImage) frame.getImage();
 
-        if (texture.getImage().hasAlpha()) {
+        if (image.hasAlpha()) {
             GL11.glEnable(GL11.GL_BLEND);
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, image.getId());
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV2());
+        GL11.glTexCoord2f(frame.getU1(), frame.getV2());
         GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV2());
+        GL11.glTexCoord2f(frame.getU2(), frame.getV2());
         GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV1());
+        GL11.glTexCoord2f(frame.getU2(), frame.getV1());
         GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV1());
+        GL11.glTexCoord2f(frame.getU1(), frame.getV1());
         GL11.glVertex2f(pts[3].x, pts[3].y);
         GL11.glEnd();
-        if (texture.getImage().hasAlpha()) {
+        if (image.hasAlpha()) {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
@@ -475,20 +481,20 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawDoor(Door door, IAnimationFrame texture) {
+    public void drawDoor(Door door, IAnimationFrame frame) {
         Box box = (Box) door.getShape();
         Vector2f[] pts = box.getPoints(door.getPosition(), door.getRotation());
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV2());
+        GL11.glTexCoord2f(frame.getU1(), frame.getV2());
         GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV2());
+        GL11.glTexCoord2f(frame.getU2(), frame.getV2());
         GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV1());
+        GL11.glTexCoord2f(frame.getU2(), frame.getV1());
         GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV1());
+        GL11.glTexCoord2f(frame.getU1(), frame.getV1());
         GL11.glVertex2f(pts[3].x, pts[3].y);
         GL11.glEnd();
         GL11.glDisable(GL11.GL_BLEND);
@@ -505,7 +511,7 @@ public strictfp class LwjglGameView implements IGameView {
         final float y2 = explosion.getSize() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) frame.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
         final float u1 = frame.getU1(), v1 = frame.getV1(), u2 = frame.getU2(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
@@ -523,7 +529,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawFireBall(FireBall fireball, IAnimationFrame texture, World world) {
+    public void drawFireBall(FireBall fireball, IAnimationFrame frame, World world) {
         GL11.glPushMatrix();
         ROVector2f pos = fireball.getPosition();
         GL11.glTranslatef(pos.getX(), pos.getY(), 0.0f);
@@ -532,14 +538,16 @@ public strictfp class LwjglGameView implements IGameView {
         final float x2 = fireball.getSize() / 2.0f;
         final float y1 = -fireball.getSize() / 2.0f;
         final float y2 = fireball.getSize() / 2.0f;
+        
+        LwjglAnimationImage image = (LwjglAnimationImage) frame.getImage();
 
-        if (texture.getImage().hasAlpha()) {
+        if (image.hasAlpha()) {
             GL11.glEnable(GL11.GL_BLEND);
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) image.getId());
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -551,7 +559,7 @@ public strictfp class LwjglGameView implements IGameView {
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glPopMatrix();
-        if (texture.getImage().hasAlpha()) {
+        if (image.hasAlpha()) {
             GL11.glDisable(GL11.GL_BLEND);
         }
 
@@ -584,7 +592,7 @@ public strictfp class LwjglGameView implements IGameView {
         float y2 = bounds.getHeight() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) frame.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
         final float v1 = frame.getV1(), v2 = frame.getV2();
         final float u1, u2;
@@ -614,7 +622,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawKey(Key key, IAnimationFrame texture, World world) {
+    public void drawKey(Key key, IAnimationFrame frame, World world) {
         AABox bounds = key.getShape().getBounds();
 
         GL11.glPushMatrix();
@@ -626,7 +634,7 @@ public strictfp class LwjglGameView implements IGameView {
         final float y2 = bounds.getHeight() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
         NewtonColor color = key.getColor();
         GL11.glColor3f(color.r, color.g, color.b);
@@ -635,8 +643,8 @@ public strictfp class LwjglGameView implements IGameView {
             GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
         }
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -657,7 +665,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawLosedApple(LosedApple apple, World world, IAnimationFrame texture, float alpha) {
+    public void drawLosedApple(LosedApple apple, World world, IAnimationFrame frame, float alpha) {
         GL11.glPushMatrix();
         GL11.glTranslatef(apple.getPosition().getX(), apple.getPosition().getY(), 0.0f);
         GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
@@ -668,10 +676,10 @@ public strictfp class LwjglGameView implements IGameView {
 
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -689,7 +697,7 @@ public strictfp class LwjglGameView implements IGameView {
 
     @Override
     public void drawMobilePikeAnchor(MobilePikeAnchor anchor, IAnimationFrame frame) {
-        IAnimationImage texture = frame.getImage();
+        LwjglAnimationImage image = (LwjglAnimationImage) frame.getImage();
         GL11.glPushMatrix();
         GL11.glTranslatef(anchor.getPosition().getX(), anchor.getPosition().getY(), 0.0f);
         AABox bounds = anchor.getShape().getBounds();
@@ -698,10 +706,10 @@ public strictfp class LwjglGameView implements IGameView {
         final float y1 = -bounds.getHeight() / 2.0f;
         final float y2 = bounds.getHeight() / 2.0f;
 
-        if (texture.hasAlpha()) {
+        if (image.hasAlpha()) {
             GL11.glEnable(GL11.GL_BLEND);
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) image.getId());
 
         final float u1 = 0.18f, u2 = 0.8f;
         final float v1 = 0.2f, v2 = 0.8f;
@@ -716,25 +724,25 @@ public strictfp class LwjglGameView implements IGameView {
         GL11.glVertex2f(x1, y1);
         GL11.glEnd();
         GL11.glPopMatrix();
-        if (texture.hasAlpha()) {
+        if (image.hasAlpha()) {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
 
     @Override
-    public void drawMobilePikes(MobilePikes pikes, IAnimationFrame texture) {
+    public void drawMobilePikes(MobilePikes pikes, IAnimationFrame frame) {
         Box box = (Box) pikes.getShape();
         Vector2f[] pts = box.getPoints(pikes.getPosition(), pikes.getRotation());
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV2());
+        GL11.glTexCoord2f(frame.getU1(), frame.getV2());
         GL11.glVertex2f(pts[0].x, pts[0].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV2());
+        GL11.glTexCoord2f(frame.getU2(), frame.getV2());
         GL11.glVertex2f(pts[1].x, pts[1].y);
-        GL11.glTexCoord2f(texture.getU2(), texture.getV1());
+        GL11.glTexCoord2f(frame.getU2(), frame.getV1());
         GL11.glVertex2f(pts[2].x, pts[2].y);
-        GL11.glTexCoord2f(texture.getU1(), texture.getV1());
+        GL11.glTexCoord2f(frame.getU1(), frame.getV1());
         GL11.glVertex2f(pts[3].x, pts[3].y);
         GL11.glEnd();
         GL11.glDisable(GL11.GL_BLEND);
@@ -754,7 +762,7 @@ public strictfp class LwjglGameView implements IGameView {
         float y2 = bounds.getHeight() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) frame.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
         final float v1 = frame.getV1(), v2 = frame.getV2();
         final float u1, u2;
@@ -781,7 +789,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawPickedUpObject(PickedUpObject pickedUpObject, World world, IAnimationFrame texture) {
+    public void drawPickedUpObject(PickedUpObject pickedUpObject, World world, IAnimationFrame frame) {
         GL11.glPushMatrix();
         GL11.glTranslatef(pickedUpObject.getPosition().getX(), pickedUpObject.getPosition().getY(), 0.0f);
         GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
@@ -791,10 +799,10 @@ public strictfp class LwjglGameView implements IGameView {
         final float y2 = pickedUpObject.getSize() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -810,7 +818,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawUsedKey(UsedKey key, IAnimationFrame texture, World world) {
+    public void drawUsedKey(UsedKey key, IAnimationFrame frame, World world) {
         GL11.glPushMatrix();
         GL11.glTranslatef(key.getPosition().getX(), key.getPosition().getY(), 0.0f);
         GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
@@ -820,10 +828,10 @@ public strictfp class LwjglGameView implements IGameView {
         final float y2 = key.getSize() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -839,7 +847,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawBoss(Boss boss, IAnimationFrame texture) {
+    public void drawBoss(Boss boss, IAnimationFrame frame) {
         AABox bounds = boss.getShape().getBounds();
 
         GL11.glPushMatrix();
@@ -850,10 +858,10 @@ public strictfp class LwjglGameView implements IGameView {
         float y2 = bounds.getHeight() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -871,7 +879,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawBossHand(BossHand hand, IAnimationFrame texture) {
+    public void drawBossHand(BossHand hand, IAnimationFrame frame) {
         AABox bounds = hand.getShape().getBounds();
 
         GL11.glPushMatrix();
@@ -882,10 +890,10 @@ public strictfp class LwjglGameView implements IGameView {
         float y2 = bounds.getHeight() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -986,7 +994,7 @@ public strictfp class LwjglGameView implements IGameView {
 
     @Override
     public void drawButton(Button button) {
-        ITexture texture = button.getTexture();
+        LwjglTexture texture = (LwjglTexture) button.getTexture();
         if (texture != null) {
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
@@ -1079,7 +1087,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     private void drawWorldBackground(World world, float aspectRatio) {
-        ITexture backgroundTexture = world.getBackgroundTexture();
+        LwjglTexture backgroundTexture = (LwjglTexture) world.getBackgroundTexture();
         if (null != backgroundTexture) {
             GL11.glPushMatrix();
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, backgroundTexture.getId());
@@ -1146,7 +1154,7 @@ public strictfp class LwjglGameView implements IGameView {
         final float screenWidth = Game.DEFAULT_SCREEN_WIDTH * aspectRatio;
         GL11.glLoadIdentity();
         GL11.glOrtho(0, screenWidth, Game.DEFAULT_SCREEN_HEIGHT, 0, -1f, 1f);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, backgroundTexture.getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglTexture)backgroundTexture).getId());
         drawFadeBackground(screenWidth);
 
         GL11.glColor4f(r, g, b, a);
@@ -1180,15 +1188,15 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     private void drawLoadingIcon(IPlay loadingPlay, final float screenWidth) {
-        final IAnimationFrame texture = loadingPlay.getCurrentFrame();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        final IAnimationFrame frame = loadingPlay.getCurrentFrame();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
         final float x1 = screenWidth - 256;
         final float x2 = screenWidth;
         final float y1 = Game.DEFAULT_SCREEN_HEIGHT;
         final float y2 = Game.DEFAULT_SCREEN_HEIGHT - 256;
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);
@@ -1246,7 +1254,7 @@ public strictfp class LwjglGameView implements IGameView {
         }
         if (world.getHero().hasMap()) {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, minimapTexture.getId());
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglTexture)minimapTexture).getId());
         } else {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
@@ -1279,7 +1287,7 @@ public strictfp class LwjglGameView implements IGameView {
         GL11.glPopAttrib();
     }
 
-    public void drawMinimapIcon(World world, ROVector2f worldPos, IAnimationFrame texture) {
+    public void drawMinimapIcon(World world, ROVector2f worldPos, IAnimationFrame frame) {
         float iconW = World.distanceUnit * 8.0f;
         float iconH = World.distanceUnit * 8.0f;
 
@@ -1287,8 +1295,8 @@ public strictfp class LwjglGameView implements IGameView {
         final float icon_x2 = iconW / 2.0f;
         final float icon_y1 = -iconH / 2.0f;
         final float icon_y2 = iconH / 2.0f;
-        float icon_u1 = texture.getU1(), icon_u2 = texture.getU2();
-        float icon_v1 = texture.getV1(), icon_v2 = texture.getV2();
+        float icon_u1 = frame.getU1(), icon_u2 = frame.getU2();
+        float icon_v1 = frame.getV1(), icon_v2 = frame.getV2();
         GL11.glPushMatrix();
         GL11.glRotatef((float) Math.toDegrees(-world.getGravityAngle()), 0, 0, 1.0f);
         final float miniMapPlatformSize = minimapSize * 4.0f / 256.0f;// harcoded,
@@ -1298,7 +1306,7 @@ public strictfp class LwjglGameView implements IGameView {
                 miniMapPlatformSize / (World.distanceUnit * 2.0f), 1);
         GL11.glTranslatef(worldPos.getX(), worldPos.getY(), 0);
         GL11.glRotatef((float) Math.toDegrees(world.getGravityAngle()), 0, 0, 1.0f);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(icon_u1, icon_v1);
         GL11.glVertex2f(icon_x1, icon_y2);
@@ -1340,7 +1348,7 @@ public strictfp class LwjglGameView implements IGameView {
     }
 
     @Override
-    public void drawBomb(Bomb bomb, IAnimationFrame texture, World world) {
+    public void drawBomb(Bomb bomb, IAnimationFrame frame, World world) {
         AABox bounds = bomb.getShape().getBounds();
 
         GL11.glPushMatrix();
@@ -1353,10 +1361,10 @@ public strictfp class LwjglGameView implements IGameView {
         final float y2 = bounds.getHeight() / 2.0f;
 
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, (int) texture.getImage().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((LwjglAnimationFrame)frame).getTextureId());
 
-        final float u1 = texture.getU1(), u2 = texture.getU2();
-        final float v1 = texture.getV1(), v2 = texture.getV2();
+        final float u1 = frame.getU1(), u2 = frame.getU2();
+        final float v1 = frame.getV1(), v2 = frame.getV2();
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(u1, v1);
         GL11.glVertex2f(x1, y2);

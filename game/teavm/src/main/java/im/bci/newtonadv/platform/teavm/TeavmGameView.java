@@ -34,6 +34,7 @@ import im.bci.newtonadv.game.Sequence;
 import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.jnuit.animation.ITexture;
+import im.bci.jnuit.teavm.TeavmTexture;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.Axe;
@@ -143,7 +144,14 @@ class TeavmGameView implements IGameView {
 
     @Override
     public void drawButton(MenuSequence.Button button) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TeavmTexture texture = (TeavmTexture) button.getTexture();
+        if (texture != null) {
+            double dx = button.x;
+            double dy = button.y;
+            double dw = button.w > 0 ? button.w : texture.getWidth();
+            double dh = button.h > 0 ? button.h : texture.getHeight();
+            ctx.drawImage(texture.getImage(), dx, dy, dw, dh);
+        }
     }
 
     @Override

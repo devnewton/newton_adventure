@@ -12,6 +12,7 @@ import net.phys2d.math.Vector2f;
 import net.phys2d.raw.shapes.Shape;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.jnuit.animation.ITexture;
+import im.bci.jnuit.lwjgl.LwjglTexture;
 import im.bci.newtonadv.util.ShapeUtils;
 import im.bci.newtonadv.world.IStaticPlatformDrawable;
 import im.bci.newtonadv.world.StaticPlatform;
@@ -30,7 +31,9 @@ public class StaticPlatformDrawable implements IStaticPlatformDrawable {
         public int compare(StaticPlatform o1, StaticPlatform o2) {
             int result = Integer.compare(o1.getZOrder(), o2.getZOrder());
             if (result == 0) {
-                result = Integer.compare(o1.getTexture().getId(), o2.getTexture().getId());
+                final LwjglTexture texture1 = (LwjglTexture) o1.getTexture();
+                final LwjglTexture texture2 = (LwjglTexture) o2.getTexture();
+                result = Integer.compare(texture1.getId(), texture2.getId());
             }
             return result;
         }
