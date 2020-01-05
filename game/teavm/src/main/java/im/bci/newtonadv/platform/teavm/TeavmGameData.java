@@ -165,12 +165,12 @@ class TeavmGameData implements IGameData {
 
     @Override
     public IAnimationCollection loadFromAnimation(String file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return assets.getAnimations(file);
     }
 
     @Override
     public IAnimationCollection loadFromSubTexture(String source, float u1, float v1, float u2, float v2) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return assets.getAnimationFromSubTexture(source, u1, v1, u2, v2);
     }
 
 }
