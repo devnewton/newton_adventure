@@ -35,6 +35,7 @@ import im.bci.jnuit.animation.IAnimationCollection;
 import im.bci.jnuit.animation.ITexture;
 import im.bci.jnuit.teavm.JsonArray;
 import im.bci.jnuit.teavm.JsonMap;
+import im.bci.jnuit.teavm.TeavmTexture;
 import im.bci.jnuit.teavm.assets.TeavmAssets;
 import im.bci.newtonadv.platform.interfaces.IGameData;
 import im.bci.tmxloader.TmxLoader;
@@ -43,7 +44,11 @@ import im.bci.tmxloader.TmxTile;
 import im.bci.tmxloader.TmxTileset;
 import java.util.ArrayList;
 import java.util.List;
+import org.teavm.interop.Async;
+import org.teavm.jso.JSBody;
+import org.teavm.jso.canvas.CanvasImageSource;
 import org.teavm.jso.core.JSString;
+import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.json.JSON;
 
 /**
@@ -53,9 +58,11 @@ import org.teavm.jso.json.JSON;
 class TeavmGameData implements IGameData {
 
     private final TeavmAssets assets;
+    private final HTMLCanvasElement canvas;
 
-    TeavmGameData(TeavmAssets assets) {
+    TeavmGameData(TeavmAssets assets, HTMLCanvasElement canvas) {
         this.assets = assets;
+        this.canvas = canvas;
     }
 
     @Override
@@ -150,7 +157,7 @@ class TeavmGameData implements IGameData {
 
     @Override
     public void clearUseless() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//TODO
     }
 
     @Override
@@ -160,7 +167,7 @@ class TeavmGameData implements IGameData {
 
     @Override
     public ITexture grabScreenToTexture() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new TeavmTexture(canvas);
     }
 
     @Override

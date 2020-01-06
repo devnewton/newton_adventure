@@ -26,7 +26,6 @@ package im.bci.newtonadv.platform.teavm;
 import im.bci.jnuit.animation.IAnimationFrame;
 import im.bci.jnuit.animation.IPlay;
 import im.bci.jnuit.teavm.TeavmSync;
-import im.bci.newtonadv.Game;
 import im.bci.newtonadv.game.MainMenuSequence;
 import im.bci.newtonadv.game.MenuSequence;
 import im.bci.newtonadv.game.ScoreSequence;
@@ -35,6 +34,7 @@ import im.bci.newtonadv.game.special.occasion.SnowLayer;
 import im.bci.newtonadv.platform.interfaces.IGameView;
 import im.bci.jnuit.animation.ITexture;
 import im.bci.jnuit.teavm.TeavmTexture;
+import im.bci.jnuit.teavm.assets.animation.TeavmAnimationImage;
 import im.bci.newtonadv.score.QuestScore;
 import im.bci.newtonadv.world.AnimatedPlatform;
 import im.bci.newtonadv.world.Axe;
@@ -85,9 +85,10 @@ class TeavmGameView implements IGameView {
 
     @Override
     public void draw(Sequence sequence) {
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        sequence.draw();
-        sync.sync(Game.FPS);
+        if (sync.shouldDraw()) {
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            sequence.draw();
+        }
     }
 
     @Override
@@ -211,7 +212,26 @@ class TeavmGameView implements IGameView {
 
     @Override
     public void drawMenuSequence(MenuSequence sequence) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // TODO if (Display.isVisible() || Display.isDirty() || LwjglHelper.wasResized()
+        // || sequence.isDirty()) {
+        sequence.setDirty(false);
+        doDrawMenuSequence(sequence);
+        // TODO }    
+    }
+
+    private void doDrawMenuSequence(MenuSequence sequence) {
+        ctx.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        TeavmAnimationImage background = (TeavmAnimationImage) sequence.getBackgroundImage();
+        if (background != null) {
+            final float x1 = sequence.getBackgroundX1();
+            final float x2 = sequence.getBackgroundX2();
+            final float y1 = sequence.getBackgroundY1();
+            final float y2 = sequence.getBackgroundY2();
+            ctx.drawImage(canvas, x1, y1, x2 - x1, y2 - y1);
+        }
+        for (MenuSequence.Button b : sequence.getButtons()) {
+            b.draw();
+        }
     }
 
     @Override

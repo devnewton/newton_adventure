@@ -62,7 +62,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
@@ -88,7 +87,7 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
 
         createVfs();
         createAssets();
-        createGameData();
+        createGameData(canvas);
         createGameView(canvas,ctx);
         createControls();
         createNuitToolkit(canvas,ctx);
@@ -138,9 +137,9 @@ public class TeavmPlatformSpecific implements IPlatformSpecific {
         return input;
     }
 
-    private TeavmGameData createGameData() {
+    private TeavmGameData createGameData(HTMLCanvasElement canvas) {
         if (null == data) {
-            data = new TeavmGameData(assets);
+            data = new TeavmGameData(assets, canvas);
         }
         return data;
     }
