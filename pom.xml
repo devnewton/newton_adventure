@@ -17,6 +17,7 @@
         <playn.version>1.8.5</playn.version>
     </properties>
     <modules>
+        <module>jnuit</module>
         <module>game/core</module>
         <module>game/lwjgl</module>
         <module>game/playn</module>

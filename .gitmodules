@@ -1,0 +1,3 @@
+[submodule "jnuit"]
+	path = jnuit
+	url = https://github.com/devnewton/jnuit.git
