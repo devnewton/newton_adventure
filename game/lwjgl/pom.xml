@@ -67,6 +67,8 @@
                                     <mainClass>im.bci.newtonadv.platform.lwjgl.Main</mainClass>
                                 </transformer>
                             </transformers>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <finalName>newton-adventure</finalName>
                         </configuration>
                     </execution>
                 </executions>
