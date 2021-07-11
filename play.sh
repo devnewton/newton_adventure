@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn -Pplay integration-test
+java -jar game/lwjgl/target/newton-adventure.jar
