@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Newton Adventure
+Icon=newton_adventure
+Exec=newton_adventure.sh
+Categories=Game;
