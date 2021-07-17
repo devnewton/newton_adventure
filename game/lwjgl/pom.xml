@@ -250,6 +250,12 @@
             <artifactId>lwjgl-stb</artifactId>
             <classifier>natives-windows-x86</classifier>
         </dependency>
+	<!-- added only for jlink, lwjgl depends on jsr305 but do not declare it in maven -->
+	<dependency>
+	  <groupId>com.google.code.findbugs</groupId>
+	  <artifactId>jsr305</artifactId>
+	  <version>3.0.2</version>
+	</dependency>
     </dependencies>
     <profiles>
         <profile>

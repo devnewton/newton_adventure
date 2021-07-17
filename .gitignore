@@ -1,26 +1,5 @@
-/game/target/
-/game/core/target/
-/game/lwjgl/target/
-/editor/target/
-/packages/generic/target/
-/packages/win/target/
-/packages/deb/target/
-/packages/rpm/target/
-/packages/rpm32/target/
-/packages/rpm64/target/
-/mods/duchatelet/target/
-/mods/pack1/target/
-*~
-/game/playn/assets/target/
-/game/playn/android/assets/
-/game/playn/core/target/
-/game/playn/java/target/
-/game/playn/html/target/
-/game/playn/android/target/
-/libtiled-jpurexml/target/
-/mods/bald/target/
-/target/
-/mods/retro/target/
+~
+target/
 
 # Eclipse specific files/directories #
 ######################################
